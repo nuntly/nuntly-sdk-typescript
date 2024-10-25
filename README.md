@@ -26,13 +26,18 @@ The full API of this library can be found in [api.md](api.md).
 import Nuntly from 'nuntly';
 
 const client = new Nuntly({
-  bearerToken: process.env['NUNTLY_API_BEARER_TOKEN'], // This is the default and can be omitted
+  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted
 });
 
 async function main() {
-  const apiKey = await client.apiKeys.create();
+  const email = await client.emails.send({
+    from: 'tomlinson@bbn-tenexa.com',
+    to: 'hello@world.net',
+    subject: 'First Email',
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  });
 
-  console.log(apiKey.data);
+  console.log(email.id);
 }
 
 main();
@@ -47,7 +52,7 @@ This library includes TypeScript definitions for all request params and response
 import Nuntly from 'nuntly';
 
 const client = new Nuntly({
-  bearerToken: process.env['NUNTLY_API_BEARER_TOKEN'], // This is the default and can be omitted
+  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted
 });
 
 async function main() {
@@ -155,7 +160,7 @@ console.log(response.statusText); // access the underlying Response object
 
 const { data: apiKey, response: raw } = await client.apiKeys.create().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(apiKey.data);
+console.log(apiKey.id);
 ```
 
 ### Making custom/undocumented requests

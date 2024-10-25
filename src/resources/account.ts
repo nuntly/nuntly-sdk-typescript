@@ -4,23 +4,27 @@ import { APIResource } from '../resource';
 import * as Core from '../core';
 import * as AccountAPI from './account';
 
-export class AccountResource extends APIResource {
+export class Account extends APIResource {
   /**
    * Retrieve your account informations
    */
   retrieve(options?: Core.RequestOptions): Core.APIPromise<AccountRetrieveResponse> {
-    return this._client.get('/account', options);
+    return (
+      this._client.get('/account', options) as Core.APIPromise<{ data: AccountRetrieveResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update your account
    */
   update(body: AccountUpdateParams, options?: Core.RequestOptions): Core.APIPromise<AccountUpdateResponse> {
-    return this._client.patch('/account', { body, ...options });
+    return (
+      this._client.patch('/account', { body, ...options }) as Core.APIPromise<{ data: AccountUpdateResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export interface Account {
+export interface AccountRetrieveResponse {
   /**
    * The display name
    */
@@ -37,21 +41,11 @@ export interface Account {
   user_id: string;
 }
 
-export interface AccountRetrieveResponse {
-  data?: Account;
-}
-
 export interface AccountUpdateResponse {
-  data?: AccountUpdateResponse.Data;
-}
-
-export namespace AccountUpdateResponse {
-  export interface Data {
-    /**
-     * The id of the user
-     */
-    user_id: string;
-  }
+  /**
+   * The id of the user
+   */
+  user_id: string;
 }
 
 export interface AccountUpdateParams {
@@ -61,8 +55,7 @@ export interface AccountUpdateParams {
   display_name: string;
 }
 
-export namespace AccountResource {
-  export import Account = AccountAPI.Account;
+export namespace Account {
   export import AccountRetrieveResponse = AccountAPI.AccountRetrieveResponse;
   export import AccountUpdateResponse = AccountAPI.AccountUpdateResponse;
   export import AccountUpdateParams = AccountAPI.AccountUpdateParams;

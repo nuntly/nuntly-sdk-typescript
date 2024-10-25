@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  APIKey,
   APIKeyCreateResponse,
   APIKeyRetrieveResponse,
   APIKeyUpdateResponse,
@@ -11,15 +10,8 @@ export {
   APIKeyUpdateParams,
   APIKeys,
 } from './api-keys';
+export { AccountRetrieveResponse, AccountUpdateResponse, AccountUpdateParams, Account } from './account';
 export {
-  Account,
-  AccountRetrieveResponse,
-  AccountUpdateResponse,
-  AccountUpdateParams,
-  AccountResource,
-} from './account';
-export {
-  Domain,
   DomainCreateResponse,
   DomainRetrieveResponse,
   DomainUpdateResponse,
@@ -30,24 +22,22 @@ export {
   Domains,
 } from './domains';
 export {
-  Email,
-  EmailCreateResponse,
   EmailRetrieveResponse,
   EmailListResponse,
-  EmailDeleteResponse,
   EmailBulkResponse,
-  EmailCreateParams,
+  EmailCancelResponse,
+  EmailSendResponse,
   EmailBulkParams,
+  EmailSendParams,
   Emails,
 } from './emails';
+export { Error, ErrorResponse, Shared } from './shared';
 export {
-  Organization,
   OrganizationRetrieveResponse,
   OrganizationListResponse,
   Organizations,
 } from './organizations/organizations';
 export {
-  Webhook,
   WebhookCreateResponse,
   WebhookRetrieveResponse,
   WebhookUpdateResponse,

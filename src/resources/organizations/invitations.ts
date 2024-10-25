@@ -13,7 +13,11 @@ export class Invitations extends APIResource {
     invitationId: string,
     options?: Core.RequestOptions,
   ): Core.APIPromise<InvitationDeleteResponse> {
-    return this._client.delete(`/organizations/${id}/invitations/${invitationId}`, options);
+    return (
+      this._client.delete(`/organizations/${id}/invitations/${invitationId}`, options) as Core.APIPromise<{
+        data: InvitationDeleteResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -24,11 +28,22 @@ export class Invitations extends APIResource {
     body: InvitationSendParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<InvitationSendResponse> {
-    return this._client.post(`/organizations/${id}/invitations`, { body, ...options });
+    return (
+      this._client.post(`/organizations/${id}/invitations`, { body, ...options }) as Core.APIPromise<{
+        data: InvitationSendResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export interface Invitation {
+export interface InvitationDeleteResponse {
+  /**
+   * The id of the organization
+   */
+  id: string;
+}
+
+export interface InvitationSendResponse {
   /**
    * The id of the organization
    */
@@ -58,23 +73,6 @@ export interface Invitation {
   status: 'pending' | 'accepted' | 'declined';
 }
 
-export interface InvitationDeleteResponse {
-  data?: InvitationDeleteResponse.Data;
-}
-
-export namespace InvitationDeleteResponse {
-  export interface Data {
-    /**
-     * The id of the organization
-     */
-    id: string;
-  }
-}
-
-export interface InvitationSendResponse {
-  data?: Invitation;
-}
-
 export interface InvitationSendParams {
   /**
    * The e-mail to send an invitation
@@ -83,7 +81,6 @@ export interface InvitationSendParams {
 }
 
 export namespace Invitations {
-  export import Invitation = InvitationsAPI.Invitation;
   export import InvitationDeleteResponse = InvitationsAPI.InvitationDeleteResponse;
   export import InvitationSendResponse = InvitationsAPI.InvitationSendResponse;
   export import InvitationSendParams = InvitationsAPI.InvitationSendParams;

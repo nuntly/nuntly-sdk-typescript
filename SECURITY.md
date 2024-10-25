@@ -20,7 +20,7 @@ or products provided by Nuntly please follow the respective company's security r
 
 ### Nuntly Terms and Policies
 
-Please contact dev-feedback@nuntly.com for any questions or concerns regarding security of our services.
+Please contact developers@nuntly.com for any questions or concerns regarding security of our services.
 
 ---
 

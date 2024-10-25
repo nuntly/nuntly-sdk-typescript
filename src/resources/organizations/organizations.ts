@@ -14,18 +14,24 @@ export class Organizations extends APIResource {
    * Return the organization
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<OrganizationRetrieveResponse> {
-    return this._client.get(`/organizations/${id}`, options);
+    return (
+      this._client.get(`/organizations/${id}`, options) as Core.APIPromise<{
+        data: OrganizationRetrieveResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Return the organizations
    */
   list(options?: Core.RequestOptions): Core.APIPromise<OrganizationListResponse> {
-    return this._client.get('/organizations', options);
+    return (
+      this._client.get('/organizations', options) as Core.APIPromise<{ data: OrganizationListResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export interface Organization {
+export interface OrganizationRetrieveResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
@@ -62,27 +68,57 @@ export interface Organization {
   status: 'active' | 'pending' | 'revoked';
 }
 
-export interface OrganizationRetrieveResponse {
-  data?: Organization;
-}
+/**
+ * The organizations for the user
+ */
+export type OrganizationListResponse = Array<OrganizationListResponse.OrganizationListResponseItem>;
 
-export interface OrganizationListResponse {
-  /**
-   * The organizations for the user
-   */
-  data?: Array<Organization>;
+export namespace OrganizationListResponse {
+  export interface OrganizationListResponseItem {
+    /**
+     * Date at which the object was created (ISO 8601 format)
+     */
+    created_at: string;
+
+    /**
+     * The user who created the object
+     */
+    created_by: string;
+
+    /**
+     * The display name of the organization
+     */
+    display_name: string;
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by: string;
+
+    /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
+     * The status of the organization
+     */
+    status: 'active' | 'pending' | 'revoked';
+  }
 }
 
 export namespace Organizations {
-  export import Organization = OrganizationsAPI.Organization;
   export import OrganizationRetrieveResponse = OrganizationsAPI.OrganizationRetrieveResponse;
   export import OrganizationListResponse = OrganizationsAPI.OrganizationListResponse;
   export import Memberships = MembershipsAPI.Memberships;
-  export import OrganizationMembership = MembershipsAPI.OrganizationMembership;
   export import MembershipListResponse = MembershipsAPI.MembershipListResponse;
   export import MembershipRevokeResponse = MembershipsAPI.MembershipRevokeResponse;
   export import Invitations = InvitationsAPI.Invitations;
-  export import Invitation = InvitationsAPI.Invitation;
   export import InvitationDeleteResponse = InvitationsAPI.InvitationDeleteResponse;
   export import InvitationSendResponse = InvitationsAPI.InvitationSendResponse;
   export import InvitationSendParams = InvitationsAPI.InvitationSendParams;

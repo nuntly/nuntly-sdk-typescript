@@ -10,14 +10,18 @@ export class Webhooks extends APIResource {
    * events)
    */
   create(body: WebhookCreateParams, options?: Core.RequestOptions): Core.APIPromise<WebhookCreateResponse> {
-    return this._client.post('/webhooks', { body, ...options });
+    return (
+      this._client.post('/webhooks', { body, ...options }) as Core.APIPromise<{ data: WebhookCreateResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Return the webhook with the given ID
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<WebhookRetrieveResponse> {
-    return this._client.get(`/webhooks/${id}`, options);
+    return (
+      this._client.get(`/webhooks/${id}`, options) as Core.APIPromise<{ data: WebhookRetrieveResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -28,25 +32,40 @@ export class Webhooks extends APIResource {
     body: WebhookUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<WebhookUpdateResponse> {
-    return this._client.put(`/webhooks/${id}`, { body, ...options });
+    return (
+      this._client.put(`/webhooks/${id}`, { body, ...options }) as Core.APIPromise<{
+        data: WebhookUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Return a list of your webhooks
    */
   list(options?: Core.RequestOptions): Core.APIPromise<WebhookListResponse> {
-    return this._client.get('/webhooks', options);
+    return (
+      this._client.get('/webhooks', options) as Core.APIPromise<{ data: WebhookListResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Delete the webhook with the given ID
    */
   delete(id: string, options?: Core.RequestOptions): Core.APIPromise<WebhookDeleteResponse> {
-    return this._client.delete(`/webhooks/${id}`, options);
+    return (
+      this._client.delete(`/webhooks/${id}`, options) as Core.APIPromise<{ data: WebhookDeleteResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export interface Webhook {
+export interface WebhookCreateResponse {
+  /**
+   * The id of the webhook
+   */
+  id: string;
+}
+
+export interface WebhookRetrieveResponse {
   /**
    * The id of the webhook
    */
@@ -93,33 +112,61 @@ export interface Webhook {
   name?: string;
 }
 
-export interface WebhookCreateResponse {
-  data?: WebhookCreateResponse.Data;
-}
-
-export namespace WebhookCreateResponse {
-  export interface Data {
-    /**
-     * The id of the webhook
-     */
-    id: string;
-  }
-}
-
-export interface WebhookRetrieveResponse {
-  data?: Webhook;
-}
-
 export interface WebhookUpdateResponse {
-  data?: WebhookUpdateResponse.Data;
+  /**
+   * The id of the webhook
+   */
+  id: string;
+
+  /**
+   * The list of events to enable for this webhook
+   */
+  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+
+  /**
+   * The status of the webhook.
+   */
+  status: 'enabled' | 'disabled' | 'revoked';
+
+  /**
+   * The endpoint URL of the webhook
+   */
+  endpoint_url?: string;
+
+  /**
+   * The name of the webhook
+   */
+  name?: string;
 }
 
-export namespace WebhookUpdateResponse {
+export interface WebhookListResponse {
+  /**
+   * The webhooks registered in your organization
+   */
+  data: Array<WebhookListResponse.Data>;
+}
+
+export namespace WebhookListResponse {
   export interface Data {
     /**
      * The id of the webhook
      */
     id: string;
+
+    /**
+     * Date at which the object was created (ISO 8601 format)
+     */
+    created_at: string;
+
+    /**
+     * The user who created the object
+     */
+    created_by: string;
+
+    /**
+     * The endpoint URL of the webhook
+     */
+    endpoint_url: string;
 
     /**
      * The list of events to enable for this webhook
@@ -129,14 +176,19 @@ export namespace WebhookUpdateResponse {
     >;
 
     /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by: string;
+
+    /**
      * The status of the webhook.
      */
     status: 'enabled' | 'disabled' | 'revoked';
-
-    /**
-     * The endpoint URL of the webhook
-     */
-    endpoint_url?: string;
 
     /**
      * The name of the webhook
@@ -145,30 +197,11 @@ export namespace WebhookUpdateResponse {
   }
 }
 
-export interface WebhookListResponse {
-  data?: WebhookListResponse.Data;
-}
-
-export namespace WebhookListResponse {
-  export interface Data {
-    /**
-     * The webhooks registered in your organization
-     */
-    data: Array<WebhooksAPI.Webhook>;
-  }
-}
-
 export interface WebhookDeleteResponse {
-  data?: WebhookDeleteResponse.Data;
-}
-
-export namespace WebhookDeleteResponse {
-  export interface Data {
-    /**
-     * The id of the webhook
-     */
-    id: string;
-  }
+  /**
+   * The id of the webhook
+   */
+  id: string;
 }
 
 export interface WebhookCreateParams {
@@ -216,7 +249,6 @@ export interface WebhookUpdateParams {
 }
 
 export namespace Webhooks {
-  export import Webhook = WebhooksAPI.Webhook;
   export import WebhookCreateResponse = WebhooksAPI.WebhookCreateResponse;
   export import WebhookRetrieveResponse = WebhooksAPI.WebhookRetrieveResponse;
   export import WebhookUpdateResponse = WebhooksAPI.WebhookUpdateResponse;
