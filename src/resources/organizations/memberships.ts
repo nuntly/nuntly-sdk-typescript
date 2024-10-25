@@ -3,14 +3,17 @@
 import { APIResource } from '../../resource';
 import * as Core from '../../core';
 import * as MembershipsAPI from './memberships';
-import * as InvitationsAPI from './invitations';
 
 export class Memberships extends APIResource {
   /**
    * Return the organization memberships
    */
   list(id: string, options?: Core.RequestOptions): Core.APIPromise<MembershipListResponse> {
-    return this._client.get(`/organizations/${id}/memberships`, options);
+    return (
+      this._client.get(`/organizations/${id}/memberships`, options) as Core.APIPromise<{
+        data: MembershipListResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -21,23 +24,57 @@ export class Memberships extends APIResource {
     userId: string,
     options?: Core.RequestOptions,
   ): Core.APIPromise<MembershipRevokeResponse> {
-    return this._client.delete(`/organizations/${id}/memberships/${userId}`, options);
+    return (
+      this._client.delete(`/organizations/${id}/memberships/${userId}`, options) as Core.APIPromise<{
+        data: MembershipRevokeResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export interface OrganizationMembership {
+export interface MembershipListResponse {
   /**
    * The invitations of this organization
    */
-  invitations: Array<InvitationsAPI.Invitation>;
+  invitations: Array<MembershipListResponse.Invitation>;
 
   /**
    * The organization membership
    */
-  members: Array<OrganizationMembership.Member>;
+  members: Array<MembershipListResponse.Member>;
 }
 
-export namespace OrganizationMembership {
+export namespace MembershipListResponse {
+  export interface Invitation {
+    /**
+     * The id of the organization
+     */
+    id: string;
+
+    /**
+     * Date at which the object was created (ISO 8601 format)
+     */
+    created_at: string;
+
+    email: string;
+
+    invitation_expired_at: string;
+
+    inviter_email: string;
+
+    kind: string;
+
+    /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
+     * The status of the invitation
+     */
+    status: 'pending' | 'accepted' | 'declined';
+  }
+
   export interface Member {
     members: Array<Member.Member>;
   }
@@ -82,30 +119,19 @@ export namespace OrganizationMembership {
   }
 }
 
-export interface MembershipListResponse {
-  data?: OrganizationMembership;
-}
-
 export interface MembershipRevokeResponse {
-  data?: MembershipRevokeResponse.Data;
-}
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
-export namespace MembershipRevokeResponse {
-  export interface Data {
-    /**
-     * The id of the organization
-     */
-    org_id: string;
-
-    /**
-     * The id of the organization
-     */
-    user_id: string;
-  }
+  /**
+   * The id of the organization
+   */
+  user_id: string;
 }
 
 export namespace Memberships {
-  export import OrganizationMembership = MembershipsAPI.OrganizationMembership;
   export import MembershipListResponse = MembershipsAPI.MembershipListResponse;
   export import MembershipRevokeResponse = MembershipsAPI.MembershipRevokeResponse;
 }

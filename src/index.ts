@@ -8,9 +8,9 @@ import * as API from './resources/index';
 
 export interface ClientOptions {
   /**
-   * Bearer token for authentication
+   * API Key for authentication
    */
-  bearerToken?: string | undefined;
+  apiKey?: string | null | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -73,15 +73,15 @@ export interface ClientOptions {
  * API Client for interfacing with the Nuntly API.
  */
 export class Nuntly extends Core.APIClient {
-  bearerToken: string;
+  apiKey: string | null;
 
   private _options: ClientOptions;
 
   /**
    * API Client for interfacing with the Nuntly API.
    *
-   * @param {string | undefined} [opts.bearerToken=process.env['NUNTLY_API_BEARER_TOKEN'] ?? undefined]
-   * @param {string} [opts.baseURL=process.env['NUNTLY_BASE_URL'] ?? https://api-eu-west-1.nuntly.com] - Override the default base URL for the API.
+   * @param {string | null | undefined} [opts.apiKey=process.env['NUNTLY_API_KEY'] ?? null]
+   * @param {string} [opts.baseURL=process.env['NUNTLY_BASE_URL'] ?? https://api.nuntly.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -91,19 +91,13 @@ export class Nuntly extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('NUNTLY_BASE_URL'),
-    bearerToken = Core.readEnv('NUNTLY_API_BEARER_TOKEN'),
+    apiKey = Core.readEnv('NUNTLY_API_KEY') ?? null,
     ...opts
   }: ClientOptions = {}) {
-    if (bearerToken === undefined) {
-      throw new Errors.NuntlyError(
-        "The NUNTLY_API_BEARER_TOKEN environment variable is missing or empty; either provide it, or instantiate the Nuntly client with an bearerToken option, like new Nuntly({ bearerToken: 'My Bearer Token' }).",
-      );
-    }
-
     const options: ClientOptions = {
-      bearerToken,
+      apiKey,
       ...opts,
-      baseURL: baseURL || `https://api-eu-west-1.nuntly.com`,
+      baseURL: baseURL || `https://api.nuntly.com`,
     };
 
     super({
@@ -116,15 +110,16 @@ export class Nuntly extends Core.APIClient {
 
     this._options = options;
 
-    this.bearerToken = bearerToken;
+    this.apiKey = apiKey;
   }
 
+  shared: API.Shared = new API.Shared(this);
   apiKeys: API.APIKeys = new API.APIKeys(this);
   domains: API.Domains = new API.Domains(this);
   emails: API.Emails = new API.Emails(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
   organizations: API.Organizations = new API.Organizations(this);
-  account: API.AccountResource = new API.AccountResource(this);
+  account: API.Account = new API.Account(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -137,8 +132,24 @@ export class Nuntly extends Core.APIClient {
     };
   }
 
+  protected override validateHeaders(headers: Core.Headers, customHeaders: Core.Headers) {
+    if (this.apiKey && headers['authorization']) {
+      return;
+    }
+    if (customHeaders['authorization'] === null) {
+      return;
+    }
+
+    throw new Error(
+      'Could not resolve authentication method. Expected the apiKey to be set. Or for the "Authorization" headers to be explicitly omitted',
+    );
+  }
+
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
-    return { Authorization: `Bearer ${this.bearerToken}` };
+    if (this.apiKey == null) {
+      return {};
+    }
+    return { Authorization: `Bearer ${this.apiKey}` };
   }
 
   static Nuntly = this;
@@ -184,8 +195,11 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Nuntly {
   export import RequestOptions = Core.RequestOptions;
 
+  export import Shared = API.Shared;
+  export import Error = API.Error;
+  export import ErrorResponse = API.ErrorResponse;
+
   export import APIKeys = API.APIKeys;
-  export import APIKey = API.APIKey;
   export import APIKeyCreateResponse = API.APIKeyCreateResponse;
   export import APIKeyRetrieveResponse = API.APIKeyRetrieveResponse;
   export import APIKeyUpdateResponse = API.APIKeyUpdateResponse;
@@ -195,7 +209,6 @@ export namespace Nuntly {
   export import APIKeyUpdateParams = API.APIKeyUpdateParams;
 
   export import Domains = API.Domains;
-  export import Domain = API.Domain;
   export import DomainCreateResponse = API.DomainCreateResponse;
   export import DomainRetrieveResponse = API.DomainRetrieveResponse;
   export import DomainUpdateResponse = API.DomainUpdateResponse;
@@ -205,17 +218,15 @@ export namespace Nuntly {
   export import DomainUpdateParams = API.DomainUpdateParams;
 
   export import Emails = API.Emails;
-  export import Email = API.Email;
-  export import EmailCreateResponse = API.EmailCreateResponse;
   export import EmailRetrieveResponse = API.EmailRetrieveResponse;
   export import EmailListResponse = API.EmailListResponse;
-  export import EmailDeleteResponse = API.EmailDeleteResponse;
   export import EmailBulkResponse = API.EmailBulkResponse;
-  export import EmailCreateParams = API.EmailCreateParams;
+  export import EmailCancelResponse = API.EmailCancelResponse;
+  export import EmailSendResponse = API.EmailSendResponse;
   export import EmailBulkParams = API.EmailBulkParams;
+  export import EmailSendParams = API.EmailSendParams;
 
   export import Webhooks = API.Webhooks;
-  export import Webhook = API.Webhook;
   export import WebhookCreateResponse = API.WebhookCreateResponse;
   export import WebhookRetrieveResponse = API.WebhookRetrieveResponse;
   export import WebhookUpdateResponse = API.WebhookUpdateResponse;
@@ -225,11 +236,9 @@ export namespace Nuntly {
   export import WebhookUpdateParams = API.WebhookUpdateParams;
 
   export import Organizations = API.Organizations;
-  export import Organization = API.Organization;
   export import OrganizationRetrieveResponse = API.OrganizationRetrieveResponse;
   export import OrganizationListResponse = API.OrganizationListResponse;
 
-  export import AccountResource = API.AccountResource;
   export import Account = API.Account;
   export import AccountRetrieveResponse = API.AccountRetrieveResponse;
   export import AccountUpdateResponse = API.AccountUpdateResponse;

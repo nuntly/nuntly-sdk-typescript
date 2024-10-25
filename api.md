@@ -1,8 +1,14 @@
+# Shared
+
+Types:
+
+- <code><a href="./src/resources/shared.ts">Error</a></code>
+- <code><a href="./src/resources/shared.ts">ErrorResponse</a></code>
+
 # APIKeys
 
 Types:
 
-- <code><a href="./src/resources/api-keys.ts">APIKey</a></code>
 - <code><a href="./src/resources/api-keys.ts">APIKeyCreateResponse</a></code>
 - <code><a href="./src/resources/api-keys.ts">APIKeyRetrieveResponse</a></code>
 - <code><a href="./src/resources/api-keys.ts">APIKeyUpdateResponse</a></code>
@@ -21,7 +27,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/domains.ts">Domain</a></code>
 - <code><a href="./src/resources/domains.ts">DomainCreateResponse</a></code>
 - <code><a href="./src/resources/domains.ts">DomainRetrieveResponse</a></code>
 - <code><a href="./src/resources/domains.ts">DomainUpdateResponse</a></code>
@@ -40,26 +45,24 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/emails.ts">Email</a></code>
-- <code><a href="./src/resources/emails.ts">EmailCreateResponse</a></code>
 - <code><a href="./src/resources/emails.ts">EmailRetrieveResponse</a></code>
 - <code><a href="./src/resources/emails.ts">EmailListResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailDeleteResponse</a></code>
 - <code><a href="./src/resources/emails.ts">EmailBulkResponse</a></code>
+- <code><a href="./src/resources/emails.ts">EmailCancelResponse</a></code>
+- <code><a href="./src/resources/emails.ts">EmailSendResponse</a></code>
 
 Methods:
 
-- <code title="post /emails">client.emails.<a href="./src/resources/emails.ts">create</a>({ ...params }) -> EmailCreateResponse</code>
 - <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(id) -> EmailRetrieveResponse</code>
 - <code title="get /emails">client.emails.<a href="./src/resources/emails.ts">list</a>() -> EmailListResponse</code>
-- <code title="delete /emails/{id}">client.emails.<a href="./src/resources/emails.ts">delete</a>(id) -> EmailDeleteResponse</code>
 - <code title="post /emails/bulk">client.emails.<a href="./src/resources/emails.ts">bulk</a>({ ...params }) -> EmailBulkResponse</code>
+- <code title="delete /emails/{id}">client.emails.<a href="./src/resources/emails.ts">cancel</a>(id) -> EmailCancelResponse</code>
+- <code title="post /emails">client.emails.<a href="./src/resources/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
 
 # Webhooks
 
 Types:
 
-- <code><a href="./src/resources/webhooks.ts">Webhook</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookCreateResponse</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookRetrieveResponse</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookUpdateResponse</a></code>
@@ -78,7 +81,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/organizations/organizations.ts">Organization</a></code>
 - <code><a href="./src/resources/organizations/organizations.ts">OrganizationRetrieveResponse</a></code>
 - <code><a href="./src/resources/organizations/organizations.ts">OrganizationListResponse</a></code>
 
@@ -91,7 +93,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/organizations/memberships.ts">OrganizationMembership</a></code>
 - <code><a href="./src/resources/organizations/memberships.ts">MembershipListResponse</a></code>
 - <code><a href="./src/resources/organizations/memberships.ts">MembershipRevokeResponse</a></code>
 
@@ -104,7 +105,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/organizations/invitations.ts">Invitation</a></code>
 - <code><a href="./src/resources/organizations/invitations.ts">InvitationDeleteResponse</a></code>
 - <code><a href="./src/resources/organizations/invitations.ts">InvitationSendResponse</a></code>
 
@@ -117,7 +117,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/account.ts">Account</a></code>
 - <code><a href="./src/resources/account.ts">AccountRetrieveResponse</a></code>
 - <code><a href="./src/resources/account.ts">AccountUpdateResponse</a></code>
 
