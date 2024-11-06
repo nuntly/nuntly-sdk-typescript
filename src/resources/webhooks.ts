@@ -138,15 +138,13 @@ export interface WebhookUpdateResponse {
   name?: string;
 }
 
-export interface WebhookListResponse {
-  /**
-   * The webhooks registered in your organization
-   */
-  data: Array<WebhookListResponse.Data>;
-}
+/**
+ * The webhooks registered in your organization
+ */
+export type WebhookListResponse = Array<WebhookListResponse.WebhookListResponseItem>;
 
 export namespace WebhookListResponse {
-  export interface Data {
+  export interface WebhookListResponseItem {
     /**
      * The id of the webhook
      */
