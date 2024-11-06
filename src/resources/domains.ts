@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as DomainsAPI from './domains';
 
 export class Domains extends APIResource {
   /**
@@ -434,12 +433,14 @@ export interface DomainUpdateParams {
   open_tracking?: boolean;
 }
 
-export namespace Domains {
-  export import DomainCreateResponse = DomainsAPI.DomainCreateResponse;
-  export import DomainRetrieveResponse = DomainsAPI.DomainRetrieveResponse;
-  export import DomainUpdateResponse = DomainsAPI.DomainUpdateResponse;
-  export import DomainListResponse = DomainsAPI.DomainListResponse;
-  export import DomainDeleteResponse = DomainsAPI.DomainDeleteResponse;
-  export import DomainCreateParams = DomainsAPI.DomainCreateParams;
-  export import DomainUpdateParams = DomainsAPI.DomainUpdateParams;
+export declare namespace Domains {
+  export {
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
+    type DomainUpdateResponse as DomainUpdateResponse,
+    type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainCreateParams as DomainCreateParams,
+    type DomainUpdateParams as DomainUpdateParams,
+  };
 }

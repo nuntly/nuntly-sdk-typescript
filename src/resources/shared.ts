@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../resource';
-import * as SharedAPI from './shared';
 
 export class Shared extends APIResource {}
 
@@ -44,7 +43,6 @@ export interface ErrorResponse {
   error: Error;
 }
 
-export namespace Shared {
-  export import Error = SharedAPI.Error;
-  export import ErrorResponse = SharedAPI.ErrorResponse;
+export declare namespace Shared {
+  export { type Error as Error, type ErrorResponse as ErrorResponse };
 }

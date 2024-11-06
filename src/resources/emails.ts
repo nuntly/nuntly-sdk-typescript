@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as EmailsAPI from './emails';
 
 export class Emails extends APIResource {
   /**
@@ -559,12 +558,14 @@ export namespace EmailSendParams {
   }
 }
 
-export namespace Emails {
-  export import EmailRetrieveResponse = EmailsAPI.EmailRetrieveResponse;
-  export import EmailListResponse = EmailsAPI.EmailListResponse;
-  export import EmailBulkResponse = EmailsAPI.EmailBulkResponse;
-  export import EmailCancelResponse = EmailsAPI.EmailCancelResponse;
-  export import EmailSendResponse = EmailsAPI.EmailSendResponse;
-  export import EmailBulkParams = EmailsAPI.EmailBulkParams;
-  export import EmailSendParams = EmailsAPI.EmailSendParams;
+export declare namespace Emails {
+  export {
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailListResponse as EmailListResponse,
+    type EmailBulkResponse as EmailBulkResponse,
+    type EmailCancelResponse as EmailCancelResponse,
+    type EmailSendResponse as EmailSendResponse,
+    type EmailBulkParams as EmailBulkParams,
+    type EmailSendParams as EmailSendParams,
+  };
 }

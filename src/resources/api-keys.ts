@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import * as APIKeysAPI from './api-keys';
 
 export class APIKeys extends APIResource {
   /**
@@ -227,12 +226,14 @@ export interface APIKeyUpdateParams {
   status?: 'enabled' | 'disabled';
 }
 
-export namespace APIKeys {
-  export import APIKeyCreateResponse = APIKeysAPI.APIKeyCreateResponse;
-  export import APIKeyRetrieveResponse = APIKeysAPI.APIKeyRetrieveResponse;
-  export import APIKeyUpdateResponse = APIKeysAPI.APIKeyUpdateResponse;
-  export import APIKeyListResponse = APIKeysAPI.APIKeyListResponse;
-  export import APIKeyDeleteResponse = APIKeysAPI.APIKeyDeleteResponse;
-  export import APIKeyCreateParams = APIKeysAPI.APIKeyCreateParams;
-  export import APIKeyUpdateParams = APIKeysAPI.APIKeyUpdateParams;
+export declare namespace APIKeys {
+  export {
+    type APIKeyCreateResponse as APIKeyCreateResponse,
+    type APIKeyRetrieveResponse as APIKeyRetrieveResponse,
+    type APIKeyUpdateResponse as APIKeyUpdateResponse,
+    type APIKeyListResponse as APIKeyListResponse,
+    type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyUpdateParams as APIKeyUpdateParams,
+  };
 }

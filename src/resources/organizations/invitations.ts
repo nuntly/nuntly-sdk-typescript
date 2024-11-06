@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../resource';
 import * as Core from '../../core';
-import * as InvitationsAPI from './invitations';
 
 export class Invitations extends APIResource {
   /**
@@ -80,8 +79,10 @@ export interface InvitationSendParams {
   email: string;
 }
 
-export namespace Invitations {
-  export import InvitationDeleteResponse = InvitationsAPI.InvitationDeleteResponse;
-  export import InvitationSendResponse = InvitationsAPI.InvitationSendResponse;
-  export import InvitationSendParams = InvitationsAPI.InvitationSendParams;
+export declare namespace Invitations {
+  export {
+    type InvitationDeleteResponse as InvitationDeleteResponse,
+    type InvitationSendResponse as InvitationSendResponse,
+    type InvitationSendParams as InvitationSendParams,
+  };
 }
