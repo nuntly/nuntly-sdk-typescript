@@ -341,15 +341,13 @@ export interface DomainUpdateResponse {
   open_tracking?: boolean;
 }
 
-export interface DomainListResponse {
-  /**
-   * The domains registered in your account
-   */
-  data: Array<DomainListResponse.Data>;
-}
+/**
+ * The domains registered in your account
+ */
+export type DomainListResponse = Array<DomainListResponse.DomainListResponseItem>;
 
 export namespace DomainListResponse {
-  export interface Data {
+  export interface DomainListResponseItem {
     /**
      * The id of the domain
      */
