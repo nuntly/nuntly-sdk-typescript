@@ -2,9 +2,15 @@
 
 import { APIResource } from '../../resource';
 import * as Core from '../../core';
-import * as OrganizationsAPI from './organizations';
 import * as InvitationsAPI from './invitations';
+import {
+  InvitationDeleteResponse,
+  InvitationSendParams,
+  InvitationSendResponse,
+  Invitations,
+} from './invitations';
 import * as MembershipsAPI from './memberships';
+import { MembershipListResponse, MembershipRevokeResponse, Memberships } from './memberships';
 
 export class Organizations extends APIResource {
   memberships: MembershipsAPI.Memberships = new MembershipsAPI.Memberships(this._client);
@@ -112,14 +118,25 @@ export namespace OrganizationListResponse {
   }
 }
 
-export namespace Organizations {
-  export import OrganizationRetrieveResponse = OrganizationsAPI.OrganizationRetrieveResponse;
-  export import OrganizationListResponse = OrganizationsAPI.OrganizationListResponse;
-  export import Memberships = MembershipsAPI.Memberships;
-  export import MembershipListResponse = MembershipsAPI.MembershipListResponse;
-  export import MembershipRevokeResponse = MembershipsAPI.MembershipRevokeResponse;
-  export import Invitations = InvitationsAPI.Invitations;
-  export import InvitationDeleteResponse = InvitationsAPI.InvitationDeleteResponse;
-  export import InvitationSendResponse = InvitationsAPI.InvitationSendResponse;
-  export import InvitationSendParams = InvitationsAPI.InvitationSendParams;
+Organizations.Memberships = Memberships;
+Organizations.Invitations = Invitations;
+
+export declare namespace Organizations {
+  export {
+    type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
+    type OrganizationListResponse as OrganizationListResponse,
+  };
+
+  export {
+    Memberships as Memberships,
+    type MembershipListResponse as MembershipListResponse,
+    type MembershipRevokeResponse as MembershipRevokeResponse,
+  };
+
+  export {
+    Invitations as Invitations,
+    type InvitationDeleteResponse as InvitationDeleteResponse,
+    type InvitationSendResponse as InvitationSendResponse,
+    type InvitationSendParams as InvitationSendParams,
+  };
 }

@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as AccountAPI from './account';
 
 export class Account extends APIResource {
   /**
@@ -31,7 +30,7 @@ export interface AccountRetrieveResponse {
   display_name: string;
 
   /**
-   * The email address associated with the account
+   * The email address associated with this account
    */
   email: string;
 
@@ -55,8 +54,10 @@ export interface AccountUpdateParams {
   display_name: string;
 }
 
-export namespace Account {
-  export import AccountRetrieveResponse = AccountAPI.AccountRetrieveResponse;
-  export import AccountUpdateResponse = AccountAPI.AccountUpdateResponse;
-  export import AccountUpdateParams = AccountAPI.AccountUpdateParams;
+export declare namespace Account {
+  export {
+    type AccountRetrieveResponse as AccountRetrieveResponse,
+    type AccountUpdateResponse as AccountUpdateResponse,
+    type AccountUpdateParams as AccountUpdateParams,
+  };
 }

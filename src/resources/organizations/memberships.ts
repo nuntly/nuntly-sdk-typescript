@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../resource';
 import * as Core from '../../core';
-import * as MembershipsAPI from './memberships';
 
 export class Memberships extends APIResource {
   /**
@@ -76,46 +75,40 @@ export namespace MembershipListResponse {
   }
 
   export interface Member {
-    members: Array<Member.Member>;
-  }
+    /**
+     * Date at which the object was created (ISO 8601 format)
+     */
+    created_at: string;
 
-  export namespace Member {
-    export interface Member {
-      /**
-       * Date at which the object was created (ISO 8601 format)
-       */
-      created_at: string;
+    /**
+     * The user who created the object
+     */
+    created_by: string;
 
-      /**
-       * The user who created the object
-       */
-      created_by: string;
+    display_name: string;
 
-      display_name: string;
+    email: string;
 
-      email: string;
+    kind: string;
 
-      kind: string;
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at: string;
 
-      /**
-       * Date at which the object was modified (ISO 8601 format)
-       */
-      modified_at: string;
+    /**
+     * The last user who modified the object
+     */
+    modified_by: string;
 
-      /**
-       * The last user who modified the object
-       */
-      modified_by: string;
+    org_id: string;
 
-      org_id: string;
+    /**
+     * The role of the membership
+     */
+    role: 'owner' | 'member';
 
-      /**
-       * The role of the membership
-       */
-      role: 'owner' | 'member';
-
-      user_id: string;
-    }
+    user_id: string;
   }
 }
 
@@ -131,7 +124,9 @@ export interface MembershipRevokeResponse {
   user_id: string;
 }
 
-export namespace Memberships {
-  export import MembershipListResponse = MembershipsAPI.MembershipListResponse;
-  export import MembershipRevokeResponse = MembershipsAPI.MembershipRevokeResponse;
+export declare namespace Memberships {
+  export {
+    type MembershipListResponse as MembershipListResponse,
+    type MembershipRevokeResponse as MembershipRevokeResponse,
+  };
 }

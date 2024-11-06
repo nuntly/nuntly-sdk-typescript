@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as WebhooksAPI from './webhooks';
 
 export class Webhooks extends APIResource {
   /**
@@ -248,12 +247,14 @@ export interface WebhookUpdateParams {
   name?: string;
 }
 
-export namespace Webhooks {
-  export import WebhookCreateResponse = WebhooksAPI.WebhookCreateResponse;
-  export import WebhookRetrieveResponse = WebhooksAPI.WebhookRetrieveResponse;
-  export import WebhookUpdateResponse = WebhooksAPI.WebhookUpdateResponse;
-  export import WebhookListResponse = WebhooksAPI.WebhookListResponse;
-  export import WebhookDeleteResponse = WebhooksAPI.WebhookDeleteResponse;
-  export import WebhookCreateParams = WebhooksAPI.WebhookCreateParams;
-  export import WebhookUpdateParams = WebhooksAPI.WebhookUpdateParams;
+export declare namespace Webhooks {
+  export {
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+  };
 }

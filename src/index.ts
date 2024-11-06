@@ -1,10 +1,62 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import * as Errors from './error';
-import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
+import * as Errors from './error';
+import * as Uploads from './uploads';
 import * as API from './resources/index';
+import {
+  Account,
+  AccountRetrieveResponse,
+  AccountUpdateParams,
+  AccountUpdateResponse,
+} from './resources/account';
+import {
+  APIKeyCreateParams,
+  APIKeyCreateResponse,
+  APIKeyDeleteResponse,
+  APIKeyListResponse,
+  APIKeyRetrieveResponse,
+  APIKeyUpdateParams,
+  APIKeyUpdateResponse,
+  APIKeys,
+} from './resources/api-keys';
+import {
+  DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteResponse,
+  DomainListResponse,
+  DomainRetrieveResponse,
+  DomainUpdateParams,
+  DomainUpdateResponse,
+  Domains,
+} from './resources/domains';
+import {
+  EmailBulkParams,
+  EmailBulkResponse,
+  EmailCancelResponse,
+  EmailListResponse,
+  EmailRetrieveResponse,
+  EmailSendParams,
+  EmailSendResponse,
+  Emails,
+} from './resources/emails';
+import { Error, ErrorResponse, Shared } from './resources/shared';
+import {
+  WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteResponse,
+  WebhookListResponse,
+  WebhookRetrieveResponse,
+  WebhookUpdateParams,
+  WebhookUpdateResponse,
+  Webhooks,
+} from './resources/webhooks';
+import {
+  OrganizationListResponse,
+  OrganizationRetrieveResponse,
+  Organizations,
+} from './resources/organizations/organizations';
 
 export interface ClientOptions {
   /**
@@ -173,7 +225,7 @@ export class Nuntly extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-export const {
+export {
   NuntlyError,
   APIError,
   APIConnectionError,
@@ -187,62 +239,80 @@ export const {
   InternalServerError,
   PermissionDeniedError,
   UnprocessableEntityError,
-} = Errors;
+} from './error';
 
 export import toFile = Uploads.toFile;
 export import fileFromPath = Uploads.fileFromPath;
 
-export namespace Nuntly {
-  export import RequestOptions = Core.RequestOptions;
+Nuntly.Shared = Shared;
+Nuntly.APIKeys = APIKeys;
+Nuntly.Domains = Domains;
+Nuntly.Emails = Emails;
+Nuntly.Webhooks = Webhooks;
+Nuntly.Organizations = Organizations;
+Nuntly.Account = Account;
 
-  export import Shared = API.Shared;
-  export import Error = API.Error;
-  export import ErrorResponse = API.ErrorResponse;
+export declare namespace Nuntly {
+  export type RequestOptions = Core.RequestOptions;
 
-  export import APIKeys = API.APIKeys;
-  export import APIKeyCreateResponse = API.APIKeyCreateResponse;
-  export import APIKeyRetrieveResponse = API.APIKeyRetrieveResponse;
-  export import APIKeyUpdateResponse = API.APIKeyUpdateResponse;
-  export import APIKeyListResponse = API.APIKeyListResponse;
-  export import APIKeyDeleteResponse = API.APIKeyDeleteResponse;
-  export import APIKeyCreateParams = API.APIKeyCreateParams;
-  export import APIKeyUpdateParams = API.APIKeyUpdateParams;
+  export { Shared as Shared, type Error as Error, type ErrorResponse as ErrorResponse };
 
-  export import Domains = API.Domains;
-  export import DomainCreateResponse = API.DomainCreateResponse;
-  export import DomainRetrieveResponse = API.DomainRetrieveResponse;
-  export import DomainUpdateResponse = API.DomainUpdateResponse;
-  export import DomainListResponse = API.DomainListResponse;
-  export import DomainDeleteResponse = API.DomainDeleteResponse;
-  export import DomainCreateParams = API.DomainCreateParams;
-  export import DomainUpdateParams = API.DomainUpdateParams;
+  export {
+    APIKeys as APIKeys,
+    type APIKeyCreateResponse as APIKeyCreateResponse,
+    type APIKeyRetrieveResponse as APIKeyRetrieveResponse,
+    type APIKeyUpdateResponse as APIKeyUpdateResponse,
+    type APIKeyListResponse as APIKeyListResponse,
+    type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyUpdateParams as APIKeyUpdateParams,
+  };
 
-  export import Emails = API.Emails;
-  export import EmailRetrieveResponse = API.EmailRetrieveResponse;
-  export import EmailListResponse = API.EmailListResponse;
-  export import EmailBulkResponse = API.EmailBulkResponse;
-  export import EmailCancelResponse = API.EmailCancelResponse;
-  export import EmailSendResponse = API.EmailSendResponse;
-  export import EmailBulkParams = API.EmailBulkParams;
-  export import EmailSendParams = API.EmailSendParams;
+  export {
+    Domains as Domains,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
+    type DomainUpdateResponse as DomainUpdateResponse,
+    type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainCreateParams as DomainCreateParams,
+    type DomainUpdateParams as DomainUpdateParams,
+  };
 
-  export import Webhooks = API.Webhooks;
-  export import WebhookCreateResponse = API.WebhookCreateResponse;
-  export import WebhookRetrieveResponse = API.WebhookRetrieveResponse;
-  export import WebhookUpdateResponse = API.WebhookUpdateResponse;
-  export import WebhookListResponse = API.WebhookListResponse;
-  export import WebhookDeleteResponse = API.WebhookDeleteResponse;
-  export import WebhookCreateParams = API.WebhookCreateParams;
-  export import WebhookUpdateParams = API.WebhookUpdateParams;
+  export {
+    Emails as Emails,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailListResponse as EmailListResponse,
+    type EmailBulkResponse as EmailBulkResponse,
+    type EmailCancelResponse as EmailCancelResponse,
+    type EmailSendResponse as EmailSendResponse,
+    type EmailBulkParams as EmailBulkParams,
+    type EmailSendParams as EmailSendParams,
+  };
 
-  export import Organizations = API.Organizations;
-  export import OrganizationRetrieveResponse = API.OrganizationRetrieveResponse;
-  export import OrganizationListResponse = API.OrganizationListResponse;
+  export {
+    Webhooks as Webhooks,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+  };
 
-  export import Account = API.Account;
-  export import AccountRetrieveResponse = API.AccountRetrieveResponse;
-  export import AccountUpdateResponse = API.AccountUpdateResponse;
-  export import AccountUpdateParams = API.AccountUpdateParams;
+  export {
+    Organizations as Organizations,
+    type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
+    type OrganizationListResponse as OrganizationListResponse,
+  };
+
+  export {
+    Account as Account,
+    type AccountRetrieveResponse as AccountRetrieveResponse,
+    type AccountUpdateResponse as AccountUpdateResponse,
+    type AccountUpdateParams as AccountUpdateParams,
+  };
 }
 
 export default Nuntly;
