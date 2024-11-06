@@ -10,7 +10,7 @@ const client = new Nuntly({
 
 describe('resource domains', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.domains.create({ name: 'acme.com' });
+    const responsePromise = client.domains.create({ name: 'acme.com', region: 'eu-west-1' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

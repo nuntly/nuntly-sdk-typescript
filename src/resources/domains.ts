@@ -92,6 +92,11 @@ export interface DomainCreateResponse {
   open_tracking: boolean;
 
   /**
+   * The region of the domain
+   */
+  region: 'eu-west-1';
+
+  /**
    * The records for your domain
    */
   sending_records: Array<DomainCreateResponse.SendingRecord>;
@@ -110,11 +115,6 @@ export interface DomainCreateResponse {
    * The date of the lastest verification of the status
    */
   status_at: string;
-
-  /**
-   * The region of the domain
-   */
-  region?: 'eu-west-1';
 }
 
 export namespace DomainCreateResponse {
@@ -139,6 +139,11 @@ export namespace DomainCreateResponse {
      * The name of the record.
      */
     name: string;
+
+    /**
+     * The region of the record
+     */
+    region: 'eu-west-1';
 
     /**
      * The status of the record
@@ -176,11 +181,6 @@ export namespace DomainCreateResponse {
      * indicating higher priority for email delivery
      */
     priority?: string;
-
-    /**
-     * The region of the record
-     */
-    region?: 'eu-west-1';
 
     /**
      * A unique identifier in DKIM record to create CNAME records for verifying domain
@@ -226,6 +226,11 @@ export interface DomainRetrieveResponse {
   open_tracking: boolean;
 
   /**
+   * The region of the domain
+   */
+  region: 'eu-west-1';
+
+  /**
    * The records for your domain
    */
   sending_records: Array<DomainRetrieveResponse.SendingRecord>;
@@ -244,11 +249,6 @@ export interface DomainRetrieveResponse {
    * The date of the lastest verification of the status
    */
   status_at: string;
-
-  /**
-   * The region of the domain
-   */
-  region?: 'eu-west-1';
 }
 
 export namespace DomainRetrieveResponse {
@@ -273,6 +273,11 @@ export namespace DomainRetrieveResponse {
      * The name of the record.
      */
     name: string;
+
+    /**
+     * The region of the record
+     */
+    region: 'eu-west-1';
 
     /**
      * The status of the record
@@ -310,11 +315,6 @@ export namespace DomainRetrieveResponse {
      * indicating higher priority for email delivery
      */
     priority?: string;
-
-    /**
-     * The region of the record
-     */
-    region?: 'eu-west-1';
 
     /**
      * A unique identifier in DKIM record to create CNAME records for verifying domain
@@ -381,6 +381,11 @@ export namespace DomainListResponse {
     name: string;
 
     /**
+     * The region of the domain
+     */
+    region: 'eu-west-1';
+
+    /**
      * The sending status for the domain
      */
     sending_status: 'enabled' | 'disabled';
@@ -394,11 +399,6 @@ export namespace DomainListResponse {
      * The date of the lastest verification of the status
      */
     status_at: string;
-
-    /**
-     * The region of the domain
-     */
-    region?: 'eu-west-1';
   }
 }
 
@@ -418,7 +418,7 @@ export interface DomainCreateParams {
   /**
    * The region of the domain
    */
-  region?: 'eu-west-1';
+  region: 'eu-west-1';
 }
 
 export interface DomainUpdateParams {
