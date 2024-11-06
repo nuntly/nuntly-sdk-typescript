@@ -138,15 +138,13 @@ export namespace EmailRetrieveResponse {
   }
 }
 
-export interface EmailListResponse {
-  /**
-   * The emails
-   */
-  emails: Array<EmailListResponse.Email>;
-}
+/**
+ * The emails
+ */
+export type EmailListResponse = Array<EmailListResponse.EmailListResponseItem>;
 
 export namespace EmailListResponse {
-  export interface Email {
+  export interface EmailListResponseItem {
     /**
      * The id of the email
      */
@@ -187,7 +185,7 @@ export namespace EmailListResponse {
      */
     context?: unknown;
 
-    desired_delivery?: Email.DesiredDelivery;
+    desired_delivery?: EmailListResponseItem.DesiredDelivery;
 
     /**
      * The headers to add to the email
@@ -208,10 +206,10 @@ export namespace EmailListResponse {
     /**
      * The tags to add to the email
      */
-    tags?: Array<Email.Tag>;
+    tags?: Array<EmailListResponseItem.Tag>;
   }
 
-  export namespace Email {
+  export namespace EmailListResponseItem {
     export interface DesiredDelivery {
       delivery_time: string;
 
