@@ -62,6 +62,26 @@ export interface WebhookCreateResponse {
    * The id of the webhook
    */
   id: string;
+
+  /**
+   * The endpoint URL of the webhook
+   */
+  endpoint_url: string;
+
+  /**
+   * The list of events to enable for this webhook
+   */
+  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+
+  /**
+   * The status of the webhook.
+   */
+  status: 'enabled' | 'disabled' | 'revoked';
+
+  /**
+   * The name of the webhook
+   */
+  name?: string;
 }
 
 export interface WebhookRetrieveResponse {
