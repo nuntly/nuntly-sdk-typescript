@@ -74,6 +74,11 @@ export interface WebhookCreateResponse {
   events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
 
   /**
+   * The signing secret of the webhook.
+   */
+  signing_secret: string;
+
+  /**
    * The status of the webhook.
    */
   status: 'enabled' | 'disabled' | 'revoked';
