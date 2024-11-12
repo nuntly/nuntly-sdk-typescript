@@ -225,25 +225,6 @@ export class Nuntly extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-export {
-  NuntlyError,
-  APIError,
-  APIConnectionError,
-  APIConnectionTimeoutError,
-  APIUserAbortError,
-  NotFoundError,
-  ConflictError,
-  RateLimitError,
-  BadRequestError,
-  AuthenticationError,
-  InternalServerError,
-  PermissionDeniedError,
-  UnprocessableEntityError,
-} from './error';
-
-export import toFile = Uploads.toFile;
-export import fileFromPath = Uploads.fileFromPath;
-
 Nuntly.Shared = Shared;
 Nuntly.APIKeys = APIKeys;
 Nuntly.Domains = Domains;
@@ -251,7 +232,6 @@ Nuntly.Emails = Emails;
 Nuntly.Webhooks = Webhooks;
 Nuntly.Organizations = Organizations;
 Nuntly.Account = Account;
-
 export declare namespace Nuntly {
   export type RequestOptions = Core.RequestOptions;
 
@@ -314,5 +294,22 @@ export declare namespace Nuntly {
     type AccountUpdateParams as AccountUpdateParams,
   };
 }
+
+export { toFile, fileFromPath } from 'nuntly/uploads';
+export {
+  NuntlyError,
+  APIError,
+  APIConnectionError,
+  APIConnectionTimeoutError,
+  APIUserAbortError,
+  NotFoundError,
+  ConflictError,
+  RateLimitError,
+  BadRequestError,
+  AuthenticationError,
+  InternalServerError,
+  PermissionDeniedError,
+  UnprocessableEntityError,
+} from 'nuntly/error';
 
 export default Nuntly;
