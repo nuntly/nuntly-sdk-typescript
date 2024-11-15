@@ -295,7 +295,7 @@ export declare namespace Nuntly {
   };
 }
 
-export { toFile, fileFromPath } from 'nuntly/uploads';
+export { toFile, fileFromPath } from './uploads';
 export {
   NuntlyError,
   APIError,
@@ -310,6 +310,6 @@ export {
   InternalServerError,
   PermissionDeniedError,
   UnprocessableEntityError,
-} from 'nuntly/error';
+} from './error';
 
 export default Nuntly;
