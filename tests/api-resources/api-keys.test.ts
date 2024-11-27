@@ -35,7 +35,7 @@ describe('resource apiKeys', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.apiKeys.retrieve('ak_pdGukGd4BTmHj8dscBDE5Mc9');
+    const responsePromise = client.apiKeys.retrieve('apk_pdGukGd4BTmHj8dscBDE5Mc9');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,7 +48,7 @@ describe('resource apiKeys', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.apiKeys.retrieve('ak_pdGukGd4BTmHj8dscBDE5Mc9', { path: '/_stainless_unknown_path' }),
+      client.apiKeys.retrieve('apk_pdGukGd4BTmHj8dscBDE5Mc9', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 

@@ -124,6 +124,11 @@ export interface APIKeyRetrieveResponse {
   created_by: string;
 
   /**
+   * The kind of object returned
+   */
+  kind: string;
+
+  /**
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at: string;
@@ -134,9 +139,19 @@ export interface APIKeyRetrieveResponse {
   modified_by: string;
 
   /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
+
+  /**
    * The status of the api key
    */
   status: 'enabled' | 'disabled' | 'revoked';
+
+  /**
+   * The id of the user
+   */
+  user_id: string;
 
   /**
    * The name of the api key
@@ -179,6 +194,11 @@ export namespace APIKeyListResponse {
     created_by: string;
 
     /**
+     * The kind of object returned
+     */
+    kind: string;
+
+    /**
      * Date at which the object was modified (ISO 8601 format)
      */
     modified_at: string;
@@ -189,9 +209,19 @@ export namespace APIKeyListResponse {
     modified_by: string;
 
     /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
+
+    /**
      * The status of the api key
      */
     status: 'enabled' | 'disabled' | 'revoked';
+
+    /**
+     * The id of the user
+     */
+    user_id: string;
 
     /**
      * The name of the api key

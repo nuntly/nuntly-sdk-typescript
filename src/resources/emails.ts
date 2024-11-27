@@ -69,7 +69,7 @@ export interface EmailRetrieveResponse {
   /**
    * The status of the email.
    */
-  status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'blocked';
+  status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'rejected';
 
   /**
    * The primary recipient(s) of the email
@@ -163,7 +163,7 @@ export namespace EmailListResponse {
     /**
      * The status of the email.
      */
-    status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'blocked';
+    status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'rejected';
 
     /**
      * The primary recipient(s) of the email
