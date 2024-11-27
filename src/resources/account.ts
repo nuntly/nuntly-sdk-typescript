@@ -25,6 +25,21 @@ export class Account extends APIResource {
 
 export interface AccountRetrieveResponse {
   /**
+   * The id of the user
+   */
+  id: string;
+
+  /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
+
+  /**
+   * The user who created the object
+   */
+  created_by: string;
+
+  /**
    * The display name
    */
   display_name: string;
@@ -35,16 +50,36 @@ export interface AccountRetrieveResponse {
   email: string;
 
   /**
-   * The id of the user
+   * The kind of object returned
    */
-  user_id: string;
+  kind: string;
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
+
+  /**
+   * The profile picture of the user
+   */
+  picture?: string;
 }
 
 export interface AccountUpdateResponse {
   /**
    * The id of the user
    */
-  user_id: string;
+  id: string;
 }
 
 export interface AccountUpdateParams {
