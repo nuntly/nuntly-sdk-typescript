@@ -52,7 +52,7 @@ export interface AccountRetrieveResponse {
   /**
    * The kind of object returned
    */
-  kind: string;
+  kind: 'user';
 
   /**
    * Date at which the object was modified (ISO 8601 format)
