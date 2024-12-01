@@ -50,8 +50,18 @@ describe('resource emails', () => {
   test('bulk: only required params', async () => {
     const responsePromise = client.emails.bulk({
       emails: [
-        { from: 'tomlinson@bbn-tenexa.com', to: 'hello@world.net' },
-        { from: 'hello@chatgpt.com', to: 'you@world.net' },
+        {
+          from: 'tomlinson@bbn-tenexa.com',
+          region: 'eu-west-1',
+          subject: 'First email',
+          to: 'hello@world.net',
+        },
+        {
+          from: 'hello@chatgpt.com',
+          region: 'eu-west-1',
+          subject: 'Welcome to ChatGPT',
+          to: 'you@world.net',
+        },
       ],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -68,6 +78,8 @@ describe('resource emails', () => {
       emails: [
         {
           from: 'tomlinson@bbn-tenexa.com',
+          region: 'eu-west-1',
+          subject: 'First email',
           to: 'hello@world.net',
           bcc: ['string'],
           cc: ['string'],
@@ -76,12 +88,13 @@ describe('resource emails', () => {
           headers: { foo: 'string' },
           html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<p>',
           reply_to: ['string'],
-          subject: 'First email',
           tags: [{ name: 'name', value: 'value' }],
           text: 'text',
         },
         {
           from: 'hello@chatgpt.com',
+          region: 'eu-west-1',
+          subject: 'Welcome to ChatGPT',
           to: 'you@world.net',
           bcc: ['string'],
           cc: ['string'],
@@ -90,7 +103,6 @@ describe('resource emails', () => {
           headers: { foo: 'string' },
           html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<p>',
           reply_to: ['string'],
-          subject: 'Welcome to ChatGPT',
           tags: [{ name: 'name', value: 'value' }],
           text: 'text',
         },
@@ -103,6 +115,7 @@ describe('resource emails', () => {
         from: 'from',
         headers: { foo: 'string' },
         html: 'html',
+        region: 'eu-west-1',
         reply_to: ['string'],
         subject: 'subject',
         tags: [{ name: 'name', value: 'value' }],
@@ -132,7 +145,12 @@ describe('resource emails', () => {
   });
 
   test('send: only required params', async () => {
-    const responsePromise = client.emails.send({ from: 'tomlinson@bbn-tenexa.com', to: 'hello@world.net' });
+    const responsePromise = client.emails.send({
+      from: 'tomlinson@bbn-tenexa.com',
+      region: 'eu-west-1',
+      subject: 'First email',
+      to: 'hello@world.net',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -145,6 +163,8 @@ describe('resource emails', () => {
   test('send: required and optional params', async () => {
     const response = await client.emails.send({
       from: 'tomlinson@bbn-tenexa.com',
+      region: 'eu-west-1',
+      subject: 'First email',
       to: 'hello@world.net',
       attachments: [{ content: 'content', content_type: 'content_type', filename: 'filename', path: 'path' }],
       bcc: ['string'],
@@ -154,7 +174,6 @@ describe('resource emails', () => {
       headers: { foo: 'string' },
       html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<p>',
       reply_to: ['string'],
-      subject: 'First email',
       tags: [{ name: 'name', value: 'value' }],
       text: 'text',
     });

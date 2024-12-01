@@ -46,7 +46,7 @@ export interface MembershipListResponse {
 export namespace MembershipListResponse {
   export interface Invitation {
     /**
-     * The id of the organization
+     * The id of the invitation
      */
     id: string;
 
@@ -55,18 +55,47 @@ export namespace MembershipListResponse {
      */
     created_at: string;
 
+    /**
+     * The user who created the object
+     */
+    created_by: string;
+
+    /**
+     * The e-mail to send an invitation
+     */
     email: string;
 
     invitation_expired_at: string;
 
+    /**
+     * The inviter e-mail
+     */
     inviter_email: string;
 
-    kind: string;
+    /**
+     * The kind of object returned
+     */
+    kind: 'invitation';
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by: string;
 
     /**
      * The id of the organization
      */
     org_id: string;
+
+    /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
 
     /**
      * The status of the invitation
@@ -85,11 +114,20 @@ export namespace MembershipListResponse {
      */
     created_by: string;
 
+    /**
+     * The display name of the organization
+     */
     display_name: string;
 
+    /**
+     * The e-mail to send an invitation
+     */
     email: string;
 
-    kind: string;
+    /**
+     * The kind of object returned
+     */
+    kind: 'org-membership';
 
     /**
      * Date at which the object was modified (ISO 8601 format)
@@ -101,25 +139,46 @@ export namespace MembershipListResponse {
      */
     modified_by: string;
 
+    /**
+     * The id of the organization
+     */
     org_id: string;
 
     /**
-     * The role of the membership
+     * The region of the related data
+     */
+    region: 'eu-west-1';
+
+    /**
+     * The role in the organization
      */
     role: 'owner' | 'member';
 
+    /**
+     * The status of the membership
+     */
+    status: 'active' | 'pending' | 'revoked' | 'suspended';
+
+    /**
+     * The id of the account
+     */
     user_id: string;
   }
 }
 
 export interface MembershipRevokeResponse {
   /**
+   * The kind of object returned
+   */
+  kind: 'org-membership';
+
+  /**
    * The id of the organization
    */
   org_id: string;
 
   /**
-   * The id of the organization
+   * The id of the account
    */
   user_id: string;
 }

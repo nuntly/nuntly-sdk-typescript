@@ -64,6 +64,16 @@ export interface WebhookCreateResponse {
   id: string;
 
   /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
+
+  /**
+   * The user who created the object
+   */
+  created_by: string;
+
+  /**
    * The endpoint URL of the webhook
    */
   endpoint_url: string;
@@ -72,6 +82,26 @@ export interface WebhookCreateResponse {
    * The list of events to enable for this webhook
    */
   events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'webhook';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
   /**
    * The signing secret of the webhook.
@@ -116,6 +146,11 @@ export interface WebhookRetrieveResponse {
   events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
 
   /**
+   * The kind of object returned
+   */
+  kind: 'webhook';
+
+  /**
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at: string;
@@ -124,6 +159,11 @@ export interface WebhookRetrieveResponse {
    * The last user who modified the object
    */
   modified_by: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
   /**
    * The status of the webhook.
@@ -143,24 +183,9 @@ export interface WebhookUpdateResponse {
   id: string;
 
   /**
-   * The list of events to enable for this webhook
+   * The kind of object returned
    */
-  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
-
-  /**
-   * The status of the webhook.
-   */
-  status: 'enabled' | 'disabled' | 'revoked';
-
-  /**
-   * The endpoint URL of the webhook
-   */
-  endpoint_url?: string;
-
-  /**
-   * The name of the webhook
-   */
-  name?: string;
+  kind: 'webhook';
 }
 
 /**
@@ -198,6 +223,11 @@ export namespace WebhookListResponse {
     >;
 
     /**
+     * The kind of object returned
+     */
+    kind: 'webhook';
+
+    /**
      * Date at which the object was modified (ISO 8601 format)
      */
     modified_at: string;
@@ -206,6 +236,11 @@ export namespace WebhookListResponse {
      * The last user who modified the object
      */
     modified_by: string;
+
+    /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
 
     /**
      * The status of the webhook.
@@ -224,6 +259,11 @@ export interface WebhookDeleteResponse {
    * The id of the webhook
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'webhook';
 }
 
 export interface WebhookCreateParams {

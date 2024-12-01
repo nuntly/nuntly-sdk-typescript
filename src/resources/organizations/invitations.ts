@@ -37,14 +37,24 @@ export class Invitations extends APIResource {
 
 export interface InvitationDeleteResponse {
   /**
-   * The id of the organization
+   * The id of the invitation
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'invitation';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 export interface InvitationSendResponse {
   /**
-   * The id of the organization
+   * The id of the invitation
    */
   id: string;
 
@@ -53,18 +63,47 @@ export interface InvitationSendResponse {
    */
   created_at: string;
 
+  /**
+   * The user who created the object
+   */
+  created_by: string;
+
+  /**
+   * The e-mail to send an invitation
+   */
   email: string;
 
   invitation_expired_at: string;
 
+  /**
+   * The inviter e-mail
+   */
   inviter_email: string;
 
-  kind: string;
+  /**
+   * The kind of object returned
+   */
+  kind: 'invitation';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by: string;
 
   /**
    * The id of the organization
    */
   org_id: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
   /**
    * The status of the invitation

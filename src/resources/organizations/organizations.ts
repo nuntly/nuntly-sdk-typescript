@@ -28,7 +28,7 @@ export class Organizations extends APIResource {
   }
 
   /**
-   * Return the organizations
+   * Return the organizations that the current user is a member
    */
   list(options?: Core.RequestOptions): Core.APIPromise<OrganizationListResponse> {
     return (
@@ -54,6 +54,11 @@ export interface OrganizationRetrieveResponse {
   display_name: string;
 
   /**
+   * The kind of object returned
+   */
+  kind: 'organization';
+
+  /**
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at: string;
@@ -67,6 +72,11 @@ export interface OrganizationRetrieveResponse {
    * The id of the organization
    */
   org_id: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
   /**
    * The status of the organization
@@ -97,6 +107,11 @@ export namespace OrganizationListResponse {
     display_name: string;
 
     /**
+     * The kind of object returned
+     */
+    kind: 'organization';
+
+    /**
      * Date at which the object was modified (ISO 8601 format)
      */
     modified_at: string;
@@ -110,6 +125,11 @@ export namespace OrganizationListResponse {
      * The id of the organization
      */
     org_id: string;
+
+    /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
 
     /**
      * The status of the organization
