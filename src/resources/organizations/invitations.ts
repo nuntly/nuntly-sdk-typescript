@@ -37,19 +37,19 @@ export class Invitations extends APIResource {
 
 export interface InvitationDeleteResponse {
   /**
-   * The id of the invitation
+   * The id of the organization
    */
   id: string;
+
+  /**
+   * The id of the invitation
+   */
+  invitation_id: string;
 
   /**
    * The kind of object returned
    */
   kind: 'invitation';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
 }
 
 export interface InvitationSendResponse {
