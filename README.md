@@ -32,8 +32,9 @@ const client = new Nuntly({
 async function main() {
   const email = await client.emails.send({
     from: 'tomlinson@bbn-tenexa.com',
-    to: 'hello@world.net',
+    region: 'eu-west-1',
     subject: 'First Email',
+    to: 'hello@world.net',
     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   });
 

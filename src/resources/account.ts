@@ -80,6 +80,11 @@ export interface AccountUpdateResponse {
    * The id of the user
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'user';
 }
 
 export interface AccountUpdateParams {

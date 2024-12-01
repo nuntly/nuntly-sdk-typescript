@@ -14,7 +14,7 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Return the domain with the given ID
+   * Return the domain with the given id
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DomainRetrieveResponse> {
     return (
@@ -75,6 +75,11 @@ export interface DomainCreateResponse {
   created_by: string;
 
   /**
+   * The kind of object returned
+   */
+  kind: 'domain';
+
+  /**
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at: string;
@@ -92,7 +97,7 @@ export interface DomainCreateResponse {
   open_tracking: boolean;
 
   /**
-   * The region of the domain
+   * The region of the related data
    */
   region: 'eu-west-1';
 
@@ -120,6 +125,11 @@ export interface DomainCreateResponse {
 export namespace DomainCreateResponse {
   export interface SendingRecord {
     /**
+     * Same value as "value" except for DKIM due of length of the value
+     */
+    display: string;
+
+    /**
      * Same value as "value" except for MX due of the priority
      */
     expected: string;
@@ -136,12 +146,17 @@ export namespace DomainCreateResponse {
     group: 'DKIM' | 'SPF' | 'MX' | 'DMARC';
 
     /**
+     * The kind of object returned
+     */
+    kind: 'record';
+
+    /**
      * The name of the record.
      */
     name: string;
 
     /**
-     * The region of the record
+     * The region of the related data
      */
     region: 'eu-west-1';
 
@@ -169,11 +184,6 @@ export namespace DomainCreateResponse {
      * The value of a DNS record is the data that the record points to
      */
     value: string;
-
-    /**
-     * Same value as "value" except for DKIM due of length of the value
-     */
-    display?: string;
 
     /**
      * Priority in a DNS record, typically used in MX (Mail Exchange) records,
@@ -209,6 +219,11 @@ export interface DomainRetrieveResponse {
   created_by: string;
 
   /**
+   * The kind of object returned
+   */
+  kind: 'domain';
+
+  /**
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at: string;
@@ -226,7 +241,7 @@ export interface DomainRetrieveResponse {
   open_tracking: boolean;
 
   /**
-   * The region of the domain
+   * The region of the related data
    */
   region: 'eu-west-1';
 
@@ -254,6 +269,11 @@ export interface DomainRetrieveResponse {
 export namespace DomainRetrieveResponse {
   export interface SendingRecord {
     /**
+     * Same value as "value" except for DKIM due of length of the value
+     */
+    display: string;
+
+    /**
      * Same value as "value" except for MX due of the priority
      */
     expected: string;
@@ -270,12 +290,17 @@ export namespace DomainRetrieveResponse {
     group: 'DKIM' | 'SPF' | 'MX' | 'DMARC';
 
     /**
+     * The kind of object returned
+     */
+    kind: 'record';
+
+    /**
      * The name of the record.
      */
     name: string;
 
     /**
-     * The region of the record
+     * The region of the related data
      */
     region: 'eu-west-1';
 
@@ -305,11 +330,6 @@ export namespace DomainRetrieveResponse {
     value: string;
 
     /**
-     * Same value as "value" except for DKIM due of length of the value
-     */
-    display?: string;
-
-    /**
      * Priority in a DNS record, typically used in MX (Mail Exchange) records,
      * specifies the order in which mail servers should be used, with lower values
      * indicating higher priority for email delivery
@@ -329,6 +349,11 @@ export interface DomainUpdateResponse {
    * The id of the domain
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'domain';
 
   /**
    * Emit an event for each time the recipient clicks a link in the email
@@ -364,6 +389,11 @@ export namespace DomainListResponse {
     created_by: string;
 
     /**
+     * The kind of object returned
+     */
+    kind: 'domain';
+
+    /**
      * Date at which the object was modified (ISO 8601 format)
      */
     modified_at: string;
@@ -379,7 +409,7 @@ export namespace DomainListResponse {
     name: string;
 
     /**
-     * The region of the domain
+     * The region of the related data
      */
     region: 'eu-west-1';
 
@@ -405,6 +435,11 @@ export interface DomainDeleteResponse {
    * The id of the domain
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'domain';
 }
 
 export interface DomainCreateParams {
@@ -414,7 +449,7 @@ export interface DomainCreateParams {
   name: string;
 
   /**
-   * The region of the domain
+   * The region of the related data
    */
   region: 'eu-west-1';
 }

@@ -62,14 +62,49 @@ export interface EmailRetrieveResponse {
   created_at: string;
 
   /**
+   * The user who created the object
+   */
+  created_by: string;
+
+  /**
    * The e-mail address of the sender
    */
   from: string;
 
   /**
+   * The kind of object returned
+   */
+  kind: 'email';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
+
+  /**
    * The status of the email.
    */
   status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'rejected';
+
+  /**
+   * Date xhen the status changed
+   */
+  status_at: string;
+
+  /**
+   * The subject of the e-mail
+   */
+  subject: string;
 
   /**
    * The primary recipient(s) of the email
@@ -80,6 +115,11 @@ export interface EmailRetrieveResponse {
    * The blind carbon copy recipient(s) of the email
    */
   bcc?: Array<string> | string;
+
+  /**
+   * The id of the email
+   */
+  bulk_id?: string;
 
   /**
    * The carbon copy recipient(s) of the email
@@ -103,11 +143,6 @@ export interface EmailRetrieveResponse {
    * response will go to this address instead of the sender's email address
    */
   reply_to?: Array<string> | string;
-
-  /**
-   * The subject of the e-mail
-   */
-  subject?: string;
 
   /**
    * The tags to add to the email
@@ -156,14 +191,49 @@ export namespace EmailListResponse {
     created_at: string;
 
     /**
+     * The user who created the object
+     */
+    created_by: string;
+
+    /**
      * The e-mail address of the sender
      */
     from: string;
 
     /**
+     * The kind of object returned
+     */
+    kind: 'email';
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by: string;
+
+    /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
+
+    /**
      * The status of the email.
      */
     status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'rejected';
+
+    /**
+     * Date xhen the status changed
+     */
+    status_at: string;
+
+    /**
+     * The subject of the e-mail
+     */
+    subject: string;
 
     /**
      * The primary recipient(s) of the email
@@ -174,6 +244,11 @@ export namespace EmailListResponse {
      * The blind carbon copy recipient(s) of the email
      */
     bcc?: Array<string> | string;
+
+    /**
+     * The id of the email
+     */
+    bulk_id?: string;
 
     /**
      * The carbon copy recipient(s) of the email
@@ -197,11 +272,6 @@ export namespace EmailListResponse {
      * response will go to this address instead of the sender's email address
      */
     reply_to?: Array<string> | string;
-
-    /**
-     * The subject of the e-mail
-     */
-    subject?: string;
 
     /**
      * The tags to add to the email
@@ -251,6 +321,11 @@ export interface EmailCancelResponse {
    * The id of the email
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'email';
 }
 
 export interface EmailSendResponse {
@@ -258,6 +333,11 @@ export interface EmailSendResponse {
    * The id of the email
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'email';
 
   /**
    * The status of the email.
@@ -283,6 +363,16 @@ export namespace EmailBulkParams {
      * The e-mail address of the sender
      */
     from: string;
+
+    /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
+
+    /**
+     * The subject of the e-mail
+     */
+    subject: string;
 
     /**
      * The primary recipient(s) of the email
@@ -321,11 +411,6 @@ export namespace EmailBulkParams {
      * response will go to this address instead of the sender's email address
      */
     reply_to?: Array<string> | string;
-
-    /**
-     * The subject of the e-mail
-     */
-    subject?: string;
 
     /**
      * The tags to add to the email
@@ -398,6 +483,11 @@ export namespace EmailBulkParams {
     html?: string;
 
     /**
+     * The region of the related data
+     */
+    region?: 'eu-west-1';
+
+    /**
      * The email address where replies should be sent. If a recipient replies, the
      * response will go to this address instead of the sender's email address
      */
@@ -450,6 +540,16 @@ export interface EmailSendParams {
   from: string;
 
   /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
+
+  /**
+   * The subject of the e-mail
+   */
+  subject: string;
+
+  /**
    * The primary recipient(s) of the email
    */
   to: Array<string> | string;
@@ -491,11 +591,6 @@ export interface EmailSendParams {
    * response will go to this address instead of the sender's email address
    */
   reply_to?: Array<string> | string;
-
-  /**
-   * The subject of the e-mail
-   */
-  subject?: string;
 
   /**
    * The tags to add to the email

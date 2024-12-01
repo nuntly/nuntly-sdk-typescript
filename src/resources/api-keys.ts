@@ -189,6 +189,11 @@ export interface APIKeyUpdateResponse {
    * The id of the api key
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'api-key';
 }
 
 /**
@@ -260,6 +265,11 @@ export interface APIKeyDeleteResponse {
    * The id of the api key
    */
   id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'api-key';
 }
 
 export interface APIKeyCreateParams {
