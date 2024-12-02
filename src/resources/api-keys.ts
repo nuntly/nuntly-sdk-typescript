@@ -107,6 +107,11 @@ export interface APIKeyCreateResponse {
   modified_by: string;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -164,6 +169,11 @@ export interface APIKeyRetrieveResponse {
   modified_by: string;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -194,6 +204,11 @@ export interface APIKeyUpdateResponse {
    * The kind of object returned
    */
   kind: 'api-key';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 /**
@@ -239,6 +254,11 @@ export namespace APIKeyListResponse {
     modified_by: string;
 
     /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
      * The region of the related data
      */
     region: 'eu-west-1';
@@ -270,6 +290,11 @@ export interface APIKeyDeleteResponse {
    * The kind of object returned
    */
   kind: 'api-key';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 export interface APIKeyCreateParams {
