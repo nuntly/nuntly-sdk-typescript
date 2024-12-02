@@ -97,6 +97,11 @@ export interface DomainCreateResponse {
   open_tracking: boolean;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -241,6 +246,11 @@ export interface DomainRetrieveResponse {
   open_tracking: boolean;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -356,6 +366,11 @@ export interface DomainUpdateResponse {
   kind: 'domain';
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * Emit an event for each time the recipient clicks a link in the email
    */
   click_tracking?: boolean;
@@ -409,6 +424,11 @@ export namespace DomainListResponse {
     name: string;
 
     /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
      * The region of the related data
      */
     region: 'eu-west-1';
@@ -440,6 +460,11 @@ export interface DomainDeleteResponse {
    * The kind of object returned
    */
   kind: 'domain';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 export interface DomainCreateParams {

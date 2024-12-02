@@ -87,6 +87,11 @@ export interface EmailRetrieveResponse {
   modified_by: string;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -216,6 +221,11 @@ export namespace EmailListResponse {
     modified_by: string;
 
     /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
      * The region of the related data
      */
     region: 'eu-west-1';
@@ -326,6 +336,11 @@ export interface EmailCancelResponse {
    * The kind of object returned
    */
   kind: 'email';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 export interface EmailSendResponse {
@@ -338,6 +353,11 @@ export interface EmailSendResponse {
    * The kind of object returned
    */
   kind: 'email';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
   /**
    * The status of the email.

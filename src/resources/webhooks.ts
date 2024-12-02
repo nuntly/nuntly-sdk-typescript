@@ -99,6 +99,11 @@ export interface WebhookCreateResponse {
   modified_by: string;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -161,6 +166,11 @@ export interface WebhookRetrieveResponse {
   modified_by: string;
 
   /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
    * The region of the related data
    */
   region: 'eu-west-1';
@@ -186,6 +196,11 @@ export interface WebhookUpdateResponse {
    * The kind of object returned
    */
   kind: 'webhook';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 /**
@@ -238,6 +253,11 @@ export namespace WebhookListResponse {
     modified_by: string;
 
     /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
      * The region of the related data
      */
     region: 'eu-west-1';
@@ -264,6 +284,11 @@ export interface WebhookDeleteResponse {
    * The kind of object returned
    */
   kind: 'webhook';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 }
 
 export interface WebhookCreateParams {
