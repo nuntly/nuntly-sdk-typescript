@@ -31,16 +31,6 @@ import {
   DomainUpdateResponse,
   Domains,
 } from './resources/domains';
-import {
-  EmailBulkParams,
-  EmailBulkResponse,
-  EmailCancelResponse,
-  EmailListResponse,
-  EmailRetrieveResponse,
-  EmailSendParams,
-  EmailSendResponse,
-  Emails,
-} from './resources/emails';
 import { Error, ErrorResponse, Shared } from './resources/shared';
 import {
   WebhookCreateParams,
@@ -52,6 +42,16 @@ import {
   WebhookUpdateResponse,
   Webhooks,
 } from './resources/webhooks';
+import {
+  EmailBulkParams,
+  EmailBulkResponse,
+  EmailCancelResponse,
+  EmailListResponse,
+  EmailRetrieveResponse,
+  EmailSendParams,
+  EmailSendResponse,
+  Emails,
+} from './resources/emails/emails';
 import {
   OrganizationListResponse,
   OrganizationRetrieveResponse,

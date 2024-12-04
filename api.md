@@ -45,19 +45,29 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/emails.ts">EmailRetrieveResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailListResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailBulkResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailCancelResponse</a></code>
-- <code><a href="./src/resources/emails.ts">EmailSendResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailListResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailBulkResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailCancelResponse</a></code>
+- <code><a href="./src/resources/emails/emails.ts">EmailSendResponse</a></code>
 
 Methods:
 
-- <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(id) -> EmailRetrieveResponse</code>
-- <code title="get /emails">client.emails.<a href="./src/resources/emails.ts">list</a>() -> EmailListResponse</code>
-- <code title="post /emails/bulk">client.emails.<a href="./src/resources/emails.ts">bulk</a>({ ...params }) -> EmailBulkResponse</code>
-- <code title="delete /emails/{id}">client.emails.<a href="./src/resources/emails.ts">cancel</a>(id) -> EmailCancelResponse</code>
-- <code title="post /emails">client.emails.<a href="./src/resources/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
+- <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">retrieve</a>(id) -> EmailRetrieveResponse</code>
+- <code title="get /emails">client.emails.<a href="./src/resources/emails/emails.ts">list</a>() -> EmailListResponse</code>
+- <code title="post /emails/bulk">client.emails.<a href="./src/resources/emails/emails.ts">bulk</a>({ ...params }) -> EmailBulkResponse</code>
+- <code title="delete /emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">cancel</a>(id) -> EmailCancelResponse</code>
+- <code title="post /emails">client.emails.<a href="./src/resources/emails/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
+
+## Events
+
+Types:
+
+- <code><a href="./src/resources/emails/events.ts">EventListResponse</a></code>
+
+Methods:
+
+- <code title="get /emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">list</a>(id) -> EventListResponse</code>
 
 # Webhooks
 
