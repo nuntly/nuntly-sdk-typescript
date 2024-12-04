@@ -1,9 +1,13 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import * as Core from '../core';
+import { APIResource } from '../../resource';
+import * as Core from '../../core';
+import * as EventsAPI from './events';
+import { EventListResponse, Events } from './events';
 
 export class Emails extends APIResource {
+  events: EventsAPI.Events = new EventsAPI.Events(this._client);
+
   /**
    * Return the email with the given id
    */
@@ -671,6 +675,8 @@ export namespace EmailSendParams {
   }
 }
 
+Emails.Events = Events;
+
 export declare namespace Emails {
   export {
     type EmailRetrieveResponse as EmailRetrieveResponse,
@@ -681,4 +687,6 @@ export declare namespace Emails {
     type EmailBulkParams as EmailBulkParams,
     type EmailSendParams as EmailSendParams,
   };
+
+  export { Events as Events, type EventListResponse as EventListResponse };
 }

@@ -35,7 +35,7 @@ export {
   type EmailSendResponse,
   type EmailBulkParams,
   type EmailSendParams,
-} from './emails';
+} from './emails/emails';
 export {
   Organizations,
   type OrganizationRetrieveResponse,
