@@ -148,6 +148,11 @@ export interface EmailRetrieveResponse {
   headers?: Record<string, string>;
 
   /**
+   * The id from email provider
+   */
+  message_id?: string;
+
+  /**
    * The email address where replies should be sent. If a recipient replies, the
    * response will go to this address instead of the sender's email address
    */
@@ -280,6 +285,11 @@ export namespace EmailListResponse {
      * The headers to add to the email
      */
     headers?: Record<string, string>;
+
+    /**
+     * The id from email provider
+     */
+    message_id?: string;
 
     /**
      * The email address where replies should be sent. If a recipient replies, the
