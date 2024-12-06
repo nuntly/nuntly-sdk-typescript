@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as EventsAPI from './events';
 import { EventListResponse, Events } from './events';
@@ -20,7 +21,15 @@ export class Emails extends APIResource {
   /**
    * Return a list of your last emails
    */
-  list(query: EmailListParams, options?: Core.RequestOptions): Core.APIPromise<EmailListResponse> {
+  list(query?: EmailListParams, options?: Core.RequestOptions): Core.APIPromise<EmailListResponse>;
+  list(options?: Core.RequestOptions): Core.APIPromise<EmailListResponse>;
+  list(
+    query: EmailListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<EmailListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
     return (
       this._client.get('/emails', { query, ...options }) as Core.APIPromise<{ data: EmailListResponse }>
     )._thenUnwrap((obj) => obj.data);
@@ -384,7 +393,7 @@ export interface EmailListParams {
    * The cursor for pagination, which can be populated by the `next_cursor` value of
    * the initial request
    */
-  cursor: string;
+  cursor?: string;
 }
 
 export interface EmailBulkParams {
