@@ -20,10 +20,10 @@ export class Emails extends APIResource {
   /**
    * Return a list of your last emails
    */
-  list(options?: Core.RequestOptions): Core.APIPromise<EmailListResponse> {
-    return (this._client.get('/emails', options) as Core.APIPromise<{ data: EmailListResponse }>)._thenUnwrap(
-      (obj) => obj.data,
-    );
+  list(query: EmailListParams, options?: Core.RequestOptions): Core.APIPromise<EmailListResponse> {
+    return (
+      this._client.get('/emails', { query, ...options }) as Core.APIPromise<{ data: EmailListResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -379,6 +379,14 @@ export interface EmailSendResponse {
   status: 'queued' | 'scheduled';
 }
 
+export interface EmailListParams {
+  /**
+   * The cursor for pagination, which can be populated by the `next_cursor` value of
+   * the initial request
+   */
+  cursor: string;
+}
+
 export interface EmailBulkParams {
   /**
    * The emails to send by bulk
@@ -694,6 +702,7 @@ export declare namespace Emails {
     type EmailBulkResponse as EmailBulkResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
+    type EmailListParams as EmailListParams,
     type EmailBulkParams as EmailBulkParams,
     type EmailSendParams as EmailSendParams,
   };

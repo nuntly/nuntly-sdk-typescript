@@ -3,6 +3,8 @@
 import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
+import * as Pagination from './pagination';
+import { type CursorPageParams, CursorPageResponse } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import {
@@ -46,6 +48,7 @@ import {
   EmailBulkParams,
   EmailBulkResponse,
   EmailCancelResponse,
+  EmailListParams,
   EmailListResponse,
   EmailRetrieveResponse,
   EmailSendParams,
@@ -235,6 +238,9 @@ Nuntly.Account = Account;
 export declare namespace Nuntly {
   export type RequestOptions = Core.RequestOptions;
 
+  export import CursorPage = Pagination.CursorPage;
+  export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
+
   export { Shared as Shared, type Error as Error, type ErrorResponse as ErrorResponse };
 
   export {
@@ -266,6 +272,7 @@ export declare namespace Nuntly {
     type EmailBulkResponse as EmailBulkResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
+    type EmailListParams as EmailListParams,
     type EmailBulkParams as EmailBulkParams,
     type EmailSendParams as EmailSendParams,
   };
