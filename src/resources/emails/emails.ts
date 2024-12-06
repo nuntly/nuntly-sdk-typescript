@@ -30,9 +30,7 @@ export class Emails extends APIResource {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return (
-      this._client.get('/emails', { query, ...options }) as Core.APIPromise<{ data: EmailListResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return this._client.get('/emails', { query, ...options });
   }
 
   /**
@@ -196,13 +194,17 @@ export namespace EmailRetrieveResponse {
   }
 }
 
-/**
- * The emails
- */
-export type EmailListResponse = Array<EmailListResponse.EmailListResponseItem>;
+export interface EmailListResponse {
+  /**
+   * The emails
+   */
+  data?: Array<EmailListResponse.Data>;
+
+  next_cursor?: string;
+}
 
 export namespace EmailListResponse {
-  export interface EmailListResponseItem {
+  export interface Data {
     /**
      * The id of the email
      */
@@ -288,7 +290,7 @@ export namespace EmailListResponse {
      */
     context?: unknown;
 
-    desired_delivery?: EmailListResponseItem.DesiredDelivery;
+    desired_delivery?: Data.DesiredDelivery;
 
     /**
      * The headers to add to the email
@@ -309,10 +311,10 @@ export namespace EmailListResponse {
     /**
      * The tags to add to the email
      */
-    tags?: Array<EmailListResponseItem.Tag>;
+    tags?: Array<Data.Tag>;
   }
 
-  export namespace EmailListResponseItem {
+  export namespace Data {
     export interface DesiredDelivery {
       delivery_time: string;
 
