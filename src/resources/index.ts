@@ -33,6 +33,7 @@ export {
   type EmailBulkResponse,
   type EmailCancelResponse,
   type EmailSendResponse,
+  type EmailListParams,
   type EmailBulkParams,
   type EmailSendParams,
 } from './emails/emails';

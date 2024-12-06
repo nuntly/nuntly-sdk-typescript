@@ -54,7 +54,7 @@ Types:
 Methods:
 
 - <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">retrieve</a>(id) -> EmailRetrieveResponse</code>
-- <code title="get /emails">client.emails.<a href="./src/resources/emails/emails.ts">list</a>() -> EmailListResponse</code>
+- <code title="get /emails">client.emails.<a href="./src/resources/emails/emails.ts">list</a>({ ...params }) -> EmailListResponse</code>
 - <code title="post /emails/bulk">client.emails.<a href="./src/resources/emails/emails.ts">bulk</a>({ ...params }) -> EmailBulkResponse</code>
 - <code title="delete /emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">cancel</a>(id) -> EmailCancelResponse</code>
 - <code title="post /emails">client.emails.<a href="./src/resources/emails/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
