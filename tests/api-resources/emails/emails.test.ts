@@ -29,8 +29,8 @@ describe('resource emails', () => {
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
-  test('list: only required params', async () => {
-    const responsePromise = client.emails.list({ cursor: 'cursor' });
+  test('list', async () => {
+    const responsePromise = client.emails.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -40,8 +40,18 @@ describe('resource emails', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('list: required and optional params', async () => {
-    const response = await client.emails.list({ cursor: 'cursor' });
+  test('list: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.emails.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Nuntly.NotFoundError,
+    );
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.emails.list({ cursor: 'cursor' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('bulk: only required params', async () => {
