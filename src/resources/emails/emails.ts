@@ -200,7 +200,7 @@ export interface EmailListResponse {
    */
   data?: Array<EmailListResponse.Data>;
 
-  next_cursor?: string;
+  next?: string;
 }
 
 export namespace EmailListResponse {
