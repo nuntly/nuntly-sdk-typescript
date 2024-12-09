@@ -48,7 +48,6 @@ import {
   EmailBulkParams,
   EmailBulkResponse,
   EmailCancelResponse,
-  EmailListParams,
   EmailListResponse,
   EmailRetrieveResponse,
   EmailSendParams,
@@ -272,7 +271,6 @@ export declare namespace Nuntly {
     type EmailBulkResponse as EmailBulkResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
-    type EmailListParams as EmailListParams,
     type EmailBulkParams as EmailBulkParams,
     type EmailSendParams as EmailSendParams,
   };
