@@ -79,10 +79,7 @@ export interface WebhookCreateResponse {
    */
   endpoint_url: string;
 
-  /**
-   * The list of events to enable for this webhook
-   */
-  events: SharedAPI.WebhookEventType;
+  events: Array<SharedAPI.WebhookEventType>;
 
   /**
    * The kind of object returned
@@ -146,10 +143,7 @@ export interface WebhookRetrieveResponse {
    */
   endpoint_url: string;
 
-  /**
-   * The list of events to enable for this webhook
-   */
-  events: SharedAPI.WebhookEventType;
+  events: Array<SharedAPI.WebhookEventType>;
 
   /**
    * The kind of object returned
@@ -231,10 +225,7 @@ export namespace WebhookListResponse {
      */
     endpoint_url: string;
 
-    /**
-     * The list of events to enable for this webhook
-     */
-    events: SharedAPI.WebhookEventType;
+    events: Array<SharedAPI.WebhookEventType>;
 
     /**
      * The kind of object returned
@@ -296,10 +287,7 @@ export interface WebhookCreateParams {
    */
   endpoint_url: string;
 
-  /**
-   * The list of events to enable for this webhook
-   */
-  events: SharedAPI.WebhookEventType;
+  events: Array<SharedAPI.WebhookEventType>;
 
   /**
    * The status of the webhook.
@@ -318,10 +306,7 @@ export interface WebhookUpdateParams {
    */
   endpoint_url: string;
 
-  /**
-   * The list of events to enable for this webhook
-   */
-  events: SharedAPI.WebhookEventType;
+  events: Array<SharedAPI.WebhookEventType>;
 
   /**
    * The name of the webhook
