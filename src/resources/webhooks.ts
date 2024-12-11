@@ -2,6 +2,7 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
+import * as SharedAPI from './shared';
 
 export class Webhooks extends APIResource {
   /**
@@ -81,16 +82,7 @@ export interface WebhookCreateResponse {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<
-    | 'email.sent'
-    | 'email.delivered'
-    | 'email.opened'
-    | 'email.clicked'
-    | 'email.bounced'
-    | 'email.complained'
-    | 'email.rejected'
-    | 'email.delivery_delayed'
-  >;
+  events: SharedAPI.WebhookEventType;
 
   /**
    * The kind of object returned
@@ -157,16 +149,7 @@ export interface WebhookRetrieveResponse {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<
-    | 'email.sent'
-    | 'email.delivered'
-    | 'email.opened'
-    | 'email.clicked'
-    | 'email.bounced'
-    | 'email.complained'
-    | 'email.rejected'
-    | 'email.delivery_delayed'
-  >;
+  events: SharedAPI.WebhookEventType;
 
   /**
    * The kind of object returned
@@ -251,16 +234,7 @@ export namespace WebhookListResponse {
     /**
      * The list of events to enable for this webhook
      */
-    events: Array<
-      | 'email.sent'
-      | 'email.delivered'
-      | 'email.opened'
-      | 'email.clicked'
-      | 'email.bounced'
-      | 'email.complained'
-      | 'email.rejected'
-      | 'email.delivery_delayed'
-    >;
+    events: SharedAPI.WebhookEventType;
 
     /**
      * The kind of object returned
@@ -325,16 +299,7 @@ export interface WebhookCreateParams {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<
-    | 'email.sent'
-    | 'email.delivered'
-    | 'email.opened'
-    | 'email.clicked'
-    | 'email.bounced'
-    | 'email.complained'
-    | 'email.rejected'
-    | 'email.delivery_delayed'
-  >;
+  events: SharedAPI.WebhookEventType;
 
   /**
    * The status of the webhook.
@@ -356,16 +321,7 @@ export interface WebhookUpdateParams {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<
-    | 'email.sent'
-    | 'email.delivered'
-    | 'email.opened'
-    | 'email.clicked'
-    | 'email.bounced'
-    | 'email.complained'
-    | 'email.rejected'
-    | 'email.delivery_delayed'
-  >;
+  events: SharedAPI.WebhookEventType;
 
   /**
    * The name of the webhook
