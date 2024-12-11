@@ -81,7 +81,16 @@ export interface WebhookCreateResponse {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+  events: Array<
+    | 'email.sent'
+    | 'email.delivered'
+    | 'email.opened'
+    | 'email.clicked'
+    | 'email.bounced'
+    | 'email.complained'
+    | 'email.rejected'
+    | 'email.delivery_delayed'
+  >;
 
   /**
    * The kind of object returned
@@ -148,7 +157,16 @@ export interface WebhookRetrieveResponse {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+  events: Array<
+    | 'email.sent'
+    | 'email.delivered'
+    | 'email.opened'
+    | 'email.clicked'
+    | 'email.bounced'
+    | 'email.complained'
+    | 'email.rejected'
+    | 'email.delivery_delayed'
+  >;
 
   /**
    * The kind of object returned
@@ -234,7 +252,14 @@ export namespace WebhookListResponse {
      * The list of events to enable for this webhook
      */
     events: Array<
-      'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'
+      | 'email.sent'
+      | 'email.delivered'
+      | 'email.opened'
+      | 'email.clicked'
+      | 'email.bounced'
+      | 'email.complained'
+      | 'email.rejected'
+      | 'email.delivery_delayed'
     >;
 
     /**
@@ -300,7 +325,16 @@ export interface WebhookCreateParams {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+  events: Array<
+    | 'email.sent'
+    | 'email.delivered'
+    | 'email.opened'
+    | 'email.clicked'
+    | 'email.bounced'
+    | 'email.complained'
+    | 'email.rejected'
+    | 'email.delivery_delayed'
+  >;
 
   /**
    * The status of the webhook.
@@ -322,7 +356,16 @@ export interface WebhookUpdateParams {
   /**
    * The list of events to enable for this webhook
    */
-  events: Array<'Bounce' | 'Complaint' | 'Delivery' | 'Send' | 'Reject' | 'Open' | 'Click' | 'DeliveryDelay'>;
+  events: Array<
+    | 'email.sent'
+    | 'email.delivered'
+    | 'email.opened'
+    | 'email.clicked'
+    | 'email.bounced'
+    | 'email.complained'
+    | 'email.rejected'
+    | 'email.delivery_delayed'
+  >;
 
   /**
    * The name of the webhook
