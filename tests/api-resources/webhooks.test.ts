@@ -12,7 +12,7 @@ describe('resource webhooks', () => {
   test('create: only required params', async () => {
     const responsePromise = client.webhooks.create({
       endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
-      events: ['Bounce', 'Complaint'],
+      events: ['email.sent', 'email.delivered'],
       status: 'enabled',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -27,7 +27,7 @@ describe('resource webhooks', () => {
   test('create: required and optional params', async () => {
     const response = await client.webhooks.create({
       endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
-      events: ['Bounce', 'Complaint'],
+      events: ['email.sent', 'email.delivered'],
       status: 'enabled',
       name: 'My fist webhook',
     });
@@ -54,7 +54,7 @@ describe('resource webhooks', () => {
   test('update: only required params', async () => {
     const responsePromise = client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {
       endpoint_url: 'https://webhook.site/12345678-abcd-5678-abcd-123456789012',
-      events: ['Bounce', 'Complaint', 'Delivery'],
+      events: ['email.sent', 'email.delivered'],
       name: 'My fist webhook',
       status: 'enabled',
     });
@@ -70,7 +70,7 @@ describe('resource webhooks', () => {
   test('update: required and optional params', async () => {
     const response = await client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {
       endpoint_url: 'https://webhook.site/12345678-abcd-5678-abcd-123456789012',
-      events: ['Bounce', 'Complaint', 'Delivery'],
+      events: ['email.sent', 'email.delivered'],
       name: 'My fist webhook',
       status: 'enabled',
     });
