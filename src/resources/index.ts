@@ -41,7 +41,7 @@ export {
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,
 } from './organizations/organizations';
-export { Shared, type Error, type ErrorResponse } from './shared';
+export { Shared, type Error, type ErrorResponse, type WebhookEventType } from './shared';
 export {
   Webhooks,
   type WebhookCreateResponse,

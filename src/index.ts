@@ -33,7 +33,7 @@ import {
   DomainUpdateResponse,
   Domains,
 } from './resources/domains';
-import { Error, ErrorResponse, Shared } from './resources/shared';
+import { Error, ErrorResponse, Shared, WebhookEventType } from './resources/shared';
 import {
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -240,7 +240,12 @@ export declare namespace Nuntly {
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
-  export { Shared as Shared, type Error as Error, type ErrorResponse as ErrorResponse };
+  export {
+    Shared as Shared,
+    type Error as Error,
+    type ErrorResponse as ErrorResponse,
+    type WebhookEventType as WebhookEventType,
+  };
 
   export {
     APIKeys as APIKeys,

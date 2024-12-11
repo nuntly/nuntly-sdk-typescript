@@ -43,6 +43,24 @@ export interface ErrorResponse {
   error: Error;
 }
 
+/**
+ * The list of events to enable for this webhook
+ */
+export type WebhookEventType = Array<
+  | 'email.sent'
+  | 'email.delivered'
+  | 'email.opened'
+  | 'email.clicked'
+  | 'email.bounced'
+  | 'email.complained'
+  | 'email.rejected'
+  | 'email.delivery_delayed'
+>;
+
 export declare namespace Shared {
-  export { type Error as Error, type ErrorResponse as ErrorResponse };
+  export {
+    type Error as Error,
+    type ErrorResponse as ErrorResponse,
+    type WebhookEventType as WebhookEventType,
+  };
 }
