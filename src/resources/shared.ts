@@ -44,7 +44,7 @@ export interface ErrorResponse {
 }
 
 /**
- * The list of events to enable for this webhook
+ * The webhook events
  */
 export type WebhookEventType =
   | 'email.sent'
