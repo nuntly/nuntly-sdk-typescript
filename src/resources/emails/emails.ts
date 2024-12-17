@@ -103,7 +103,16 @@ export interface EmailRetrieveResponse {
   /**
    * The status of the email.
    */
-  status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'rejected';
+  status:
+    | 'queued'
+    | 'scheduled'
+    | 'processed'
+    | 'sending'
+    | 'sent'
+    | 'delivered'
+    | 'bounced'
+    | 'canceled'
+    | 'rejected';
 
   /**
    * Date xhen the status changed
@@ -242,7 +251,16 @@ export namespace EmailListResponse {
     /**
      * The status of the email.
      */
-    status: 'queued' | 'scheduled' | 'processed' | 'sending' | 'sent' | 'delivered' | 'canceled' | 'rejected';
+    status:
+      | 'queued'
+      | 'scheduled'
+      | 'processed'
+      | 'sending'
+      | 'sent'
+      | 'delivered'
+      | 'bounced'
+      | 'canceled'
+      | 'rejected';
 
     /**
      * Date xhen the status changed
