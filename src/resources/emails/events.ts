@@ -50,16 +50,14 @@ export namespace EventListResponse {
      * The type of the email event
      */
     type:
-      | 'bounced'
-      | 'clicked'
-      | 'complaint_received'
-      | 'delivered'
-      | 'delivery_delayed'
-      | 'opened'
-      | 'rejected'
-      | 'rendering_failed'
-      | 'sent'
-      | 'subscribed';
+      | 'email.sent'
+      | 'email.delivered'
+      | 'email.opened'
+      | 'email.clicked'
+      | 'email.bounced'
+      | 'email.complained'
+      | 'email.rejected'
+      | 'email.delivery_delayed';
 
     /**
      * Detail of the event
