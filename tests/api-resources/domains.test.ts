@@ -25,7 +25,7 @@ describe('resource domains', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.domains.retrieve('dn_FdfQe2eZAzRrHCXKSr7VsxUz');
+    const responsePromise = client.domains.retrieve('dns_FdfQe2eZAzRrHCXKSr7VsxUz');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,12 +38,12 @@ describe('resource domains', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.domains.retrieve('dn_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
+      client.domains.retrieve('dns_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.domains.update('dn_FdfQe2eZAzRrHCXKSr7VsxUz', {});
+    const responsePromise = client.domains.update('dns_FdfQe2eZAzRrHCXKSr7VsxUz', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,7 +72,7 @@ describe('resource domains', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.domains.delete('dn_FdfQe2eZAzRrHCXKSr7VsxUz');
+    const responsePromise = client.domains.delete('dns_FdfQe2eZAzRrHCXKSr7VsxUz');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -85,7 +85,7 @@ describe('resource domains', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.domains.delete('dn_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
+      client.domains.delete('dns_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 });

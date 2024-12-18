@@ -23,7 +23,7 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Updates some domain fields with the given ID
+   * Updates domain tracking settings
    */
   update(
     id: string,
