@@ -130,6 +130,11 @@ export interface EmailRetrieveResponse {
   to: Array<string> | string;
 
   /**
+   * The attachements
+   */
+  attachments?: Array<EmailRetrieveResponse.Attachment>;
+
+  /**
    * The blind carbon copy recipient(s) of the email
    */
   bcc?: Array<string> | string;
@@ -174,6 +179,26 @@ export interface EmailRetrieveResponse {
 }
 
 export namespace EmailRetrieveResponse {
+  /**
+   * The attachment
+   */
+  export interface Attachment {
+    /**
+     * Content type for the attachment
+     */
+    content_type?: string;
+
+    /**
+     * The name of the attached file
+     */
+    filename?: string;
+
+    /**
+     * Attachement URL
+     */
+    path?: string;
+  }
+
   export interface DesiredDelivery {
     delivery_time: string;
 
@@ -278,6 +303,11 @@ export namespace EmailListResponse {
     to: Array<string> | string;
 
     /**
+     * The attachements
+     */
+    attachments?: Array<EmailListResponseItem.Attachment>;
+
+    /**
      * The blind carbon copy recipient(s) of the email
      */
     bcc?: Array<string> | string;
@@ -322,6 +352,26 @@ export namespace EmailListResponse {
   }
 
   export namespace EmailListResponseItem {
+    /**
+     * The attachment
+     */
+    export interface Attachment {
+      /**
+       * Content type for the attachment
+       */
+      content_type?: string;
+
+      /**
+       * The name of the attached file
+       */
+      filename?: string;
+
+      /**
+       * Attachement URL
+       */
+      path?: string;
+    }
+
     export interface DesiredDelivery {
       delivery_time: string;
 
