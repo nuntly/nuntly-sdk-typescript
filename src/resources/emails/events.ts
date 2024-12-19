@@ -27,6 +27,11 @@ export namespace EventListResponse {
     id: string;
 
     /**
+     * Detail of the event
+     */
+    details: Record<string, unknown>;
+
+    /**
      * The id of the email
      */
     email_id: string;
@@ -58,11 +63,6 @@ export namespace EventListResponse {
       | 'email.complained'
       | 'email.rejected'
       | 'email.delivery_delayed';
-
-    /**
-     * Detail of the event
-     */
-    details?: string;
   }
 }
 
