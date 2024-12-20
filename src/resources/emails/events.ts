@@ -55,6 +55,8 @@ export namespace EventListResponse {
      * The type of the email event
      */
     type:
+      | 'email.queued'
+      | 'email.scheduled'
       | 'email.sent'
       | 'email.delivered'
       | 'email.opened'
