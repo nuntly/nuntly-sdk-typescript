@@ -184,7 +184,7 @@ export namespace EmailRetrieveResponse {
    */
   export interface Attachment {
     /**
-     * Content type for the attachment
+     * Content type of the attachment
      */
     content_type?: string;
 
@@ -357,7 +357,7 @@ export namespace EmailListResponse {
      */
     export interface Attachment {
       /**
-       * Content type for the attachment
+       * Content type of the attachment
        */
       content_type?: string;
 
@@ -716,7 +716,7 @@ export namespace EmailSendParams {
     content?: string;
 
     /**
-     * Content type for the attachment
+     * Content type of the attachment
      */
     content_type?: string;
 
