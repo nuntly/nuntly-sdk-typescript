@@ -57,6 +57,7 @@ export namespace EventListResponse {
     type:
       | 'email.queued'
       | 'email.scheduled'
+      | 'email.processed'
       | 'email.sent'
       | 'email.delivered'
       | 'email.opened'
