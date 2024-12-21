@@ -154,8 +154,6 @@ export interface EmailRetrieveResponse {
    */
   context?: unknown;
 
-  desired_delivery?: EmailRetrieveResponse.DesiredDelivery;
-
   /**
    * The headers to add to the email
    */
@@ -171,6 +169,11 @@ export interface EmailRetrieveResponse {
    * response will go to this address instead of the sender's email address
    */
   reply_to?: Array<string> | string;
+
+  /**
+   * The date at which the email is scheduled to be sent
+   */
+  scheduled_at?: string;
 
   /**
    * The tags to add to the email
@@ -197,12 +200,6 @@ export namespace EmailRetrieveResponse {
      * Attachement URL
      */
     path?: string;
-  }
-
-  export interface DesiredDelivery {
-    delivery_time: string;
-
-    delivery_timezone?: string;
   }
 
   /**
@@ -327,8 +324,6 @@ export namespace EmailListResponse {
      */
     context?: unknown;
 
-    desired_delivery?: EmailListResponseItem.DesiredDelivery;
-
     /**
      * The headers to add to the email
      */
@@ -344,6 +339,11 @@ export namespace EmailListResponse {
      * response will go to this address instead of the sender's email address
      */
     reply_to?: Array<string> | string;
+
+    /**
+     * The date at which the email is scheduled to be sent
+     */
+    scheduled_at?: string;
 
     /**
      * The tags to add to the email
@@ -370,12 +370,6 @@ export namespace EmailListResponse {
        * Attachement URL
        */
       path?: string;
-    }
-
-    export interface DesiredDelivery {
-      delivery_time: string;
-
-      delivery_timezone?: string;
     }
 
     /**
@@ -496,8 +490,6 @@ export namespace EmailBulkParams {
      */
     context?: unknown;
 
-    desired_delivery?: Email.DesiredDelivery;
-
     /**
      * The headers to add to the email
      */
@@ -515,6 +507,11 @@ export namespace EmailBulkParams {
     reply_to?: Array<string> | string;
 
     /**
+     * The date at which the email is scheduled to be sent
+     */
+    scheduled_at?: string;
+
+    /**
      * The tags to add to the email
      */
     tags?: Array<Email.Tag>;
@@ -526,12 +523,6 @@ export namespace EmailBulkParams {
   }
 
   export namespace Email {
-    export interface DesiredDelivery {
-      delivery_time: string;
-
-      delivery_timezone?: string;
-    }
-
     /**
      * The tag to add to the email and you can get via email id or in webhook events
      */
@@ -567,8 +558,6 @@ export namespace EmailBulkParams {
      */
     context?: unknown;
 
-    desired_delivery?: Fallback.DesiredDelivery;
-
     /**
      * The e-mail address of the sender
      */
@@ -596,6 +585,11 @@ export namespace EmailBulkParams {
     reply_to?: Array<string> | string;
 
     /**
+     * The date at which the email is scheduled to be sent
+     */
+    scheduled_at?: string;
+
+    /**
      * The subject of the e-mail
      */
     subject?: string;
@@ -612,12 +606,6 @@ export namespace EmailBulkParams {
   }
 
   export namespace Fallback {
-    export interface DesiredDelivery {
-      delivery_time: string;
-
-      delivery_timezone?: string;
-    }
-
     /**
      * The tag to add to the email and you can get via email id or in webhook events
      */
@@ -676,8 +664,6 @@ export interface EmailSendParams {
    */
   context?: unknown;
 
-  desired_delivery?: EmailSendParams.DesiredDelivery;
-
   /**
    * The headers to add to the email
    */
@@ -693,6 +679,11 @@ export interface EmailSendParams {
    * response will go to this address instead of the sender's email address
    */
   reply_to?: Array<string> | string;
+
+  /**
+   * The date at which the email is scheduled to be sent
+   */
+  scheduled_at?: string;
 
   /**
    * The tags to add to the email
@@ -729,12 +720,6 @@ export namespace EmailSendParams {
      * Attachement URL
      */
     path?: string;
-  }
-
-  export interface DesiredDelivery {
-    delivery_time: string;
-
-    delivery_timezone?: string;
   }
 
   /**
