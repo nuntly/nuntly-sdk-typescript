@@ -120,6 +120,7 @@ describe('resource emails', () => {
         subject: 'subject',
         tags: [{ name: 'name', value: 'value' }],
         text: 'text',
+        to: ['string'],
       },
     });
   });

@@ -29,7 +29,7 @@ export interface Error {
    * A (best effort) human readable explanation specific to this occurrence of the
    * error.
    */
-  detail?: string;
+  detail?: Array<unknown> | string;
 }
 
 /**
