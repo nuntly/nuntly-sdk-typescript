@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../resource';
 import * as Core from '../../core';
+import * as SharedAPI from '../shared';
 import * as EventsAPI from './events';
 import { EventListResponse, Events } from './events';
 
@@ -103,16 +104,7 @@ export interface EmailRetrieveResponse {
   /**
    * The status of the email.
    */
-  status:
-    | 'queued'
-    | 'scheduled'
-    | 'processed'
-    | 'sending'
-    | 'sent'
-    | 'delivered'
-    | 'bounced'
-    | 'canceled'
-    | 'rejected';
+  status: SharedAPI.EmailsStatus;
 
   /**
    * Date xhen the status changed
@@ -273,16 +265,7 @@ export namespace EmailListResponse {
     /**
      * The status of the email.
      */
-    status:
-      | 'queued'
-      | 'scheduled'
-      | 'processed'
-      | 'sending'
-      | 'sent'
-      | 'delivered'
-      | 'bounced'
-      | 'canceled'
-      | 'rejected';
+    status: SharedAPI.EmailsStatus;
 
     /**
      * Date xhen the status changed
@@ -401,7 +384,7 @@ export namespace EmailBulkResponse {
     /**
      * The status of the email in the bulk.
      */
-    status: 'queued' | 'scheduled' | 'error';
+    status: SharedAPI.BulkEmailsStatus;
 
     /**
      * The id of the email
