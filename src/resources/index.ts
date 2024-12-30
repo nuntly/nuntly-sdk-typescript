@@ -44,7 +44,7 @@ export {
 export {
   Shared,
   type BulkEmailsStatus,
-  type EmailsStatus,
+  type EmailStatus,
   type Error,
   type ErrorResponse,
   type WebhookEventType,

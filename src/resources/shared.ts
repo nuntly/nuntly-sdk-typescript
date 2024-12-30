@@ -12,7 +12,7 @@ export type BulkEmailsStatus = 'queued' | 'scheduled' | 'rejected';
 /**
  * The status of the email.
  */
-export type EmailsStatus =
+export type EmailStatus =
   | 'queued'
   | 'scheduled'
   | 'processed'
@@ -78,7 +78,7 @@ export type WebhookEventType =
 export declare namespace Shared {
   export {
     type BulkEmailsStatus as BulkEmailsStatus,
-    type EmailsStatus as EmailsStatus,
+    type EmailStatus as EmailStatus,
     type Error as Error,
     type ErrorResponse as ErrorResponse,
     type WebhookEventType as WebhookEventType,
