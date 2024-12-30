@@ -140,7 +140,7 @@ export interface EmailRetrieveResponse {
   bcc?: Array<string> | string;
 
   /**
-   * The id of the email
+   * The bulk id
    */
   bulk_id?: string;
 
@@ -310,7 +310,7 @@ export namespace EmailListResponse {
     bcc?: Array<string> | string;
 
     /**
-     * The id of the email
+     * The bulk id
      */
     bulk_id?: string;
 
@@ -389,16 +389,31 @@ export namespace EmailListResponse {
   }
 }
 
-export interface EmailBulkResponse {
-  emails: Array<EmailBulkResponse.Email>;
-}
+export type EmailBulkResponse = Array<EmailBulkResponse.EmailBulkResponseItem>;
 
 export namespace EmailBulkResponse {
-  export interface Email {
+  export interface EmailBulkResponseItem {
+    /**
+     * The kind of object returned
+     */
+    kind: 'email';
+
+    /**
+     * The status of the email in the bulk.
+     */
+    status: 'queued' | 'scheduled' | 'error';
+
     /**
      * The id of the email
      */
-    id: string;
+    id?: string;
+
+    error?: string;
+
+    /**
+     * The id of the organization
+     */
+    org_id?: string;
   }
 }
 
@@ -443,12 +458,12 @@ export interface EmailSendResponse {
 
 export interface EmailBulkParams {
   /**
-   * The emails to send by bulk
+   * The emails to send
    */
   emails: Array<EmailBulkParams.Email>;
 
   /**
-   * Used as a fallback field email value if no value is present in email
+   * Used as a fallback field email value if no value is present in emails
    */
   fallback?: EmailBulkParams.Fallback;
 }
@@ -540,7 +555,7 @@ export namespace EmailBulkParams {
   }
 
   /**
-   * Used as a fallback field email value if no value is present in email
+   * Used as a fallback field email value if no value is present in emails
    */
   export interface Fallback {
     /**
@@ -603,6 +618,11 @@ export namespace EmailBulkParams {
      * The plaintext version of the email
      */
     text?: string;
+
+    /**
+     * The primary recipient(s) of the email
+     */
+    to?: Array<string> | string;
   }
 
   export namespace Fallback {
