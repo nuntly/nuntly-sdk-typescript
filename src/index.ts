@@ -35,7 +35,7 @@ import {
 } from './resources/domains';
 import {
   BulkEmailsStatus,
-  EmailsStatus,
+  EmailStatus,
   Error,
   ErrorResponse,
   Shared,
@@ -250,7 +250,7 @@ export declare namespace Nuntly {
   export {
     Shared as Shared,
     type BulkEmailsStatus as BulkEmailsStatus,
-    type EmailsStatus as EmailsStatus,
+    type EmailStatus as EmailStatus,
     type Error as Error,
     type ErrorResponse as ErrorResponse,
     type WebhookEventType as WebhookEventType,

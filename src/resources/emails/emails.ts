@@ -104,7 +104,7 @@ export interface EmailRetrieveResponse {
   /**
    * The status of the email.
    */
-  status: SharedAPI.EmailsStatus;
+  status: SharedAPI.EmailStatus;
 
   /**
    * Date xhen the status changed
@@ -265,7 +265,7 @@ export namespace EmailListResponse {
     /**
      * The status of the email.
      */
-    status: SharedAPI.EmailsStatus;
+    status: SharedAPI.EmailStatus;
 
     /**
      * Date xhen the status changed
