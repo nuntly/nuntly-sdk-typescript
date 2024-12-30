@@ -33,7 +33,14 @@ import {
   DomainUpdateResponse,
   Domains,
 } from './resources/domains';
-import { Error, ErrorResponse, Shared, WebhookEventType } from './resources/shared';
+import {
+  BulkEmailsStatus,
+  EmailsStatus,
+  Error,
+  ErrorResponse,
+  Shared,
+  WebhookEventType,
+} from './resources/shared';
 import {
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -242,6 +249,8 @@ export declare namespace Nuntly {
 
   export {
     Shared as Shared,
+    type BulkEmailsStatus as BulkEmailsStatus,
+    type EmailsStatus as EmailsStatus,
     type Error as Error,
     type ErrorResponse as ErrorResponse,
     type WebhookEventType as WebhookEventType,

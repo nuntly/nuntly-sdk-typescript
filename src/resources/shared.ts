@@ -5,6 +5,25 @@ import { APIResource } from '../resource';
 export class Shared extends APIResource {}
 
 /**
+ * The status of the email in the bulk.
+ */
+export type BulkEmailsStatus = 'queued' | 'scheduled' | 'rejected';
+
+/**
+ * The status of the email.
+ */
+export type EmailsStatus =
+  | 'queued'
+  | 'scheduled'
+  | 'processed'
+  | 'sending'
+  | 'sent'
+  | 'delivered'
+  | 'bounced'
+  | 'canceled'
+  | 'rejected';
+
+/**
  * This object provide you additional information about errors encountered while
  * performing the operation
  */
@@ -58,6 +77,8 @@ export type WebhookEventType =
 
 export declare namespace Shared {
   export {
+    type BulkEmailsStatus as BulkEmailsStatus,
+    type EmailsStatus as EmailsStatus,
     type Error as Error,
     type ErrorResponse as ErrorResponse,
     type WebhookEventType as WebhookEventType,
