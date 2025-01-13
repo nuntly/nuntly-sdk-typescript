@@ -170,7 +170,7 @@ export interface EmailRetrieveResponse {
   /**
    * May provide information about the status
    */
-  status_reason?: string;
+  status_reason?: Record<string, unknown>;
 
   /**
    * The tags to add to the email
@@ -336,7 +336,7 @@ export namespace EmailListResponse {
     /**
      * May provide information about the status
      */
-    status_reason?: string;
+    status_reason?: Record<string, unknown>;
 
     /**
      * The tags to add to the email
