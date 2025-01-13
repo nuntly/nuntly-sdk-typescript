@@ -168,6 +168,11 @@ export interface EmailRetrieveResponse {
   scheduled_at?: string;
 
   /**
+   * May provide information about the status
+   */
+  status_reason?: string;
+
+  /**
    * The tags to add to the email
    */
   tags?: Array<EmailRetrieveResponse.Tag>;
@@ -327,6 +332,11 @@ export namespace EmailListResponse {
      * The date at which the email is scheduled to be sent
      */
     scheduled_at?: string;
+
+    /**
+     * May provide information about the status
+     */
+    status_reason?: string;
 
     /**
      * The tags to add to the email
