@@ -130,16 +130,6 @@ export interface DomainCreateResponse {
 export namespace DomainCreateResponse {
   export interface SendingRecord {
     /**
-     * Same value as "value" except for DKIM due of length of the value
-     */
-    display: string;
-
-    /**
-     * Same value as "value" except for MX due of the priority
-     */
-    expected: string;
-
-    /**
      * The FQDN of the domain record
      */
     fullname: string;
@@ -278,16 +268,6 @@ export interface DomainRetrieveResponse {
 
 export namespace DomainRetrieveResponse {
   export interface SendingRecord {
-    /**
-     * Same value as "value" except for DKIM due of length of the value
-     */
-    display: string;
-
-    /**
-     * Same value as "value" except for MX due of the priority
-     */
-    expected: string;
-
     /**
      * The FQDN of the domain record
      */
