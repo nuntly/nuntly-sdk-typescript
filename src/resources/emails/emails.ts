@@ -168,7 +168,7 @@ export interface EmailRetrieveResponse {
   scheduled_at?: string;
 
   /**
-   * May provide information about the status
+   * May provide more informations about the status
    */
   status_reason?: Record<string, unknown>;
 
@@ -334,7 +334,7 @@ export namespace EmailListResponse {
     scheduled_at?: string;
 
     /**
-     * May provide information about the status
+     * May provide more informations about the status
      */
     status_reason?: Record<string, unknown>;
 
