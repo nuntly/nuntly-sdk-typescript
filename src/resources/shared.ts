@@ -74,7 +74,8 @@ export type WebhookEventType =
   | 'email.bounced'
   | 'email.complained'
   | 'email.rejected'
-  | 'email.delivery_delayed';
+  | 'email.delivery_delayed'
+  | 'email.failed';
 
 export declare namespace Shared {
   export {

@@ -66,7 +66,8 @@ export namespace EventListResponse {
       | 'email.bounced'
       | 'email.complained'
       | 'email.rejected'
-      | 'email.delivery_delayed';
+      | 'email.delivery_delayed'
+      | 'email.failed';
   }
 }
 
