@@ -16,7 +16,7 @@ export type EmailStatus =
   | 'queued'
   | 'scheduled'
   | 'processed'
-  | 'template_failed'
+  | 'failed'
   | 'sending'
   | 'sent'
   | 'delivered'
