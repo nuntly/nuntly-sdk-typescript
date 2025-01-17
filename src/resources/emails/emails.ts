@@ -37,7 +37,7 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Cancel an email or a scheduled email
+   * Cancel a scheduled email
    */
   cancel(id: string, options?: Core.RequestOptions): Core.APIPromise<EmailCancelResponse> {
     return (
@@ -382,10 +382,22 @@ export namespace EmailListResponse {
   }
 }
 
-export type EmailBulkResponse = Array<EmailBulkResponse.EmailBulkResponseItem>;
+export interface EmailBulkResponse {
+  /**
+   * The bulk id
+   */
+  id: string;
+
+  emails: Array<EmailBulkResponse.Email>;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'bulk-email';
+}
 
 export namespace EmailBulkResponse {
-  export interface EmailBulkResponseItem {
+  export interface Email {
     /**
      * The kind of object returned
      */
