@@ -72,6 +72,16 @@ Methods:
 
 - <code title="get /emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">list</a>(id) -> EventListResponse</code>
 
+## Stats
+
+Types:
+
+- <code><a href="./src/resources/emails/stats.ts">StatListResponse</a></code>
+
+Methods:
+
+- <code title="get /emails/stats">client.emails.stats.<a href="./src/resources/emails/stats.ts">list</a>() -> StatListResponse</code>
+
 # Webhooks
 
 Types:

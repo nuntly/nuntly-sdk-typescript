@@ -11,3 +11,4 @@ export {
   type EmailSendParams,
 } from './emails';
 export { Events, type EventListResponse } from './events';
+export { Stats, type StatListResponse } from './stats';
