@@ -5,9 +5,12 @@ import * as Core from '../../core';
 import * as SharedAPI from '../shared';
 import * as EventsAPI from './events';
 import { EventListResponse, Events } from './events';
+import * as StatsAPI from './stats';
+import { StatListResponse, Stats } from './stats';
 
 export class Emails extends APIResource {
   events: EventsAPI.Events = new EventsAPI.Events(this._client);
+  stats: StatsAPI.Stats = new StatsAPI.Stats(this._client);
 
   /**
    * Return the email with the given id
@@ -764,6 +767,7 @@ export namespace EmailSendParams {
 }
 
 Emails.Events = Events;
+Emails.Stats = Stats;
 
 export declare namespace Emails {
   export {
@@ -777,4 +781,6 @@ export declare namespace Emails {
   };
 
   export { Events as Events, type EventListResponse as EventListResponse };
+
+  export { Stats as Stats, type StatListResponse as StatListResponse };
 }
