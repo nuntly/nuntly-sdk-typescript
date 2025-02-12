@@ -121,7 +121,7 @@ export namespace SubscriptionListResponse {
       /**
        * The date of the creation of the schedule
        */
-      created: string | null;
+      created: string;
 
       phases: Array<Schedule.Phase>;
     }
