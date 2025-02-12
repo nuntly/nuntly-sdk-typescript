@@ -49,7 +49,7 @@ export namespace SubscriptionListResponse {
     price: SubscriptionListResponseItem.Price;
 
     /**
-     * The type of the subscription (plan or addon
+     * The status of the subscription (plan or addon
      */
     status:
       | 'active'
@@ -62,7 +62,7 @@ export namespace SubscriptionListResponse {
       | 'unpaid';
 
     /**
-     * The status of the subscription
+     * The type of the subscription
      */
     type: 'plan' | 'addon';
 
@@ -101,7 +101,7 @@ export namespace SubscriptionListResponse {
         /**
          * The frequency at which a subscription is billed.
          */
-        interval?: string;
+        interval?: 'day' | 'month' | 'week' | 'year';
 
         /**
          * The number of intervals between subscription billings
@@ -128,30 +128,55 @@ export namespace SubscriptionListResponse {
 
     export namespace Schedule {
       export interface Phase {
-        /**
-         * ISO currency code
-         */
-        currency: string;
-
-        recurring: Phase.Recurring;
-
-        /**
-         * The unit amount in cents (or local equivalent) to be charged
-         */
-        unit_amount: number | null;
+        price: Phase.Price;
       }
 
       export namespace Phase {
-        export interface Recurring {
+        export interface Price {
           /**
-           * The frequency at which a subscription is billed.
+           * ISO currency code
            */
-          interval?: string;
+          currency: string;
+
+          recurring: Price.Recurring;
 
           /**
-           * The number of intervals between subscription billings
+           * The type of the subscription
            */
-          interval_count?: number;
+          type: 'plan' | 'addon';
+
+          /**
+           * The unit amount in cents (or local equivalent) to be charged
+           */
+          unit_amount: number | null;
+
+          /**
+           * The name of the plan
+           */
+          product?: 'free' | 'pro' | 'enterprise';
+
+          quota?: Price.Quota;
+        }
+
+        export namespace Price {
+          export interface Recurring {
+            /**
+             * The frequency at which a subscription is billed.
+             */
+            interval?: 'day' | 'month' | 'week' | 'year';
+
+            /**
+             * The number of intervals between subscription billings
+             */
+            interval_count?: number;
+          }
+
+          export interface Quota {
+            /**
+             * The quota of the emails subscribed (if applicable)
+             */
+            emails?: number;
+          }
         }
       }
     }
