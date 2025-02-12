@@ -48,8 +48,6 @@ export namespace SubscriptionListResponse {
 
     price: SubscriptionListResponseItem.Price;
 
-    quota: SubscriptionListResponseItem.Quota;
-
     /**
      * The type of the subscription (plan or addon
      */
@@ -77,6 +75,8 @@ export namespace SubscriptionListResponse {
      * The name of the plan
      */
     product?: 'free' | 'pro' | 'enterprise';
+
+    quota?: SubscriptionListResponseItem.Quota;
   }
 
   export namespace SubscriptionListResponseItem {
