@@ -3,12 +3,15 @@
 import { APIResource } from '../../resource';
 import * as Core from '../../core';
 import * as SharedAPI from '../shared';
+import * as BulkAPI from './bulk';
+import { Bulk, BulkRetrieveResponse, BulkSendParams, BulkSendResponse } from './bulk';
 import * as EventsAPI from './events';
 import { EventListResponse, Events } from './events';
 import * as StatsAPI from './stats';
 import { StatListResponse, Stats } from './stats';
 
 export class Emails extends APIResource {
+  bulk: BulkAPI.Bulk = new BulkAPI.Bulk(this._client);
   events: EventsAPI.Events = new EventsAPI.Events(this._client);
   stats: StatsAPI.Stats = new StatsAPI.Stats(this._client);
 
@@ -28,15 +31,6 @@ export class Emails extends APIResource {
     return (this._client.get('/emails', options) as Core.APIPromise<{ data: EmailListResponse }>)._thenUnwrap(
       (obj) => obj.data,
     );
-  }
-
-  /**
-   * Send bulk emails
-   */
-  bulk(body: EmailBulkParams, options?: Core.RequestOptions): Core.APIPromise<EmailBulkResponse> {
-    return (
-      this._client.post('/emails/bulk', { body, ...options }) as Core.APIPromise<{ data: EmailBulkResponse }>
-    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -385,46 +379,6 @@ export namespace EmailListResponse {
   }
 }
 
-export interface EmailBulkResponse {
-  /**
-   * The bulk id
-   */
-  id: string;
-
-  emails: Array<EmailBulkResponse.Email>;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'bulk-email';
-}
-
-export namespace EmailBulkResponse {
-  export interface Email {
-    /**
-     * The kind of object returned
-     */
-    kind: 'email';
-
-    /**
-     * The status of the email in the bulk.
-     */
-    status: SharedAPI.BulkEmailsStatus;
-
-    /**
-     * The id of the email
-     */
-    id?: string;
-
-    error?: string;
-
-    /**
-     * The id of the organization
-     */
-    org_id?: string;
-  }
-}
-
 export interface EmailCancelResponse {
   /**
    * The id of the email
@@ -462,193 +416,6 @@ export interface EmailSendResponse {
    * The status of the email.
    */
   status: 'queued' | 'scheduled';
-}
-
-export interface EmailBulkParams {
-  /**
-   * The emails to send
-   */
-  emails: Array<EmailBulkParams.Email>;
-
-  /**
-   * Used as a fallback field email value if no value is present in emails
-   */
-  fallback?: EmailBulkParams.Fallback;
-}
-
-export namespace EmailBulkParams {
-  export interface Email {
-    /**
-     * The e-mail address of the sender
-     */
-    from: string;
-
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
-
-    /**
-     * The subject of the e-mail
-     */
-    subject: string;
-
-    /**
-     * The primary recipient(s) of the email
-     */
-    to: Array<string> | string;
-
-    /**
-     * The blind carbon copy recipient(s) of the email
-     */
-    bcc?: Array<string> | string;
-
-    /**
-     * The carbon copy recipient(s) of the email
-     */
-    cc?: Array<string> | string;
-
-    /**
-     * The context for the template
-     */
-    context?: unknown;
-
-    /**
-     * The headers to add to the email
-     */
-    headers?: Record<string, string>;
-
-    /**
-     * The HTML version of the email
-     */
-    html?: string;
-
-    /**
-     * The email address where replies should be sent. If a recipient replies, the
-     * response will go to this address instead of the sender's email address
-     */
-    reply_to?: Array<string> | string;
-
-    /**
-     * The date at which the email is scheduled to be sent
-     */
-    scheduled_at?: string;
-
-    /**
-     * The tags to add to the email
-     */
-    tags?: Array<Email.Tag>;
-
-    /**
-     * The plaintext version of the email
-     */
-    text?: string;
-  }
-
-  export namespace Email {
-    /**
-     * The tag to add to the email and you can get via email id or in webhook events
-     */
-    export interface Tag {
-      /**
-       * The name of the tag
-       */
-      name: string;
-
-      /**
-       * The tag to add to the email
-       */
-      value: string;
-    }
-  }
-
-  /**
-   * Used as a fallback field email value if no value is present in emails
-   */
-  export interface Fallback {
-    /**
-     * The blind carbon copy recipient(s) of the email
-     */
-    bcc?: Array<string> | string;
-
-    /**
-     * The carbon copy recipient(s) of the email
-     */
-    cc?: Array<string> | string;
-
-    /**
-     * The context for the template
-     */
-    context?: unknown;
-
-    /**
-     * The e-mail address of the sender
-     */
-    from?: string;
-
-    /**
-     * The headers to add to the email
-     */
-    headers?: Record<string, string>;
-
-    /**
-     * The HTML version of the email
-     */
-    html?: string;
-
-    /**
-     * The region of the related data
-     */
-    region?: 'eu-west-1';
-
-    /**
-     * The email address where replies should be sent. If a recipient replies, the
-     * response will go to this address instead of the sender's email address
-     */
-    reply_to?: Array<string> | string;
-
-    /**
-     * The date at which the email is scheduled to be sent
-     */
-    scheduled_at?: string;
-
-    /**
-     * The subject of the e-mail
-     */
-    subject?: string;
-
-    /**
-     * The tags to add to the email
-     */
-    tags?: Array<Fallback.Tag>;
-
-    /**
-     * The plaintext version of the email
-     */
-    text?: string;
-
-    /**
-     * The primary recipient(s) of the email
-     */
-    to?: Array<string> | string;
-  }
-
-  export namespace Fallback {
-    /**
-     * The tag to add to the email and you can get via email id or in webhook events
-     */
-    export interface Tag {
-      /**
-       * The name of the tag
-       */
-      name: string;
-
-      /**
-       * The tag to add to the email
-       */
-      value: string;
-    }
-  }
 }
 
 export interface EmailSendParams {
@@ -766,6 +533,7 @@ export namespace EmailSendParams {
   }
 }
 
+Emails.Bulk = Bulk;
 Emails.Events = Events;
 Emails.Stats = Stats;
 
@@ -773,11 +541,16 @@ export declare namespace Emails {
   export {
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
-    type EmailBulkResponse as EmailBulkResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
-    type EmailBulkParams as EmailBulkParams,
     type EmailSendParams as EmailSendParams,
+  };
+
+  export {
+    Bulk as Bulk,
+    type BulkRetrieveResponse as BulkRetrieveResponse,
+    type BulkSendResponse as BulkSendResponse,
+    type BulkSendParams as BulkSendParams,
   };
 
   export { Events as Events, type EventListResponse as EventListResponse };

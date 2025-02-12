@@ -11,10 +11,13 @@ import {
 } from './invitations';
 import * as MembershipsAPI from './memberships';
 import { MembershipListResponse, MembershipRevokeResponse, Memberships } from './memberships';
+import * as SubscriptionsAPI from './subscriptions';
+import { Subscriptions } from './subscriptions';
 
 export class Organizations extends APIResource {
   memberships: MembershipsAPI.Memberships = new MembershipsAPI.Memberships(this._client);
   invitations: InvitationsAPI.Invitations = new InvitationsAPI.Invitations(this._client);
+  subscriptions: SubscriptionsAPI.Subscriptions = new SubscriptionsAPI.Subscriptions(this._client);
 
   /**
    * Return the organization
@@ -140,6 +143,7 @@ export namespace OrganizationListResponse {
 
 Organizations.Memberships = Memberships;
 Organizations.Invitations = Invitations;
+Organizations.Subscriptions = Subscriptions;
 
 export declare namespace Organizations {
   export {
@@ -159,4 +163,6 @@ export declare namespace Organizations {
     type InvitationSendResponse as InvitationSendResponse,
     type InvitationSendParams as InvitationSendParams,
   };
+
+  export { Subscriptions as Subscriptions };
 }

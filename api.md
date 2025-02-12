@@ -50,7 +50,6 @@ Types:
 
 - <code><a href="./src/resources/emails/emails.ts">EmailRetrieveResponse</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailListResponse</a></code>
-- <code><a href="./src/resources/emails/emails.ts">EmailBulkResponse</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailCancelResponse</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailSendResponse</a></code>
 
@@ -58,9 +57,20 @@ Methods:
 
 - <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">retrieve</a>(id) -> EmailRetrieveResponse</code>
 - <code title="get /emails">client.emails.<a href="./src/resources/emails/emails.ts">list</a>() -> EmailListResponse</code>
-- <code title="post /emails/bulk">client.emails.<a href="./src/resources/emails/emails.ts">bulk</a>({ ...params }) -> EmailBulkResponse</code>
 - <code title="delete /emails/{id}">client.emails.<a href="./src/resources/emails/emails.ts">cancel</a>(id) -> EmailCancelResponse</code>
 - <code title="post /emails">client.emails.<a href="./src/resources/emails/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
+
+## Bulk
+
+Types:
+
+- <code><a href="./src/resources/emails/bulk.ts">BulkRetrieveResponse</a></code>
+- <code><a href="./src/resources/emails/bulk.ts">BulkSendResponse</a></code>
+
+Methods:
+
+- <code title="get /emails/bulk/{id}">client.emails.bulk.<a href="./src/resources/emails/bulk.ts">retrieve</a>(id) -> BulkRetrieveResponse</code>
+- <code title="post /emails/bulk">client.emails.bulk.<a href="./src/resources/emails/bulk.ts">send</a>({ ...params }) -> BulkSendResponse</code>
 
 ## Events
 
@@ -135,6 +145,8 @@ Methods:
 
 - <code title="delete /organizations/{id}/invitations/{invitation_id}">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">delete</a>(id, invitationId) -> InvitationDeleteResponse</code>
 - <code title="post /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">send</a>(id, { ...params }) -> InvitationSendResponse</code>
+
+## Subscriptions
 
 # Account
 
