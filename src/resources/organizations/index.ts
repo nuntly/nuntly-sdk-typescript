@@ -12,3 +12,4 @@ export {
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,
 } from './organizations';
+export { Subscriptions } from './subscriptions';

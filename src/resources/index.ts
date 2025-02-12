@@ -30,10 +30,8 @@ export {
   Emails,
   type EmailRetrieveResponse,
   type EmailListResponse,
-  type EmailBulkResponse,
   type EmailCancelResponse,
   type EmailSendResponse,
-  type EmailBulkParams,
   type EmailSendParams,
 } from './emails/emails';
 export {
