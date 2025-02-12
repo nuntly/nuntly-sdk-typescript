@@ -48,6 +48,8 @@ export namespace SubscriptionListResponse {
 
     price: SubscriptionListResponseItem.Price;
 
+    quota: SubscriptionListResponseItem.Quota;
+
     /**
      * The type of the subscription (plan or addon
      */
@@ -75,11 +77,6 @@ export namespace SubscriptionListResponse {
      * The name of the plan
      */
     product?: 'free' | 'pro' | 'enterprise';
-
-    /**
-     * The quota of the emails (if applicable)
-     */
-    quota_emails?: number;
   }
 
   export namespace SubscriptionListResponseItem {
@@ -109,6 +106,13 @@ export namespace SubscriptionListResponse {
          */
         interval_count?: number;
       }
+    }
+
+    export interface Quota {
+      /**
+       * The quota of the emails subscribed (if applicable)
+       */
+      emails?: number;
     }
   }
 }
