@@ -148,6 +148,14 @@ Methods:
 
 ## Subscriptions
 
+Types:
+
+- <code><a href="./src/resources/organizations/subscriptions.ts">SubscriptionListResponse</a></code>
+
+Methods:
+
+- <code title="get /organizations/{id}/subscriptions">client.organizations.subscriptions.<a href="./src/resources/organizations/subscriptions.ts">list</a>(id) -> SubscriptionListResponse</code>
+
 # Account
 
 Types:

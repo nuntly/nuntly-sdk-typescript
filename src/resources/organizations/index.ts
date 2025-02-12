@@ -12,4 +12,4 @@ export {
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,
 } from './organizations';
-export { Subscriptions } from './subscriptions';
+export { Subscriptions, type SubscriptionListResponse } from './subscriptions';

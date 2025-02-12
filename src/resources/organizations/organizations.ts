@@ -12,7 +12,7 @@ import {
 import * as MembershipsAPI from './memberships';
 import { MembershipListResponse, MembershipRevokeResponse, Memberships } from './memberships';
 import * as SubscriptionsAPI from './subscriptions';
-import { Subscriptions } from './subscriptions';
+import { SubscriptionListResponse, Subscriptions } from './subscriptions';
 
 export class Organizations extends APIResource {
   memberships: MembershipsAPI.Memberships = new MembershipsAPI.Memberships(this._client);
@@ -164,5 +164,5 @@ export declare namespace Organizations {
     type InvitationSendParams as InvitationSendParams,
   };
 
-  export { Subscriptions as Subscriptions };
+  export { Subscriptions as Subscriptions, type SubscriptionListResponse as SubscriptionListResponse };
 }
