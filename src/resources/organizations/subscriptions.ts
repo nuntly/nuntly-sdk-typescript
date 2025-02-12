@@ -77,6 +77,8 @@ export namespace SubscriptionListResponse {
     product?: 'free' | 'pro' | 'enterprise';
 
     quota?: SubscriptionListResponseItem.Quota;
+
+    schedule?: SubscriptionListResponseItem.Schedule;
   }
 
   export namespace SubscriptionListResponseItem {
@@ -113,6 +115,45 @@ export namespace SubscriptionListResponse {
        * The quota of the emails subscribed (if applicable)
        */
       emails?: number;
+    }
+
+    export interface Schedule {
+      /**
+       * The date of the creation of the schedule
+       */
+      created: string | null;
+
+      phases: Array<Schedule.Phase>;
+    }
+
+    export namespace Schedule {
+      export interface Phase {
+        /**
+         * ISO currency code
+         */
+        currency: string;
+
+        recurring: Phase.Recurring;
+
+        /**
+         * The unit amount in cents (or local equivalent) to be charged
+         */
+        unit_amount: number | null;
+      }
+
+      export namespace Phase {
+        export interface Recurring {
+          /**
+           * The frequency at which a subscription is billed.
+           */
+          interval?: string;
+
+          /**
+           * The number of intervals between subscription billings
+           */
+          interval_count?: number;
+        }
+      }
     }
   }
 }
