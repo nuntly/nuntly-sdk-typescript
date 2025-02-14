@@ -156,6 +156,16 @@ Methods:
 
 - <code title="get /organizations/{id}/subscriptions">client.organizations.subscriptions.<a href="./src/resources/organizations/subscriptions.ts">list</a>(id) -> SubscriptionListResponse</code>
 
+## Usage
+
+Types:
+
+- <code><a href="./src/resources/organizations/usage.ts">UsageRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /organizations/{id}/usage">client.organizations.usage.<a href="./src/resources/organizations/usage.ts">retrieve</a>(id) -> UsageRetrieveResponse</code>
+
 # Account
 
 Types:

@@ -13,11 +13,14 @@ import * as MembershipsAPI from './memberships';
 import { MembershipListResponse, MembershipRevokeResponse, Memberships } from './memberships';
 import * as SubscriptionsAPI from './subscriptions';
 import { SubscriptionListResponse, Subscriptions } from './subscriptions';
+import * as UsageAPI from './usage';
+import { Usage, UsageRetrieveResponse } from './usage';
 
 export class Organizations extends APIResource {
   memberships: MembershipsAPI.Memberships = new MembershipsAPI.Memberships(this._client);
   invitations: InvitationsAPI.Invitations = new InvitationsAPI.Invitations(this._client);
   subscriptions: SubscriptionsAPI.Subscriptions = new SubscriptionsAPI.Subscriptions(this._client);
+  usage: UsageAPI.Usage = new UsageAPI.Usage(this._client);
 
   /**
    * Return the organization
@@ -144,6 +147,7 @@ export namespace OrganizationListResponse {
 Organizations.Memberships = Memberships;
 Organizations.Invitations = Invitations;
 Organizations.Subscriptions = Subscriptions;
+Organizations.Usage = Usage;
 
 export declare namespace Organizations {
   export {
@@ -165,4 +169,6 @@ export declare namespace Organizations {
   };
 
   export { Subscriptions as Subscriptions, type SubscriptionListResponse as SubscriptionListResponse };
+
+  export { Usage as Usage, type UsageRetrieveResponse as UsageRetrieveResponse };
 }
