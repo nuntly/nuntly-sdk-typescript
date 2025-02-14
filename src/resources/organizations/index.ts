@@ -13,3 +13,4 @@ export {
   type OrganizationListResponse,
 } from './organizations';
 export { Subscriptions, type SubscriptionListResponse } from './subscriptions';
+export { Usage, type UsageRetrieveResponse } from './usage';
