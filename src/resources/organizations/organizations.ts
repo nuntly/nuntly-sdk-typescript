@@ -65,16 +65,6 @@ export interface OrganizationRetrieveResponse {
   kind: 'organization';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -88,6 +78,16 @@ export interface OrganizationRetrieveResponse {
    * The status of the organization
    */
   status: 'active' | 'pending' | 'revoked';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 /**
@@ -118,16 +118,6 @@ export namespace OrganizationListResponse {
     kind: 'organization';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The id of the organization
      */
     org_id: string;
@@ -141,6 +131,16 @@ export namespace OrganizationListResponse {
      * The status of the organization
      */
     status: 'active' | 'pending' | 'revoked';
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
   }
 }
 

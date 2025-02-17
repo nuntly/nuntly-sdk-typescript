@@ -87,16 +87,6 @@ export interface WebhookCreateResponse {
   kind: 'webhook';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -115,6 +105,16 @@ export interface WebhookCreateResponse {
    * The status of the webhook.
    */
   status: 'enabled' | 'disabled' | 'revoked';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
   /**
    * The name of the webhook
@@ -151,16 +151,6 @@ export interface WebhookRetrieveResponse {
   kind: 'webhook';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -174,6 +164,16 @@ export interface WebhookRetrieveResponse {
    * The status of the webhook.
    */
   status: 'enabled' | 'disabled' | 'revoked';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
   /**
    * The name of the webhook
@@ -233,16 +233,6 @@ export namespace WebhookListResponse {
     kind: 'webhook';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The id of the organization
      */
     org_id: string;
@@ -256,6 +246,16 @@ export namespace WebhookListResponse {
      * The status of the webhook.
      */
     status: 'enabled' | 'disabled' | 'revoked';
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
 
     /**
      * The name of the webhook

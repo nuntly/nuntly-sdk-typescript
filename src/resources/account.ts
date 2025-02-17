@@ -55,19 +55,19 @@ export interface AccountRetrieveResponse {
   kind: 'user';
 
   /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
+
+  /**
    * Date at which the object was modified (ISO 8601 format)
    */
-  modified_at: string;
+  modified_at?: string;
 
   /**
    * The last user who modified the object
    */
-  modified_by: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
+  modified_by?: string;
 
   /**
    * The profile picture of the user

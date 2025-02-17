@@ -97,16 +97,6 @@ export interface APIKeyCreateResponse {
   kind: 'api-key';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -125,6 +115,16 @@ export interface APIKeyCreateResponse {
    * The id of the user
    */
   user_id: string;
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
   /**
    * The name of the api key
@@ -159,16 +159,6 @@ export interface APIKeyRetrieveResponse {
   kind: 'api-key';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -187,6 +177,16 @@ export interface APIKeyRetrieveResponse {
    * The id of the user
    */
   user_id: string;
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
   /**
    * The name of the api key
@@ -244,16 +244,6 @@ export namespace APIKeyListResponse {
     kind: 'api-key';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The id of the organization
      */
     org_id: string;
@@ -272,6 +262,16 @@ export namespace APIKeyListResponse {
      * The id of the user
      */
     user_id: string;
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
 
     /**
      * The name of the api key

@@ -86,16 +86,6 @@ export interface InvitationSendResponse {
   kind: 'invitation';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -109,6 +99,16 @@ export interface InvitationSendResponse {
    * The status of the invitation
    */
   status: 'pending' | 'accepted' | 'declined';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 export interface InvitationSendParams {
