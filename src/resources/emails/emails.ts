@@ -79,16 +79,6 @@ export interface EmailRetrieveResponse {
   kind: 'email';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The id of the organization
    */
   org_id: string;
@@ -152,6 +142,16 @@ export interface EmailRetrieveResponse {
    * The id from email provider
    */
   message_id?: string;
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
   /**
    * The email address where replies should be sent. If a recipient replies, the
@@ -245,16 +245,6 @@ export namespace EmailListResponse {
     kind: 'email';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The id of the organization
      */
     org_id: string;
@@ -318,6 +308,16 @@ export namespace EmailListResponse {
      * The id from email provider
      */
     message_id?: string;
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
 
     /**
      * The email address where replies should be sent. If a recipient replies, the

@@ -78,16 +78,6 @@ export namespace MembershipListResponse {
     kind: 'invitation';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The id of the organization
      */
     org_id: string;
@@ -101,6 +91,16 @@ export namespace MembershipListResponse {
      * The status of the invitation
      */
     status: 'pending' | 'accepted' | 'declined';
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
   }
 
   export interface Member {
@@ -130,16 +130,6 @@ export namespace MembershipListResponse {
     kind: 'org-membership';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The id of the organization
      */
     org_id: string;
@@ -163,6 +153,16 @@ export namespace MembershipListResponse {
      * The id of the account
      */
     user_id: string;
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
   }
 }
 

@@ -10,7 +10,7 @@ const client = new Nuntly({
 
 describe('resource emails', () => {
   test('retrieve', async () => {
-    const responsePromise = client.emails.retrieve('eml_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
+    const responsePromise = client.emails.retrieve('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('resource emails', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.emails.retrieve('eml_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT', {
+      client.emails.retrieve('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT', {
         path: '/_stainless_unknown_path',
       }),
     ).rejects.toThrow(Nuntly.NotFoundError);
@@ -48,7 +48,7 @@ describe('resource emails', () => {
   });
 
   test('cancel', async () => {
-    const responsePromise = client.emails.cancel('eml_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
+    const responsePromise = client.emails.cancel('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -61,7 +61,7 @@ describe('resource emails', () => {
   test('cancel: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.emails.cancel('eml_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT', {
+      client.emails.cancel('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT', {
         path: '/_stainless_unknown_path',
       }),
     ).rejects.toThrow(Nuntly.NotFoundError);

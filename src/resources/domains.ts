@@ -80,16 +80,6 @@ export interface DomainCreateResponse {
   kind: 'domain';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The name of the domain. For example: 'email.mycompany.com'
    */
   name: string;
@@ -125,6 +115,16 @@ export interface DomainCreateResponse {
    * The date of the lastest verification of the status
    */
   status_at: string;
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 export namespace DomainCreateResponse {
@@ -219,16 +219,6 @@ export interface DomainRetrieveResponse {
   kind: 'domain';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by: string;
-
-  /**
    * The name of the domain. For example: 'email.mycompany.com'
    */
   name: string;
@@ -264,6 +254,16 @@ export interface DomainRetrieveResponse {
    * The date of the lastest verification of the status
    */
   status_at: string;
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 export namespace DomainRetrieveResponse {
@@ -389,16 +389,6 @@ export namespace DomainListResponse {
     kind: 'domain';
 
     /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by: string;
-
-    /**
      * The name of the domain. For example: 'email.mycompany.com'
      */
     name: string;
@@ -427,6 +417,16 @@ export namespace DomainListResponse {
      * The date of the lastest verification of the status
      */
     status_at: string;
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
   }
 }
 
