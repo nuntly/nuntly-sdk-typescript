@@ -69,7 +69,7 @@ export namespace SubscriptionListResponse {
     /**
      * The name of the addon
      */
-    addon?: 'dedicated-ip';
+    addon?: 'dedicated-ips';
 
     /**
      * The name of the plan
