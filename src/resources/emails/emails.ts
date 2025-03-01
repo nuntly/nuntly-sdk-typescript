@@ -43,7 +43,8 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Send an email
+   * Send transactional emails through the Nuntly platform. It supports HTML and
+   * plain-text emails, attachments, labels, custom headers and scheduling.
    */
   send(body: EmailSendParams, options?: Core.RequestOptions): Core.APIPromise<EmailSendResponse> {
     return (
