@@ -70,7 +70,6 @@ describe('resource emails', () => {
   test('send: only required params', async () => {
     const responsePromise = client.emails.send({
       from: 'tomlinson@bbn-tenexa.com',
-      region: 'eu-west-1',
       subject: 'First email',
       to: 'hello@world.net',
     });
@@ -86,7 +85,6 @@ describe('resource emails', () => {
   test('send: required and optional params', async () => {
     const response = await client.emails.send({
       from: 'tomlinson@bbn-tenexa.com',
-      region: 'eu-west-1',
       subject: 'First email',
       to: 'hello@world.net',
       attachments: [{ content: 'content', content_type: 'content_type', filename: 'filename', path: 'path' }],

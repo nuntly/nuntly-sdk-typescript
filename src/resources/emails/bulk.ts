@@ -130,11 +130,6 @@ export namespace BulkSendParams {
     from: string;
 
     /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
-
-    /**
      * The subject of the e-mail
      */
     subject: string;
@@ -241,11 +236,6 @@ export namespace BulkSendParams {
      * The HTML version of the email
      */
     html?: string;
-
-    /**
-     * The region of the related data
-     */
-    region?: 'eu-west-1';
 
     /**
      * The email address where replies should be sent. If a recipient replies, the

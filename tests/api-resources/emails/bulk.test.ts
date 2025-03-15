@@ -34,18 +34,8 @@ describe('resource bulk', () => {
   test('send: only required params', async () => {
     const responsePromise = client.emails.bulk.send({
       emails: [
-        {
-          from: 'tomlinson@bbn-tenexa.com',
-          region: 'eu-west-1',
-          subject: 'First email',
-          to: 'hello@world.net',
-        },
-        {
-          from: 'hello@chatgpt.com',
-          region: 'eu-west-1',
-          subject: 'Welcome to ChatGPT',
-          to: 'you@world.net',
-        },
+        { from: 'tomlinson@bbn-tenexa.com', subject: 'First email', to: 'hello@world.net' },
+        { from: 'hello@chatgpt.com', subject: 'Welcome to ChatGPT', to: 'you@world.net' },
       ],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -62,7 +52,6 @@ describe('resource bulk', () => {
       emails: [
         {
           from: 'tomlinson@bbn-tenexa.com',
-          region: 'eu-west-1',
           subject: 'First email',
           to: 'hello@world.net',
           bcc: ['string'],
@@ -77,7 +66,6 @@ describe('resource bulk', () => {
         },
         {
           from: 'hello@chatgpt.com',
-          region: 'eu-west-1',
           subject: 'Welcome to ChatGPT',
           to: 'you@world.net',
           bcc: ['string'],
@@ -98,7 +86,6 @@ describe('resource bulk', () => {
         from: 'from',
         headers: { foo: 'string' },
         html: 'html',
-        region: 'eu-west-1',
         reply_to: ['string'],
         scheduled_at: '2019-12-27T18:11:19.117Z',
         subject: 'subject',

@@ -426,11 +426,6 @@ export interface EmailSendParams {
   from: string;
 
   /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
    * The subject of the e-mail
    */
   subject: string;
