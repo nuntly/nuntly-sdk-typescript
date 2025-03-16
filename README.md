@@ -73,6 +73,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
+  // try catch statement
   const apiKey = await client.apiKeys.create().catch(async (err) => {
     if (err instanceof Nuntly.APIError) {
       console.log(err.status); // 400
@@ -82,6 +83,17 @@ async function main() {
       throw err;
     }
   });
+
+  // or data and error
+  const { data, error } = await client.apiKeys.create().catchError()
+  if (error) {
+    console.log(error.status); // 400
+    console.log(error.details);
+    // ...
+  }
+
+  console.log(data.apikey)
+
 }
 
 main();

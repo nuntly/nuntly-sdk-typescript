@@ -124,6 +124,15 @@ export class APIPromise<T> extends Promise<T> {
     return { data, response };
   }
 
+  async catchError(): Promise<{ data: T; error: null } | { data: null; error: APIError }> {
+    try {
+      const data = await this.parse();
+      return { data, error: null };
+    } catch (err) {
+      return { data: null, error: err as APIError };
+    }
+  }
+
   private parse(): Promise<T> {
     if (!this.parsedPromise) {
       this.parsedPromise = this.responsePromise.then(this.parseResponse);
