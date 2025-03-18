@@ -31,10 +31,10 @@ const client = new Nuntly({
 
 async function main() {
   const email = await client.emails.send({
-    from: 'tomlinson@bbn-tenexa.com',
-    subject: 'First Email',
-    to: 'hello@world.net',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    from: 'ray@info.tomlinson.ai',
+    subject: 'Verify Your Email Address',
+    to: 'brian67@gmail.com',
+    text: 'Thank you for signing up! Please verify your email address...',
   });
 
   console.log(email.id);
