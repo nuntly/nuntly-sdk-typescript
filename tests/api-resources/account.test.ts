@@ -28,7 +28,7 @@ describe('resource account', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.account.update({ display_name: 'John Connor' });
+    const responsePromise = client.account.update({ display_name: 'Ray Tomlinson' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -39,6 +39,6 @@ describe('resource account', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.account.update({ display_name: 'John Connor' });
+    const response = await client.account.update({ display_name: 'Ray Tomlinson' });
   });
 });

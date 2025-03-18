@@ -29,7 +29,7 @@ describe('resource webhooks', () => {
       endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
       events: ['email.sent', 'email.delivered'],
       status: 'enabled',
-      name: 'My fist webhook',
+      name: 'My webhook',
     });
   });
 
@@ -53,9 +53,9 @@ describe('resource webhooks', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {
-      endpoint_url: 'https://webhook.site/12345678-abcd-5678-abcd-123456789012',
+      endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
       events: ['email.sent', 'email.delivered'],
-      name: 'My fist webhook',
+      name: 'My webhook',
       status: 'enabled',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -69,9 +69,9 @@ describe('resource webhooks', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {
-      endpoint_url: 'https://webhook.site/12345678-abcd-5678-abcd-123456789012',
+      endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
       events: ['email.sent', 'email.delivered'],
-      name: 'My fist webhook',
+      name: 'My webhook',
       status: 'enabled',
     });
   });

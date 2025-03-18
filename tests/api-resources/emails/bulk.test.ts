@@ -34,8 +34,8 @@ describe('resource bulk', () => {
   test('send: only required params', async () => {
     const responsePromise = client.emails.bulk.send({
       emails: [
-        { from: 'tomlinson@bbn-tenexa.com', subject: 'First email', to: 'hello@world.net' },
-        { from: 'hello@chatgpt.com', subject: 'Welcome to ChatGPT', to: 'you@world.net' },
+        { from: 'ray@info.tomlinson.ai', subject: 'Welcome to Tomlinson AI!', to: 'carlo43@gmail.com' },
+        { from: 'ray@info.tomlinson.ai', subject: 'Welcome to Tomlinson AI!', to: 'pink42@yahoo.com' },
       ],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -51,28 +51,28 @@ describe('resource bulk', () => {
     const response = await client.emails.bulk.send({
       emails: [
         {
-          from: 'tomlinson@bbn-tenexa.com',
-          subject: 'First email',
-          to: 'hello@world.net',
+          from: 'ray@info.tomlinson.ai',
+          subject: 'Welcome to Tomlinson AI!',
+          to: 'carlo43@gmail.com',
           bcc: ['string'],
           cc: ['string'],
           context: {},
           headers: { foo: 'string' },
-          html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<p>',
+          html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
           reply_to: ['string'],
           scheduled_at: '2019-12-27T18:11:19.117Z',
           tags: [{ name: 'name', value: 'value' }],
           text: 'text',
         },
         {
-          from: 'hello@chatgpt.com',
-          subject: 'Welcome to ChatGPT',
-          to: 'you@world.net',
+          from: 'ray@info.tomlinson.ai',
+          subject: 'Welcome to Tomlinson AI!',
+          to: 'pink42@yahoo.com',
           bcc: ['string'],
           cc: ['string'],
           context: {},
           headers: { foo: 'string' },
-          html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<p>',
+          html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
           reply_to: ['string'],
           scheduled_at: '2019-12-27T18:11:19.117Z',
           tags: [{ name: 'name', value: 'value' }],

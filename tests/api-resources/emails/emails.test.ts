@@ -69,9 +69,9 @@ describe('resource emails', () => {
 
   test('send: only required params', async () => {
     const responsePromise = client.emails.send({
-      from: 'tomlinson@bbn-tenexa.com',
-      subject: 'First email',
-      to: 'hello@world.net',
+      from: 'ray@info.tomlinson.ai',
+      subject: 'Welcome to Tomlinson AI!',
+      to: 'carlo43@gmail.com',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -84,15 +84,15 @@ describe('resource emails', () => {
 
   test('send: required and optional params', async () => {
     const response = await client.emails.send({
-      from: 'tomlinson@bbn-tenexa.com',
-      subject: 'First email',
-      to: 'hello@world.net',
+      from: 'ray@info.tomlinson.ai',
+      subject: 'Welcome to Tomlinson AI!',
+      to: 'carlo43@gmail.com',
       attachments: [{ content: 'content', content_type: 'content_type', filename: 'filename', path: 'path' }],
       bcc: ['string'],
       cc: ['string'],
       context: {},
       headers: { foo: 'string' },
-      html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<p>',
+      html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
       reply_to: ['string'],
       scheduled_at: '2019-12-27T18:11:19.117Z',
       tags: [{ name: 'name', value: 'value' }],
