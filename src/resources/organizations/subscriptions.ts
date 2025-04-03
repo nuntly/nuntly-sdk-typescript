@@ -111,10 +111,25 @@ export namespace SubscriptionListResponse {
     }
 
     export interface Quota {
-      /**
-       * The quota of the emails subscribed (if applicable)
-       */
-      emails?: number;
+      daily: Quota.Daily;
+
+      monthly: Quota.Monthly;
+    }
+
+    export namespace Quota {
+      export interface Daily {
+        /**
+         * The quota of the emails subscribed (if applicable)
+         */
+        transac_emails: number;
+      }
+
+      export interface Monthly {
+        /**
+         * The quota of the emails subscribed (if applicable)
+         */
+        transac_emails: number;
+      }
     }
 
     export interface Schedule {
@@ -172,10 +187,25 @@ export namespace SubscriptionListResponse {
           }
 
           export interface Quota {
-            /**
-             * The quota of the emails subscribed (if applicable)
-             */
-            emails?: number;
+            daily: Quota.Daily;
+
+            monthly: Quota.Monthly;
+          }
+
+          export namespace Quota {
+            export interface Daily {
+              /**
+               * The quota of the emails subscribed (if applicable)
+               */
+              transac_emails: number;
+            }
+
+            export interface Monthly {
+              /**
+               * The quota of the emails subscribed (if applicable)
+               */
+              transac_emails: number;
+            }
           }
         }
       }
