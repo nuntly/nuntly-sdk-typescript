@@ -17,20 +17,46 @@ export class Usage extends APIResource {
 }
 
 export interface UsageRetrieveResponse {
-  period_start: string;
+  daily: UsageRetrieveResponse.Daily;
 
-  quota: UsageRetrieveResponse.Quota;
-
-  usage: UsageRetrieveResponse.Usage;
+  monthly: UsageRetrieveResponse.Monthly;
 }
 
 export namespace UsageRetrieveResponse {
-  export interface Quota {
-    emails: number;
+  export interface Daily {
+    consumed: Daily.Consumed;
+
+    period: string;
+
+    quota: Daily.Quota;
   }
 
-  export interface Usage {
-    emails: number;
+  export namespace Daily {
+    export interface Consumed {
+      transac_emails: number;
+    }
+
+    export interface Quota {
+      transac_emails: number;
+    }
+  }
+
+  export interface Monthly {
+    consumed: Monthly.Consumed;
+
+    period: string;
+
+    quota: Monthly.Quota;
+  }
+
+  export namespace Monthly {
+    export interface Consumed {
+      transac_emails: number;
+    }
+
+    export interface Quota {
+      transac_emails: number;
+    }
   }
 }
 
