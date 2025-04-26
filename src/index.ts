@@ -53,6 +53,7 @@ import {
 } from './resources/webhooks';
 import {
   EmailCancelResponse,
+  EmailListParams,
   EmailListResponse,
   EmailRetrieveResponse,
   EmailSendParams,
@@ -282,6 +283,7 @@ export declare namespace Nuntly {
     type EmailListResponse as EmailListResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
+    type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
   };
 
