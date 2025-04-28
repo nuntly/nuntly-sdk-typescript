@@ -226,7 +226,7 @@ export interface EmailListResponse {
   /**
    * The next cursor to use for pagination
    */
-  next?: string;
+  next_cursor?: string;
 }
 
 export namespace EmailListResponse {
@@ -432,14 +432,14 @@ export interface EmailSendResponse {
 
 export interface EmailListParams {
   /**
+   * The cursor to use for pagination
+   */
+  cursor?: string;
+
+  /**
    * The number of emails to return
    */
   limit?: number;
-
-  /**
-   * The cursor to use for pagination
-   */
-  next?: string;
 }
 
 export interface EmailSendParams {
