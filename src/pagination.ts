@@ -9,7 +9,7 @@ export interface CursorPageResponse<Item> {
 }
 
 export interface CursorPageParams {
-  cursor?: string;
+  cursor?: string | null;
 
   limit?: number;
 }
