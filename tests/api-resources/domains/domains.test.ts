@@ -10,7 +10,7 @@ const client = new Nuntly({
 
 describe('resource domains', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.domains.create({ name: 'acme.com', region: 'eu-west-1' });
+    const responsePromise = client.domains.domains.create({ name: 'acme.com', region: 'eu-west-1' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,11 +21,11 @@ describe('resource domains', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.domains.create({ name: 'acme.com', region: 'eu-west-1' });
+    const response = await client.domains.domains.create({ name: 'acme.com', region: 'eu-west-1' });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.domains.retrieve('dns_FdfQe2eZAzRrHCXKSr7VsxUz');
+    const responsePromise = client.domains.domains.retrieve('dns_FdfQe2eZAzRrHCXKSr7VsxUz');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,12 +38,12 @@ describe('resource domains', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.domains.retrieve('dns_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
+      client.domains.domains.retrieve('dns_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.domains.update('dns_FdfQe2eZAzRrHCXKSr7VsxUz', {});
+    const responsePromise = client.domains.domains.update('dns_FdfQe2eZAzRrHCXKSr7VsxUz', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,7 +54,7 @@ describe('resource domains', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.domains.list();
+    const responsePromise = client.domains.domains.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,13 +66,13 @@ describe('resource domains', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.domains.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.domains.domains.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Nuntly.NotFoundError,
     );
   });
 
   test('delete', async () => {
-    const responsePromise = client.domains.delete('dns_FdfQe2eZAzRrHCXKSr7VsxUz');
+    const responsePromise = client.domains.domains.delete('dns_FdfQe2eZAzRrHCXKSr7VsxUz');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -85,7 +85,7 @@ describe('resource domains', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.domains.delete('dns_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
+      client.domains.domains.delete('dns_FdfQe2eZAzRrHCXKSr7VsxUz', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 });
