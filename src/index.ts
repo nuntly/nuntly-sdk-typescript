@@ -24,6 +24,16 @@ import {
   APIKeys,
 } from './resources/api-keys';
 import {
+  DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteResponse,
+  DomainListResponse,
+  DomainRetrieveResponse,
+  DomainUpdateParams,
+  DomainUpdateResponse,
+  Domains,
+} from './resources/domains';
+import {
   BulkEmailsStatus,
   EmailStatus,
   Error,
@@ -41,7 +51,6 @@ import {
   WebhookUpdateResponse,
   Webhooks,
 } from './resources/webhooks';
-import { Domains } from './resources/domains/domains';
 import {
   EmailCancelResponse,
   EmailListParams,
@@ -259,7 +268,16 @@ export declare namespace Nuntly {
     type APIKeyUpdateParams as APIKeyUpdateParams,
   };
 
-  export { Domains as Domains };
+  export {
+    Domains as Domains,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
+    type DomainUpdateResponse as DomainUpdateResponse,
+    type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainCreateParams as DomainCreateParams,
+    type DomainUpdateParams as DomainUpdateParams,
+  };
 
   export {
     Emails as Emails,
