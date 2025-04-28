@@ -5,11 +5,11 @@ import { AbstractPage, Response, APIClient, FinalRequestOptions, PageInfo } from
 export interface CursorPageResponse<Item> {
   data: Array<Item>;
 
-  next: string | null;
+  next_cursor: string | null;
 }
 
 export interface CursorPageParams {
-  next?: string;
+  next_cursor?: string;
 
   limit?: number;
 }
@@ -17,7 +17,7 @@ export interface CursorPageParams {
 export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageResponse<Item> {
   data: Array<Item>;
 
-  next: string | null;
+  next_cursor: string | null;
 
   constructor(
     client: APIClient,
@@ -28,7 +28,7 @@ export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageRe
     super(client, response, body, options);
 
     this.data = body.data || [];
-    this.next = body.next || null;
+    this.next_cursor = body.next_cursor || null;
   }
 
   getPaginatedItems(): Item[] {
@@ -46,14 +46,14 @@ export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageRe
   }
 
   nextPageInfo(): PageInfo | null {
-    const cursor = this.next;
+    const cursor = this.next_cursor;
     if (!cursor) {
       return null;
     }
 
     return {
       params: {
-        next: cursor,
+        next_cursor: cursor,
       },
     };
   }

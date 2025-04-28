@@ -10,7 +10,6 @@ import * as EventsAPI from './events';
 import { EventListResponse, Events } from './events';
 import * as StatsAPI from './stats';
 import { StatListResponse, Stats } from './stats';
-import { CursorPage, type CursorPageParams } from '../../pagination';
 
 export class Emails extends APIResource {
   bulk: BulkAPI.Bulk = new BulkAPI.Bulk(this._client);
@@ -29,19 +28,16 @@ export class Emails extends APIResource {
   /**
    * Return a list of your last emails
    */
-  list(
-    query?: EmailListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<EmailListResponsesCursorPage, EmailListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<EmailListResponsesCursorPage, EmailListResponse>;
+  list(query?: EmailListParams, options?: Core.RequestOptions): Core.APIPromise<EmailListResponse>;
+  list(options?: Core.RequestOptions): Core.APIPromise<EmailListResponse>;
   list(
     query: EmailListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<EmailListResponsesCursorPage, EmailListResponse> {
+  ): Core.APIPromise<EmailListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/emails', EmailListResponsesCursorPage, { query, ...options });
+    return this._client.get('/emails', { query, ...options });
   }
 
   /**
@@ -63,8 +59,6 @@ export class Emails extends APIResource {
     )._thenUnwrap((obj) => obj.data);
   }
 }
-
-export class EmailListResponsesCursorPage extends CursorPage<EmailListResponse> {}
 
 export interface EmailRetrieveResponse {
   /**
@@ -227,162 +221,173 @@ export namespace EmailRetrieveResponse {
 }
 
 export interface EmailListResponse {
-  /**
-   * The id of the email
-   */
-  id: string;
+  data?: Array<EmailListResponse.Data>;
 
   /**
-   * Date at which the object was created (ISO 8601 format)
+   * The next cursor to use for pagination
    */
-  created_at: string;
-
-  /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
-   * The e-mail address of the sender
-   */
-  from: string;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'email';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
-   * The status of the email.
-   */
-  status: SharedAPI.EmailStatus;
-
-  /**
-   * Date xhen the status changed
-   */
-  status_at: string;
-
-  /**
-   * The subject of the e-mail
-   */
-  subject: string;
-
-  /**
-   * The primary recipient(s) of the email
-   */
-  to: Array<string> | string;
-
-  /**
-   * The attachements
-   */
-  attachments?: Array<EmailListResponse.Attachment>;
-
-  /**
-   * The blind carbon copy recipient(s) of the email
-   */
-  bcc?: Array<string> | string;
-
-  /**
-   * The bulk id
-   */
-  bulk_id?: string;
-
-  /**
-   * The carbon copy recipient(s) of the email
-   */
-  cc?: Array<string> | string;
-
-  /**
-   * The context for the template
-   */
-  context?: unknown;
-
-  /**
-   * The headers to add to the email
-   */
-  headers?: Record<string, string>;
-
-  /**
-   * The id from email provider
-   */
-  message_id?: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
-
-  /**
-   * The email address where replies should be sent. If a recipient replies, the
-   * response will go to this address instead of the sender's email address
-   */
-  reply_to?: Array<string> | string;
-
-  /**
-   * The date at which the email is scheduled to be sent
-   */
-  scheduled_at?: string;
-
-  /**
-   * May provide more informations about the status
-   */
-  status_reason?: Record<string, unknown>;
-
-  /**
-   * The tags to add to the email
-   */
-  tags?: Array<EmailListResponse.Tag>;
+  next?: string;
 }
 
 export namespace EmailListResponse {
-  /**
-   * The attachment
-   */
-  export interface Attachment {
+  export interface Data {
     /**
-     * Content type of the attachment
+     * The id of the email
      */
-    content_type?: string;
+    id: string;
 
     /**
-     * The name of the attached file
+     * Date at which the object was created (ISO 8601 format)
      */
-    filename?: string;
+    created_at: string;
 
     /**
-     * Attachement URL
+     * The user who created the object
      */
-    path?: string;
+    created_by: string;
+
+    /**
+     * The e-mail address of the sender
+     */
+    from: string;
+
+    /**
+     * The kind of object returned
+     */
+    kind: 'email';
+
+    /**
+     * The id of the organization
+     */
+    org_id: string;
+
+    /**
+     * The region of the related data
+     */
+    region: 'eu-west-1';
+
+    /**
+     * The status of the email.
+     */
+    status: SharedAPI.EmailStatus;
+
+    /**
+     * Date xhen the status changed
+     */
+    status_at: string;
+
+    /**
+     * The subject of the e-mail
+     */
+    subject: string;
+
+    /**
+     * The primary recipient(s) of the email
+     */
+    to: Array<string> | string;
+
+    /**
+     * The attachements
+     */
+    attachments?: Array<Data.Attachment>;
+
+    /**
+     * The blind carbon copy recipient(s) of the email
+     */
+    bcc?: Array<string> | string;
+
+    /**
+     * The bulk id
+     */
+    bulk_id?: string;
+
+    /**
+     * The carbon copy recipient(s) of the email
+     */
+    cc?: Array<string> | string;
+
+    /**
+     * The context for the template
+     */
+    context?: unknown;
+
+    /**
+     * The headers to add to the email
+     */
+    headers?: Record<string, string>;
+
+    /**
+     * The id from email provider
+     */
+    message_id?: string;
+
+    /**
+     * Date at which the object was modified (ISO 8601 format)
+     */
+    modified_at?: string;
+
+    /**
+     * The last user who modified the object
+     */
+    modified_by?: string;
+
+    /**
+     * The email address where replies should be sent. If a recipient replies, the
+     * response will go to this address instead of the sender's email address
+     */
+    reply_to?: Array<string> | string;
+
+    /**
+     * The date at which the email is scheduled to be sent
+     */
+    scheduled_at?: string;
+
+    /**
+     * May provide more informations about the status
+     */
+    status_reason?: Record<string, unknown>;
+
+    /**
+     * The tags to add to the email
+     */
+    tags?: Array<Data.Tag>;
   }
 
-  /**
-   * The tag to add to the email and you can get via email id or in webhook events
-   */
-  export interface Tag {
+  export namespace Data {
     /**
-     * The name of the tag
+     * The attachment
      */
-    name: string;
+    export interface Attachment {
+      /**
+       * Content type of the attachment
+       */
+      content_type?: string;
+
+      /**
+       * The name of the attached file
+       */
+      filename?: string;
+
+      /**
+       * Attachement URL
+       */
+      path?: string;
+    }
 
     /**
-     * The tag to add to the email
+     * The tag to add to the email and you can get via email id or in webhook events
      */
-    value: string;
+    export interface Tag {
+      /**
+       * The name of the tag
+       */
+      name: string;
+
+      /**
+       * The tag to add to the email
+       */
+      value: string;
+    }
   }
 }
 
@@ -425,7 +430,17 @@ export interface EmailSendResponse {
   status: 'queued' | 'scheduled';
 }
 
-export interface EmailListParams extends CursorPageParams {}
+export interface EmailListParams {
+  /**
+   * The number of emails to return
+   */
+  limit?: number;
+
+  /**
+   * The cursor to use for pagination
+   */
+  next?: string;
+}
 
 export interface EmailSendParams {
   /**
@@ -537,7 +552,6 @@ export namespace EmailSendParams {
   }
 }
 
-Emails.EmailListResponsesCursorPage = EmailListResponsesCursorPage;
 Emails.Bulk = Bulk;
 Emails.Events = Events;
 Emails.Stats = Stats;
@@ -548,7 +562,6 @@ export declare namespace Emails {
     type EmailListResponse as EmailListResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
-    EmailListResponsesCursorPage as EmailListResponsesCursorPage,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
   };
