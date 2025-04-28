@@ -425,17 +425,7 @@ export interface EmailSendResponse {
   status: 'queued' | 'scheduled';
 }
 
-export interface EmailListParams extends CursorPageParams {
-  /**
-   * The end date to search for emails
-   */
-  end_date?: string;
-
-  /**
-   * The start date to search for emails
-   */
-  start_date?: string;
-}
+export interface EmailListParams extends CursorPageParams {}
 
 export interface EmailSendParams {
   /**
