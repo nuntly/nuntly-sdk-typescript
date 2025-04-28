@@ -27,6 +27,7 @@ export {
   type DomainUpdateParams,
 } from './domains';
 export {
+  EmailListResponsesCursorPage,
   Emails,
   type EmailRetrieveResponse,
   type EmailListResponse,

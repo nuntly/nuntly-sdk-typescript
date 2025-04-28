@@ -55,6 +55,7 @@ import {
   EmailCancelResponse,
   EmailListParams,
   EmailListResponse,
+  EmailListResponsesCursorPage,
   EmailRetrieveResponse,
   EmailSendParams,
   EmailSendResponse,
@@ -237,6 +238,7 @@ Nuntly.Shared = Shared;
 Nuntly.APIKeys = APIKeys;
 Nuntly.Domains = Domains;
 Nuntly.Emails = Emails;
+Nuntly.EmailListResponsesCursorPage = EmailListResponsesCursorPage;
 Nuntly.Webhooks = Webhooks;
 Nuntly.Organizations = Organizations;
 Nuntly.Account = Account;
@@ -283,6 +285,7 @@ export declare namespace Nuntly {
     type EmailListResponse as EmailListResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
+    EmailListResponsesCursorPage as EmailListResponsesCursorPage,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
   };
