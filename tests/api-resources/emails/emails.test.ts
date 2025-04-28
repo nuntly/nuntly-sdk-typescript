@@ -50,7 +50,7 @@ describe('resource emails', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.emails.list({ limit: 0, next: 'next' }, { path: '/_stainless_unknown_path' }),
+      client.emails.list({ cursor: 'cursor', limit: 0 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
