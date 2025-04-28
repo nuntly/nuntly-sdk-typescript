@@ -16,7 +16,16 @@ export {
   type AccountUpdateResponse,
   type AccountUpdateParams,
 } from './account';
-export { Domains } from './domains/domains';
+export {
+  Domains,
+  type DomainCreateResponse,
+  type DomainRetrieveResponse,
+  type DomainUpdateResponse,
+  type DomainListResponse,
+  type DomainDeleteResponse,
+  type DomainCreateParams,
+  type DomainUpdateParams,
+} from './domains';
 export {
   EmailListResponsesCursorPage,
   Emails,
