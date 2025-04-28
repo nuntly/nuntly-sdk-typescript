@@ -9,7 +9,7 @@ export interface CursorPageResponse<Item> {
 }
 
 export interface CursorPageParams {
-  next?: string;
+  cursor?: string;
 
   limit?: number;
 }
@@ -53,7 +53,7 @@ export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageRe
 
     return {
       params: {
-        next: cursor,
+        cursor,
       },
     };
   }
