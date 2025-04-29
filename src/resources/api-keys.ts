@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { CursorPage, type CursorPageParams } from '../pagination';
 
 export class APIKeys extends APIResource {
   /**
@@ -49,10 +50,19 @@ export class APIKeys extends APIResource {
   /**
    * Return a list of your api keys
    */
-  list(options?: Core.RequestOptions): Core.APIPromise<APIKeyListResponse> {
-    return (
-      this._client.get('/api-keys', options) as Core.APIPromise<{ data: APIKeyListResponse }>
-    )._thenUnwrap((obj) => obj.data);
+  list(
+    query?: APIKeyListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<APIKeyListResponsesCursorPage, APIKeyListResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<APIKeyListResponsesCursorPage, APIKeyListResponse>;
+  list(
+    query: APIKeyListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<APIKeyListResponsesCursorPage, APIKeyListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
+    return this._client.getAPIList('/api-keys', APIKeyListResponsesCursorPage, { query, ...options });
   }
 
   /**
@@ -64,6 +74,8 @@ export class APIKeys extends APIResource {
     )._thenUnwrap((obj) => obj.data);
   }
 }
+
+export class APIKeyListResponsesCursorPage extends CursorPage<APIKeyListResponse> {}
 
 export interface APIKeyCreateResponse {
   /**
@@ -211,73 +223,66 @@ export interface APIKeyUpdateResponse {
   org_id: string;
 }
 
-/**
- * The api keys registered in your account
- */
-export type APIKeyListResponse = Array<APIKeyListResponse.APIKeyListResponseItem>;
+export interface APIKeyListResponse {
+  /**
+   * The id of the api key
+   */
+  id: string;
 
-export namespace APIKeyListResponse {
-  export interface APIKeyListResponseItem {
-    /**
-     * The id of the api key
-     */
-    id: string;
+  /**
+   * The truncated value of the api key
+   */
+  apikey_truncated: string;
 
-    /**
-     * The truncated value of the api key
-     */
-    apikey_truncated: string;
+  /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
 
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
+  /**
+   * The user who created the object
+   */
+  created_by: string;
 
-    /**
-     * The user who created the object
-     */
-    created_by: string;
+  /**
+   * The kind of object returned
+   */
+  kind: 'api-key';
 
-    /**
-     * The kind of object returned
-     */
-    kind: 'api-key';
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
-    /**
-     * The id of the organization
-     */
-    org_id: string;
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
+  /**
+   * The status of the api key
+   */
+  status: 'enabled' | 'disabled' | 'revoked';
 
-    /**
-     * The status of the api key
-     */
-    status: 'enabled' | 'disabled' | 'revoked';
+  /**
+   * The id of the user
+   */
+  user_id: string;
 
-    /**
-     * The id of the user
-     */
-    user_id: string;
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
 
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-
-    /**
-     * The name of the api key
-     */
-    name?: string;
-  }
+  /**
+   * The name of the api key
+   */
+  name?: string;
 }
 
 export interface APIKeyDeleteResponse {
@@ -316,6 +321,10 @@ export interface APIKeyUpdateParams {
   status?: 'enabled' | 'disabled';
 }
 
+export interface APIKeyListParams extends CursorPageParams {}
+
+APIKeys.APIKeyListResponsesCursorPage = APIKeyListResponsesCursorPage;
+
 export declare namespace APIKeys {
   export {
     type APIKeyCreateResponse as APIKeyCreateResponse,
@@ -323,7 +332,9 @@ export declare namespace APIKeys {
     type APIKeyUpdateResponse as APIKeyUpdateResponse,
     type APIKeyListResponse as APIKeyListResponse,
     type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    APIKeyListResponsesCursorPage as APIKeyListResponsesCursorPage,
     type APIKeyCreateParams as APIKeyCreateParams,
     type APIKeyUpdateParams as APIKeyUpdateParams,
+    type APIKeyListParams as APIKeyListParams,
   };
 }

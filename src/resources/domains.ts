@@ -1,7 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../resource';
+import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { CursorPage, type CursorPageParams } from '../pagination';
 
 export class Domains extends APIResource {
   /**
@@ -40,10 +42,19 @@ export class Domains extends APIResource {
   /**
    * Return a list of your domains
    */
-  list(options?: Core.RequestOptions): Core.APIPromise<DomainListResponse> {
-    return (
-      this._client.get('/domains', options) as Core.APIPromise<{ data: DomainListResponse }>
-    )._thenUnwrap((obj) => obj.data);
+  list(
+    query?: DomainListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<DomainListResponsesCursorPage, DomainListResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<DomainListResponsesCursorPage, DomainListResponse>;
+  list(
+    query: DomainListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<DomainListResponsesCursorPage, DomainListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
+    return this._client.getAPIList('/domains', DomainListResponsesCursorPage, { query, ...options });
   }
 
   /**
@@ -55,6 +66,8 @@ export class Domains extends APIResource {
     )._thenUnwrap((obj) => obj.data);
   }
 }
+
+export class DomainListResponsesCursorPage extends CursorPage<DomainListResponse> {}
 
 export interface DomainCreateResponse {
   /**
@@ -361,73 +374,66 @@ export interface DomainUpdateResponse {
   open_tracking?: boolean;
 }
 
-/**
- * The domains registered in your account
- */
-export type DomainListResponse = Array<DomainListResponse.DomainListResponseItem>;
+export interface DomainListResponse {
+  /**
+   * The id of the domain
+   */
+  id: string;
 
-export namespace DomainListResponse {
-  export interface DomainListResponseItem {
-    /**
-     * The id of the domain
-     */
-    id: string;
+  /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
 
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
+  /**
+   * The user who created the object
+   */
+  created_by: string;
 
-    /**
-     * The user who created the object
-     */
-    created_by: string;
+  /**
+   * The kind of object returned
+   */
+  kind: 'domain';
 
-    /**
-     * The kind of object returned
-     */
-    kind: 'domain';
+  /**
+   * The name of the domain. For example: 'email.mycompany.com'
+   */
+  name: string;
 
-    /**
-     * The name of the domain. For example: 'email.mycompany.com'
-     */
-    name: string;
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
-    /**
-     * The id of the organization
-     */
-    org_id: string;
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
+  /**
+   * The sending status for the domain
+   */
+  sending_status: 'enabled' | 'disabled';
 
-    /**
-     * The sending status for the domain
-     */
-    sending_status: 'enabled' | 'disabled';
+  /**
+   * The status for the domain
+   */
+  status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
 
-    /**
-     * The status for the domain
-     */
-    status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
+  /**
+   * The date of the lastest verification of the status
+   */
+  status_at: string;
 
-    /**
-     * The date of the lastest verification of the status
-     */
-    status_at: string;
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
 
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-  }
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 export interface DomainDeleteResponse {
@@ -471,6 +477,10 @@ export interface DomainUpdateParams {
   open_tracking?: boolean;
 }
 
+export interface DomainListParams extends CursorPageParams {}
+
+Domains.DomainListResponsesCursorPage = DomainListResponsesCursorPage;
+
 export declare namespace Domains {
   export {
     type DomainCreateResponse as DomainCreateResponse,
@@ -478,7 +488,9 @@ export declare namespace Domains {
     type DomainUpdateResponse as DomainUpdateResponse,
     type DomainListResponse as DomainListResponse,
     type DomainDeleteResponse as DomainDeleteResponse,
+    DomainListResponsesCursorPage as DomainListResponsesCursorPage,
     type DomainCreateParams as DomainCreateParams,
     type DomainUpdateParams as DomainUpdateParams,
+    type DomainListParams as DomainListParams,
   };
 }

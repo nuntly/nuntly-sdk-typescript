@@ -17,7 +17,9 @@ import {
   APIKeyCreateParams,
   APIKeyCreateResponse,
   APIKeyDeleteResponse,
+  APIKeyListParams,
   APIKeyListResponse,
+  APIKeyListResponsesCursorPage,
   APIKeyRetrieveResponse,
   APIKeyUpdateParams,
   APIKeyUpdateResponse,
@@ -27,7 +29,9 @@ import {
   DomainCreateParams,
   DomainCreateResponse,
   DomainDeleteResponse,
+  DomainListParams,
   DomainListResponse,
+  DomainListResponsesCursorPage,
   DomainRetrieveResponse,
   DomainUpdateParams,
   DomainUpdateResponse,
@@ -45,7 +49,9 @@ import {
   WebhookCreateParams,
   WebhookCreateResponse,
   WebhookDeleteResponse,
+  WebhookListParams,
   WebhookListResponse,
+  WebhookListResponsesCursorPage,
   WebhookRetrieveResponse,
   WebhookUpdateParams,
   WebhookUpdateResponse,
@@ -236,10 +242,13 @@ export class Nuntly extends Core.APIClient {
 
 Nuntly.Shared = Shared;
 Nuntly.APIKeys = APIKeys;
+Nuntly.APIKeyListResponsesCursorPage = APIKeyListResponsesCursorPage;
 Nuntly.Domains = Domains;
+Nuntly.DomainListResponsesCursorPage = DomainListResponsesCursorPage;
 Nuntly.Emails = Emails;
 Nuntly.EmailListResponsesCursorPage = EmailListResponsesCursorPage;
 Nuntly.Webhooks = Webhooks;
+Nuntly.WebhookListResponsesCursorPage = WebhookListResponsesCursorPage;
 Nuntly.Organizations = Organizations;
 Nuntly.Account = Account;
 export declare namespace Nuntly {
@@ -264,8 +273,10 @@ export declare namespace Nuntly {
     type APIKeyUpdateResponse as APIKeyUpdateResponse,
     type APIKeyListResponse as APIKeyListResponse,
     type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    APIKeyListResponsesCursorPage as APIKeyListResponsesCursorPage,
     type APIKeyCreateParams as APIKeyCreateParams,
     type APIKeyUpdateParams as APIKeyUpdateParams,
+    type APIKeyListParams as APIKeyListParams,
   };
 
   export {
@@ -275,8 +286,10 @@ export declare namespace Nuntly {
     type DomainUpdateResponse as DomainUpdateResponse,
     type DomainListResponse as DomainListResponse,
     type DomainDeleteResponse as DomainDeleteResponse,
+    DomainListResponsesCursorPage as DomainListResponsesCursorPage,
     type DomainCreateParams as DomainCreateParams,
     type DomainUpdateParams as DomainUpdateParams,
+    type DomainListParams as DomainListParams,
   };
 
   export {
@@ -297,8 +310,10 @@ export declare namespace Nuntly {
     type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
+    WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
   };
 
   export {
