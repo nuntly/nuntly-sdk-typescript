@@ -28,4 +28,15 @@ describe('resource events', () => {
       }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.emails.events.list(
+        'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
+        { cursor: 'cursor', limit: 1 },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
+  });
 });

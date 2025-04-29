@@ -1,15 +1,29 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 
 export class Memberships extends APIResource {
   /**
    * Return the organization memberships
    */
-  list(id: string, options?: Core.RequestOptions): Core.APIPromise<MembershipListResponse> {
+  list(
+    id: string,
+    query?: MembershipListParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<MembershipListResponse>;
+  list(id: string, options?: Core.RequestOptions): Core.APIPromise<MembershipListResponse>;
+  list(
+    id: string,
+    query: MembershipListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<MembershipListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list(id, {}, query);
+    }
     return (
-      this._client.get(`/organizations/${id}/memberships`, options) as Core.APIPromise<{
+      this._client.get(`/organizations/${id}/memberships`, { query, ...options }) as Core.APIPromise<{
         data: MembershipListResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
@@ -183,9 +197,22 @@ export interface MembershipRevokeResponse {
   user_id: string;
 }
 
+export interface MembershipListParams {
+  /**
+   * The cursor to use for pagination
+   */
+  cursor?: string;
+
+  /**
+   * The number of emails to return
+   */
+  limit?: number;
+}
+
 export declare namespace Memberships {
   export {
     type MembershipListResponse as MembershipListResponse,
     type MembershipRevokeResponse as MembershipRevokeResponse,
+    type MembershipListParams as MembershipListParams,
   };
 }

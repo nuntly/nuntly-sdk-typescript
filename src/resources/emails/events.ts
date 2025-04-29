@@ -1,15 +1,31 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 
 export class Events extends APIResource {
   /**
    * Return the events related to this email id
    */
-  list(id: string, options?: Core.RequestOptions): Core.APIPromise<EventListResponse> {
+  list(
+    id: string,
+    query?: EventListParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<EventListResponse>;
+  list(id: string, options?: Core.RequestOptions): Core.APIPromise<EventListResponse>;
+  list(
+    id: string,
+    query: EventListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<EventListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list(id, {}, query);
+    }
     return (
-      this._client.get(`/emails/${id}/events`, options) as Core.APIPromise<{ data: EventListResponse }>
+      this._client.get(`/emails/${id}/events`, { query, ...options }) as Core.APIPromise<{
+        data: EventListResponse;
+      }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
@@ -71,6 +87,18 @@ export namespace EventListResponse {
   }
 }
 
+export interface EventListParams {
+  /**
+   * The cursor to use for pagination
+   */
+  cursor?: string;
+
+  /**
+   * The number of emails to return
+   */
+  limit?: number;
+}
+
 export declare namespace Events {
-  export { type EventListResponse as EventListResponse };
+  export { type EventListResponse as EventListResponse, type EventListParams as EventListParams };
 }
