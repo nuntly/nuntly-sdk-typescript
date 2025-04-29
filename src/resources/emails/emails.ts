@@ -7,7 +7,7 @@ import * as SharedAPI from '../shared';
 import * as BulkAPI from './bulk';
 import { Bulk, BulkRetrieveResponse, BulkSendParams, BulkSendResponse } from './bulk';
 import * as EventsAPI from './events';
-import { EventListResponse, Events } from './events';
+import { EventListParams, EventListResponse, Events } from './events';
 import * as StatsAPI from './stats';
 import { StatListResponse, Stats } from './stats';
 import { CursorPage, type CursorPageParams } from '../../pagination';
@@ -560,7 +560,11 @@ export declare namespace Emails {
     type BulkSendParams as BulkSendParams,
   };
 
-  export { Events as Events, type EventListResponse as EventListResponse };
+  export {
+    Events as Events,
+    type EventListResponse as EventListResponse,
+    type EventListParams as EventListParams,
+  };
 
   export { Stats as Stats, type StatListResponse as StatListResponse };
 }

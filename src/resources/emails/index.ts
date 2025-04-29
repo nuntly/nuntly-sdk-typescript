@@ -11,5 +11,5 @@ export {
   type EmailListParams,
   type EmailSendParams,
 } from './emails';
-export { Events, type EventListResponse } from './events';
+export { Events, type EventListResponse, type EventListParams } from './events';
 export { Stats, type StatListResponse } from './stats';

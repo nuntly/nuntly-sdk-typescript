@@ -68,6 +68,7 @@ import {
   Emails,
 } from './resources/emails/emails';
 import {
+  OrganizationListParams,
   OrganizationListResponse,
   OrganizationRetrieveResponse,
   Organizations,
@@ -320,6 +321,7 @@ export declare namespace Nuntly {
     Organizations as Organizations,
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
     type OrganizationListResponse as OrganizationListResponse,
+    type OrganizationListParams as OrganizationListParams,
   };
 
   export {

@@ -44,6 +44,7 @@ export {
   Organizations,
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,
+  type OrganizationListParams,
 } from './organizations/organizations';
 export {
   Shared,

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as InvitationsAPI from './invitations';
 import {
@@ -10,7 +11,12 @@ import {
   Invitations,
 } from './invitations';
 import * as MembershipsAPI from './memberships';
-import { MembershipListResponse, MembershipRevokeResponse, Memberships } from './memberships';
+import {
+  MembershipListParams,
+  MembershipListResponse,
+  MembershipRevokeResponse,
+  Memberships,
+} from './memberships';
 import * as SubscriptionsAPI from './subscriptions';
 import { SubscriptionListResponse, Subscriptions } from './subscriptions';
 import * as UsageAPI from './usage';
@@ -36,9 +42,22 @@ export class Organizations extends APIResource {
   /**
    * Return the organizations that the current user is a member
    */
-  list(options?: Core.RequestOptions): Core.APIPromise<OrganizationListResponse> {
+  list(
+    query?: OrganizationListParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<OrganizationListResponse>;
+  list(options?: Core.RequestOptions): Core.APIPromise<OrganizationListResponse>;
+  list(
+    query: OrganizationListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<OrganizationListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
     return (
-      this._client.get('/organizations', options) as Core.APIPromise<{ data: OrganizationListResponse }>
+      this._client.get('/organizations', { query, ...options }) as Core.APIPromise<{
+        data: OrganizationListResponse;
+      }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
@@ -144,6 +163,18 @@ export namespace OrganizationListResponse {
   }
 }
 
+export interface OrganizationListParams {
+  /**
+   * The cursor to use for pagination
+   */
+  cursor?: string;
+
+  /**
+   * The number of emails to return
+   */
+  limit?: number;
+}
+
 Organizations.Memberships = Memberships;
 Organizations.Invitations = Invitations;
 Organizations.Subscriptions = Subscriptions;
@@ -153,12 +184,14 @@ export declare namespace Organizations {
   export {
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
     type OrganizationListResponse as OrganizationListResponse,
+    type OrganizationListParams as OrganizationListParams,
   };
 
   export {
     Memberships as Memberships,
     type MembershipListResponse as MembershipListResponse,
     type MembershipRevokeResponse as MembershipRevokeResponse,
+    type MembershipListParams as MembershipListParams,
   };
 
   export {

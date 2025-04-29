@@ -80,7 +80,7 @@ Types:
 
 Methods:
 
-- <code title="get /emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">list</a>(id) -> EventListResponse</code>
+- <code title="get /emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">list</a>(id, { ...params }) -> EventListResponse</code>
 
 ## Stats
 
@@ -120,7 +120,7 @@ Types:
 Methods:
 
 - <code title="get /organizations/{id}">client.organizations.<a href="./src/resources/organizations/organizations.ts">retrieve</a>(id) -> OrganizationRetrieveResponse</code>
-- <code title="get /organizations">client.organizations.<a href="./src/resources/organizations/organizations.ts">list</a>() -> OrganizationListResponse</code>
+- <code title="get /organizations">client.organizations.<a href="./src/resources/organizations/organizations.ts">list</a>({ ...params }) -> OrganizationListResponse</code>
 
 ## Memberships
 
@@ -131,7 +131,7 @@ Types:
 
 Methods:
 
-- <code title="get /organizations/{id}/memberships">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">list</a>(id) -> MembershipListResponse</code>
+- <code title="get /organizations/{id}/memberships">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">list</a>(id, { ...params }) -> MembershipListResponse</code>
 - <code title="delete /organizations/{id}/memberships/{user_id}">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">revoke</a>(id, userId) -> MembershipRevokeResponse</code>
 
 ## Invitations
