@@ -1,8 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../resource';
+import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as SharedAPI from './shared';
+import { CursorPage, type CursorPageParams } from '../pagination';
 
 export class Webhooks extends APIResource {
   /**
@@ -42,10 +44,19 @@ export class Webhooks extends APIResource {
   /**
    * Return a list of your webhooks
    */
-  list(options?: Core.RequestOptions): Core.APIPromise<WebhookListResponse> {
-    return (
-      this._client.get('/webhooks', options) as Core.APIPromise<{ data: WebhookListResponse }>
-    )._thenUnwrap((obj) => obj.data);
+  list(
+    query?: WebhookListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<WebhookListResponsesCursorPage, WebhookListResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<WebhookListResponsesCursorPage, WebhookListResponse>;
+  list(
+    query: WebhookListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<WebhookListResponsesCursorPage, WebhookListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
+    return this._client.getAPIList('/webhooks', WebhookListResponsesCursorPage, { query, ...options });
   }
 
   /**
@@ -57,6 +68,8 @@ export class Webhooks extends APIResource {
     )._thenUnwrap((obj) => obj.data);
   }
 }
+
+export class WebhookListResponsesCursorPage extends CursorPage<WebhookListResponse> {}
 
 export interface WebhookCreateResponse {
   /**
@@ -198,70 +211,63 @@ export interface WebhookUpdateResponse {
   org_id: string;
 }
 
-/**
- * The webhooks registered in your organization
- */
-export type WebhookListResponse = Array<WebhookListResponse.WebhookListResponseItem>;
+export interface WebhookListResponse {
+  /**
+   * The id of the webhook
+   */
+  id: string;
 
-export namespace WebhookListResponse {
-  export interface WebhookListResponseItem {
-    /**
-     * The id of the webhook
-     */
-    id: string;
+  /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
 
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
+  /**
+   * The user who created the object
+   */
+  created_by: string;
 
-    /**
-     * The user who created the object
-     */
-    created_by: string;
+  /**
+   * The endpoint URL of the webhook
+   */
+  endpoint_url: string;
 
-    /**
-     * The endpoint URL of the webhook
-     */
-    endpoint_url: string;
+  events: Array<SharedAPI.WebhookEventType>;
 
-    events: Array<SharedAPI.WebhookEventType>;
+  /**
+   * The kind of object returned
+   */
+  kind: 'webhook';
 
-    /**
-     * The kind of object returned
-     */
-    kind: 'webhook';
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
-    /**
-     * The id of the organization
-     */
-    org_id: string;
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
+  /**
+   * The status of the webhook.
+   */
+  status: 'enabled' | 'disabled' | 'revoked';
 
-    /**
-     * The status of the webhook.
-     */
-    status: 'enabled' | 'disabled' | 'revoked';
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
 
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-
-    /**
-     * The name of the webhook
-     */
-    name?: string;
-  }
+  /**
+   * The name of the webhook
+   */
+  name?: string;
 }
 
 export interface WebhookDeleteResponse {
@@ -319,6 +325,10 @@ export interface WebhookUpdateParams {
   status: 'enabled' | 'disabled';
 }
 
+export interface WebhookListParams extends CursorPageParams {}
+
+Webhooks.WebhookListResponsesCursorPage = WebhookListResponsesCursorPage;
+
 export declare namespace Webhooks {
   export {
     type WebhookCreateResponse as WebhookCreateResponse,
@@ -326,7 +336,9 @@ export declare namespace Webhooks {
     type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
+    WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
   };
 }
