@@ -2,8 +2,10 @@
 
 export {
   Invitations,
+  type InvitationListResponse,
   type InvitationDeleteResponse,
   type InvitationSendResponse,
+  type InvitationListParams,
   type InvitationSendParams,
 } from './invitations';
 export {
@@ -13,6 +15,7 @@ export {
   type MembershipListParams,
 } from './memberships';
 export {
+  OrganizationListResponsesCursorPage,
   Organizations,
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,

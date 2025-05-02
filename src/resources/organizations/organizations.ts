@@ -6,6 +6,8 @@ import * as Core from '../../core';
 import * as InvitationsAPI from './invitations';
 import {
   InvitationDeleteResponse,
+  InvitationListParams,
+  InvitationListResponse,
   InvitationSendParams,
   InvitationSendResponse,
   Invitations,
@@ -21,6 +23,7 @@ import * as SubscriptionsAPI from './subscriptions';
 import { SubscriptionListResponse, Subscriptions } from './subscriptions';
 import * as UsageAPI from './usage';
 import { Usage, UsageRetrieveResponse } from './usage';
+import { CursorPage, type CursorPageParams } from '../../pagination';
 
 export class Organizations extends APIResource {
   memberships: MembershipsAPI.Memberships = new MembershipsAPI.Memberships(this._client);
@@ -45,22 +48,25 @@ export class Organizations extends APIResource {
   list(
     query?: OrganizationListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<OrganizationListResponse>;
-  list(options?: Core.RequestOptions): Core.APIPromise<OrganizationListResponse>;
+  ): Core.PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse>;
   list(
     query: OrganizationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<OrganizationListResponse> {
+  ): Core.PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return (
-      this._client.get('/organizations', { query, ...options }) as Core.APIPromise<{
-        data: OrganizationListResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return this._client.getAPIList('/organizations', OrganizationListResponsesCursorPage, {
+      query,
+      ...options,
+    });
   }
 }
+
+export class OrganizationListResponsesCursorPage extends CursorPage<OrganizationListResponse> {}
 
 export interface OrganizationRetrieveResponse {
   /**
@@ -109,72 +115,56 @@ export interface OrganizationRetrieveResponse {
   modified_by?: string;
 }
 
-/**
- * The organizations for the user
- */
-export type OrganizationListResponse = Array<OrganizationListResponse.OrganizationListResponseItem>;
-
-export namespace OrganizationListResponse {
-  export interface OrganizationListResponseItem {
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
-
-    /**
-     * The user who created the object
-     */
-    created_by: string;
-
-    /**
-     * The display name of the organization
-     */
-    display_name: string;
-
-    /**
-     * The kind of object returned
-     */
-    kind: 'organization';
-
-    /**
-     * The id of the organization
-     */
-    org_id: string;
-
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
-
-    /**
-     * The status of the organization
-     */
-    status: 'active' | 'pending' | 'revoked';
-
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-  }
-}
-
-export interface OrganizationListParams {
+export interface OrganizationListResponse {
   /**
-   * The cursor to use for pagination
+   * Date at which the object was created (ISO 8601 format)
    */
-  cursor?: string;
+  created_at: string;
 
   /**
-   * The number of emails to return
+   * The user who created the object
    */
-  limit?: number;
+  created_by: string;
+
+  /**
+   * The display name of the organization
+   */
+  display_name: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'organization';
+
+  /**
+   * The id of the organization
+   */
+  org_id: string;
+
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
+
+  /**
+   * The status of the organization
+   */
+  status: 'active' | 'pending' | 'revoked';
+
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
+
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
+export interface OrganizationListParams extends CursorPageParams {}
+
+Organizations.OrganizationListResponsesCursorPage = OrganizationListResponsesCursorPage;
 Organizations.Memberships = Memberships;
 Organizations.Invitations = Invitations;
 Organizations.Subscriptions = Subscriptions;
@@ -184,6 +174,7 @@ export declare namespace Organizations {
   export {
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
     type OrganizationListResponse as OrganizationListResponse,
+    OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
     type OrganizationListParams as OrganizationListParams,
   };
 
@@ -196,8 +187,10 @@ export declare namespace Organizations {
 
   export {
     Invitations as Invitations,
+    type InvitationListResponse as InvitationListResponse,
     type InvitationDeleteResponse as InvitationDeleteResponse,
     type InvitationSendResponse as InvitationSendResponse,
+    type InvitationListParams as InvitationListParams,
     type InvitationSendParams as InvitationSendParams,
   };
 

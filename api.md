@@ -120,7 +120,7 @@ Types:
 Methods:
 
 - <code title="get /organizations/{id}">client.organizations.<a href="./src/resources/organizations/organizations.ts">retrieve</a>(id) -> OrganizationRetrieveResponse</code>
-- <code title="get /organizations">client.organizations.<a href="./src/resources/organizations/organizations.ts">list</a>({ ...params }) -> OrganizationListResponse</code>
+- <code title="get /organizations">client.organizations.<a href="./src/resources/organizations/organizations.ts">list</a>({ ...params }) -> OrganizationListResponsesCursorPage</code>
 
 ## Memberships
 
@@ -138,11 +138,13 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/organizations/invitations.ts">InvitationListResponse</a></code>
 - <code><a href="./src/resources/organizations/invitations.ts">InvitationDeleteResponse</a></code>
 - <code><a href="./src/resources/organizations/invitations.ts">InvitationSendResponse</a></code>
 
 Methods:
 
+- <code title="get /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">list</a>(id, { ...params }) -> InvitationListResponse</code>
 - <code title="delete /organizations/{id}/invitations/{invitation_id}">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">delete</a>(id, invitationId) -> InvitationDeleteResponse</code>
 - <code title="post /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">send</a>(id, { ...params }) -> InvitationSendResponse</code>
 

@@ -70,6 +70,7 @@ import {
 import {
   OrganizationListParams,
   OrganizationListResponse,
+  OrganizationListResponsesCursorPage,
   OrganizationRetrieveResponse,
   Organizations,
 } from './resources/organizations/organizations';
@@ -251,6 +252,7 @@ Nuntly.EmailListResponsesCursorPage = EmailListResponsesCursorPage;
 Nuntly.Webhooks = Webhooks;
 Nuntly.WebhookListResponsesCursorPage = WebhookListResponsesCursorPage;
 Nuntly.Organizations = Organizations;
+Nuntly.OrganizationListResponsesCursorPage = OrganizationListResponsesCursorPage;
 Nuntly.Account = Account;
 export declare namespace Nuntly {
   export type RequestOptions = Core.RequestOptions;
@@ -321,6 +323,7 @@ export declare namespace Nuntly {
     Organizations as Organizations,
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
     type OrganizationListResponse as OrganizationListResponse,
+    OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
     type OrganizationListParams as OrganizationListParams,
   };
 
