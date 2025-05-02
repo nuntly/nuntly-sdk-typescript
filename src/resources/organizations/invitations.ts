@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import { CursorPage, type CursorPageParams } from '../../pagination';
 
@@ -10,9 +11,21 @@ export class Invitations extends APIResource {
    */
   list(
     id: string,
-    query: InvitationListParams,
+    query?: InvitationListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse>;
+  list(
+    id: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse>;
+  list(
+    id: string,
+    query: InvitationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse> {
+    if (isRequestOptions(query)) {
+      return this.list(id, {}, query);
+    }
     return this._client.getAPIList(`/organizations/${id}/invitations`, InvitationListResponsesCursorPage, {
       query,
       ...options,
@@ -191,7 +204,7 @@ export interface InvitationListParams extends CursorPageParams {
   /**
    * The status of the invitation
    */
-  status: 'pending' | 'accepted' | 'declined' | 'all';
+  status?: 'pending' | 'accepted' | 'declined';
 }
 
 export interface InvitationSendParams {
