@@ -8,6 +8,7 @@ import {
   InvitationDeleteResponse,
   InvitationListParams,
   InvitationListResponse,
+  InvitationListResponsesCursorPage,
   InvitationSendParams,
   InvitationSendResponse,
   Invitations,
@@ -169,6 +170,7 @@ Organizations.OrganizationListResponsesCursorPage = OrganizationListResponsesCur
 Organizations.Memberships = Memberships;
 Organizations.MembershipListResponsesCursorPage = MembershipListResponsesCursorPage;
 Organizations.Invitations = Invitations;
+Organizations.InvitationListResponsesCursorPage = InvitationListResponsesCursorPage;
 Organizations.Subscriptions = Subscriptions;
 Organizations.Usage = Usage;
 
@@ -193,6 +195,7 @@ export declare namespace Organizations {
     type InvitationListResponse as InvitationListResponse,
     type InvitationDeleteResponse as InvitationDeleteResponse,
     type InvitationSendResponse as InvitationSendResponse,
+    InvitationListResponsesCursorPage as InvitationListResponsesCursorPage,
     type InvitationListParams as InvitationListParams,
     type InvitationSendParams as InvitationSendParams,
   };
