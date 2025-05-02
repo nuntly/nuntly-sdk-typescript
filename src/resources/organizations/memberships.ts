@@ -45,79 +45,13 @@ export class Memberships extends APIResource {
   }
 }
 
-export interface MembershipListResponse {
-  /**
-   * The invitations of this organization
-   */
-  invitations: Array<MembershipListResponse.Invitation>;
-
-  /**
-   * The organization membership
-   */
-  members: Array<MembershipListResponse.Member>;
-}
+/**
+ * The organization membership
+ */
+export type MembershipListResponse = Array<MembershipListResponse.MembershipListResponseItem>;
 
 export namespace MembershipListResponse {
-  export interface Invitation {
-    /**
-     * The id of the invitation
-     */
-    id: string;
-
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
-
-    /**
-     * The user who created the object
-     */
-    created_by: string;
-
-    /**
-     * The e-mail to send an invitation
-     */
-    email: string;
-
-    invitation_expired_at: string;
-
-    /**
-     * The inviter e-mail
-     */
-    inviter_email: string;
-
-    /**
-     * The kind of object returned
-     */
-    kind: 'invitation';
-
-    /**
-     * The id of the organization
-     */
-    org_id: string;
-
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
-
-    /**
-     * The status of the invitation
-     */
-    status: 'pending' | 'accepted' | 'declined';
-
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-  }
-
-  export interface Member {
+  export interface MembershipListResponseItem {
     /**
      * Date at which the object was created (ISO 8601 format)
      */
