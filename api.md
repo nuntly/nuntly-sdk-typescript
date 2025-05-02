@@ -144,7 +144,7 @@ Types:
 
 Methods:
 
-- <code title="get /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">list</a>(id, { ...params }) -> InvitationListResponse</code>
+- <code title="get /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">list</a>(id, { ...params }) -> InvitationListResponsesCursorPage</code>
 - <code title="delete /organizations/{id}/invitations/{invitation_id}">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">delete</a>(id, invitationId) -> InvitationDeleteResponse</code>
 - <code title="post /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">send</a>(id, { ...params }) -> InvitationSendResponse</code>
 

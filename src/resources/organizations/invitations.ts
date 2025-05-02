@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import { CursorPage, type CursorPageParams } from '../../pagination';
 
 export class Invitations extends APIResource {
   /**
@@ -12,17 +13,23 @@ export class Invitations extends APIResource {
     id: string,
     query?: InvitationListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<InvitationListResponse>;
-  list(id: string, options?: Core.RequestOptions): Core.APIPromise<InvitationListResponse>;
+  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse>;
+  list(
+    id: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse>;
   list(
     id: string,
     query: InvitationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<InvitationListResponse> {
+  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse> {
     if (isRequestOptions(query)) {
       return this.list(id, {}, query);
     }
-    return this._client.get(`/organizations/${id}/invitations`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${id}/invitations`, InvitationListResponsesCursorPage, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -56,71 +63,65 @@ export class Invitations extends APIResource {
   }
 }
 
+export class InvitationListResponsesCursorPage extends CursorPage<InvitationListResponse> {}
+
 export interface InvitationListResponse {
-  data?: InvitationListResponse.Data;
+  /**
+   * The id of the invitation
+   */
+  id: string;
 
-  next_cursor?: string | null;
-}
+  /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
 
-export namespace InvitationListResponse {
-  export interface Data {
-    /**
-     * The id of the invitation
-     */
-    id: string;
+  /**
+   * The user who created the object
+   */
+  created_by: string;
 
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
+  /**
+   * The e-mail to send an invitation
+   */
+  email: string;
 
-    /**
-     * The user who created the object
-     */
-    created_by: string;
+  invitation_expired_at: string;
 
-    /**
-     * The e-mail to send an invitation
-     */
-    email: string;
+  /**
+   * The inviter e-mail
+   */
+  inviter_email: string;
 
-    invitation_expired_at: string;
+  /**
+   * The kind of object returned
+   */
+  kind: 'invitation';
 
-    /**
-     * The inviter e-mail
-     */
-    inviter_email: string;
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
-    /**
-     * The kind of object returned
-     */
-    kind: 'invitation';
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
-    /**
-     * The id of the organization
-     */
-    org_id: string;
+  /**
+   * The status of the invitation
+   */
+  status: 'pending' | 'accepted' | 'declined';
 
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
 
-    /**
-     * The status of the invitation
-     */
-    status: 'pending' | 'accepted' | 'declined';
-
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
-
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-  }
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 export interface InvitationDeleteResponse {
@@ -199,17 +200,7 @@ export interface InvitationSendResponse {
   modified_by?: string;
 }
 
-export interface InvitationListParams {
-  /**
-   * The cursor to use for pagination
-   */
-  cursor?: string;
-
-  /**
-   * The number of emails to return
-   */
-  limit?: number;
-}
+export interface InvitationListParams extends CursorPageParams {}
 
 export interface InvitationSendParams {
   /**
@@ -218,11 +209,14 @@ export interface InvitationSendParams {
   email: string;
 }
 
+Invitations.InvitationListResponsesCursorPage = InvitationListResponsesCursorPage;
+
 export declare namespace Invitations {
   export {
     type InvitationListResponse as InvitationListResponse,
     type InvitationDeleteResponse as InvitationDeleteResponse,
     type InvitationSendResponse as InvitationSendResponse,
+    InvitationListResponsesCursorPage as InvitationListResponsesCursorPage,
     type InvitationListParams as InvitationListParams,
     type InvitationSendParams as InvitationSendParams,
   };
