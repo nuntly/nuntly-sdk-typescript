@@ -41,6 +41,7 @@ export {
   type EmailSendParams,
 } from './emails/emails';
 export {
+  OrganizationListResponsesCursorPage,
   Organizations,
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,
