@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import { CursorPage, type CursorPageParams } from '../../pagination';
 
 export class Memberships extends APIResource {
   /**
@@ -12,21 +13,23 @@ export class Memberships extends APIResource {
     id: string,
     query?: MembershipListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<MembershipListResponse>;
-  list(id: string, options?: Core.RequestOptions): Core.APIPromise<MembershipListResponse>;
+  ): Core.PagePromise<MembershipListResponsesCursorPage, MembershipListResponse>;
+  list(
+    id: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<MembershipListResponsesCursorPage, MembershipListResponse>;
   list(
     id: string,
     query: MembershipListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<MembershipListResponse> {
+  ): Core.PagePromise<MembershipListResponsesCursorPage, MembershipListResponse> {
     if (isRequestOptions(query)) {
       return this.list(id, {}, query);
     }
-    return (
-      this._client.get(`/organizations/${id}/memberships`, { query, ...options }) as Core.APIPromise<{
-        data: MembershipListResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return this._client.getAPIList(`/organizations/${id}/memberships`, MembershipListResponsesCursorPage, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -45,73 +48,68 @@ export class Memberships extends APIResource {
   }
 }
 
-/**
- * The organization membership
- */
-export type MembershipListResponse = Array<MembershipListResponse.MembershipListResponseItem>;
+export class MembershipListResponsesCursorPage extends CursorPage<MembershipListResponse> {}
 
-export namespace MembershipListResponse {
-  export interface MembershipListResponseItem {
-    /**
-     * Date at which the object was created (ISO 8601 format)
-     */
-    created_at: string;
+export interface MembershipListResponse {
+  /**
+   * Date at which the object was created (ISO 8601 format)
+   */
+  created_at: string;
 
-    /**
-     * The user who created the object
-     */
-    created_by: string;
+  /**
+   * The user who created the object
+   */
+  created_by: string;
 
-    /**
-     * The display name of the organization
-     */
-    display_name: string;
+  /**
+   * The display name of the organization
+   */
+  display_name: string;
 
-    /**
-     * The e-mail to send an invitation
-     */
-    email: string;
+  /**
+   * The e-mail to send an invitation
+   */
+  email: string;
 
-    /**
-     * The kind of object returned
-     */
-    kind: 'org-membership';
+  /**
+   * The kind of object returned
+   */
+  kind: 'org-membership';
 
-    /**
-     * The id of the organization
-     */
-    org_id: string;
+  /**
+   * The id of the organization
+   */
+  org_id: string;
 
-    /**
-     * The region of the related data
-     */
-    region: 'eu-west-1';
+  /**
+   * The region of the related data
+   */
+  region: 'eu-west-1';
 
-    /**
-     * The role in the organization
-     */
-    role: 'owner' | 'member';
+  /**
+   * The role in the organization
+   */
+  role: 'owner' | 'member';
 
-    /**
-     * The status of the membership
-     */
-    status: 'active' | 'pending' | 'revoked' | 'suspended';
+  /**
+   * The status of the membership
+   */
+  status: 'active' | 'pending' | 'revoked' | 'suspended';
 
-    /**
-     * The id of the account
-     */
-    user_id: string;
+  /**
+   * The id of the account
+   */
+  user_id: string;
 
-    /**
-     * Date at which the object was modified (ISO 8601 format)
-     */
-    modified_at?: string;
+  /**
+   * Date at which the object was modified (ISO 8601 format)
+   */
+  modified_at?: string;
 
-    /**
-     * The last user who modified the object
-     */
-    modified_by?: string;
-  }
+  /**
+   * The last user who modified the object
+   */
+  modified_by?: string;
 }
 
 export interface MembershipRevokeResponse {
@@ -131,22 +129,15 @@ export interface MembershipRevokeResponse {
   user_id: string;
 }
 
-export interface MembershipListParams {
-  /**
-   * The cursor to use for pagination
-   */
-  cursor?: string;
+export interface MembershipListParams extends CursorPageParams {}
 
-  /**
-   * The number of emails to return
-   */
-  limit?: number;
-}
+Memberships.MembershipListResponsesCursorPage = MembershipListResponsesCursorPage;
 
 export declare namespace Memberships {
   export {
     type MembershipListResponse as MembershipListResponse,
     type MembershipRevokeResponse as MembershipRevokeResponse,
+    MembershipListResponsesCursorPage as MembershipListResponsesCursorPage,
     type MembershipListParams as MembershipListParams,
   };
 }

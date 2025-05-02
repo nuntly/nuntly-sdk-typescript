@@ -9,6 +9,7 @@ export {
   type InvitationSendParams,
 } from './invitations';
 export {
+  MembershipListResponsesCursorPage,
   Memberships,
   type MembershipListResponse,
   type MembershipRevokeResponse,
