@@ -16,6 +16,7 @@ import * as MembershipsAPI from './memberships';
 import {
   MembershipListParams,
   MembershipListResponse,
+  MembershipListResponsesCursorPage,
   MembershipRevokeResponse,
   Memberships,
 } from './memberships';
@@ -166,6 +167,7 @@ export interface OrganizationListParams extends CursorPageParams {}
 
 Organizations.OrganizationListResponsesCursorPage = OrganizationListResponsesCursorPage;
 Organizations.Memberships = Memberships;
+Organizations.MembershipListResponsesCursorPage = MembershipListResponsesCursorPage;
 Organizations.Invitations = Invitations;
 Organizations.Subscriptions = Subscriptions;
 Organizations.Usage = Usage;
@@ -182,6 +184,7 @@ export declare namespace Organizations {
     Memberships as Memberships,
     type MembershipListResponse as MembershipListResponse,
     type MembershipRevokeResponse as MembershipRevokeResponse,
+    MembershipListResponsesCursorPage as MembershipListResponsesCursorPage,
     type MembershipListParams as MembershipListParams,
   };
 

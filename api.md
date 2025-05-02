@@ -131,7 +131,7 @@ Types:
 
 Methods:
 
-- <code title="get /organizations/{id}/memberships">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">list</a>(id, { ...params }) -> MembershipListResponse</code>
+- <code title="get /organizations/{id}/memberships">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">list</a>(id, { ...params }) -> MembershipListResponsesCursorPage</code>
 - <code title="delete /organizations/{id}/memberships/{user_id}">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">revoke</a>(id, userId) -> MembershipRevokeResponse</code>
 
 ## Invitations
