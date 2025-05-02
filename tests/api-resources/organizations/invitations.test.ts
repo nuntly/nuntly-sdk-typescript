@@ -9,8 +9,8 @@ const client = new Nuntly({
 });
 
 describe('resource invitations', () => {
-  test('list', async () => {
-    const responsePromise = client.organizations.invitations.list('id');
+  test('list: only required params', async () => {
+    const responsePromise = client.organizations.invitations.list('id', { status: 'pending' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,22 +20,12 @@ describe('resource invitations', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.organizations.invitations.list('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Nuntly.NotFoundError);
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.organizations.invitations.list(
-        'id',
-        { cursor: 'cursor', limit: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Nuntly.NotFoundError);
+  test('list: required and optional params', async () => {
+    const response = await client.organizations.invitations.list('id', {
+      status: 'pending',
+      cursor: 'cursor',
+      limit: 1,
+    });
   });
 
   test('delete', async () => {
