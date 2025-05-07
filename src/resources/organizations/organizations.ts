@@ -35,6 +35,13 @@ export class Organizations extends APIResource {
 
   /**
    * Return the organization
+   *
+   * @example
+   * ```ts
+   * const organization = await client.organizations.retrieve(
+   *   'org_9UTZz2PisZ68YwE3NJu9urQ9',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<OrganizationRetrieveResponse> {
     return (
@@ -46,6 +53,14 @@ export class Organizations extends APIResource {
 
   /**
    * Return the organizations that the current user is a member
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const organizationListResponse of client.organizations.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query?: OrganizationListParams,

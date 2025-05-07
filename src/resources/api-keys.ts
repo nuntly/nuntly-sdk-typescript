@@ -8,6 +8,11 @@ import { CursorPage, type CursorPageParams } from '../pagination';
 export class APIKeys extends APIResource {
   /**
    * Create a new api key
+   *
+   * @example
+   * ```ts
+   * const apiKey = await client.apiKeys.create();
+   * ```
    */
   create(body?: APIKeyCreateParams, options?: Core.RequestOptions): Core.APIPromise<APIKeyCreateResponse>;
   create(options?: Core.RequestOptions): Core.APIPromise<APIKeyCreateResponse>;
@@ -25,6 +30,13 @@ export class APIKeys extends APIResource {
 
   /**
    * Return the api-key with the given ID
+   *
+   * @example
+   * ```ts
+   * const apiKey = await client.apiKeys.retrieve(
+   *   'apk_pdGukGd4BTmHj8dscBDE5Mc9',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<APIKeyRetrieveResponse> {
     return (
@@ -34,6 +46,13 @@ export class APIKeys extends APIResource {
 
   /**
    * Updates partial api key fields with the given id
+   *
+   * @example
+   * ```ts
+   * const apiKey = await client.apiKeys.update(
+   *   'ak_pdGukGd4BTmHj8dscBDE5Mc9',
+   * );
+   * ```
    */
   update(
     id: string,
@@ -49,6 +68,14 @@ export class APIKeys extends APIResource {
 
   /**
    * Return a list of your api keys
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const apiKeyListResponse of client.apiKeys.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query?: APIKeyListParams,
@@ -67,6 +94,13 @@ export class APIKeys extends APIResource {
 
   /**
    * Delete the api key with the given ID
+   *
+   * @example
+   * ```ts
+   * const apiKey = await client.apiKeys.delete(
+   *   'ak_pdGukGd4BTmHj8dscBDE5Mc9',
+   * );
+   * ```
    */
   delete(id: string, options?: Core.RequestOptions): Core.APIPromise<APIKeyDeleteResponse> {
     return (

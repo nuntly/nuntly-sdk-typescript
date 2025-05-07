@@ -8,6 +8,14 @@ import { CursorPage, type CursorPageParams } from '../pagination';
 export class Domains extends APIResource {
   /**
    * Return the domain with the given ID
+   *
+   * @example
+   * ```ts
+   * const domain = await client.domains.create({
+   *   name: 'acme.com',
+   *   region: 'eu-west-1',
+   * });
+   * ```
    */
   create(body: DomainCreateParams, options?: Core.RequestOptions): Core.APIPromise<DomainCreateResponse> {
     return (
@@ -17,6 +25,13 @@ export class Domains extends APIResource {
 
   /**
    * Return the domain with the given id
+   *
+   * @example
+   * ```ts
+   * const domain = await client.domains.retrieve(
+   *   'dns_FdfQe2eZAzRrHCXKSr7VsxUz',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DomainRetrieveResponse> {
     return (
@@ -26,6 +41,13 @@ export class Domains extends APIResource {
 
   /**
    * Updates domain tracking settings
+   *
+   * @example
+   * ```ts
+   * const domain = await client.domains.update(
+   *   'dns_FdfQe2eZAzRrHCXKSr7VsxUz',
+   * );
+   * ```
    */
   update(
     id: string,
@@ -41,6 +63,14 @@ export class Domains extends APIResource {
 
   /**
    * Return a list of your domains
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const domainListResponse of client.domains.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query?: DomainListParams,
@@ -59,6 +89,13 @@ export class Domains extends APIResource {
 
   /**
    * Delete the domain with the given ID
+   *
+   * @example
+   * ```ts
+   * const domain = await client.domains.delete(
+   *   'dns_FdfQe2eZAzRrHCXKSr7VsxUz',
+   * );
+   * ```
    */
   delete(id: string, options?: Core.RequestOptions): Core.APIPromise<DomainDeleteResponse> {
     return (

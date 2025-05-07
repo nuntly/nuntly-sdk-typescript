@@ -8,6 +8,16 @@ import { CursorPage, type CursorPageParams } from '../../pagination';
 export class Invitations extends APIResource {
   /**
    * Return the organization invitations
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const invitationListResponse of client.organizations.invitations.list(
+   *   'id',
+   * )) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     id: string,
@@ -34,6 +44,15 @@ export class Invitations extends APIResource {
 
   /**
    * Delete an invitation
+   *
+   * @example
+   * ```ts
+   * const invitation =
+   *   await client.organizations.invitations.delete(
+   *     'id',
+   *     'invitation_id',
+   *   );
+   * ```
    */
   delete(
     id: string,
@@ -49,6 +68,14 @@ export class Invitations extends APIResource {
 
   /**
    * Send an invitation to someone you wish to invite to join your organization
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.organizations.invitations.send('id', {
+   *     email: 'sarah.connor@sky.net',
+   *   });
+   * ```
    */
   send(
     id: string,

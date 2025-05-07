@@ -7,6 +7,13 @@ import * as Core from '../../core';
 export class Events extends APIResource {
   /**
    * Return the events related to this email id
+   *
+   * @example
+   * ```ts
+   * const events = await client.emails.events.list(
+   *   'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
+   * );
+   * ```
    */
   list(
     id: string,

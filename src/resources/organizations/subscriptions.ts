@@ -6,6 +6,12 @@ import * as Core from '../../core';
 export class Subscriptions extends APIResource {
   /**
    * Return the organization subscriptions
+   *
+   * @example
+   * ```ts
+   * const subscriptions =
+   *   await client.organizations.subscriptions.list('id');
+   * ```
    */
   list(id: string, options?: Core.RequestOptions): Core.APIPromise<SubscriptionListResponse> {
     return (

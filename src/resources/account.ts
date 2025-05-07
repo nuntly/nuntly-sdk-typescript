@@ -6,6 +6,11 @@ import * as Core from '../core';
 export class Account extends APIResource {
   /**
    * Retrieve your account informations
+   *
+   * @example
+   * ```ts
+   * const account = await client.account.retrieve();
+   * ```
    */
   retrieve(options?: Core.RequestOptions): Core.APIPromise<AccountRetrieveResponse> {
     return (
@@ -15,6 +20,13 @@ export class Account extends APIResource {
 
   /**
    * Update your account
+   *
+   * @example
+   * ```ts
+   * const account = await client.account.update({
+   *   display_name: 'Ray Tomlinson',
+   * });
+   * ```
    */
   update(body: AccountUpdateParams, options?: Core.RequestOptions): Core.APIPromise<AccountUpdateResponse> {
     return (
