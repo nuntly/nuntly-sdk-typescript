@@ -6,6 +6,13 @@ import * as Core from '../../core';
 export class Usage extends APIResource {
   /**
    * Return the organization usage
+   *
+   * @example
+   * ```ts
+   * const usage = await client.organizations.usage.retrieve(
+   *   'id',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<UsageRetrieveResponse> {
     return (

@@ -7,6 +7,13 @@ import * as SharedAPI from '../shared';
 export class Bulk extends APIResource {
   /**
    * Return a list of emails
+   *
+   * @example
+   * ```ts
+   * const bulk = await client.emails.bulk.retrieve(
+   *   'blk_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<BulkRetrieveResponse> {
     return (
@@ -16,6 +23,24 @@ export class Bulk extends APIResource {
 
   /**
    * Send bulk emails
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.bulk.send({
+   *   emails: [
+   *     {
+   *       from: 'ray@info.tomlinson.ai',
+   *       subject: 'Welcome to Tomlinson AI!',
+   *       to: 'carlo43@gmail.com',
+   *     },
+   *     {
+   *       from: 'ray@info.tomlinson.ai',
+   *       subject: 'Welcome to Tomlinson AI!',
+   *       to: 'pink42@yahoo.com',
+   *     },
+   *   ],
+   * });
+   * ```
    */
   send(body: BulkSendParams, options?: Core.RequestOptions): Core.APIPromise<BulkSendResponse> {
     return (

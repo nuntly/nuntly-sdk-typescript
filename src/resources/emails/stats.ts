@@ -6,6 +6,11 @@ import * as Core from '../../core';
 export class Stats extends APIResource {
   /**
    * Return the emails stats
+   *
+   * @example
+   * ```ts
+   * const stats = await client.emails.stats.list();
+   * ```
    */
   list(options?: Core.RequestOptions): Core.APIPromise<StatListResponse> {
     return (

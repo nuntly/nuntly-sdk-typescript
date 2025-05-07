@@ -8,6 +8,16 @@ import { CursorPage, type CursorPageParams } from '../../pagination';
 export class Memberships extends APIResource {
   /**
    * Return the organization memberships
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const membershipListResponse of client.organizations.memberships.list(
+   *   'id',
+   * )) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     id: string,
@@ -34,6 +44,15 @@ export class Memberships extends APIResource {
 
   /**
    * Revoke a user from an organization
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.organizations.memberships.revoke(
+   *     'id',
+   *     'user_id',
+   *   );
+   * ```
    */
   revoke(
     id: string,

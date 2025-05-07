@@ -19,6 +19,13 @@ export class Emails extends APIResource {
 
   /**
    * Return the email with the given id
+   *
+   * @example
+   * ```ts
+   * const email = await client.emails.retrieve(
+   *   'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<EmailRetrieveResponse> {
     return (
@@ -28,6 +35,14 @@ export class Emails extends APIResource {
 
   /**
    * Return a list of your last emails
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const emailListResponse of client.emails.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query?: EmailListParams,
@@ -46,6 +61,13 @@ export class Emails extends APIResource {
 
   /**
    * Cancel a scheduled email
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.cancel(
+   *   'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
+   * );
+   * ```
    */
   cancel(id: string, options?: Core.RequestOptions): Core.APIPromise<EmailCancelResponse> {
     return (
@@ -56,6 +78,15 @@ export class Emails extends APIResource {
   /**
    * Send transactional emails through the Nuntly platform. It supports HTML and
    * plain-text emails, attachments, labels, custom headers and scheduling.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.send({
+   *   from: 'ray@info.tomlinson.ai',
+   *   subject: 'Welcome to Tomlinson AI!',
+   *   to: 'carlo43@gmail.com',
+   * });
+   * ```
    */
   send(body: EmailSendParams, options?: Core.RequestOptions): Core.APIPromise<EmailSendResponse> {
     return (

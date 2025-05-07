@@ -10,6 +10,16 @@ export class Webhooks extends APIResource {
   /**
    * Create a webhook so the endpoint is notified from Nuntly platform events (Emails
    * events)
+   *
+   * @example
+   * ```ts
+   * const webhook = await client.webhooks.create({
+   *   endpoint_url:
+   *     'https://webhook.site/12345678-1234-5678-1234-123456789012',
+   *   events: ['email.delivered', 'email.sent'],
+   *   status: 'enabled',
+   * });
+   * ```
    */
   create(body: WebhookCreateParams, options?: Core.RequestOptions): Core.APIPromise<WebhookCreateResponse> {
     return (
@@ -19,6 +29,13 @@ export class Webhooks extends APIResource {
 
   /**
    * Return the webhook with the given ID
+   *
+   * @example
+   * ```ts
+   * const webhook = await client.webhooks.retrieve(
+   *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
+   * );
+   * ```
    */
   retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<WebhookRetrieveResponse> {
     return (
@@ -28,6 +45,20 @@ export class Webhooks extends APIResource {
 
   /**
    * Updates a webhook with the given ID
+   *
+   * @example
+   * ```ts
+   * const webhook = await client.webhooks.update(
+   *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
+   *   {
+   *     endpoint_url:
+   *       'https://webhook.site/12345678-1234-5678-1234-123456789012',
+   *     events: ['email.delivered', 'email.sent'],
+   *     name: 'My webhook',
+   *     status: 'enabled',
+   *   },
+   * );
+   * ```
    */
   update(
     id: string,
@@ -43,6 +74,14 @@ export class Webhooks extends APIResource {
 
   /**
    * Return a list of your webhooks
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const webhookListResponse of client.webhooks.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query?: WebhookListParams,
@@ -61,6 +100,13 @@ export class Webhooks extends APIResource {
 
   /**
    * Delete the webhook with the given ID
+   *
+   * @example
+   * ```ts
+   * const webhook = await client.webhooks.delete(
+   *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
+   * );
+   * ```
    */
   delete(id: string, options?: Core.RequestOptions): Core.APIPromise<WebhookDeleteResponse> {
     return (
