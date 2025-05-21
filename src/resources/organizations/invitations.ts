@@ -231,7 +231,7 @@ export interface InvitationListParams extends CursorPageParams {
   /**
    * The status of the invitation
    */
-  status?: 'pending' | 'accepted' | 'declined';
+  status?: 'pending' | 'accepted' | 'declined' | 'done';
 }
 
 export interface InvitationSendParams {
