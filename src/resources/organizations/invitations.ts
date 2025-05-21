@@ -138,7 +138,7 @@ export interface InvitationListResponse {
   /**
    * The status of the invitation
    */
-  status: 'pending' | 'accepted' | 'declined';
+  status: 'pending' | 'accepted' | 'declined' | 'done';
 
   /**
    * Date at which the object was modified (ISO 8601 format)
@@ -214,7 +214,7 @@ export interface InvitationSendResponse {
   /**
    * The status of the invitation
    */
-  status: 'pending' | 'accepted' | 'declined';
+  status: 'pending' | 'accepted' | 'declined' | 'done';
 
   /**
    * Date at which the object was modified (ISO 8601 format)
