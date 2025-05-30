@@ -80,7 +80,7 @@ export namespace SubscriptionListResponse {
     /**
      * The name of the plan
      */
-    plan?: 'free' | 'pro' | 'enterprise';
+    plan?: 'free' | 'starter' | 'scale' | 'enterprise';
 
     quota?: SubscriptionListResponseItem.Quota;
 
@@ -174,7 +174,7 @@ export namespace SubscriptionListResponse {
           /**
            * The name of the plan
            */
-          plan?: 'free' | 'pro' | 'enterprise';
+          plan?: 'free' | 'starter' | 'scale' | 'enterprise';
 
           quota?: Price.Quota;
         }
