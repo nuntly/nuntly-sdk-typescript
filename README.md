@@ -160,13 +160,13 @@ List methods in the Nuntly API are paginated.
 You can use the `for await … of` syntax to iterate through items across all pages:
 
 ```ts
-async function fetchAllEmails(params) {
-  const allEmails = [];
+async function fetchAllEmailListResponses(params) {
+  const allEmailListResponses = [];
   // Automatically fetches more pages as needed.
   for await (const emailListResponse of client.emails.list({ cursor: 'eyJwYWdlIjoxfQ==', limit: 10 })) {
-    allEmails.push(emailListResponse);
+    allEmailListResponses.push(emailListResponse);
   }
-  return allEmails;
+  return allEmailListResponses;
 }
 ```
 
