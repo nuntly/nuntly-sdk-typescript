@@ -28,7 +28,9 @@ describe('resource organizations', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.organizations.update('id', { display_name: 'Ray Tomlinson org.' });
+    const responsePromise = client.organizations.update('org_9UTZz2PisZ68YwE3NJu9urQ9', {
+      display_name: 'Ray Tomlinson org.',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -39,7 +41,9 @@ describe('resource organizations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.organizations.update('id', { display_name: 'Ray Tomlinson org.' });
+    const response = await client.organizations.update('org_9UTZz2PisZ68YwE3NJu9urQ9', {
+      display_name: 'Ray Tomlinson org.',
+    });
   });
 
   test('list', async () => {
