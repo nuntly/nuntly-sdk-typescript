@@ -57,7 +57,7 @@ export class Organizations extends APIResource {
    * @example
    * ```ts
    * const organization = await client.organizations.update(
-   *   'id',
+   *   'org_9UTZz2PisZ68YwE3NJu9urQ9',
    *   { display_name: 'Ray Tomlinson org.' },
    * );
    * ```
