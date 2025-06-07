@@ -29,18 +29,14 @@ const client = new Nuntly({
   apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted
 });
 
-async function main() {
-  const email = await client.emails.send({
-    from: 'ray@info.tomlinson.ai',
-    subject: 'Verify Your Email Address',
-    to: 'brian67@gmail.com',
-    text: 'Thank you for signing up! Please verify your email address...',
-  });
+const email = await client.emails.send({
+  from: 'ray@info.tomlinson.ai',
+  subject: 'Verify Your Email Address',
+  to: 'brian67@gmail.com',
+  text: 'Thank you for signing up! Please verify your email address...',
+});
 
-  console.log(email.id);
-}
-
-main();
+console.log(email.id);
 ```
 
 ### Request & Response types
@@ -55,11 +51,7 @@ const client = new Nuntly({
   apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted
 });
 
-async function main() {
-  const apiKey: Nuntly.APIKeyCreateResponse = await client.apiKeys.create();
-}
-
-main();
+const apiKey: Nuntly.APIKeyCreateResponse = await client.apiKeys.create();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -72,31 +64,25 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-async function main() {
-  // try catch statement
-  const apiKey = await client.apiKeys.create().catch(async (err) => {
-    if (err instanceof Nuntly.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
-    }
-  });
-
-  // or data and error
-  const { data, error } = await client.apiKeys.create().catchError()
-  if (error) {
-    console.log(error.status); // 400
-    console.log(error.details);
-    // ...
+// try catch statement
+const apiKey = await client.apiKeys.create().catch(async (err) => {
+  if (err instanceof Nuntly.APIError) {
+    console.log(err.status); // 400
+    console.log(err.name); // BadRequestError
+    console.log(err.headers); // {server: 'nginx', ...}
+  } else {
+    throw err;
   }
 
-  console.log(data.apikey)
-
+// or data and error
+const { data, error } = await client.apiKeys.create().catchError()
+if (error) {
+  console.log(error.status); // 400
+  console.log(error.details);
+  // ...
 }
 
-main();
+console.log(data.apikey)
 ```
 
 Error codes are as follows:
