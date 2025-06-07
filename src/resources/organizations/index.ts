@@ -20,7 +20,9 @@ export {
   OrganizationListResponsesCursorPage,
   Organizations,
   type OrganizationRetrieveResponse,
+  type OrganizationUpdateResponse,
   type OrganizationListResponse,
+  type OrganizationUpdateParams,
   type OrganizationListParams,
 } from './organizations';
 export { Subscriptions, type SubscriptionListResponse } from './subscriptions';

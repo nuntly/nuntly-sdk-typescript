@@ -44,7 +44,9 @@ export {
   OrganizationListResponsesCursorPage,
   Organizations,
   type OrganizationRetrieveResponse,
+  type OrganizationUpdateResponse,
   type OrganizationListResponse,
+  type OrganizationUpdateParams,
   type OrganizationListParams,
 } from './organizations/organizations';
 export {

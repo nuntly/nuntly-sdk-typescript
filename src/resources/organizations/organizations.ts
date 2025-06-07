@@ -52,6 +52,29 @@ export class Organizations extends APIResource {
   }
 
   /**
+   * Patch the organization
+   *
+   * @example
+   * ```ts
+   * const organization = await client.organizations.update(
+   *   'id',
+   *   { display_name: 'Ray Tomlinson org.' },
+   * );
+   * ```
+   */
+  update(
+    id: string,
+    body: OrganizationUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<OrganizationUpdateResponse> {
+    return (
+      this._client.patch(`/organizations/${id}`, { body, ...options }) as Core.APIPromise<{
+        data: OrganizationUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
+  }
+
+  /**
    * Return the organizations that the current user is a member
    *
    * @example
@@ -132,6 +155,18 @@ export interface OrganizationRetrieveResponse {
   modified_by?: string;
 }
 
+export interface OrganizationUpdateResponse {
+  /**
+   * The id of the account
+   */
+  id: string;
+
+  /**
+   * The kind of object returned
+   */
+  kind: 'organization';
+}
+
 export interface OrganizationListResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
@@ -179,6 +214,13 @@ export interface OrganizationListResponse {
   modified_by?: string;
 }
 
+export interface OrganizationUpdateParams {
+  /**
+   * The display name of the organization
+   */
+  display_name: string;
+}
+
 export interface OrganizationListParams extends CursorPageParams {}
 
 Organizations.OrganizationListResponsesCursorPage = OrganizationListResponsesCursorPage;
@@ -192,8 +234,10 @@ Organizations.Usage = Usage;
 export declare namespace Organizations {
   export {
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
+    type OrganizationUpdateResponse as OrganizationUpdateResponse,
     type OrganizationListResponse as OrganizationListResponse,
     OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
+    type OrganizationUpdateParams as OrganizationUpdateParams,
     type OrganizationListParams as OrganizationListParams,
   };
 
