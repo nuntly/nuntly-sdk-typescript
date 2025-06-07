@@ -115,11 +115,13 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/organizations/organizations.ts">OrganizationRetrieveResponse</a></code>
+- <code><a href="./src/resources/organizations/organizations.ts">OrganizationUpdateResponse</a></code>
 - <code><a href="./src/resources/organizations/organizations.ts">OrganizationListResponse</a></code>
 
 Methods:
 
 - <code title="get /organizations/{id}">client.organizations.<a href="./src/resources/organizations/organizations.ts">retrieve</a>(id) -> OrganizationRetrieveResponse</code>
+- <code title="patch /organizations/{id}">client.organizations.<a href="./src/resources/organizations/organizations.ts">update</a>(id, { ...params }) -> OrganizationUpdateResponse</code>
 - <code title="get /organizations">client.organizations.<a href="./src/resources/organizations/organizations.ts">list</a>({ ...params }) -> OrganizationListResponsesCursorPage</code>
 
 ## Memberships

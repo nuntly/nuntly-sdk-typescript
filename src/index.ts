@@ -72,6 +72,8 @@ import {
   OrganizationListResponse,
   OrganizationListResponsesCursorPage,
   OrganizationRetrieveResponse,
+  OrganizationUpdateParams,
+  OrganizationUpdateResponse,
   Organizations,
 } from './resources/organizations/organizations';
 
@@ -322,8 +324,10 @@ export declare namespace Nuntly {
   export {
     Organizations as Organizations,
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
+    type OrganizationUpdateResponse as OrganizationUpdateResponse,
     type OrganizationListResponse as OrganizationListResponse,
     OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
+    type OrganizationUpdateParams as OrganizationUpdateParams,
     type OrganizationListParams as OrganizationListParams,
   };
 
