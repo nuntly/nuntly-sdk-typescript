@@ -2,7 +2,7 @@
 
 import type { Nuntly } from './index';
 
-export class APIResource {
+export abstract class APIResource {
   protected _client: Nuntly;
 
   constructor(client: Nuntly) {
