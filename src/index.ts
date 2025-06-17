@@ -173,6 +173,7 @@ export class Nuntly extends Core.APIClient {
 
     super({
       baseURL: options.baseURL!,
+      baseURLOverridden: baseURL ? baseURL !== 'https://api.nuntly.com' : false,
       timeout: options.timeout ?? 60000 /* 1 minute */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
@@ -191,6 +192,13 @@ export class Nuntly extends Core.APIClient {
   webhooks: API.Webhooks = new API.Webhooks(this);
   organizations: API.Organizations = new API.Organizations(this);
   account: API.Account = new API.Account(this);
+
+  /**
+   * Check whether the base URL is set to its default.
+   */
+  #baseURLOverridden(): boolean {
+    return this.baseURL !== 'https://api.nuntly.com';
+  }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
