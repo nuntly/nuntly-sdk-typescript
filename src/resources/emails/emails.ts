@@ -226,19 +226,14 @@ export namespace EmailRetrieveResponse {
    */
   export interface Attachment {
     /**
-     * Content type of the attachment
+     * Content type of the attachment (the MIME type)
      */
     content_type?: string;
 
     /**
-     * The name of the attached file
+     * The name of the attached file to be displayed to the recipient
      */
     filename?: string;
-
-    /**
-     * Attachement URL
-     */
-    path?: string;
   }
 
   /**
@@ -386,19 +381,14 @@ export namespace EmailListResponse {
    */
   export interface Attachment {
     /**
-     * Content type of the attachment
+     * Content type of the attachment (the MIME type)
      */
     content_type?: string;
 
     /**
-     * The name of the attached file
+     * The name of the attached file to be displayed to the recipient
      */
     filename?: string;
-
-    /**
-     * Attachement URL
-     */
-    path?: string;
   }
 
   /**
@@ -537,19 +527,14 @@ export namespace EmailSendParams {
     content?: string;
 
     /**
-     * Content type of the attachment
+     * Content type of the attachment (the MIME type)
      */
     content_type?: string;
 
     /**
-     * The name of the attached file
+     * The name of the attached file to be displayed to the recipient
      */
     filename?: string;
-
-    /**
-     * Attachement URL
-     */
-    path?: string;
   }
 
   /**
