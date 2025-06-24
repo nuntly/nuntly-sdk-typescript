@@ -120,11 +120,6 @@ export interface DomainCreateResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The kind of object returned
    */
   kind: 'domain';
@@ -170,11 +165,6 @@ export interface DomainCreateResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export namespace DomainCreateResponse {
@@ -259,11 +249,6 @@ export interface DomainRetrieveResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The kind of object returned
    */
   kind: 'domain';
@@ -309,11 +294,6 @@ export interface DomainRetrieveResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export namespace DomainRetrieveResponse {
@@ -423,11 +403,6 @@ export interface DomainListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The kind of object returned
    */
   kind: 'domain';
@@ -466,11 +441,6 @@ export interface DomainListResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export interface DomainDeleteResponse {

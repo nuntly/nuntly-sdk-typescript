@@ -129,11 +129,6 @@ export interface WebhookCreateResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The endpoint URL of the webhook
    */
   endpoint_url: string;
@@ -171,11 +166,6 @@ export interface WebhookCreateResponse {
   modified_at?: string;
 
   /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
-
-  /**
    * The name of the webhook
    */
   name?: string;
@@ -191,11 +181,6 @@ export interface WebhookRetrieveResponse {
    * Date at which the object was created (ISO 8601 format)
    */
   created_at: string;
-
-  /**
-   * The user who created the object
-   */
-  created_by: string;
 
   /**
    * The endpoint URL of the webhook
@@ -228,11 +213,6 @@ export interface WebhookRetrieveResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The name of the webhook
@@ -269,11 +249,6 @@ export interface WebhookListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The endpoint URL of the webhook
    */
   endpoint_url: string;
@@ -304,11 +279,6 @@ export interface WebhookListResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The name of the webhook

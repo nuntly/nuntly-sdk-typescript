@@ -104,11 +104,6 @@ export interface InvitationListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The e-mail to send an invitation
    */
   email: string;
@@ -144,11 +139,6 @@ export interface InvitationListResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export interface InvitationDeleteResponse {
@@ -180,11 +170,6 @@ export interface InvitationSendResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The e-mail to send an invitation
    */
   email: string;
@@ -220,11 +205,6 @@ export interface InvitationSendResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export interface InvitationListParams extends CursorPageParams {

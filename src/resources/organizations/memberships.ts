@@ -76,11 +76,6 @@ export interface MembershipListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The display name of the organization
    */
   display_name: string;
@@ -124,11 +119,6 @@ export interface MembershipListResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export interface MembershipRevokeResponse {
