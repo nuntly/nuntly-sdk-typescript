@@ -264,11 +264,6 @@ export interface EmailListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The e-mail address of the sender
    */
   from: string;
@@ -309,34 +304,9 @@ export interface EmailListResponse {
   to: Array<string> | string;
 
   /**
-   * The attachements
-   */
-  attachments?: Array<EmailListResponse.Attachment>;
-
-  /**
-   * The blind carbon copy recipient(s) of the email
-   */
-  bcc?: Array<string> | string;
-
-  /**
    * The bulk id
    */
   bulk_id?: string;
-
-  /**
-   * The carbon copy recipient(s) of the email
-   */
-  cc?: Array<string> | string;
-
-  /**
-   * The context for the template
-   */
-  context?: unknown;
-
-  /**
-   * The headers to add to the email
-   */
-  headers?: { [key: string]: string };
 
   /**
    * The id from email provider
@@ -344,67 +314,9 @@ export interface EmailListResponse {
   message_id?: string;
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
-
-  /**
-   * The email address where replies should be sent. If a recipient replies, the
-   * response will go to this address instead of the sender's email address
-   */
-  reply_to?: Array<string> | string;
-
-  /**
    * The date at which the email is scheduled to be sent
    */
   scheduled_at?: string;
-
-  /**
-   * May provide more informations about the status
-   */
-  status_reason?: { [key: string]: unknown };
-
-  /**
-   * The tags to add to the email
-   */
-  tags?: Array<EmailListResponse.Tag>;
-}
-
-export namespace EmailListResponse {
-  /**
-   * The attachment
-   */
-  export interface Attachment {
-    /**
-     * Content type of the attachment (the MIME type)
-     */
-    content_type?: string;
-
-    /**
-     * The name of the attached file to be displayed to the recipient
-     */
-    filename?: string;
-  }
-
-  /**
-   * The tag to add to the email and you can get via email id or in webhook events
-   */
-  export interface Tag {
-    /**
-     * The name of the tag
-     */
-    name: string;
-
-    /**
-     * The tag to add to the email
-     */
-    value: string;
-  }
 }
 
 export interface EmailCancelResponse {
