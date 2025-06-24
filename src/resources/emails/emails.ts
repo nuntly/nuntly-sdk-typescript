@@ -181,7 +181,7 @@ export interface EmailRetrieveResponse {
   /**
    * The headers to add to the email
    */
-  headers?: Record<string, string>;
+  headers?: { [key: string]: string };
 
   /**
    * The id from email provider
@@ -212,7 +212,7 @@ export interface EmailRetrieveResponse {
   /**
    * May provide more informations about the status
    */
-  status_reason?: Record<string, unknown>;
+  status_reason?: { [key: string]: unknown };
 
   /**
    * The tags to add to the email
@@ -336,7 +336,7 @@ export interface EmailListResponse {
   /**
    * The headers to add to the email
    */
-  headers?: Record<string, string>;
+  headers?: { [key: string]: string };
 
   /**
    * The id from email provider
@@ -367,7 +367,7 @@ export interface EmailListResponse {
   /**
    * May provide more informations about the status
    */
-  status_reason?: Record<string, unknown>;
+  status_reason?: { [key: string]: unknown };
 
   /**
    * The tags to add to the email
@@ -487,7 +487,7 @@ export interface EmailSendParams {
   /**
    * The headers to add to the email
    */
-  headers?: Record<string, string>;
+  headers?: { [key: string]: string };
 
   /**
    * The HTML version of the email

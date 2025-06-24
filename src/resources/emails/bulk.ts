@@ -182,7 +182,7 @@ export namespace BulkSendParams {
     /**
      * The headers to add to the email
      */
-    headers?: Record<string, string>;
+    headers?: { [key: string]: string };
 
     /**
      * The HTML version of the email
@@ -255,7 +255,7 @@ export namespace BulkSendParams {
     /**
      * The headers to add to the email
      */
-    headers?: Record<string, string>;
+    headers?: { [key: string]: string };
 
     /**
      * The HTML version of the email

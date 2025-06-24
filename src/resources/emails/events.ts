@@ -52,7 +52,7 @@ export namespace EventListResponse {
     /**
      * Detail of the event
      */
-    details: Record<string, unknown>;
+    details: { [key: string]: unknown };
 
     /**
      * The id of the email
