@@ -115,11 +115,6 @@ export interface OrganizationRetrieveResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The display name of the organization
    */
   display_name: string;
@@ -148,11 +143,6 @@ export interface OrganizationRetrieveResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export interface OrganizationUpdateResponse {
@@ -174,11 +164,6 @@ export interface OrganizationListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The display name of the organization
    */
   display_name: string;
@@ -207,11 +192,6 @@ export interface OrganizationListResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 }
 
 export interface OrganizationUpdateParams {

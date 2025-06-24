@@ -47,11 +47,6 @@ export interface AccountRetrieveResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The display name
    */
   display_name: string;
@@ -75,11 +70,6 @@ export interface AccountRetrieveResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The profile picture of the user

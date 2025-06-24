@@ -133,11 +133,6 @@ export interface APIKeyCreateResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The kind of object returned
    */
   kind: 'api-key';
@@ -166,11 +161,6 @@ export interface APIKeyCreateResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The name of the api key
@@ -195,11 +185,6 @@ export interface APIKeyRetrieveResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The kind of object returned
    */
   kind: 'api-key';
@@ -228,11 +213,6 @@ export interface APIKeyRetrieveResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The name of the api key
@@ -274,11 +254,6 @@ export interface APIKeyListResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The kind of object returned
    */
   kind: 'api-key';
@@ -307,11 +282,6 @@ export interface APIKeyListResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The name of the api key

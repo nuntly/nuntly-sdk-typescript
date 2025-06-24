@@ -109,11 +109,6 @@ export interface EmailRetrieveResponse {
   created_at: string;
 
   /**
-   * The user who created the object
-   */
-  created_by: string;
-
-  /**
    * The e-mail address of the sender
    */
   from: string;
@@ -192,11 +187,6 @@ export interface EmailRetrieveResponse {
    * Date at which the object was modified (ISO 8601 format)
    */
   modified_at?: string;
-
-  /**
-   * The last user who modified the object
-   */
-  modified_by?: string;
 
   /**
    * The email address where replies should be sent. If a recipient replies, the
