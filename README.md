@@ -75,7 +75,7 @@ const apiKey = await client.apiKeys.create().catch(async (err) => {
   }
 
 // or data and error
-const { data, error } = await client.apiKeys.create().catchError()
+const { data, error } = await client.apiKeys.create().safeAwait()
 if (error) {
   console.log(error.status); // 400
   console.log(error.details);

@@ -143,7 +143,7 @@ export class APIPromise<T> extends Promise<T> {
     return { data, response };
   }
 
-  async catchError(): Promise<{ data: T; error: null } | { data: null; error: APIError }> {
+  async safeAwait(): Promise<{ data: T; error: null } | { data: null; error: APIError }> {
     try {
       const data = await this.parse();
       return { data, error: null };
