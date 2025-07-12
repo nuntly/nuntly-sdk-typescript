@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { toFile, type ResponseLike } from 'nuntly/uploads';
-import { File } from 'nuntly/_shims/index';
+import { toFile, type ResponseLike } from '@nuntly/sdk/uploads';
+import { File } from '@nuntly/sdk/_shims/index';
 
 class MyClass {
   name: string = 'foo';

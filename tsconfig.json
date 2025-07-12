@@ -9,9 +9,9 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "nuntly/_shims/auto/*": ["src/_shims/auto/*-node"],
-      "nuntly/*": ["src/*"],
-      "nuntly": ["src/index.ts"]
+      "@nuntly/sdk/_shims/auto/*": ["src/_shims/auto/*-node"],
+      "@nuntly/sdk/*": ["src/*"],
+      "@nuntly/sdk": ["src/index.ts"]
     },
     "noEmit": true,
 
