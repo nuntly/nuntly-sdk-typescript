@@ -4,8 +4,8 @@
 /**
  * Types will get added to this namespace when you import one of the following:
  *
- *   import 'nuntly/shims/node'
- *   import 'nuntly/shims/web'
+ *   import '@nuntly/sdk/shims/node'
+ *   import '@nuntly/sdk/shims/web'
  *
  * Importing more than one will cause type and runtime errors.
  */

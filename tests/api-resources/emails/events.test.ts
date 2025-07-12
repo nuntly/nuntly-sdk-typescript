@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Nuntly from 'nuntly';
+import Nuntly from '@nuntly/sdk';
 import { Response } from 'node-fetch';
 
 const client = new Nuntly({

@@ -1,6 +1,6 @@
-import { multipartFormRequestOptions, createForm } from 'nuntly/core';
-import { Blob } from 'nuntly/_shims/index';
-import { toFile } from 'nuntly';
+import { multipartFormRequestOptions, createForm } from '@nuntly/sdk/core';
+import { Blob } from '@nuntly/sdk/_shims/index';
+import { toFile } from '@nuntly/sdk';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {

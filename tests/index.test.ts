@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Nuntly from 'nuntly';
-import { APIUserAbortError } from 'nuntly';
-import { Headers } from 'nuntly/core';
+import Nuntly from '@nuntly/sdk';
+import { APIUserAbortError } from '@nuntly/sdk';
+import { Headers } from '@nuntly/sdk/core';
 import defaultFetch, { Response, type RequestInit, type RequestInfo } from 'node-fetch';
 
 describe('instantiate client', () => {

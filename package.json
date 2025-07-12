@@ -1,5 +1,5 @@
 {
-  "name": "nuntly",
+  "name": "@nuntly/sdk",
   "version": "0.0.1-alpha.0",
   "description": "The official TypeScript library for the Nuntly API",
   "author": "Nuntly <developers@nuntly.com>",
@@ -59,8 +59,8 @@
     "./shims/web.mjs"
   ],
   "imports": {
-    "nuntly": ".",
-    "nuntly/*": "./src/*"
+    "@nuntly/sdk": ".",
+    "@nuntly/sdk/*": "./src/*"
   },
   "exports": {
     "./_shims/auto/*": {

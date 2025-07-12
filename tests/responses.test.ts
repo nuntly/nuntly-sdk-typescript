@@ -1,5 +1,5 @@
-import { createResponseHeaders } from 'nuntly/core';
-import { Headers } from 'nuntly/_shims/index';
+import { createResponseHeaders } from '@nuntly/sdk/core';
+import { Headers } from '@nuntly/sdk/_shims/index';
 
 describe('response parsing', () => {
   // TODO: test unicode characters
