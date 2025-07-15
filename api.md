@@ -134,7 +134,7 @@ Types:
 Methods:
 
 - <code title="get /organizations/{id}/memberships">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">list</a>(id, { ...params }) -> MembershipListResponsesCursorPage</code>
-- <code title="delete /organizations/{id}/memberships/{user_id}">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">revoke</a>(id, userId) -> MembershipRevokeResponse</code>
+- <code title="delete /organizations/{id}/memberships/{user_id}">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">revoke</a>(userID, { ...params }) -> MembershipRevokeResponse</code>
 
 ## Invitations
 
@@ -147,7 +147,7 @@ Types:
 Methods:
 
 - <code title="get /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">list</a>(id, { ...params }) -> InvitationListResponsesCursorPage</code>
-- <code title="delete /organizations/{id}/invitations/{invitation_id}">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">delete</a>(id, invitationId) -> InvitationDeleteResponse</code>
+- <code title="delete /organizations/{id}/invitations/{invitation_id}">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">delete</a>(invitationID, { ...params }) -> InvitationDeleteResponse</code>
 - <code title="post /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">send</a>(id, { ...params }) -> InvitationSendResponse</code>
 
 ## Subscriptions

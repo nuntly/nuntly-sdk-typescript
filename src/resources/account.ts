@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import * as Core from '../core';
+import { APIResource } from '../core/resource';
+import { APIPromise } from '../core/api-promise';
+import { RequestOptions } from '../internal/request-options';
 
 export class Account extends APIResource {
   /**
@@ -12,9 +13,9 @@ export class Account extends APIResource {
    * const account = await client.account.retrieve();
    * ```
    */
-  retrieve(options?: Core.RequestOptions): Core.APIPromise<AccountRetrieveResponse> {
+  retrieve(options?: RequestOptions): APIPromise<AccountRetrieveResponse> {
     return (
-      this._client.get('/account', options) as Core.APIPromise<{ data: AccountRetrieveResponse }>
+      this._client.get('/account', options) as APIPromise<{ data: AccountRetrieveResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -28,9 +29,9 @@ export class Account extends APIResource {
    * });
    * ```
    */
-  update(body: AccountUpdateParams, options?: Core.RequestOptions): Core.APIPromise<AccountUpdateResponse> {
+  update(body: AccountUpdateParams, options?: RequestOptions): APIPromise<AccountUpdateResponse> {
     return (
-      this._client.patch('/account', { body, ...options }) as Core.APIPromise<{ data: AccountUpdateResponse }>
+      this._client.patch('/account', { body, ...options }) as APIPromise<{ data: AccountUpdateResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }

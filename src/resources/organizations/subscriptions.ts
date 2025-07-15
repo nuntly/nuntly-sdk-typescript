@@ -1,7 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Subscriptions extends APIResource {
   /**
@@ -13,9 +15,9 @@ export class Subscriptions extends APIResource {
    *   await client.organizations.subscriptions.list('id');
    * ```
    */
-  list(id: string, options?: Core.RequestOptions): Core.APIPromise<SubscriptionListResponse> {
+  list(id: string, options?: RequestOptions): APIPromise<SubscriptionListResponse> {
     return (
-      this._client.get(`/organizations/${id}/subscriptions`, options) as Core.APIPromise<{
+      this._client.get(path`/organizations/${id}/subscriptions`, options) as APIPromise<{
         data: SubscriptionListResponse;
       }>
     )._thenUnwrap((obj) => obj.data);

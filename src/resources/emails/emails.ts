@@ -1,8 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
 import * as SharedAPI from '../shared';
 import * as BulkAPI from './bulk';
 import { Bulk, BulkRetrieveResponse, BulkSendParams, BulkSendResponse } from './bulk';
@@ -10,7 +8,10 @@ import * as EventsAPI from './events';
 import { EventListParams, EventListResponse, Events } from './events';
 import * as StatsAPI from './stats';
 import { StatListResponse, Stats } from './stats';
-import { CursorPage, type CursorPageParams } from '../../pagination';
+import { APIPromise } from '../../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Emails extends APIResource {
   bulk: BulkAPI.Bulk = new BulkAPI.Bulk(this._client);
@@ -27,9 +28,9 @@ export class Emails extends APIResource {
    * );
    * ```
    */
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<EmailRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
     return (
-      this._client.get(`/emails/${id}`, options) as Core.APIPromise<{ data: EmailRetrieveResponse }>
+      this._client.get(path`/emails/${id}`, options) as APIPromise<{ data: EmailRetrieveResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -45,18 +46,10 @@ export class Emails extends APIResource {
    * ```
    */
   list(
-    query?: EmailListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<EmailListResponsesCursorPage, EmailListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<EmailListResponsesCursorPage, EmailListResponse>;
-  list(
-    query: EmailListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<EmailListResponsesCursorPage, EmailListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list({}, query);
-    }
-    return this._client.getAPIList('/emails', EmailListResponsesCursorPage, { query, ...options });
+    query: EmailListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<EmailListResponsesCursorPage, EmailListResponse> {
+    return this._client.getAPIList('/emails', CursorPage<EmailListResponse>, { query, ...options });
   }
 
   /**
@@ -69,9 +62,9 @@ export class Emails extends APIResource {
    * );
    * ```
    */
-  cancel(id: string, options?: Core.RequestOptions): Core.APIPromise<EmailCancelResponse> {
+  cancel(id: string, options?: RequestOptions): APIPromise<EmailCancelResponse> {
     return (
-      this._client.delete(`/emails/${id}`, options) as Core.APIPromise<{ data: EmailCancelResponse }>
+      this._client.delete(path`/emails/${id}`, options) as APIPromise<{ data: EmailCancelResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -88,14 +81,14 @@ export class Emails extends APIResource {
    * });
    * ```
    */
-  send(body: EmailSendParams, options?: Core.RequestOptions): Core.APIPromise<EmailSendResponse> {
+  send(body: EmailSendParams, options?: RequestOptions): APIPromise<EmailSendResponse> {
     return (
-      this._client.post('/emails', { body, ...options }) as Core.APIPromise<{ data: EmailSendResponse }>
+      this._client.post('/emails', { body, ...options }) as APIPromise<{ data: EmailSendResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export class EmailListResponsesCursorPage extends CursorPage<EmailListResponse> {}
+export type EmailListResponsesCursorPage = CursorPage<EmailListResponse>;
 
 export interface EmailRetrieveResponse {
   /**
@@ -455,7 +448,6 @@ export namespace EmailSendParams {
   }
 }
 
-Emails.EmailListResponsesCursorPage = EmailListResponsesCursorPage;
 Emails.Bulk = Bulk;
 Emails.Events = Events;
 Emails.Stats = Stats;
@@ -466,7 +458,7 @@ export declare namespace Emails {
     type EmailListResponse as EmailListResponse,
     type EmailCancelResponse as EmailCancelResponse,
     type EmailSendResponse as EmailSendResponse,
-    EmailListResponsesCursorPage as EmailListResponsesCursorPage,
+    type EmailListResponsesCursorPage as EmailListResponsesCursorPage,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
   };
