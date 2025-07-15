@@ -154,7 +154,7 @@ export class Nuntly extends Core.APIClient {
    * API Client for interfacing with the Nuntly API.
    *
    * @param {string | null | undefined} [opts.apiKey=process.env['NUNTLY_API_KEY'] ?? null]
-   * @param {string} [opts.baseURL=process.env['NUNTLY_BASE_URL'] ?? https://api.nuntly.com] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['NUNTLY_BASE_URL'] ?? https://api.eu.nuntly.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -170,12 +170,12 @@ export class Nuntly extends Core.APIClient {
     const options: ClientOptions = {
       apiKey,
       ...opts,
-      baseURL: baseURL || `https://api.nuntly.com`,
+      baseURL: baseURL || `https://api.eu.nuntly.com`,
     };
 
     super({
       baseURL: options.baseURL!,
-      baseURLOverridden: baseURL ? baseURL !== 'https://api.nuntly.com' : false,
+      baseURLOverridden: baseURL ? baseURL !== 'https://api.eu.nuntly.com' : false,
       timeout: options.timeout ?? 60000 /* 1 minute */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
@@ -199,7 +199,7 @@ export class Nuntly extends Core.APIClient {
    * Check whether the base URL is set to its default.
    */
   #baseURLOverridden(): boolean {
-    return this.baseURL !== 'https://api.nuntly.com';
+    return this.baseURL !== 'https://api.eu.nuntly.com';
   }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {

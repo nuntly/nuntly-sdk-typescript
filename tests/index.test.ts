@@ -173,13 +173,13 @@ describe('instantiate client', () => {
     test('empty env variable', () => {
       process.env['NUNTLY_BASE_URL'] = ''; // empty
       const client = new Nuntly({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://api.nuntly.com');
+      expect(client.baseURL).toEqual('https://api.eu.nuntly.com');
     });
 
     test('blank env variable', () => {
       process.env['NUNTLY_BASE_URL'] = '  '; // blank
       const client = new Nuntly({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://api.nuntly.com');
+      expect(client.baseURL).toEqual('https://api.eu.nuntly.com');
     });
 
     test('in request options', () => {
