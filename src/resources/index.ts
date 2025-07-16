@@ -49,14 +49,7 @@ export {
   type OrganizationUpdateParams,
   type OrganizationListParams,
 } from './organizations/organizations';
-export {
-  Shared,
-  type BulkEmailsStatus,
-  type EmailStatus,
-  type Error,
-  type ErrorResponse,
-  type WebhookEventType,
-} from './shared';
+export { Shared, type BulkEmailsStatus, type EmailStatus, type WebhookEventType } from './shared';
 export {
   WebhookListResponsesCursorPage,
   Webhooks,
