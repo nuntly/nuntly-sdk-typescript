@@ -1,8 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Events extends APIResource {
   /**
@@ -17,20 +18,11 @@ export class Events extends APIResource {
    */
   list(
     id: string,
-    query?: EventListParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<EventListResponse>;
-  list(id: string, options?: Core.RequestOptions): Core.APIPromise<EventListResponse>;
-  list(
-    id: string,
-    query: EventListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<EventListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list(id, {}, query);
-    }
+    query: EventListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<EventListResponse> {
     return (
-      this._client.get(`/emails/${id}/events`, { query, ...options }) as Core.APIPromise<{
+      this._client.get(path`/emails/${id}/events`, { query, ...options }) as APIPromise<{
         data: EventListResponse;
       }>
     )._thenUnwrap((obj) => obj.data);

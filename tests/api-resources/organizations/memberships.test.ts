@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import Nuntly from '@nuntly/sdk';
-import { Response } from 'node-fetch';
 
 const client = new Nuntly({
   apiKey: 'My API Key',
@@ -20,13 +19,6 @@ describe('resource memberships', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.organizations.memberships.list('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Nuntly.NotFoundError);
-  });
-
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -38,8 +30,8 @@ describe('resource memberships', () => {
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
-  test('revoke', async () => {
-    const responsePromise = client.organizations.memberships.revoke('id', 'user_id');
+  test('revoke: only required params', async () => {
+    const responsePromise = client.organizations.memberships.revoke('user_id', { id: 'id' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,10 +41,7 @@ describe('resource memberships', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('revoke: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.organizations.memberships.revoke('id', 'user_id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Nuntly.NotFoundError);
+  test('revoke: required and optional params', async () => {
+    const response = await client.organizations.memberships.revoke('user_id', { id: 'id' });
   });
 });
