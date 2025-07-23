@@ -1,6 +1,6 @@
 {
   "pkg": "@nuntly/sdk",
-  "githubRepo": "https://github.com/stainless-sdks/nuntly-typescript",
+  "githubRepo": "https://github.com/nuntly/nuntly-sdk-typescript",
   "clientClass": "Nuntly",
   "methods": [
     {
