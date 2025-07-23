@@ -102,12 +102,12 @@ export interface APIKeyCreateResponse {
   id: string;
 
   /**
-   * The value of the api key
+   * The content of the api key
    */
   apikey: string;
 
   /**
-   * The truncated value of the api key
+   * The truncated content of the api key
    */
   apikey_truncated: string;
 
@@ -159,7 +159,7 @@ export interface APIKeyRetrieveResponse {
   id: string;
 
   /**
-   * The truncated value of the api key
+   * The truncated content of the api key
    */
   apikey_truncated: string;
 
@@ -228,7 +228,7 @@ export interface APIKeyListResponse {
   id: string;
 
   /**
-   * The truncated value of the api key
+   * The truncated content of the api key
    */
   apikey_truncated: string;
 
