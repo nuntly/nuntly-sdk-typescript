@@ -1,10 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import { isRequestOptions } from '../core';
-import * as Core from '../core';
+import { APIResource } from '../core/resource';
 import * as SharedAPI from './shared';
-import { CursorPage, type CursorPageParams } from '../pagination';
+import { APIPromise } from '../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../core/pagination';
+import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
 export class Webhooks extends APIResource {
   /**
@@ -21,9 +22,9 @@ export class Webhooks extends APIResource {
    * });
    * ```
    */
-  create(body: WebhookCreateParams, options?: Core.RequestOptions): Core.APIPromise<WebhookCreateResponse> {
+  create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
     return (
-      this._client.post('/webhooks', { body, ...options }) as Core.APIPromise<{ data: WebhookCreateResponse }>
+      this._client.post('/webhooks', { body, ...options }) as APIPromise<{ data: WebhookCreateResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -37,9 +38,9 @@ export class Webhooks extends APIResource {
    * );
    * ```
    */
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<WebhookRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<WebhookRetrieveResponse> {
     return (
-      this._client.get(`/webhooks/${id}`, options) as Core.APIPromise<{ data: WebhookRetrieveResponse }>
+      this._client.get(path`/webhooks/${id}`, options) as APIPromise<{ data: WebhookRetrieveResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -60,13 +61,9 @@ export class Webhooks extends APIResource {
    * );
    * ```
    */
-  update(
-    id: string,
-    body: WebhookUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<WebhookUpdateResponse> {
+  update(id: string, body: WebhookUpdateParams, options?: RequestOptions): APIPromise<WebhookUpdateResponse> {
     return (
-      this._client.put(`/webhooks/${id}`, { body, ...options }) as Core.APIPromise<{
+      this._client.put(path`/webhooks/${id}`, { body, ...options }) as APIPromise<{
         data: WebhookUpdateResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
@@ -84,18 +81,10 @@ export class Webhooks extends APIResource {
    * ```
    */
   list(
-    query?: WebhookListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<WebhookListResponsesCursorPage, WebhookListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<WebhookListResponsesCursorPage, WebhookListResponse>;
-  list(
-    query: WebhookListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<WebhookListResponsesCursorPage, WebhookListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list({}, query);
-    }
-    return this._client.getAPIList('/webhooks', WebhookListResponsesCursorPage, { query, ...options });
+    query: WebhookListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<WebhookListResponsesCursorPage, WebhookListResponse> {
+    return this._client.getAPIList('/webhooks', CursorPage<WebhookListResponse>, { query, ...options });
   }
 
   /**
@@ -108,14 +97,14 @@ export class Webhooks extends APIResource {
    * );
    * ```
    */
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<WebhookDeleteResponse> {
+  delete(id: string, options?: RequestOptions): APIPromise<WebhookDeleteResponse> {
     return (
-      this._client.delete(`/webhooks/${id}`, options) as Core.APIPromise<{ data: WebhookDeleteResponse }>
+      this._client.delete(path`/webhooks/${id}`, options) as APIPromise<{ data: WebhookDeleteResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export class WebhookListResponsesCursorPage extends CursorPage<WebhookListResponse> {}
+export type WebhookListResponsesCursorPage = CursorPage<WebhookListResponse>;
 
 export interface WebhookCreateResponse {
   /**
@@ -343,8 +332,6 @@ export interface WebhookUpdateParams {
 
 export interface WebhookListParams extends CursorPageParams {}
 
-Webhooks.WebhookListResponsesCursorPage = WebhookListResponsesCursorPage;
-
 export declare namespace Webhooks {
   export {
     type WebhookCreateResponse as WebhookCreateResponse,
@@ -352,7 +339,7 @@ export declare namespace Webhooks {
     type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
-    WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
+    type WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
     type WebhookListParams as WebhookListParams,

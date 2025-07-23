@@ -1,10 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
 import * as InvitationsAPI from './invitations';
 import {
+  InvitationDeleteParams,
   InvitationDeleteResponse,
   InvitationListParams,
   InvitationListResponse,
@@ -18,6 +17,7 @@ import {
   MembershipListParams,
   MembershipListResponse,
   MembershipListResponsesCursorPage,
+  MembershipRevokeParams,
   MembershipRevokeResponse,
   Memberships,
 } from './memberships';
@@ -25,7 +25,10 @@ import * as SubscriptionsAPI from './subscriptions';
 import { SubscriptionListResponse, Subscriptions } from './subscriptions';
 import * as UsageAPI from './usage';
 import { Usage, UsageRetrieveResponse } from './usage';
-import { CursorPage, type CursorPageParams } from '../../pagination';
+import { APIPromise } from '../../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Organizations extends APIResource {
   memberships: MembershipsAPI.Memberships = new MembershipsAPI.Memberships(this._client);
@@ -43,9 +46,9 @@ export class Organizations extends APIResource {
    * );
    * ```
    */
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<OrganizationRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<OrganizationRetrieveResponse> {
     return (
-      this._client.get(`/organizations/${id}`, options) as Core.APIPromise<{
+      this._client.get(path`/organizations/${id}`, options) as APIPromise<{
         data: OrganizationRetrieveResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
@@ -65,10 +68,10 @@ export class Organizations extends APIResource {
   update(
     id: string,
     body: OrganizationUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<OrganizationUpdateResponse> {
+    options?: RequestOptions,
+  ): APIPromise<OrganizationUpdateResponse> {
     return (
-      this._client.patch(`/organizations/${id}`, { body, ...options }) as Core.APIPromise<{
+      this._client.patch(path`/organizations/${id}`, { body, ...options }) as APIPromise<{
         data: OrganizationUpdateResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
@@ -86,27 +89,17 @@ export class Organizations extends APIResource {
    * ```
    */
   list(
-    query?: OrganizationListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse>;
-  list(
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse>;
-  list(
-    query: OrganizationListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list({}, query);
-    }
-    return this._client.getAPIList('/organizations', OrganizationListResponsesCursorPage, {
+    query: OrganizationListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse> {
+    return this._client.getAPIList('/organizations', CursorPage<OrganizationListResponse>, {
       query,
       ...options,
     });
   }
 }
 
-export class OrganizationListResponsesCursorPage extends CursorPage<OrganizationListResponse> {}
+export type OrganizationListResponsesCursorPage = CursorPage<OrganizationListResponse>;
 
 export interface OrganizationRetrieveResponse {
   /**
@@ -203,11 +196,8 @@ export interface OrganizationUpdateParams {
 
 export interface OrganizationListParams extends CursorPageParams {}
 
-Organizations.OrganizationListResponsesCursorPage = OrganizationListResponsesCursorPage;
 Organizations.Memberships = Memberships;
-Organizations.MembershipListResponsesCursorPage = MembershipListResponsesCursorPage;
 Organizations.Invitations = Invitations;
-Organizations.InvitationListResponsesCursorPage = InvitationListResponsesCursorPage;
 Organizations.Subscriptions = Subscriptions;
 Organizations.Usage = Usage;
 
@@ -216,7 +206,7 @@ export declare namespace Organizations {
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
     type OrganizationUpdateResponse as OrganizationUpdateResponse,
     type OrganizationListResponse as OrganizationListResponse,
-    OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
+    type OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
     type OrganizationUpdateParams as OrganizationUpdateParams,
     type OrganizationListParams as OrganizationListParams,
   };
@@ -225,8 +215,9 @@ export declare namespace Organizations {
     Memberships as Memberships,
     type MembershipListResponse as MembershipListResponse,
     type MembershipRevokeResponse as MembershipRevokeResponse,
-    MembershipListResponsesCursorPage as MembershipListResponsesCursorPage,
+    type MembershipListResponsesCursorPage as MembershipListResponsesCursorPage,
     type MembershipListParams as MembershipListParams,
+    type MembershipRevokeParams as MembershipRevokeParams,
   };
 
   export {
@@ -234,8 +225,9 @@ export declare namespace Organizations {
     type InvitationListResponse as InvitationListResponse,
     type InvitationDeleteResponse as InvitationDeleteResponse,
     type InvitationSendResponse as InvitationSendResponse,
-    InvitationListResponsesCursorPage as InvitationListResponsesCursorPage,
+    type InvitationListResponsesCursorPage as InvitationListResponsesCursorPage,
     type InvitationListParams as InvitationListParams,
+    type InvitationDeleteParams as InvitationDeleteParams,
     type InvitationSendParams as InvitationSendParams,
   };
 

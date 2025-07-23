@@ -1,9 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
-import { CursorPage, type CursorPageParams } from '../../pagination';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Memberships extends APIResource {
   /**
@@ -21,25 +22,14 @@ export class Memberships extends APIResource {
    */
   list(
     id: string,
-    query?: MembershipListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<MembershipListResponsesCursorPage, MembershipListResponse>;
-  list(
-    id: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<MembershipListResponsesCursorPage, MembershipListResponse>;
-  list(
-    id: string,
-    query: MembershipListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<MembershipListResponsesCursorPage, MembershipListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list(id, {}, query);
-    }
-    return this._client.getAPIList(`/organizations/${id}/memberships`, MembershipListResponsesCursorPage, {
-      query,
-      ...options,
-    });
+    query: MembershipListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<MembershipListResponsesCursorPage, MembershipListResponse> {
+    return this._client.getAPIList(
+      path`/organizations/${id}/memberships`,
+      CursorPage<MembershipListResponse>,
+      { query, ...options },
+    );
   }
 
   /**
@@ -48,26 +38,26 @@ export class Memberships extends APIResource {
    * @example
    * ```ts
    * const response =
-   *   await client.organizations.memberships.revoke(
-   *     'id',
-   *     'user_id',
-   *   );
+   *   await client.organizations.memberships.revoke('user_id', {
+   *     id: 'id',
+   *   });
    * ```
    */
   revoke(
-    id: string,
-    userId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<MembershipRevokeResponse> {
+    userID: string,
+    params: MembershipRevokeParams,
+    options?: RequestOptions,
+  ): APIPromise<MembershipRevokeResponse> {
+    const { id } = params;
     return (
-      this._client.delete(`/organizations/${id}/memberships/${userId}`, options) as Core.APIPromise<{
+      this._client.delete(path`/organizations/${id}/memberships/${userID}`, options) as APIPromise<{
         data: MembershipRevokeResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export class MembershipListResponsesCursorPage extends CursorPage<MembershipListResponse> {}
+export type MembershipListResponsesCursorPage = CursorPage<MembershipListResponse>;
 
 export interface MembershipListResponse {
   /**
@@ -140,13 +130,19 @@ export interface MembershipRevokeResponse {
 
 export interface MembershipListParams extends CursorPageParams {}
 
-Memberships.MembershipListResponsesCursorPage = MembershipListResponsesCursorPage;
+export interface MembershipRevokeParams {
+  /**
+   * The organization id previously created
+   */
+  id: string;
+}
 
 export declare namespace Memberships {
   export {
     type MembershipListResponse as MembershipListResponse,
     type MembershipRevokeResponse as MembershipRevokeResponse,
-    MembershipListResponsesCursorPage as MembershipListResponsesCursorPage,
+    type MembershipListResponsesCursorPage as MembershipListResponsesCursorPage,
     type MembershipListParams as MembershipListParams,
+    type MembershipRevokeParams as MembershipRevokeParams,
   };
 }

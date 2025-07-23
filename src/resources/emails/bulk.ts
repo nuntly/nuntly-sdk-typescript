@@ -1,8 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
 import * as SharedAPI from '../shared';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Bulk extends APIResource {
   /**
@@ -15,9 +17,9 @@ export class Bulk extends APIResource {
    * );
    * ```
    */
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<BulkRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<BulkRetrieveResponse> {
     return (
-      this._client.get(`/emails/bulk/${id}`, options) as Core.APIPromise<{ data: BulkRetrieveResponse }>
+      this._client.get(path`/emails/bulk/${id}`, options) as APIPromise<{ data: BulkRetrieveResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -42,9 +44,9 @@ export class Bulk extends APIResource {
    * });
    * ```
    */
-  send(body: BulkSendParams, options?: Core.RequestOptions): Core.APIPromise<BulkSendResponse> {
+  send(body: BulkSendParams, options?: RequestOptions): APIPromise<BulkSendResponse> {
     return (
-      this._client.post('/emails/bulk', { body, ...options }) as Core.APIPromise<{ data: BulkSendResponse }>
+      this._client.post('/emails/bulk', { body, ...options }) as APIPromise<{ data: BulkSendResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }

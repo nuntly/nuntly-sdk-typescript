@@ -1,9 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
-import { CursorPage, type CursorPageParams } from '../../pagination';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Invitations extends APIResource {
   /**
@@ -21,25 +22,14 @@ export class Invitations extends APIResource {
    */
   list(
     id: string,
-    query?: InvitationListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse>;
-  list(
-    id: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse>;
-  list(
-    id: string,
-    query: InvitationListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<InvitationListResponsesCursorPage, InvitationListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list(id, {}, query);
-    }
-    return this._client.getAPIList(`/organizations/${id}/invitations`, InvitationListResponsesCursorPage, {
-      query,
-      ...options,
-    });
+    query: InvitationListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<InvitationListResponsesCursorPage, InvitationListResponse> {
+    return this._client.getAPIList(
+      path`/organizations/${id}/invitations`,
+      CursorPage<InvitationListResponse>,
+      { query, ...options },
+    );
   }
 
   /**
@@ -49,18 +39,19 @@ export class Invitations extends APIResource {
    * ```ts
    * const invitation =
    *   await client.organizations.invitations.delete(
-   *     'id',
    *     'invitation_id',
+   *     { id: 'id' },
    *   );
    * ```
    */
   delete(
-    id: string,
-    invitationId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<InvitationDeleteResponse> {
+    invitationID: string,
+    params: InvitationDeleteParams,
+    options?: RequestOptions,
+  ): APIPromise<InvitationDeleteResponse> {
+    const { id } = params;
     return (
-      this._client.delete(`/organizations/${id}/invitations/${invitationId}`, options) as Core.APIPromise<{
+      this._client.delete(path`/organizations/${id}/invitations/${invitationID}`, options) as APIPromise<{
         data: InvitationDeleteResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
@@ -77,20 +68,16 @@ export class Invitations extends APIResource {
    *   });
    * ```
    */
-  send(
-    id: string,
-    body: InvitationSendParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<InvitationSendResponse> {
+  send(id: string, body: InvitationSendParams, options?: RequestOptions): APIPromise<InvitationSendResponse> {
     return (
-      this._client.post(`/organizations/${id}/invitations`, { body, ...options }) as Core.APIPromise<{
+      this._client.post(path`/organizations/${id}/invitations`, { body, ...options }) as APIPromise<{
         data: InvitationSendResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export class InvitationListResponsesCursorPage extends CursorPage<InvitationListResponse> {}
+export type InvitationListResponsesCursorPage = CursorPage<InvitationListResponse>;
 
 export interface InvitationListResponse {
   /**
@@ -214,6 +201,13 @@ export interface InvitationListParams extends CursorPageParams {
   status?: 'pending' | 'accepted' | 'declined' | 'done';
 }
 
+export interface InvitationDeleteParams {
+  /**
+   * The organization id
+   */
+  id: string;
+}
+
 export interface InvitationSendParams {
   /**
    * The e-mail to send an invitation
@@ -221,15 +215,14 @@ export interface InvitationSendParams {
   email: string;
 }
 
-Invitations.InvitationListResponsesCursorPage = InvitationListResponsesCursorPage;
-
 export declare namespace Invitations {
   export {
     type InvitationListResponse as InvitationListResponse,
     type InvitationDeleteResponse as InvitationDeleteResponse,
     type InvitationSendResponse as InvitationSendResponse,
-    InvitationListResponsesCursorPage as InvitationListResponsesCursorPage,
+    type InvitationListResponsesCursorPage as InvitationListResponsesCursorPage,
     type InvitationListParams as InvitationListParams,
+    type InvitationDeleteParams as InvitationDeleteParams,
     type InvitationSendParams as InvitationSendParams,
   };
 }
