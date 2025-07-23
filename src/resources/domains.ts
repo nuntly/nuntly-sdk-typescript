@@ -1,9 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import { isRequestOptions } from '../core';
-import * as Core from '../core';
-import { CursorPage, type CursorPageParams } from '../pagination';
+import { APIResource } from '../core/resource';
+import { APIPromise } from '../core/api-promise';
+import { CursorPage, type CursorPageParams, PagePromise } from '../core/pagination';
+import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
 export class Domains extends APIResource {
   /**
@@ -17,9 +18,9 @@ export class Domains extends APIResource {
    * });
    * ```
    */
-  create(body: DomainCreateParams, options?: Core.RequestOptions): Core.APIPromise<DomainCreateResponse> {
+  create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
     return (
-      this._client.post('/domains', { body, ...options }) as Core.APIPromise<{ data: DomainCreateResponse }>
+      this._client.post('/domains', { body, ...options }) as APIPromise<{ data: DomainCreateResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -33,9 +34,9 @@ export class Domains extends APIResource {
    * );
    * ```
    */
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DomainRetrieveResponse> {
+  retrieve(id: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
     return (
-      this._client.get(`/domains/${id}`, options) as Core.APIPromise<{ data: DomainRetrieveResponse }>
+      this._client.get(path`/domains/${id}`, options) as APIPromise<{ data: DomainRetrieveResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
@@ -49,13 +50,9 @@ export class Domains extends APIResource {
    * );
    * ```
    */
-  update(
-    id: string,
-    body: DomainUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<DomainUpdateResponse> {
+  update(id: string, body: DomainUpdateParams, options?: RequestOptions): APIPromise<DomainUpdateResponse> {
     return (
-      this._client.patch(`/domains/${id}`, { body, ...options }) as Core.APIPromise<{
+      this._client.patch(path`/domains/${id}`, { body, ...options }) as APIPromise<{
         data: DomainUpdateResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
@@ -73,18 +70,10 @@ export class Domains extends APIResource {
    * ```
    */
   list(
-    query?: DomainListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<DomainListResponsesCursorPage, DomainListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<DomainListResponsesCursorPage, DomainListResponse>;
-  list(
-    query: DomainListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<DomainListResponsesCursorPage, DomainListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list({}, query);
-    }
-    return this._client.getAPIList('/domains', DomainListResponsesCursorPage, { query, ...options });
+    query: DomainListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<DomainListResponsesCursorPage, DomainListResponse> {
+    return this._client.getAPIList('/domains', CursorPage<DomainListResponse>, { query, ...options });
   }
 
   /**
@@ -97,14 +86,14 @@ export class Domains extends APIResource {
    * );
    * ```
    */
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<DomainDeleteResponse> {
+  delete(id: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
     return (
-      this._client.delete(`/domains/${id}`, options) as Core.APIPromise<{ data: DomainDeleteResponse }>
+      this._client.delete(path`/domains/${id}`, options) as APIPromise<{ data: DomainDeleteResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export class DomainListResponsesCursorPage extends CursorPage<DomainListResponse> {}
+export type DomainListResponsesCursorPage = CursorPage<DomainListResponse>;
 
 export interface DomainCreateResponse {
   /**
@@ -486,8 +475,6 @@ export interface DomainUpdateParams {
 
 export interface DomainListParams extends CursorPageParams {}
 
-Domains.DomainListResponsesCursorPage = DomainListResponsesCursorPage;
-
 export declare namespace Domains {
   export {
     type DomainCreateResponse as DomainCreateResponse,
@@ -495,7 +482,7 @@ export declare namespace Domains {
     type DomainUpdateResponse as DomainUpdateResponse,
     type DomainListResponse as DomainListResponse,
     type DomainDeleteResponse as DomainDeleteResponse,
-    DomainListResponsesCursorPage as DomainListResponsesCursorPage,
+    type DomainListResponsesCursorPage as DomainListResponsesCursorPage,
     type DomainCreateParams as DomainCreateParams,
     type DomainUpdateParams as DomainUpdateParams,
     type DomainListParams as DomainListParams,

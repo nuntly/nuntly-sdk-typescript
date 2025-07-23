@@ -2,7 +2,6 @@
 
 export { Bulk, type BulkRetrieveResponse, type BulkSendResponse, type BulkSendParams } from './bulk';
 export {
-  EmailListResponsesCursorPage,
   Emails,
   type EmailRetrieveResponse,
   type EmailListResponse,
@@ -10,6 +9,7 @@ export {
   type EmailSendResponse,
   type EmailListParams,
   type EmailSendParams,
+  type EmailListResponsesCursorPage,
 } from './emails';
 export { Events, type EventListResponse, type EventListParams } from './events';
 export { Stats, type StatListResponse } from './stats';
