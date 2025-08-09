@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.1 (2025-08-09)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.0...v0.2.1)
+
+### Chores
+
+* **internal:** move publish config ([05ab4d2](https://github.com/nuntly/nuntly-sdk-typescript/commit/05ab4d216f451bcc375cc5335866c42c894b8b21))
+* **internal:** remove redundant imports config ([8e953bf](https://github.com/nuntly/nuntly-sdk-typescript/commit/8e953bf0745b6360579d9f89447dcf297099b3bd))
+* **internal:** update comment in script ([40dcb42](https://github.com/nuntly/nuntly-sdk-typescript/commit/40dcb42fd30f1aa634a534a17ebdf7fd530e5b78))
+* update @stainless-api/prism-cli to v5.15.0 ([b882fd6](https://github.com/nuntly/nuntly-sdk-typescript/commit/b882fd62eed107ee58ecee03ede61fa45e4113c7))
+
 ## 0.2.0 (2025-07-23)
 
 Full Changelog: [v0.1.1...v0.2.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.1.1...v0.2.0)
