@@ -810,6 +810,7 @@ export class Nuntly {
   organizations: API.Organizations = new API.Organizations(this);
   account: API.Account = new API.Account(this);
 }
+
 Nuntly.Shared = Shared;
 Nuntly.APIKeys = APIKeys;
 Nuntly.Domains = Domains;
@@ -817,6 +818,7 @@ Nuntly.Emails = Emails;
 Nuntly.Webhooks = Webhooks;
 Nuntly.Organizations = Organizations;
 Nuntly.Account = Account;
+
 export declare namespace Nuntly {
   export type RequestOptions = Opts.RequestOptions;
 
