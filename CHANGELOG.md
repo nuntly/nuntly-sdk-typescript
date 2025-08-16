@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.2 (2025-08-16)
+
+Full Changelog: [v0.2.1...v0.2.2](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.1...v0.2.2)
+
+### Chores
+
+* **deps:** update dependency @types/node to v20.17.58 ([567d3f1](https://github.com/nuntly/nuntly-sdk-typescript/commit/567d3f10b7a786624a28a7038a094b0aea83edf0))
+* **internal:** formatting change ([7ba9bc7](https://github.com/nuntly/nuntly-sdk-typescript/commit/7ba9bc7aec3aeb4fac17868e32d523d95cf116dc))
+
 ## 0.2.1 (2025-08-09)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.0...v0.2.1)
