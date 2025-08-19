@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3 (2025-08-19)
+
+Full Changelog: [v0.2.2...v0.2.3](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.2...v0.2.3)
+
+### Chores
+
+* configure new SDK language ([264c227](https://github.com/nuntly/nuntly-sdk-typescript/commit/264c227d43f582e02c3c7b52290154ff893fbe18))
+
 ## 0.2.2 (2025-08-16)
 
 Full Changelog: [v0.2.1...v0.2.2](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.1...v0.2.2)
