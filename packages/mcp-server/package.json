@@ -1,6 +1,6 @@
 {
   "name": "@nuntly/sdk-mcp",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "The official MCP Server for the Nuntly API",
   "author": "Nuntly <developers@nuntly.com>",
   "types": "dist/index.d.ts",

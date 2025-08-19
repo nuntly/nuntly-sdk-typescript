@@ -26,7 +26,7 @@ export const newMcpServer = () =>
   new McpServer(
     {
       name: 'nuntly_sdk_api',
-      version: '0.2.2',
+      version: '0.2.3',
     },
     { capabilities: { tools: {}, logging: {} } },
   );

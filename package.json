@@ -1,6 +1,6 @@
 {
   "name": "@nuntly/sdk",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "The official TypeScript library for the Nuntly API",
   "author": "Nuntly <developers@nuntly.com>",
   "types": "dist/index.d.ts",
