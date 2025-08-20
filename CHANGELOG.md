@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 (2025-08-20)
+
+Full Changelog: [v0.2.3...v0.3.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.3...v0.3.0)
+
+### Features
+
+* **mcp:** add code execution tool ([38e90b2](https://github.com/nuntly/nuntly-sdk-typescript/commit/38e90b2a53c0d1423ee16f265a8e7f6ed39401b5))
+
+
+### Chores
+
+* **internal:** make mcp-server publishing public by defaut ([8d63b09](https://github.com/nuntly/nuntly-sdk-typescript/commit/8d63b091494223721998099124d012fc20b3d1d5))
+* **mcp:** add cors to oauth metadata route ([d7d9d54](https://github.com/nuntly/nuntly-sdk-typescript/commit/d7d9d541da46bf86781ed4d804c0f33df1e28e4a))
+
 ## 0.2.3 (2025-08-19)
 
 Full Changelog: [v0.2.2...v0.2.3](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.2...v0.2.3)
