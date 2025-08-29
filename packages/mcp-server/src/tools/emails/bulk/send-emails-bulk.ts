@@ -28,6 +28,14 @@ export const tool: Tool = {
         items: {
           type: 'object',
           properties: {
+            from: {
+              type: 'string',
+              description: 'The e-mail address of the sender',
+            },
+            subject: {
+              type: 'string',
+              description: 'The subject of the e-mail',
+            },
             to: {
               anyOf: [
                 {
@@ -75,10 +83,6 @@ export const tool: Tool = {
               description: 'The context for the template',
               additionalProperties: true,
             },
-            from: {
-              type: 'string',
-              description: 'The e-mail address of the sender',
-            },
             headers: {
               type: 'object',
               description: 'The headers to add to the email',
@@ -108,10 +112,6 @@ export const tool: Tool = {
               description: 'The date at which the email is scheduled to be sent',
               format: 'date-time',
             },
-            subject: {
-              type: 'string',
-              description: 'The subject of the e-mail',
-            },
             tags: {
               type: 'array',
               description: 'The tags to add to the email',
@@ -136,7 +136,7 @@ export const tool: Tool = {
               description: 'The plaintext version of the email',
             },
           },
-          required: ['to'],
+          required: ['from', 'subject', 'to'],
         },
       },
       fallback: {

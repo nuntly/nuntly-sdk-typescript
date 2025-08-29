@@ -1,5 +1,4 @@
-import { env } from '../lib/env';
-import { nuntly } from '../lib/nuntly';
+import { env, nuntly } from '../lib';
 
 async function main() {
   const email = await nuntly.emails.send({

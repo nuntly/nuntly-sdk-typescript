@@ -1,4 +1,4 @@
-import { nuntly } from '../lib/nuntly';
+import { nuntly } from '../lib';
 
 async function main() {
   const webhook = await nuntly.webhooks.create({

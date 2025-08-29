@@ -43,8 +43,13 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update', async () => {
-    const responsePromise = client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {});
+  test('update: only required params', async () => {
+    const responsePromise = client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {
+      endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
+      events: ['email.delivered', 'email.sent'],
+      name: 'My webhook',
+      status: 'enabled',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,6 +57,15 @@ describe('resource webhooks', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: required and optional params', async () => {
+    const response = await client.webhooks.update('wh_YNtYn86oYZmP1ZHbnUBvXXFt', {
+      endpoint_url: 'https://webhook.site/12345678-1234-5678-1234-123456789012',
+      events: ['email.delivered', 'email.sent'],
+      name: 'My webhook',
+      status: 'enabled',
+    });
   });
 
   test('list', async () => {
