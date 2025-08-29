@@ -23,10 +23,7 @@ describe('resource bulk', () => {
 
   test('send: only required params', async () => {
     const responsePromise = client.emails.bulk.send({
-      emails: [
-        { from: 'ray@info.tomlinson.ai', subject: 'Welcome to Tomlinson AI!', to: 'carlo43@gmail.com' },
-        { from: 'ray@info.tomlinson.ai', subject: 'Welcome to Tomlinson AI!', to: 'pink42@yahoo.com' },
-      ],
+      emails: [{ to: 'carlo43@gmail.com' }, { to: 'pink42@yahoo.com' }],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -41,30 +38,30 @@ describe('resource bulk', () => {
     const response = await client.emails.bulk.send({
       emails: [
         {
-          from: 'ray@info.tomlinson.ai',
-          subject: 'Welcome to Tomlinson AI!',
           to: 'carlo43@gmail.com',
           bcc: ['string'],
           cc: ['string'],
           context: {},
+          from: 'ray@info.tomlinson.ai',
           headers: { foo: 'string' },
           html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
           reply_to: ['string'],
           scheduled_at: '2019-12-27T18:11:19.117Z',
+          subject: 'Welcome to Tomlinson AI!',
           tags: [{ name: 'name', value: 'value' }],
           text: 'text',
         },
         {
-          from: 'ray@info.tomlinson.ai',
-          subject: 'Welcome to Tomlinson AI!',
           to: 'pink42@yahoo.com',
           bcc: ['string'],
           cc: ['string'],
           context: {},
+          from: 'ray@info.tomlinson.ai',
           headers: { foo: 'string' },
           html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
           reply_to: ['string'],
           scheduled_at: '2019-12-27T18:11:19.117Z',
+          subject: 'Welcome to Tomlinson AI!',
           tags: [{ name: 'name', value: 'value' }],
           text: 'text',
         },

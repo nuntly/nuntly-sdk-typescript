@@ -1,0 +1,44 @@
+{
+  "name": "nuntly-typescript-examples",
+  "version": "1.0.0",
+  "description": "Usage examples for the Nuntly TypeScript SDK.",
+  "author": "Nuntly <developers@nuntly.com>",
+  "main": "index.ts",
+  "license": "Apache-2.0",
+  "packageManager": "yarn@1.22.22",
+  "private": true,
+  "scripts": {
+    "account:get": "tsx src/account/get-account.ts",
+    "api-keys:create": "tsx src/api-keys/create-api-key.ts",
+    "api-keys:delete": "tsx src/api-keys/delete-api-key.ts",
+    "api-keys:get": "tsx src/api-keys/get-api-key.ts",
+    "api-keys:list": "tsx src/api-keys/list-api-keys.ts",
+    "domains:create": "tsx src/domains/create-domain.ts",
+    "domains:get": "tsx src/domains/get-domain.ts",
+    "emails:send": "tsx src/emails/send-email.ts",
+    "emails:send-bulk-with-fallback": "tsx src/emails/send-email-bulk-with-fallback.ts",
+    "emails:send-bulk": "tsx src/emails/send-email-bulk.ts",
+    "emails:send-html-txt": "tsx src/emails/send-email-html-txt.ts",
+    "emails:send-html": "tsx src/emails/send-email-html.ts",
+    "emails:send-template": "tsx src/emails/send-email-template.ts",
+    "emails:send-with-attachment": "tsx src/emails/send-email-with-attachment.ts",
+    "emails:send-with-tag": "tsx src/emails/send-email-with-tag.ts",
+    "organizations:get": "tsx src/organizations/get-organization.ts",
+    "organizations:list": "tsx src/organizations/list-memberships.ts",
+    "organizations:usage:get": "tsx src/organizations/usage/get-usage.ts",
+    "webhooks:create": "tsx src/webhooks/create-webhook.ts",
+    "webhooks:delete": "tsx src/webhooks/delete-webhook.ts",
+    "webhooks:get": "tsx src/webhooks/get-webhook.ts",
+    "webhooks:list": "tsx src/webhooks/list-webhooks.ts",
+    "webhooks:update": "tsx src/webhooks/update-webhook.ts"
+  },
+  "dependencies": {
+    "@nuntly/sdk": "file:..",
+    "dotenv": "^17.2.1",
+    "envalid": "^8.1.0",
+    "tsx": "^4.20.5"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}
