@@ -30,16 +30,8 @@ export class Bulk extends APIResource {
    * ```ts
    * const response = await client.emails.bulk.send({
    *   emails: [
-   *     {
-   *       from: 'ray@info.tomlinson.ai',
-   *       subject: 'Welcome to Tomlinson AI!',
-   *       to: 'carlo43@gmail.com',
-   *     },
-   *     {
-   *       from: 'ray@info.tomlinson.ai',
-   *       subject: 'Welcome to Tomlinson AI!',
-   *       to: 'pink42@yahoo.com',
-   *     },
+   *     { to: 'carlo43@gmail.com' },
+   *     { to: 'pink42@yahoo.com' },
    *   ],
    * });
    * ```
@@ -152,16 +144,6 @@ export interface BulkSendParams {
 export namespace BulkSendParams {
   export interface Email {
     /**
-     * The e-mail address of the sender
-     */
-    from: string;
-
-    /**
-     * The subject of the e-mail
-     */
-    subject: string;
-
-    /**
      * The primary recipient(s) of the email
      */
     to: Array<string> | string;
@@ -180,6 +162,11 @@ export namespace BulkSendParams {
      * The context for the template
      */
     context?: unknown;
+
+    /**
+     * The e-mail address of the sender
+     */
+    from?: string;
 
     /**
      * The headers to add to the email
@@ -201,6 +188,11 @@ export namespace BulkSendParams {
      * The date at which the email is scheduled to be sent
      */
     scheduled_at?: string;
+
+    /**
+     * The subject of the e-mail
+     */
+    subject?: string;
 
     /**
      * The tags to add to the email
