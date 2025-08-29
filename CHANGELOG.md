@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 (2025-08-29)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **examples:** add comprehensive TypeScript SDK examples ([a962c49](https://github.com/nuntly/nuntly-sdk-typescript/commit/a962c495ccff388b4c648c2bd8add038ea2a100d))
+* **examples:** add comprehensive TypeScript SDK examples ([211871c](https://github.com/nuntly/nuntly-sdk-typescript/commit/211871ce6e6e8f3a26c12cae42c3fcfaf1816c0e))
+
 ## 0.4.0 (2025-08-29)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.3.0...v0.4.0)
