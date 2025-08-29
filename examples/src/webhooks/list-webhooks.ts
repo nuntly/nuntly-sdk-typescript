@@ -1,6 +1,4 @@
-import { nuntly } from '../lib/nuntly';
-
-// This example demonstrates how to list webhooks using the Nuntly SDK
+import { nuntly } from '../lib';
 
 async function main() {
   const webhooks = await nuntly.webhooks.list();

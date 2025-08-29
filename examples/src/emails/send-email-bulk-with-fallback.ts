@@ -1,23 +1,22 @@
-import { env } from '../lib/env';
-import { nuntly } from '../lib/nuntly';
+import { env, nuntly, sleep } from '../lib';
 
 async function main() {
   const bulk = await nuntly.emails.bulk.send({
     emails: [
       {
         to: env.EMAIL_TO,
-        subject: 'Hello 1 from Nuntly SDK',
-        text: 'This is an 1 email sent via the Nuntly SDK.',
+        subject: 'Hello from Nuntly SDK',
+        text: 'This is the first email of the bulk send.',
       },
       {
         to: env.EMAIL_TO,
-        text: 'This is an 2 email sent via the Nuntly SDK.',
+        text: 'This is the second email of the bulk send.',
       },
     ],
     fallback: {
       from: env.EMAIL_FROM,
-      subject: 'Fallback: subject',
-      html: '<p>This is a fallback email sent via the Nuntly SDK.</p>',
+      subject: 'Fallback subject of the bulk email',
+      html: '<p>This is a fallback html of the bulk email.',
     },
   });
   console.log('Email sent by bulk:', bulk);
@@ -28,7 +27,3 @@ async function main() {
 }
 
 main().catch(console.error);
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}

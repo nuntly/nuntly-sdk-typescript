@@ -1,4 +1,4 @@
-import { nuntly } from '../lib/nuntly';
+import { nuntly } from '../lib';
 
 async function main() {
   const account = await nuntly.account.retrieve();

@@ -51,6 +51,13 @@ export class Webhooks extends APIResource {
    * ```ts
    * const webhook = await client.webhooks.update(
    *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
+   *   {
+   *     endpoint_url:
+   *       'https://webhook.site/12345678-1234-5678-1234-123456789012',
+   *     events: ['email.delivered', 'email.sent'],
+   *     name: 'My webhook',
+   *     status: 'enabled',
+   *   },
    * );
    * ```
    */
@@ -308,19 +315,19 @@ export interface WebhookUpdateParams {
   /**
    * The endpoint URL of the webhook
    */
-  endpoint_url?: string;
+  endpoint_url: string;
 
-  events?: Array<SharedAPI.WebhookEventType>;
+  events: Array<SharedAPI.WebhookEventType>;
 
   /**
    * The name of the webhook
    */
-  name?: string;
+  name: string;
 
   /**
    * The status of the webhook.
    */
-  status?: 'enabled' | 'disabled';
+  status: 'enabled' | 'disabled';
 }
 
 export interface WebhookListParams extends CursorPageParams {}

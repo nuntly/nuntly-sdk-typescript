@@ -1,6 +1,5 @@
 import fs from 'fs';
-import { env } from '../lib/env';
-import { nuntly } from '../lib/nuntly';
+import { env, nuntly } from '../lib';
 
 async function main() {
   const attachmentPath = `${__dirname}/sample-10-page.pdf`;

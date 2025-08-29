@@ -1,5 +1,5 @@
 import * as readline from 'readline';
-import { nuntly } from '../lib/nuntly';
+import { nuntly } from '../lib';
 
 const rl = readline.createInterface({
   input: process.stdin,

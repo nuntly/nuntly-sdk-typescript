@@ -1,6 +1,4 @@
-import { env } from '../lib/env';
-import { nuntly } from '../lib/nuntly';
-import { sleep } from '../lib/util';
+import { env, nuntly, sleep } from '../lib';
 
 async function main() {
   const bulk = await nuntly.emails.bulk.send({
