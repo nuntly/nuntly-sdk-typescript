@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.0 (2025-08-29)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **mcp:** add option to infer mcp client ([ab57ffc](https://github.com/nuntly/nuntly-sdk-typescript/commit/ab57ffc553b2e67f51856834f35667e075674d03))
+
+
+### Chores
+
+* add package to package.json ([fc723b2](https://github.com/nuntly/nuntly-sdk-typescript/commit/fc723b23113c4a77545febd6d22367e9cf37b01d))
+* **client:** qualify global Blob ([38a5882](https://github.com/nuntly/nuntly-sdk-typescript/commit/38a588291258d8d9e9f89439a3ea18cefd9ca3ef))
+* **internal:** codegen related update ([7ae3ef1](https://github.com/nuntly/nuntly-sdk-typescript/commit/7ae3ef173a2f5a522cfb9e87af7e00025740fc4f))
+* **internal:** codegen related update ([7987357](https://github.com/nuntly/nuntly-sdk-typescript/commit/7987357fabb9c7e726e8ab1e10d28623829c95c2))
+* **internal:** update global Error reference ([df23219](https://github.com/nuntly/nuntly-sdk-typescript/commit/df2321970994cf42e70acce41a5b703a7b82100f))
+* **mcp:** update package.json ([4cfb884](https://github.com/nuntly/nuntly-sdk-typescript/commit/4cfb8847f7848a0d27afdb0ea7744e78e850a2b5))
+* **mcp:** update types ([610ce1b](https://github.com/nuntly/nuntly-sdk-typescript/commit/610ce1bb591400633ed7f01fd3e89d73a41196b6))
+* update CI script ([5bbc5f5](https://github.com/nuntly/nuntly-sdk-typescript/commit/5bbc5f560682fd4647cd5485c2f4839f0d405c01))
+
 ## 0.3.0 (2025-08-20)
 
 Full Changelog: [v0.2.3...v0.3.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.2.3...v0.3.0)
