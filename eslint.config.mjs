@@ -1,7 +1,7 @@
 // @ts-check
-import tseslint from 'typescript-eslint';
-import unusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-plugin-prettier';
+import unusedImports from 'eslint-plugin-unused-imports';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
@@ -10,7 +10,7 @@ export default tseslint.config(
       parserOptions: { sourceType: 'module' },
     },
     files: ['**/*.ts', '**/*.mts', '**/*.cts', '**/*.js', '**/*.mjs', '**/*.cjs'],
-    ignores: ['dist/'],
+    ignores: ['dist/', 'examples/'],
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       'unused-imports': unusedImports,
