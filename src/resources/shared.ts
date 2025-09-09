@@ -10,6 +10,11 @@ export class Shared extends APIResource {}
 export type BulkEmailsStatus = 'queued' | 'scheduled' | 'rejected';
 
 /**
+ * The headers to add to the email
+ */
+export type EmailHeaders = { [key: string]: string };
+
+/**
  * The status of the email.
  */
 export type EmailStatus =
@@ -41,6 +46,7 @@ export type WebhookEventType =
 export declare namespace Shared {
   export {
     type BulkEmailsStatus as BulkEmailsStatus,
+    type EmailHeaders as EmailHeaders,
     type EmailStatus as EmailStatus,
     type WebhookEventType as WebhookEventType,
   };

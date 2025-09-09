@@ -84,9 +84,7 @@ export const tool: Tool = {
               additionalProperties: true,
             },
             headers: {
-              type: 'object',
-              description: 'The headers to add to the email',
-              additionalProperties: true,
+              $ref: '#/$defs/email_headers',
             },
             html: {
               type: 'string',
@@ -181,9 +179,7 @@ export const tool: Tool = {
             description: 'The e-mail address of the sender',
           },
           headers: {
-            type: 'object',
-            description: 'The headers to add to the email',
-            additionalProperties: true,
+            $ref: '#/$defs/email_headers',
           },
           html: {
             type: 'string',
@@ -260,6 +256,13 @@ export const tool: Tool = {
       },
     },
     required: ['emails'],
+    $defs: {
+      email_headers: {
+        type: 'object',
+        description: 'The headers to add to the email',
+        additionalProperties: true,
+      },
+    },
   },
   annotations: {},
 };

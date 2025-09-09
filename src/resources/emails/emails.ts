@@ -169,7 +169,7 @@ export interface EmailRetrieveResponse {
   /**
    * The headers to add to the email
    */
-  headers?: { [key: string]: string };
+  headers?: SharedAPI.EmailHeaders;
 
   /**
    * The id from email provider
@@ -382,7 +382,7 @@ export interface EmailSendParams {
   /**
    * The headers to add to the email
    */
-  headers?: { [key: string]: string };
+  headers?: SharedAPI.EmailHeaders;
 
   /**
    * The HTML version of the email

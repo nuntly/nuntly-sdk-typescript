@@ -27,7 +27,7 @@
   "user_config": {
     "NUNTLY_API_KEY": {
       "title": "api_key",
-      "description": "API Key for authentication",
+      "description": "API key to authenticate requests",
       "required": false,
       "type": "string"
     }

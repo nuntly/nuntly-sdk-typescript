@@ -184,7 +184,7 @@ export namespace BulkSendParams {
     /**
      * The headers to add to the email
      */
-    headers?: { [key: string]: string };
+    headers?: SharedAPI.EmailHeaders;
 
     /**
      * The HTML version of the email
@@ -257,7 +257,7 @@ export namespace BulkSendParams {
     /**
      * The headers to add to the email
      */
-    headers?: { [key: string]: string };
+    headers?: SharedAPI.EmailHeaders;
 
     /**
      * The HTML version of the email

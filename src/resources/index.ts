@@ -49,7 +49,13 @@ export {
   type OrganizationListParams,
   type OrganizationListResponsesCursorPage,
 } from './organizations/organizations';
-export { Shared, type BulkEmailsStatus, type EmailStatus, type WebhookEventType } from './shared';
+export {
+  Shared,
+  type BulkEmailsStatus,
+  type EmailHeaders,
+  type EmailStatus,
+  type WebhookEventType,
+} from './shared';
 export {
   Webhooks,
   type WebhookCreateResponse,
