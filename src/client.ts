@@ -48,7 +48,7 @@ import {
   DomainUpdateResponse,
   Domains,
 } from './resources/domains';
-import { BulkEmailsStatus, EmailStatus, Shared, WebhookEventType } from './resources/shared';
+import { BulkEmailsStatus, EmailHeaders, EmailStatus, Shared, WebhookEventType } from './resources/shared';
 import {
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -95,7 +95,7 @@ import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
   /**
-   * API Key for authentication
+   * API key to authenticate requests
    */
   apiKey?: string | null | undefined;
 
@@ -828,6 +828,7 @@ export declare namespace Nuntly {
   export {
     Shared as Shared,
     type BulkEmailsStatus as BulkEmailsStatus,
+    type EmailHeaders as EmailHeaders,
     type EmailStatus as EmailStatus,
     type WebhookEventType as WebhookEventType,
   };

@@ -3,6 +3,7 @@
 Types:
 
 - <code><a href="./src/resources/shared.ts">BulkEmailsStatus</a></code>
+- <code><a href="./src/resources/shared.ts">EmailHeaders</a></code>
 - <code><a href="./src/resources/shared.ts">EmailStatus</a></code>
 - <code><a href="./src/resources/shared.ts">WebhookEventType</a></code>
 
