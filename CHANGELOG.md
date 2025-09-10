@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.7.0 (2025-09-10)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **api:** Move EmailHeaders in shared ([d3e7cba](https://github.com/nuntly/nuntly-sdk-typescript/commit/d3e7cba19a7a91d2faeb9c46171d7aa2f07b5ed9))
+* **mcp:** allow setting logging level ([9409483](https://github.com/nuntly/nuntly-sdk-typescript/commit/940948306e3679dd5a1e132c83fd2138f93930ab))
+* **mcp:** expose client options in `streamableHTTPApp` ([b10eb73](https://github.com/nuntly/nuntly-sdk-typescript/commit/b10eb731c1ecb601a47f31a6a8e6f28666c9d77a))
+
+
+### Bug Fixes
+
+* coerce nullable values to undefined ([17eca48](https://github.com/nuntly/nuntly-sdk-typescript/commit/17eca4862740cc5b1f1b9b372e84abd892933524))
+* **mcp:** fix query options parsing ([b2601d9](https://github.com/nuntly/nuntly-sdk-typescript/commit/b2601d919a0f17c7746e5b388bb26267898c9c35))
+
+
+### Chores
+
+* ci build action ([4de51d5](https://github.com/nuntly/nuntly-sdk-typescript/commit/4de51d5be3de0fcc1857d57b73c2151d905ed13d))
+* **internal:** codegen related update ([87aa400](https://github.com/nuntly/nuntly-sdk-typescript/commit/87aa4001a0fb88df1659aec9ca898f4ad2476123))
+* **internal:** codegen related update ([6f8a2dc](https://github.com/nuntly/nuntly-sdk-typescript/commit/6f8a2dc6203ebe04e102f1d5a46e5d0dc63fb6ae))
+* **mcp:** upload dxt as release asset ([61c41e3](https://github.com/nuntly/nuntly-sdk-typescript/commit/61c41e3b3d12c8ce1cfa808ce4115b1b5ed3f9f6))
+
 ## 0.6.0 (2025-09-02)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.5.0...v0.6.0)
