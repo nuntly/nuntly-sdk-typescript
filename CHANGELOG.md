@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.1 (2025-09-12)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.7.0...v0.7.1)
+
+### Bug Fixes
+
+* **mcp:** fix uploading dxt release assets ([c1a0b26](https://github.com/nuntly/nuntly-sdk-typescript/commit/c1a0b269596af7507a6f920246bbee6e11e5e135))
+
 ## 0.7.0 (2025-09-10)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.6.0...v0.7.0)
