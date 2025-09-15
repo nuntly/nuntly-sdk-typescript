@@ -9,4 +9,3 @@ dist-deno
 .idea/
 dist-bundle
 *.dxt
-examples/.env
