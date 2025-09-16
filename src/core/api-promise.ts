@@ -4,6 +4,7 @@ import { type Nuntly } from '../client';
 
 import { type PromiseOrValue } from '../internal/types';
 import { APIResponseProps, defaultParseResponse } from '../internal/parse';
+import { APIError } from './error';
 
 /**
  * A subclass of `Promise` providing additional helper methods
@@ -64,6 +65,15 @@ export class APIPromise<T> extends Promise<T> {
   async withResponse(): Promise<{ data: T; response: Response }> {
     const [data, response] = await Promise.all([this.parse(), this.asResponse()]);
     return { data, response };
+  }
+
+  async safeAwait(): Promise<{ data: T; error: null } | { data: null; error: APIError }> {
+    try {
+      const data = await this.parse();
+      return { data, error: null };
+    } catch (err) {
+      return { data: null, error: err as APIError };
+    }
   }
 
   private parse(): Promise<T> {
