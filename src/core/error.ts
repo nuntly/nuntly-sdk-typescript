@@ -16,11 +16,20 @@ export class APIError<
   /** JSON body of the response that caused the error */
   readonly error: TError;
 
+  readonly code: string | undefined;
+  readonly title: string | undefined;
+  readonly details?: string | undefined;
+
   constructor(status: TStatus, error: TError, message: string | undefined, headers: THeaders) {
     super(`${APIError.makeMessage(status, error, message)}`);
     this.status = status;
     this.headers = headers;
     this.error = error;
+
+    const data = error as Record<string, any>;
+    this.code = data?.['error']?.['code'];
+    this.title = data?.['error']?.['title'];
+    this.details = data?.['error']?.['details'];
   }
 
   private static makeMessage(status: number | undefined, error: any, message: string | undefined) {
