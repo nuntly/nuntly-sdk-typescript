@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.8.0 (2025-09-19)
+
+Full Changelog: [v0.7.1...v0.8.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.7.1...v0.8.0)
+
+### Features
+
+* **custom:** custom back ([3d015c1](https://github.com/nuntly/nuntly-sdk-typescript/commit/3d015c153ddefb9606dc5a281094433ccdd31b3c))
+* **mcp:** add docs search tool ([9466dce](https://github.com/nuntly/nuntly-sdk-typescript/commit/9466dce72eea19e10fc36a4047a8b06043986703))
+
+
+### Bug Fixes
+
+* **ci:** set permissions for DXT publish action ([f5801ff](https://github.com/nuntly/nuntly-sdk-typescript/commit/f5801ffb49ec3b78e30e75f137dcabb94aad6e2d))
+
+
+### Chores
+
+* **codegen:** internal codegen update ([ffa6435](https://github.com/nuntly/nuntly-sdk-typescript/commit/ffa6435626e94b0e20984b178955234a31066ee6))
+* **internal:** gitignore .mcpb files ([2e9b603](https://github.com/nuntly/nuntly-sdk-typescript/commit/2e9b6035e70360ef02e0b7daee8e0e4a8267d0d4))
+* **mcp:** rename dxt to mcpb ([049ca92](https://github.com/nuntly/nuntly-sdk-typescript/commit/049ca92b4b24d54107c69f23eb429edc42e9c186))
+* remove custom code ([62f271d](https://github.com/nuntly/nuntly-sdk-typescript/commit/62f271d2a1177c0deabde0517819139901970516))
+
 ## 0.7.1 (2025-09-12)
 
 Full Changelog: [v0.7.0...v0.7.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.7.0...v0.7.1)
