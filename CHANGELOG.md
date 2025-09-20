@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.0 (2025-09-20)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** webhook events, retry and deliveries ([970e9e9](https://github.com/nuntly/nuntly-sdk-typescript/commit/970e9e946a8f13884e96445cee3be1bf53ad97dd))
+
+
+### Chores
+
+* do not install brew dependencies in ./scripts/bootstrap by default ([e9ad6bc](https://github.com/nuntly/nuntly-sdk-typescript/commit/e9ad6bc79fd5370d6b3dcd593e1713dcea7c129c))
+
 ## 0.8.0 (2025-09-19)
 
 Full Changelog: [v0.7.1...v0.8.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.7.1...v0.8.0)
