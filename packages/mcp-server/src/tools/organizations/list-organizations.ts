@@ -28,7 +28,7 @@ export const tool: Tool = {
       },
       limit: {
         type: 'number',
-        description: 'The number of emails to return',
+        description: 'The maximum number of items to return',
       },
       jq_filter: {
         type: 'string',

@@ -32,7 +32,7 @@ export const tool: Tool = {
       events: {
         type: 'array',
         items: {
-          $ref: '#/$defs/webhook_event_type',
+          $ref: '#/$defs/event_type',
         },
       },
       name: {
@@ -53,7 +53,7 @@ export const tool: Tool = {
     },
     required: ['id'],
     $defs: {
-      webhook_event_type: {
+      event_type: {
         type: 'string',
         description: 'The webhook events',
         enum: [

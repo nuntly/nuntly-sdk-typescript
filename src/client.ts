@@ -48,19 +48,23 @@ import {
   DomainUpdateResponse,
   Domains,
 } from './resources/domains';
-import { BulkEmailsStatus, EmailHeaders, EmailStatus, Shared, WebhookEventType } from './resources/shared';
 import {
-  WebhookCreateParams,
-  WebhookCreateResponse,
-  WebhookDeleteResponse,
-  WebhookListParams,
-  WebhookListResponse,
-  WebhookListResponsesCursorPage,
-  WebhookRetrieveResponse,
-  WebhookUpdateParams,
-  WebhookUpdateResponse,
-  Webhooks,
-} from './resources/webhooks';
+  BounceDetail,
+  BulkEmailsStatus,
+  ClickDetail,
+  ComplaintDetail,
+  DeliveryDelayDetail,
+  DeliveryDetail,
+  EmailEvent,
+  EmailHeaders,
+  EmailStatus,
+  EventType,
+  FailureDetail,
+  OpenDetail,
+  RejectDetail,
+  SendDetail,
+  Shared,
+} from './resources/shared';
 import {
   EmailCancelResponse,
   EmailListParams,
@@ -80,6 +84,30 @@ import {
   OrganizationUpdateResponse,
   Organizations,
 } from './resources/organizations/organizations';
+import {
+  BaseEvent,
+  EmailBouncedEvent,
+  EmailClickedEvent,
+  EmailComplainedEvent,
+  EmailDeliveredEvent,
+  EmailDeliveryDelayedEvent,
+  EmailFailedEvent,
+  EmailOpenedEvent,
+  EmailRejectedEvent,
+  EmailSentEvent,
+  Event,
+  UnwrapWebhookEvent,
+  WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteResponse,
+  WebhookListParams,
+  WebhookListResponse,
+  WebhookListResponsesCursorPage,
+  WebhookRetrieveResponse,
+  WebhookUpdateParams,
+  WebhookUpdateResponse,
+  Webhooks,
+} from './resources/webhooks/webhooks';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -827,10 +855,20 @@ export declare namespace Nuntly {
 
   export {
     Shared as Shared,
+    type BounceDetail as BounceDetail,
     type BulkEmailsStatus as BulkEmailsStatus,
+    type ClickDetail as ClickDetail,
+    type ComplaintDetail as ComplaintDetail,
+    type DeliveryDelayDetail as DeliveryDelayDetail,
+    type DeliveryDetail as DeliveryDetail,
+    type EmailEvent as EmailEvent,
     type EmailHeaders as EmailHeaders,
     type EmailStatus as EmailStatus,
-    type WebhookEventType as WebhookEventType,
+    type EventType as EventType,
+    type FailureDetail as FailureDetail,
+    type OpenDetail as OpenDetail,
+    type RejectDetail as RejectDetail,
+    type SendDetail as SendDetail,
   };
 
   export {
@@ -872,11 +910,23 @@ export declare namespace Nuntly {
 
   export {
     Webhooks as Webhooks,
+    type BaseEvent as BaseEvent,
+    type EmailBouncedEvent as EmailBouncedEvent,
+    type EmailClickedEvent as EmailClickedEvent,
+    type EmailComplainedEvent as EmailComplainedEvent,
+    type EmailDeliveredEvent as EmailDeliveredEvent,
+    type EmailDeliveryDelayedEvent as EmailDeliveryDelayedEvent,
+    type EmailFailedEvent as EmailFailedEvent,
+    type EmailOpenedEvent as EmailOpenedEvent,
+    type EmailRejectedEvent as EmailRejectedEvent,
+    type EmailSentEvent as EmailSentEvent,
+    type Event as Event,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookRetrieveResponse as WebhookRetrieveResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
+    type UnwrapWebhookEvent as UnwrapWebhookEvent,
     type WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
