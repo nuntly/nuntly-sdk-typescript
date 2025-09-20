@@ -93,7 +93,7 @@ export interface EventListParams {
   cursor?: string;
 
   /**
-   * The number of emails to return
+   * The maximum number of items to return
    */
   limit?: number;
 }

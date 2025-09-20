@@ -248,6 +248,12 @@ The following tools are available in this MCP server.
 - `list_webhooks` (`read`): Return a list of your webhooks
 - `delete_webhooks` (`write`): Delete the webhook with the given ID
 
+### Resource `webhooks.events`:
+
+- `list_webhooks_events` (`read`): Return the last events sent by webhooks
+- `deliveries_webhooks_events` (`read`): Return the delivery attempts for the given webhook event ID
+- `retry_webhooks_events` (`write`): Retry sending the webhook event with the given event ID
+
 ### Resource `organizations`:
 
 - `retrieve_organizations` (`read`): Return the organization

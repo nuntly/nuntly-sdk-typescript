@@ -2,10 +2,20 @@
 
 Types:
 
+- <code><a href="./src/resources/shared.ts">BounceDetail</a></code>
 - <code><a href="./src/resources/shared.ts">BulkEmailsStatus</a></code>
+- <code><a href="./src/resources/shared.ts">ClickDetail</a></code>
+- <code><a href="./src/resources/shared.ts">ComplaintDetail</a></code>
+- <code><a href="./src/resources/shared.ts">DeliveryDelayDetail</a></code>
+- <code><a href="./src/resources/shared.ts">DeliveryDetail</a></code>
+- <code><a href="./src/resources/shared.ts">EmailEvent</a></code>
 - <code><a href="./src/resources/shared.ts">EmailHeaders</a></code>
 - <code><a href="./src/resources/shared.ts">EmailStatus</a></code>
-- <code><a href="./src/resources/shared.ts">WebhookEventType</a></code>
+- <code><a href="./src/resources/shared.ts">EventType</a></code>
+- <code><a href="./src/resources/shared.ts">FailureDetail</a></code>
+- <code><a href="./src/resources/shared.ts">OpenDetail</a></code>
+- <code><a href="./src/resources/shared.ts">RejectDetail</a></code>
+- <code><a href="./src/resources/shared.ts">SendDetail</a></code>
 
 # APIKeys
 
@@ -95,19 +105,46 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/webhooks.ts">WebhookCreateResponse</a></code>
-- <code><a href="./src/resources/webhooks.ts">WebhookRetrieveResponse</a></code>
-- <code><a href="./src/resources/webhooks.ts">WebhookUpdateResponse</a></code>
-- <code><a href="./src/resources/webhooks.ts">WebhookListResponse</a></code>
-- <code><a href="./src/resources/webhooks.ts">WebhookDeleteResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">BaseEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailBouncedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailClickedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailComplainedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailDeliveredEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailDeliveryDelayedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailFailedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailOpenedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailRejectedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailSentEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">Event</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookCreateResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookRetrieveResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookUpdateResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookListResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">WebhookDeleteResponse</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">UnwrapWebhookEvent</a></code>
 
 Methods:
 
-- <code title="post /webhooks">client.webhooks.<a href="./src/resources/webhooks.ts">create</a>({ ...params }) -> WebhookCreateResponse</code>
-- <code title="get /webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks.ts">retrieve</a>(id) -> WebhookRetrieveResponse</code>
-- <code title="put /webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks.ts">update</a>(id, { ...params }) -> WebhookUpdateResponse</code>
-- <code title="get /webhooks">client.webhooks.<a href="./src/resources/webhooks.ts">list</a>({ ...params }) -> WebhookListResponsesCursorPage</code>
-- <code title="delete /webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks.ts">delete</a>(id) -> WebhookDeleteResponse</code>
+- <code title="post /webhooks">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">create</a>({ ...params }) -> WebhookCreateResponse</code>
+- <code title="get /webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">retrieve</a>(id) -> WebhookRetrieveResponse</code>
+- <code title="put /webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">update</a>(id, { ...params }) -> WebhookUpdateResponse</code>
+- <code title="get /webhooks">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">list</a>({ ...params }) -> WebhookListResponsesCursorPage</code>
+- <code title="delete /webhooks/{id}">client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">delete</a>(id) -> WebhookDeleteResponse</code>
+- <code>client.webhooks.<a href="./src/resources/webhooks/webhooks.ts">unwrap</a>(body) -> void</code>
+
+## Events
+
+Types:
+
+- <code><a href="./src/resources/webhooks/events.ts">EventListResponse</a></code>
+- <code><a href="./src/resources/webhooks/events.ts">EventDeliveriesResponse</a></code>
+- <code><a href="./src/resources/webhooks/events.ts">EventRetryResponse</a></code>
+
+Methods:
+
+- <code title="get /webhooks/events">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">list</a>({ ...params }) -> EventListResponsesCursorPage</code>
+- <code title="get /webhooks/{id}/events/{event_id}/deliveries">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">deliveries</a>(eventID, { ...params }) -> EventDeliveriesResponse</code>
+- <code title="post /webhooks/{id}/events/{event_id}/retry">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">retry</a>(eventID, { ...params }) -> EventRetryResponse</code>
 
 # Organizations
 
