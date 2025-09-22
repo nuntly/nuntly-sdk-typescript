@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0 (2025-09-22)
+
+Full Changelog: [v0.9.0...v0.10.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.9.0...v0.10.0)
+
+### Features
+
+* **api:** rotate webhook signing secret ([cf79edb](https://github.com/nuntly/nuntly-sdk-typescript/commit/cf79edb6e38bc85d783831d389e2aa70189cc28d))
+
 ## 0.9.0 (2025-09-20)
 
 Full Changelog: [v0.8.0...v0.9.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.8.0...v0.9.0)
