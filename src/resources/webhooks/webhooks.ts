@@ -366,6 +366,11 @@ export interface WebhookUpdateResponse {
    * The id of the organization
    */
   org_id: string;
+
+  /**
+   * The signing secret of the webhook.
+   */
+  signing_secret?: string;
 }
 
 export interface WebhookListResponse {
@@ -479,6 +484,11 @@ export interface WebhookUpdateParams {
    * The name of the webhook
    */
   name?: string;
+
+  /**
+   * If true, a new signing secret will be generated
+   */
+  rotate_secret?: boolean;
 
   /**
    * The status of the webhook.
