@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.1 (2025-09-23)
+
+Full Changelog: [v0.10.0...v0.10.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.0...v0.10.1)
+
+### Features
+
+* **api:** rename retry to replay ([2e78ac7](https://github.com/nuntly/nuntly-sdk-typescript/commit/2e78ac7342f2562f4ca8e72beec7f7a8da66ec92))
+* **mcp:** enable experimental docs search tool ([387eb6d](https://github.com/nuntly/nuntly-sdk-typescript/commit/387eb6d6e59c534618c403230f8c11d8967c17d9))
+
 ## 0.10.0 (2025-09-22)
 
 Full Changelog: [v0.9.0...v0.10.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.9.0...v0.10.0)
