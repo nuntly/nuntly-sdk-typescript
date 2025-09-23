@@ -138,13 +138,13 @@ Types:
 
 - <code><a href="./src/resources/webhooks/events.ts">EventListResponse</a></code>
 - <code><a href="./src/resources/webhooks/events.ts">EventDeliveriesResponse</a></code>
-- <code><a href="./src/resources/webhooks/events.ts">EventRetryResponse</a></code>
+- <code><a href="./src/resources/webhooks/events.ts">EventReplayResponse</a></code>
 
 Methods:
 
 - <code title="get /webhooks/events">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">list</a>({ ...params }) -> EventListResponsesCursorPage</code>
 - <code title="get /webhooks/{id}/events/{event_id}/deliveries">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">deliveries</a>(eventID, { ...params }) -> EventDeliveriesResponse</code>
-- <code title="post /webhooks/{id}/events/{event_id}/retry">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">retry</a>(eventID, { ...params }) -> EventRetryResponse</code>
+- <code title="post /webhooks/{id}/events/{event_id}/replay">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">replay</a>(eventID, { ...params }) -> EventReplayResponse</code>
 
 # Organizations
 

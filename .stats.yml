@@ -1,4 +1,4 @@
 configured_endpoints: 38
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/bazoud-corp%2Fnuntly-c487f50f89f545b11e2fc3d66bb40d1210d19f990f444a862062ddce9b1b707c.yml
-openapi_spec_hash: d54bdbb21cb47f2022891d821f9dd3bd
-config_hash: 8a5e724f36feda703b50a4e9307b10f5
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/bazoud-corp%2Fnuntly-664d729c94bedd3ae87b381ae93c7ea71dcf43c3d3bdb697cf3aed79626e4aa6.yml
+openapi_spec_hash: 6610425356f95d60426d67cf16b046f8
+config_hash: bdf1ef13bb34e63dfac71fbacaf02059
