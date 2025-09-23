@@ -252,7 +252,7 @@ The following tools are available in this MCP server.
 
 - `list_webhooks_events` (`read`): Return the last events sent by webhooks
 - `deliveries_webhooks_events` (`read`): Return the delivery attempts for the given webhook event ID
-- `retry_webhooks_events` (`write`): Retry sending the webhook event with the given event ID
+- `replay_webhooks_events` (`write`): Replay the webhook event
 
 ### Resource `organizations`:
 
