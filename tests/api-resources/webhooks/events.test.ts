@@ -41,8 +41,8 @@ describe('resource events', () => {
     const response = await client.webhooks.events.deliveries('event_id', { id: 'id' });
   });
 
-  test('retry: only required params', async () => {
-    const responsePromise = client.webhooks.events.retry('event_id', { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' });
+  test('replay: only required params', async () => {
+    const responsePromise = client.webhooks.events.replay('event_id', { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,7 +52,7 @@ describe('resource events', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retry: required and optional params', async () => {
-    const response = await client.webhooks.events.retry('event_id', { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' });
+  test('replay: required and optional params', async () => {
+    const response = await client.webhooks.events.replay('event_id', { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' });
   });
 });

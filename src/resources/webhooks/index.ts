@@ -4,10 +4,10 @@ export {
   Events,
   type EventListResponse,
   type EventDeliveriesResponse,
-  type EventRetryResponse,
+  type EventReplayResponse,
   type EventListParams,
   type EventDeliveriesParams,
-  type EventRetryParams,
+  type EventReplayParams,
   type EventListResponsesCursorPage,
 } from './events';
 export {

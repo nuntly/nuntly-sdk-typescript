@@ -9,8 +9,8 @@ import {
   EventListParams,
   EventListResponse,
   EventListResponsesCursorPage,
-  EventRetryParams,
-  EventRetryResponse,
+  EventReplayParams,
+  EventReplayResponse,
   Events,
 } from './events';
 import { APIPromise } from '../../core/api-promise';
@@ -529,10 +529,10 @@ export declare namespace Webhooks {
     Events as Events,
     type EventListResponse as EventListResponse,
     type EventDeliveriesResponse as EventDeliveriesResponse,
-    type EventRetryResponse as EventRetryResponse,
+    type EventReplayResponse as EventReplayResponse,
     type EventListResponsesCursorPage as EventListResponsesCursorPage,
     type EventListParams as EventListParams,
     type EventDeliveriesParams as EventDeliveriesParams,
-    type EventRetryParams as EventRetryParams,
+    type EventReplayParams as EventReplayParams,
   };
 }

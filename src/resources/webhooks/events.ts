@@ -52,21 +52,25 @@ export class Events extends APIResource {
   }
 
   /**
-   * Retry sending the webhook event with the given event ID
+   * Replay the webhook event
    *
    * @example
    * ```ts
-   * const response = await client.webhooks.events.retry(
+   * const response = await client.webhooks.events.replay(
    *   'event_id',
    *   { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' },
    * );
    * ```
    */
-  retry(eventID: string, params: EventRetryParams, options?: RequestOptions): APIPromise<EventRetryResponse> {
+  replay(
+    eventID: string,
+    params: EventReplayParams,
+    options?: RequestOptions,
+  ): APIPromise<EventReplayResponse> {
     const { id } = params;
     return (
-      this._client.post(path`/webhooks/${id}/events/${eventID}/retry`, options) as APIPromise<{
-        data: EventRetryResponse;
+      this._client.post(path`/webhooks/${id}/events/${eventID}/replay`, options) as APIPromise<{
+        data: EventReplayResponse;
       }>
     )._thenUnwrap((obj) => obj.data);
   }
@@ -127,7 +131,7 @@ export namespace EventDeliveriesResponse {
   }
 }
 
-export type EventRetryResponse = unknown;
+export type EventReplayResponse = unknown;
 
 export interface EventListParams extends CursorPageParams {}
 
@@ -138,7 +142,7 @@ export interface EventDeliveriesParams {
   id: string;
 }
 
-export interface EventRetryParams {
+export interface EventReplayParams {
   /**
    * The webhook id
    */
@@ -149,10 +153,10 @@ export declare namespace Events {
   export {
     type EventListResponse as EventListResponse,
     type EventDeliveriesResponse as EventDeliveriesResponse,
-    type EventRetryResponse as EventRetryResponse,
+    type EventReplayResponse as EventReplayResponse,
     type EventListResponsesCursorPage as EventListResponsesCursorPage,
     type EventListParams as EventListParams,
     type EventDeliveriesParams as EventDeliveriesParams,
-    type EventRetryParams as EventRetryParams,
+    type EventReplayParams as EventReplayParams,
   };
 }

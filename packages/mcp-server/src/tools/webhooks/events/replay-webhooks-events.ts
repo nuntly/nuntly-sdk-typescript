@@ -10,13 +10,13 @@ export const metadata: Metadata = {
   operation: 'write',
   tags: [],
   httpMethod: 'post',
-  httpPath: '/webhooks/{id}/events/{event_id}/retry',
-  operationId: 'retry-webhook-event',
+  httpPath: '/webhooks/{id}/events/{event_id}/replay',
+  operationId: 'replay-webhook-event',
 };
 
 export const tool: Tool = {
-  name: 'retry_webhooks_events',
-  description: 'Retry sending the webhook event with the given event ID',
+  name: 'replay_webhooks_events',
+  description: 'Replay the webhook event',
   inputSchema: {
     type: 'object',
     properties: {
@@ -34,7 +34,7 @@ export const tool: Tool = {
 
 export const handler = async (client: Nuntly, args: Record<string, unknown> | undefined) => {
   const { event_id, ...body } = args as any;
-  return asTextContentResult((await client.webhooks.events.retry(event_id, body)) as object);
+  return asTextContentResult((await client.webhooks.events.replay(event_id, body)) as object);
 };
 
 export default { metadata, tool, handler };
