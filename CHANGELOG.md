@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.11.0 (2025-09-27)
+
+Full Changelog: [v0.10.1...v0.11.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.1...v0.11.0)
+
+### Features
+
+* **mcp:** add option for including docs tools ([6d5c15f](https://github.com/nuntly/nuntly-sdk-typescript/commit/6d5c15fb7f0111335852bb7240f54991ba16abef))
+
+
+### Performance Improvements
+
+* faster formatting ([c292ce8](https://github.com/nuntly/nuntly-sdk-typescript/commit/c292ce8a33aae78a460103c2098f808a11995c3a))
+
+
+### Chores
+
+* **internal:** codegen related update ([2334597](https://github.com/nuntly/nuntly-sdk-typescript/commit/23345977ab98c41ca55351ca0186e175d929f44c))
+* **internal:** fix incremental formatting in some cases ([26cc488](https://github.com/nuntly/nuntly-sdk-typescript/commit/26cc4882f94983444ab24ab488889d4787daba2b))
+* **internal:** ignore .eslintcache ([56919b7](https://github.com/nuntly/nuntly-sdk-typescript/commit/56919b7a527c7b8e4a25a0d2bab56a3d5c59cd42))
+* **internal:** remove deprecated `compilerOptions.baseUrl` from tsconfig.json ([1526bc4](https://github.com/nuntly/nuntly-sdk-typescript/commit/1526bc40fd0bd1decf6bdfedc540e3caf46b7a37))
+* **mcp:** allow pointing `docs_search` tool at other URLs ([02409de](https://github.com/nuntly/nuntly-sdk-typescript/commit/02409de69c9b0314646bd8b1d975f1e06d081b8a))
+
 ## 0.10.1 (2025-09-23)
 
 Full Changelog: [v0.10.0...v0.10.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.0...v0.10.1)
