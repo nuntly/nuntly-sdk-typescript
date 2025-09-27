@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "@nuntly/sdk/*": ["dist/src/*"],
-      "@nuntly/sdk": ["dist/src/index.ts"]
+      "@nuntly/sdk/*": ["./dist/src/*"],
+      "@nuntly/sdk": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,
