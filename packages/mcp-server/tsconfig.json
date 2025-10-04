@@ -7,10 +7,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "baseUrl": "./",
     "paths": {
-      "@nuntly/sdk-mcp/*": ["src/*"],
-      "@nuntly/sdk-mcp": ["src/index.ts"]
+      "@nuntly/sdk-mcp/*": ["./src/*"],
+      "@nuntly/sdk-mcp": ["./src/index.ts"]
     },
     "noEmit": true,
 

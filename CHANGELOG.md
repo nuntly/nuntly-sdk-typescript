@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.10.2 (2025-10-04)
+
+Full Changelog: [v0.10.1...v0.10.2](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.1...v0.10.2)
+
+### Features
+
+* **mcp:** add option for including docs tools ([6d5c15f](https://github.com/nuntly/nuntly-sdk-typescript/commit/6d5c15fb7f0111335852bb7240f54991ba16abef))
+
+
+### Bug Fixes
+
+* **mcp:** fix cli argument parsing logic ([61d8454](https://github.com/nuntly/nuntly-sdk-typescript/commit/61d8454d07a38351e3ad4f69da3bcb8b11f999ef))
+* **mcp:** resolve a linting issue in server code ([2b7ffc2](https://github.com/nuntly/nuntly-sdk-typescript/commit/2b7ffc2c9e80362fdf3dea2048d305364b4c0742))
+
+
+### Performance Improvements
+
+* faster formatting ([c292ce8](https://github.com/nuntly/nuntly-sdk-typescript/commit/c292ce8a33aae78a460103c2098f808a11995c3a))
+
+
+### Chores
+
+* **internal:** codegen related update ([2334597](https://github.com/nuntly/nuntly-sdk-typescript/commit/23345977ab98c41ca55351ca0186e175d929f44c))
+* **internal:** fix incremental formatting in some cases ([26cc488](https://github.com/nuntly/nuntly-sdk-typescript/commit/26cc4882f94983444ab24ab488889d4787daba2b))
+* **internal:** ignore .eslintcache ([56919b7](https://github.com/nuntly/nuntly-sdk-typescript/commit/56919b7a527c7b8e4a25a0d2bab56a3d5c59cd42))
+* **internal:** remove .eslintcache ([3349485](https://github.com/nuntly/nuntly-sdk-typescript/commit/3349485caf2c0294807a72d9f89dd78dd486d7e6))
+* **internal:** remove deprecated `compilerOptions.baseUrl` from tsconfig.json ([1526bc4](https://github.com/nuntly/nuntly-sdk-typescript/commit/1526bc40fd0bd1decf6bdfedc540e3caf46b7a37))
+* **jsdoc:** fix [@link](https://github.com/link) annotations to refer only to parts of the package‘s public interface ([26e8e1b](https://github.com/nuntly/nuntly-sdk-typescript/commit/26e8e1b98b81bfd36fc6f8dd0706a8f0895f2405))
+* **mcp:** allow pointing `docs_search` tool at other URLs ([02409de](https://github.com/nuntly/nuntly-sdk-typescript/commit/02409de69c9b0314646bd8b1d975f1e06d081b8a))
+* update lockfile ([456bf05](https://github.com/nuntly/nuntly-sdk-typescript/commit/456bf0516d4c1e46a78efff666e596c16578a788))
+
 ## 0.10.1 (2025-09-23)
 
 Full Changelog: [v0.10.0...v0.10.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.0...v0.10.1)
