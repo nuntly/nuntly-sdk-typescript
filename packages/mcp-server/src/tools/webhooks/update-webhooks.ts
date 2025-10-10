@@ -59,7 +59,6 @@ export const tool: Tool = {
     $defs: {
       event_type: {
         type: 'string',
-        description: 'The webhook events',
         enum: [
           'email.sent',
           'email.delivered',
