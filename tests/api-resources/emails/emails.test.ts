@@ -68,7 +68,13 @@ describe('resource emails', () => {
       from: 'ray@info.tomlinson.ai',
       subject: 'Welcome to Tomlinson AI!',
       to: 'carlo43@gmail.com',
-      attachments: [{ content: 'content', content_type: 'content_type', filename: 'filename' }],
+      attachments: [
+        {
+          content: 'content',
+          content_type: 'content_type',
+          filename: 'filename',
+        },
+      ],
       bcc: ['string'],
       cc: ['string'],
       context: {},
