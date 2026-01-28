@@ -24,7 +24,11 @@ describe('resource invitations', () => {
     await expect(
       client.organizations.invitations.list(
         'id',
-        { cursor: 'cursor', limit: 1, status: 'pending' },
+        {
+          cursor: 'cursor',
+          limit: 1,
+          status: 'pending',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Nuntly.NotFoundError);
