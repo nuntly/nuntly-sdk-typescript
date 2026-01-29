@@ -70,6 +70,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
+// try catch statement
 const apiKey = await client.apiKeys.create().catch(async (err) => {
   if (err instanceof Nuntly.APIError) {
     console.log(err.status); // 400
@@ -79,6 +80,19 @@ const apiKey = await client.apiKeys.create().catch(async (err) => {
     throw err;
   }
 });
+```
+
+or safely use async/await without the try catch block
+
+```ts
+const client = createSafeNuntly({ apiKey: NUNTLY_API_KEY });
+const { data, error } = await client.apiKeys.create();
+if (error) {
+  console.log(error.status); // 400
+  console.log(error.details);
+  // ...
+}
+console.log(data.apikey);
 ```
 
 Error codes are as follows:
