@@ -1,5 +1,60 @@
 # Changelog
 
+## 0.10.2 (2026-01-29)
+
+Full Changelog: [v0.10.1...v0.10.2](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.1...v0.10.2)
+
+### Features
+
+* **mcp:** add option for including docs tools ([6d5c15f](https://github.com/nuntly/nuntly-sdk-typescript/commit/6d5c15fb7f0111335852bb7240f54991ba16abef))
+* **mcp:** enable optional code execution tool on http mcp servers ([4e1eddb](https://github.com/nuntly/nuntly-sdk-typescript/commit/4e1eddbe20840aa78b231404d6ee7be12e639176))
+
+
+### Bug Fixes
+
+* **mcpb:** pin @anthropic-ai/mcpb version ([aa7919d](https://github.com/nuntly/nuntly-sdk-typescript/commit/aa7919d81ee18aff9580c9ca24127dc145c89967))
+* **mcp:** fix cli argument parsing logic ([61d8454](https://github.com/nuntly/nuntly-sdk-typescript/commit/61d8454d07a38351e3ad4f69da3bcb8b11f999ef))
+* **mcp:** fix some response schemas used for jq filtering ([2f59b51](https://github.com/nuntly/nuntly-sdk-typescript/commit/2f59b5164bb6cdf55841e1f3e89aa5e7dd235c90))
+* **mcp:** resolve a linting issue in server code ([2b7ffc2](https://github.com/nuntly/nuntly-sdk-typescript/commit/2b7ffc2c9e80362fdf3dea2048d305364b4c0742))
+* **mcp:** return tool execution error on jq failure ([9ff9dee](https://github.com/nuntly/nuntly-sdk-typescript/commit/9ff9deec23de2a557fca5c9f82f0977ca773da04))
+
+
+### Performance Improvements
+
+* faster formatting ([c292ce8](https://github.com/nuntly/nuntly-sdk-typescript/commit/c292ce8a33aae78a460103c2098f808a11995c3a))
+
+
+### Chores
+
+* extract some types in mcp docs ([07407f3](https://github.com/nuntly/nuntly-sdk-typescript/commit/07407f33b775b3772b132889068f8fc3728dc9f8))
+* **internal:** codegen related update ([11daf98](https://github.com/nuntly/nuntly-sdk-typescript/commit/11daf98b94933efb6881c9ad21a62ea1a0a8cf8f))
+* **internal:** codegen related update ([a6ae25b](https://github.com/nuntly/nuntly-sdk-typescript/commit/a6ae25b8de8964578c67039149f486631aad29c6))
+* **internal:** codegen related update ([d567574](https://github.com/nuntly/nuntly-sdk-typescript/commit/d567574a4fe7110b520d96f64600525e87adebfc))
+* **internal:** codegen related update ([2334597](https://github.com/nuntly/nuntly-sdk-typescript/commit/23345977ab98c41ca55351ca0186e175d929f44c))
+* **internal:** fix incremental formatting in some cases ([26cc488](https://github.com/nuntly/nuntly-sdk-typescript/commit/26cc4882f94983444ab24ab488889d4787daba2b))
+* **internal:** grammar fix (it's -&gt; its) ([9632ca7](https://github.com/nuntly/nuntly-sdk-typescript/commit/9632ca7ab61aa76eb6cd28ad9302d01113ac23ce))
+* **internal:** ignore .eslintcache ([56919b7](https://github.com/nuntly/nuntly-sdk-typescript/commit/56919b7a527c7b8e4a25a0d2bab56a3d5c59cd42))
+* **internal:** remove .eslintcache ([3349485](https://github.com/nuntly/nuntly-sdk-typescript/commit/3349485caf2c0294807a72d9f89dd78dd486d7e6))
+* **internal:** remove deprecated `compilerOptions.baseUrl` from tsconfig.json ([1526bc4](https://github.com/nuntly/nuntly-sdk-typescript/commit/1526bc40fd0bd1decf6bdfedc540e3caf46b7a37))
+* **internal:** upgrade wrangler version ([ea3ff53](https://github.com/nuntly/nuntly-sdk-typescript/commit/ea3ff5389ea905388ad5d741bf98780f5124a6a5))
+* **internal:** use npm pack for build uploads ([3c344cd](https://github.com/nuntly/nuntly-sdk-typescript/commit/3c344cd180869780aaffc00368119bf3663f7c62))
+* **jsdoc:** fix [@link](https://github.com/link) annotations to refer only to parts of the package‘s public interface ([26e8e1b](https://github.com/nuntly/nuntly-sdk-typescript/commit/26e8e1b98b81bfd36fc6f8dd0706a8f0895f2405))
+* mcp code tool explicit error message when missing a run function ([175a42a](https://github.com/nuntly/nuntly-sdk-typescript/commit/175a42a4c9d14af2a5e24053d7bd6d59b50701c0))
+* **mcp:** add friendlier MCP code tool errors on incorrect method invocations ([2e4c224](https://github.com/nuntly/nuntly-sdk-typescript/commit/2e4c2240b9d3b4503c108664573cbd0ec2a661ff))
+* **mcp:** add line numbers to code tool errors ([aa305dc](https://github.com/nuntly/nuntly-sdk-typescript/commit/aa305dc1306f4e8baffa5d9386d01116bff2e488))
+* **mcp:** allow pointing `docs_search` tool at other URLs ([02409de](https://github.com/nuntly/nuntly-sdk-typescript/commit/02409de69c9b0314646bd8b1d975f1e06d081b8a))
+* **mcp:** clarify http auth error ([fe59f9c](https://github.com/nuntly/nuntly-sdk-typescript/commit/fe59f9caafb872e4009cfdf138611b015ebdeaa7))
+* **mcp:** upgrade jq-web ([8f1248e](https://github.com/nuntly/nuntly-sdk-typescript/commit/8f1248e96aeceeef14b3954fe11d4006665bf19e))
+* update docstrings ([b119f6a](https://github.com/nuntly/nuntly-sdk-typescript/commit/b119f6abf78e2cde6a8c301e29c294e0a92a4a5b))
+* update lockfile ([456bf05](https://github.com/nuntly/nuntly-sdk-typescript/commit/456bf0516d4c1e46a78efff666e596c16578a788))
+* use structured error when code execution tool errors ([2d6ac69](https://github.com/nuntly/nuntly-sdk-typescript/commit/2d6ac69f3ac0627e1ce2b721b06e91debcbc3f60))
+
+
+### Documentation
+
+* **mcp:** add a README button for one-click add to Cursor ([396ec15](https://github.com/nuntly/nuntly-sdk-typescript/commit/396ec1535841de24a8a0354acebaffcc631fadcb))
+* **mcp:** add a README link to add server to VS Code or Claude Code ([35397ce](https://github.com/nuntly/nuntly-sdk-typescript/commit/35397ce25cc225cc14c52b3539269b43dbc248e4))
+
 ## 0.10.1 (2025-09-23)
 
 Full Changelog: [v0.10.0...v0.10.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.0...v0.10.1)
