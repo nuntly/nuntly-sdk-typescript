@@ -8,12 +8,7 @@ import { path } from '../internal/utils/path';
 
 export class APIKeys extends APIResource {
   /**
-   * Create a new api key
-   *
-   * @example
-   * ```ts
-   * const apiKey = await client.apiKeys.create();
-   * ```
+   * Create an API key
    */
   create(
     body: APIKeyCreateParams | null | undefined = {},
@@ -25,14 +20,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Return the api-key with the given ID
-   *
-   * @example
-   * ```ts
-   * const apiKey = await client.apiKeys.retrieve(
-   *   'apk_pdGukGd4BTmHj8dscBDE5Mc9',
-   * );
-   * ```
+   * Retrieve an API key
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<APIKeyRetrieveResponse> {
     return (
@@ -41,16 +29,13 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Updates partial api key fields with the given id
-   *
-   * @example
-   * ```ts
-   * const apiKey = await client.apiKeys.update(
-   *   'ak_pdGukGd4BTmHj8dscBDE5Mc9',
-   * );
-   * ```
+   * Update an API key
    */
-  update(id: string, body: APIKeyUpdateParams, options?: RequestOptions): APIPromise<APIKeyUpdateResponse> {
+  update(
+    id: string,
+    body: APIKeyUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<APIKeyUpdateResponse> {
     return (
       this._client.put(path`/api-keys/${id}`, { body, ...options }) as APIPromise<{
         data: APIKeyUpdateResponse;
@@ -59,15 +44,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Return a list of your api keys
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const apiKeyListResponse of client.apiKeys.list()) {
-   *   // ...
-   * }
-   * ```
+   * List API keys
    */
   list(
     query: APIKeyListParams | null | undefined = {},
@@ -77,14 +54,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Delete the api key with the given ID
-   *
-   * @example
-   * ```ts
-   * const apiKey = await client.apiKeys.delete(
-   *   'ak_pdGukGd4BTmHj8dscBDE5Mc9',
-   * );
-   * ```
+   * Delete an API key
    */
   delete(id: string, options?: RequestOptions): APIPromise<APIKeyDeleteResponse> {
     return (
@@ -104,47 +74,17 @@ export interface APIKeyCreateResponse {
   /**
    * The content of the api key
    */
-  apikey: string;
+  apiKey: string;
 
   /**
-   * The truncated content of the api key
+   * The last 6 characters of the api key token
    */
-  apikey_truncated: string;
+  shortToken: string;
 
   /**
-   * Date at which the object was created (ISO 8601 format)
-   */
-  created_at: string;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'api-key';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
-   * The status of the api key
+   * The status for the api key
    */
   status: 'enabled' | 'disabled' | 'revoked';
-
-  /**
-   * The id of the user
-   */
-  user_id: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
 
   /**
    * The name of the api key
@@ -159,44 +99,19 @@ export interface APIKeyRetrieveResponse {
   id: string;
 
   /**
-   * The truncated content of the api key
-   */
-  apikey_truncated: string;
-
-  /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
-   * The kind of object returned
+   * The last 6 characters of the api key token
    */
-  kind: 'api-key';
+  shortToken: string;
 
   /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
-   * The status of the api key
+   * The status for the api key
    */
   status: 'enabled' | 'disabled' | 'revoked';
-
-  /**
-   * The id of the user
-   */
-  user_id: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
 
   /**
    * The name of the api key
@@ -209,16 +124,6 @@ export interface APIKeyUpdateResponse {
    * The id of the api key
    */
   id: string;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'api-key';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
 }
 
 export interface APIKeyListResponse {
@@ -228,44 +133,19 @@ export interface APIKeyListResponse {
   id: string;
 
   /**
-   * The truncated content of the api key
-   */
-  apikey_truncated: string;
-
-  /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
-   * The kind of object returned
+   * The last 6 characters of the api key token
    */
-  kind: 'api-key';
+  shortToken: string;
 
   /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
-   * The status of the api key
+   * The status for the api key
    */
   status: 'enabled' | 'disabled' | 'revoked';
-
-  /**
-   * The id of the user
-   */
-  user_id: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
 
   /**
    * The name of the api key
@@ -278,16 +158,6 @@ export interface APIKeyDeleteResponse {
    * The id of the api key
    */
   id: string;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'api-key';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
 }
 
 export interface APIKeyCreateParams {
@@ -295,6 +165,11 @@ export interface APIKeyCreateParams {
    * The name of the api key
    */
   name?: string;
+
+  /**
+   * The status for the api key
+   */
+  status?: 'enabled' | 'disabled' | 'revoked';
 }
 
 export interface APIKeyUpdateParams {
@@ -303,9 +178,6 @@ export interface APIKeyUpdateParams {
    */
   name?: string;
 
-  /**
-   * The status of the api key
-   */
   status?: 'enabled' | 'disabled';
 }
 

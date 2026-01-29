@@ -7,9 +7,9 @@ const client = new Nuntly({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource subscriptions', () => {
-  test('list', async () => {
-    const responsePromise = client.organizations.subscriptions.list('id');
+describe('resource content', () => {
+  test('retrieve', async () => {
+    const responsePromise = client.emails.content.retrieve('em_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

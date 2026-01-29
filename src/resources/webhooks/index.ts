@@ -12,7 +12,6 @@ export {
 } from './events';
 export {
   Webhooks,
-  type BaseEvent,
   type EmailBouncedEvent,
   type EmailClickedEvent,
   type EmailComplainedEvent,
@@ -20,7 +19,11 @@ export {
   type EmailDeliveryDelayedEvent,
   type EmailFailedEvent,
   type EmailOpenedEvent,
+  type EmailProcessedEvent,
+  type EmailQueuedEvent,
   type EmailRejectedEvent,
+  type EmailScheduledEvent,
+  type EmailSendingEvent,
   type EmailSentEvent,
   type Event,
   type WebhookCreateResponse,

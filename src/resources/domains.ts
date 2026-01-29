@@ -8,15 +8,7 @@ import { path } from '../internal/utils/path';
 
 export class Domains extends APIResource {
   /**
-   * Return the domain with the given ID
-   *
-   * @example
-   * ```ts
-   * const domain = await client.domains.create({
-   *   name: 'acme.com',
-   *   region: 'eu-west-1',
-   * });
-   * ```
+   * Create a domain
    */
   create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
     return (
@@ -25,14 +17,7 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Return the domain with the given id
-   *
-   * @example
-   * ```ts
-   * const domain = await client.domains.retrieve(
-   *   'dns_FdfQe2eZAzRrHCXKSr7VsxUz',
-   * );
-   * ```
+   * Retrieve a domain
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
     return (
@@ -41,16 +26,13 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Updates domain tracking settings
-   *
-   * @example
-   * ```ts
-   * const domain = await client.domains.update(
-   *   'dns_FdfQe2eZAzRrHCXKSr7VsxUz',
-   * );
-   * ```
+   * Update a domain
    */
-  update(id: string, body: DomainUpdateParams, options?: RequestOptions): APIPromise<DomainUpdateResponse> {
+  update(
+    id: string,
+    body: DomainUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<DomainUpdateResponse> {
     return (
       this._client.patch(path`/domains/${id}`, { body, ...options }) as APIPromise<{
         data: DomainUpdateResponse;
@@ -58,17 +40,6 @@ export class Domains extends APIResource {
     )._thenUnwrap((obj) => obj.data);
   }
 
-  /**
-   * Return a list of your domains
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const domainListResponse of client.domains.list()) {
-   *   // ...
-   * }
-   * ```
-   */
   list(
     query: DomainListParams | null | undefined = {},
     options?: RequestOptions,
@@ -77,14 +48,7 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Delete the domain with the given ID
-   *
-   * @example
-   * ```ts
-   * const domain = await client.domains.delete(
-   *   'dns_FdfQe2eZAzRrHCXKSr7VsxUz',
-   * );
-   * ```
+   * Delete a domain
    */
   delete(id: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
     return (
@@ -101,44 +65,40 @@ export interface DomainCreateResponse {
    */
   id: string;
 
-  click_tracking: boolean;
+  /**
+   * Emit an event for each time the recipient clicks a link in the email
+   */
+  clickTracking: boolean;
 
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'domain';
-
-  /**
-   * The name of the domain. For example: 'email.mycompany.com'
+   * The name of the domain to send e-mails'
    */
   name: string;
 
-  open_tracking: boolean;
-
   /**
-   * The id of the organization
+   * Emit an event for each recipient opens an email their email client
    */
-  org_id: string;
+  openTracking: boolean;
 
   /**
-   * The region of the related data
+   * The region of the domain data
    */
   region: 'eu-west-1';
 
   /**
    * The records for your domain
    */
-  sending_records: Array<DomainCreateResponse.SendingRecord>;
+  sendingRecords: Array<DomainCreateResponse.SendingRecord>;
 
   /**
    * The sending status for the domain
    */
-  sending_status: 'enabled' | 'disabled';
+  sendingStatus: 'enabled' | 'disabled';
 
   /**
    * The status for the domain
@@ -146,14 +106,9 @@ export interface DomainCreateResponse {
   status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
 
   /**
-   * The date of the lastest verification of the status
+   * The date of the lastest verification of this record
    */
-  status_at: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
+  statusAt: string;
 }
 
 export namespace DomainCreateResponse {
@@ -170,19 +125,14 @@ export namespace DomainCreateResponse {
     group: 'DKIM' | 'SPF' | 'MX' | 'DMARC';
 
     /**
-     * The kind of object returned
-     */
-    kind: 'record';
-
-    /**
      * The name of the record.
      */
     name: string;
 
     /**
-     * The region of the related data
+     * The type of the record: "TXT", "MX" or "CNAME"
      */
-    region: 'eu-west-1';
+    recordType: 'TXT' | 'MX' | 'CNAME';
 
     /**
      * The status of the record
@@ -192,17 +142,12 @@ export namespace DomainCreateResponse {
     /**
      * The date of the lastest verification of this record
      */
-    status_at: string;
+    statusAt: string;
 
     /**
      * TTL (Time To Live) for this DNS record specifies the duration (in seconds)
      */
     ttl: string;
-
-    /**
-     * The type of the record: "TXT", "MX" or "CNAME"
-     */
-    type: 'TXT' | 'MX' | 'CNAME';
 
     /**
      * The value of a DNS record is the data that the record points to
@@ -230,44 +175,40 @@ export interface DomainRetrieveResponse {
    */
   id: string;
 
-  click_tracking: boolean;
+  /**
+   * Emit an event for each time the recipient clicks a link in the email
+   */
+  clickTracking: boolean;
 
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'domain';
-
-  /**
-   * The name of the domain. For example: 'email.mycompany.com'
+   * The name of the domain to send e-mails'
    */
   name: string;
 
-  open_tracking: boolean;
-
   /**
-   * The id of the organization
+   * Emit an event for each recipient opens an email their email client
    */
-  org_id: string;
+  openTracking: boolean;
 
   /**
-   * The region of the related data
+   * The region of the domain data
    */
   region: 'eu-west-1';
 
   /**
    * The records for your domain
    */
-  sending_records: Array<DomainRetrieveResponse.SendingRecord>;
+  sendingRecords: Array<DomainRetrieveResponse.SendingRecord>;
 
   /**
    * The sending status for the domain
    */
-  sending_status: 'enabled' | 'disabled';
+  sendingStatus: 'enabled' | 'disabled';
 
   /**
    * The status for the domain
@@ -275,14 +216,9 @@ export interface DomainRetrieveResponse {
   status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
 
   /**
-   * The date of the lastest verification of the status
+   * The date of the lastest verification of this record
    */
-  status_at: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
+  statusAt: string;
 }
 
 export namespace DomainRetrieveResponse {
@@ -299,19 +235,14 @@ export namespace DomainRetrieveResponse {
     group: 'DKIM' | 'SPF' | 'MX' | 'DMARC';
 
     /**
-     * The kind of object returned
-     */
-    kind: 'record';
-
-    /**
      * The name of the record.
      */
     name: string;
 
     /**
-     * The region of the related data
+     * The type of the record: "TXT", "MX" or "CNAME"
      */
-    region: 'eu-west-1';
+    recordType: 'TXT' | 'MX' | 'CNAME';
 
     /**
      * The status of the record
@@ -321,17 +252,12 @@ export namespace DomainRetrieveResponse {
     /**
      * The date of the lastest verification of this record
      */
-    status_at: string;
+    statusAt: string;
 
     /**
      * TTL (Time To Live) for this DNS record specifies the duration (in seconds)
      */
     ttl: string;
-
-    /**
-     * The type of the record: "TXT", "MX" or "CNAME"
-     */
-    type: 'TXT' | 'MX' | 'CNAME';
 
     /**
      * The value of a DNS record is the data that the record points to
@@ -360,24 +286,14 @@ export interface DomainUpdateResponse {
   id: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'domain';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
    * Emit an event for each time the recipient clicks a link in the email
    */
-  click_tracking?: boolean;
+  clickTracking: boolean;
 
   /**
    * Emit an event for each recipient opens an email their email client
    */
-  open_tracking?: boolean;
+  openTracking: boolean;
 }
 
 export interface DomainListResponse {
@@ -389,47 +305,27 @@ export interface DomainListResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'domain';
-
-  /**
-   * The name of the domain. For example: 'email.mycompany.com'
+   * The name of the domain to send e-mails'
    */
   name: string;
 
   /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
+   * The region of the domain data
    */
   region: 'eu-west-1';
 
   /**
    * The sending status for the domain
    */
-  sending_status: 'enabled' | 'disabled';
+  sendingStatus: 'enabled' | 'disabled';
 
   /**
    * The status for the domain
    */
   status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
-
-  /**
-   * The date of the lastest verification of the status
-   */
-  status_at: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
 }
 
 export interface DomainDeleteResponse {
@@ -437,40 +333,25 @@ export interface DomainDeleteResponse {
    * The id of the domain
    */
   id: string;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'domain';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
 }
 
 export interface DomainCreateParams {
   /**
-   * The name of the domain. For example: 'email.mycompany.com'
+   * The name of the domain to send e-mails'
    */
   name: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
 }
 
 export interface DomainUpdateParams {
   /**
    * Emit an event for each time the recipient clicks a link in the email
    */
-  click_tracking?: boolean;
+  clickTracking?: boolean;
 
   /**
    * Emit an event for each recipient opens an email their email client
    */
-  open_tracking?: boolean;
+  openTracking?: boolean;
 }
 
 export interface DomainListParams extends CursorPageParams {}

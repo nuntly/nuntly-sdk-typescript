@@ -19,12 +19,6 @@ import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import {
-  Account,
-  AccountRetrieveResponse,
-  AccountUpdateParams,
-  AccountUpdateResponse,
-} from './resources/account';
-import {
   APIKeyCreateParams,
   APIKeyCreateResponse,
   APIKeyDeleteResponse,
@@ -48,23 +42,7 @@ import {
   DomainUpdateResponse,
   Domains,
 } from './resources/domains';
-import {
-  BounceDetail,
-  BulkEmailsStatus,
-  ClickDetail,
-  ComplaintDetail,
-  DeliveryDelayDetail,
-  DeliveryDetail,
-  EmailEvent,
-  EmailHeaders,
-  EmailStatus,
-  EventType,
-  FailureDetail,
-  OpenDetail,
-  RejectDetail,
-  SendDetail,
-  Shared,
-} from './resources/shared';
+import { EventType, Shared } from './resources/shared';
 import {
   EmailCancelResponse,
   EmailListParams,
@@ -74,18 +52,17 @@ import {
   EmailSendParams,
   EmailSendResponse,
   Emails,
+  Status,
+  Tag,
 } from './resources/emails/emails';
 import {
   OrganizationListParams,
   OrganizationListResponse,
   OrganizationListResponsesCursorPage,
   OrganizationRetrieveResponse,
-  OrganizationUpdateParams,
-  OrganizationUpdateResponse,
   Organizations,
 } from './resources/organizations/organizations';
 import {
-  BaseEvent,
   EmailBouncedEvent,
   EmailClickedEvent,
   EmailComplainedEvent,
@@ -93,7 +70,11 @@ import {
   EmailDeliveryDelayedEvent,
   EmailFailedEvent,
   EmailOpenedEvent,
+  EmailProcessedEvent,
+  EmailQueuedEvent,
   EmailRejectedEvent,
+  EmailScheduledEvent,
+  EmailSendingEvent,
   EmailSentEvent,
   Event,
   UnwrapWebhookEvent,
@@ -218,7 +199,7 @@ export class Nuntly {
    * API Client for interfacing with the Nuntly API.
    *
    * @param {string | null | undefined} [opts.apiKey=process.env['NUNTLY_API_KEY'] ?? null]
-   * @param {string} [opts.baseURL=process.env['NUNTLY_BASE_URL'] ?? https://api.eu.nuntly.com] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['NUNTLY_BASE_URL'] ?? https://api.nuntly.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -234,7 +215,7 @@ export class Nuntly {
     const options: ClientOptions = {
       apiKey,
       ...opts,
-      baseURL: baseURL || `https://api.eu.nuntly.com`,
+      baseURL: baseURL || `https://api.nuntly.com`,
     };
 
     this.baseURL = options.baseURL!;
@@ -280,7 +261,7 @@ export class Nuntly {
    * Check whether the base URL is set to its default.
    */
   #baseURLOverridden(): boolean {
-    return this.baseURL !== 'https://api.eu.nuntly.com';
+    return this.baseURL !== 'https://api.nuntly.com';
   }
 
   protected defaultQuery(): Record<string, string | undefined> | undefined {
@@ -836,7 +817,6 @@ export class Nuntly {
   emails: API.Emails = new API.Emails(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
   organizations: API.Organizations = new API.Organizations(this);
-  account: API.Account = new API.Account(this);
 }
 
 Nuntly.Shared = Shared;
@@ -845,7 +825,6 @@ Nuntly.Domains = Domains;
 Nuntly.Emails = Emails;
 Nuntly.Webhooks = Webhooks;
 Nuntly.Organizations = Organizations;
-Nuntly.Account = Account;
 
 export declare namespace Nuntly {
   export type RequestOptions = Opts.RequestOptions;
@@ -853,23 +832,7 @@ export declare namespace Nuntly {
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
-  export {
-    Shared as Shared,
-    type BounceDetail as BounceDetail,
-    type BulkEmailsStatus as BulkEmailsStatus,
-    type ClickDetail as ClickDetail,
-    type ComplaintDetail as ComplaintDetail,
-    type DeliveryDelayDetail as DeliveryDelayDetail,
-    type DeliveryDetail as DeliveryDetail,
-    type EmailEvent as EmailEvent,
-    type EmailHeaders as EmailHeaders,
-    type EmailStatus as EmailStatus,
-    type EventType as EventType,
-    type FailureDetail as FailureDetail,
-    type OpenDetail as OpenDetail,
-    type RejectDetail as RejectDetail,
-    type SendDetail as SendDetail,
-  };
+  export { Shared as Shared, type EventType as EventType };
 
   export {
     APIKeys as APIKeys,
@@ -899,6 +862,8 @@ export declare namespace Nuntly {
 
   export {
     Emails as Emails,
+    type Status as Status,
+    type Tag as Tag,
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
     type EmailCancelResponse as EmailCancelResponse,
@@ -910,7 +875,6 @@ export declare namespace Nuntly {
 
   export {
     Webhooks as Webhooks,
-    type BaseEvent as BaseEvent,
     type EmailBouncedEvent as EmailBouncedEvent,
     type EmailClickedEvent as EmailClickedEvent,
     type EmailComplainedEvent as EmailComplainedEvent,
@@ -918,7 +882,11 @@ export declare namespace Nuntly {
     type EmailDeliveryDelayedEvent as EmailDeliveryDelayedEvent,
     type EmailFailedEvent as EmailFailedEvent,
     type EmailOpenedEvent as EmailOpenedEvent,
+    type EmailProcessedEvent as EmailProcessedEvent,
+    type EmailQueuedEvent as EmailQueuedEvent,
     type EmailRejectedEvent as EmailRejectedEvent,
+    type EmailScheduledEvent as EmailScheduledEvent,
+    type EmailSendingEvent as EmailSendingEvent,
     type EmailSentEvent as EmailSentEvent,
     type Event as Event,
     type WebhookCreateResponse as WebhookCreateResponse,
@@ -936,17 +904,8 @@ export declare namespace Nuntly {
   export {
     Organizations as Organizations,
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
-    type OrganizationUpdateResponse as OrganizationUpdateResponse,
     type OrganizationListResponse as OrganizationListResponse,
     type OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
-    type OrganizationUpdateParams as OrganizationUpdateParams,
     type OrganizationListParams as OrganizationListParams,
-  };
-
-  export {
-    Account as Account,
-    type AccountRetrieveResponse as AccountRetrieveResponse,
-    type AccountUpdateResponse as AccountUpdateResponse,
-    type AccountUpdateParams as AccountUpdateParams,
   };
 }

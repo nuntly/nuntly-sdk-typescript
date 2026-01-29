@@ -9,9 +9,7 @@ const client = new Nuntly({
 
 describe('resource bulk', () => {
   test('retrieve', async () => {
-    const responsePromise = client.emails.bulk.retrieve(
-      'blk_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
-    );
+    const responsePromise = client.emails.bulk.retrieve('blk_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,9 +20,7 @@ describe('resource bulk', () => {
   });
 
   test('send: only required params', async () => {
-    const responsePromise = client.emails.bulk.send({
-      emails: [{ to: 'carlo43@gmail.com' }, { to: 'pink42@yahoo.com' }],
-    });
+    const responsePromise = client.emails.bulk.send({ emails: [{}] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,43 +34,29 @@ describe('resource bulk', () => {
     const response = await client.emails.bulk.send({
       emails: [
         {
-          to: 'carlo43@gmail.com',
           bcc: ['string'],
           cc: ['string'],
-          context: {},
-          from: 'ray@info.tomlinson.ai',
+          context: { foo: 'string' },
+          from: 'from',
           headers: { foo: 'string' },
-          html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
-          reply_to: ['string'],
-          scheduled_at: '2019-12-27T18:11:19.117Z',
-          subject: 'Welcome to Tomlinson AI!',
+          html: 'html',
+          replyTo: ['string'],
+          scheduledAt: 'scheduledAt',
+          subject: 'subject',
           tags: [{ name: 'name', value: 'value' }],
           text: 'text',
-        },
-        {
-          to: 'pink42@yahoo.com',
-          bcc: ['string'],
-          cc: ['string'],
-          context: {},
-          from: 'ray@info.tomlinson.ai',
-          headers: { foo: 'string' },
-          html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
-          reply_to: ['string'],
-          scheduled_at: '2019-12-27T18:11:19.117Z',
-          subject: 'Welcome to Tomlinson AI!',
-          tags: [{ name: 'name', value: 'value' }],
-          text: 'text',
+          to: ['string'],
         },
       ],
       fallback: {
         bcc: ['string'],
         cc: ['string'],
-        context: {},
+        context: { foo: 'string' },
         from: 'from',
         headers: { foo: 'string' },
         html: 'html',
-        reply_to: ['string'],
-        scheduled_at: '2019-12-27T18:11:19.117Z',
+        replyTo: ['string'],
+        scheduledAt: 'scheduledAt',
         subject: 'subject',
         tags: [{ name: 'name', value: 'value' }],
         text: 'text',

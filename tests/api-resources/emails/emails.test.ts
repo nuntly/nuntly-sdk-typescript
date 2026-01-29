@@ -9,7 +9,7 @@ const client = new Nuntly({
 
 describe('resource emails', () => {
   test('retrieve', async () => {
-    const responsePromise = client.emails.retrieve('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
+    const responsePromise = client.emails.retrieve('em_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,7 +38,7 @@ describe('resource emails', () => {
   });
 
   test('cancel', async () => {
-    const responsePromise = client.emails.cancel('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
+    const responsePromise = client.emails.cancel('em_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,9 +50,9 @@ describe('resource emails', () => {
 
   test('send: only required params', async () => {
     const responsePromise = client.emails.send({
-      from: 'ray@info.tomlinson.ai',
-      subject: 'Welcome to Tomlinson AI!',
-      to: 'carlo43@gmail.com',
+      from: 'from',
+      subject: 'subject',
+      to: ['string'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -65,23 +65,23 @@ describe('resource emails', () => {
 
   test('send: required and optional params', async () => {
     const response = await client.emails.send({
-      from: 'ray@info.tomlinson.ai',
-      subject: 'Welcome to Tomlinson AI!',
-      to: 'carlo43@gmail.com',
+      from: 'from',
+      subject: 'subject',
+      to: ['string'],
       attachments: [
         {
           content: 'content',
-          content_type: 'content_type',
+          contentType: 'contentType',
           filename: 'filename',
         },
       ],
       bcc: ['string'],
       cc: ['string'],
-      context: {},
+      context: { foo: 'string' },
       headers: { foo: 'string' },
-      html: '<html><body><p>Hi, Thank you for signing up! Please verify your email ...</p></body></html>',
-      reply_to: ['string'],
-      scheduled_at: '2019-12-27T18:11:19.117Z',
+      html: 'html',
+      replyTo: ['string'],
+      scheduledAt: 'scheduledAt',
       tags: [{ name: 'name', value: 'value' }],
       text: 'text',
     });

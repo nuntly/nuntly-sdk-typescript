@@ -2,20 +2,7 @@
 
 Types:
 
-- <code><a href="./src/resources/shared.ts">BounceDetail</a></code>
-- <code><a href="./src/resources/shared.ts">BulkEmailsStatus</a></code>
-- <code><a href="./src/resources/shared.ts">ClickDetail</a></code>
-- <code><a href="./src/resources/shared.ts">ComplaintDetail</a></code>
-- <code><a href="./src/resources/shared.ts">DeliveryDelayDetail</a></code>
-- <code><a href="./src/resources/shared.ts">DeliveryDetail</a></code>
-- <code><a href="./src/resources/shared.ts">EmailEvent</a></code>
-- <code><a href="./src/resources/shared.ts">EmailHeaders</a></code>
-- <code><a href="./src/resources/shared.ts">EmailStatus</a></code>
 - <code><a href="./src/resources/shared.ts">EventType</a></code>
-- <code><a href="./src/resources/shared.ts">FailureDetail</a></code>
-- <code><a href="./src/resources/shared.ts">OpenDetail</a></code>
-- <code><a href="./src/resources/shared.ts">RejectDetail</a></code>
-- <code><a href="./src/resources/shared.ts">SendDetail</a></code>
 
 # APIKeys
 
@@ -57,6 +44,8 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/emails/emails.ts">Status</a></code>
+- <code><a href="./src/resources/emails/emails.ts">Tag</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailRetrieveResponse</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailListResponse</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailCancelResponse</a></code>
@@ -78,7 +67,7 @@ Types:
 
 Methods:
 
-- <code title="get /emails/bulk/{id}">client.emails.bulk.<a href="./src/resources/emails/bulk.ts">retrieve</a>(id) -> BulkRetrieveResponse</code>
+- <code title="get /emails/bulk/{bulkId}">client.emails.bulk.<a href="./src/resources/emails/bulk.ts">retrieve</a>(bulkID) -> BulkRetrieveResponse</code>
 - <code title="post /emails/bulk">client.emails.bulk.<a href="./src/resources/emails/bulk.ts">send</a>({ ...params }) -> BulkSendResponse</code>
 
 ## Events
@@ -89,7 +78,17 @@ Types:
 
 Methods:
 
-- <code title="get /emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">list</a>(id, { ...params }) -> EventListResponse</code>
+- <code title="get /emails/{id}/events">client.emails.events.<a href="./src/resources/emails/events.ts">list</a>(id) -> EventListResponse</code>
+
+## Content
+
+Types:
+
+- <code><a href="./src/resources/emails/content.ts">ContentRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /emails/{id}/content">client.emails.content.<a href="./src/resources/emails/content.ts">retrieve</a>(id) -> ContentRetrieveResponse</code>
 
 ## Stats
 
@@ -105,7 +104,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/webhooks/webhooks.ts">BaseEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailBouncedEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailClickedEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailComplainedEvent</a></code>
@@ -113,7 +111,11 @@ Types:
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailDeliveryDelayedEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailFailedEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailOpenedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailProcessedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailQueuedEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailRejectedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailScheduledEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">EmailSendingEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailSentEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">Event</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">WebhookCreateResponse</a></code>
@@ -143,58 +145,20 @@ Types:
 Methods:
 
 - <code title="get /webhooks/events">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">list</a>({ ...params }) -> EventListResponsesCursorPage</code>
-- <code title="get /webhooks/{id}/events/{event_id}/deliveries">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">deliveries</a>(eventID, { ...params }) -> EventDeliveriesResponse</code>
-- <code title="post /webhooks/{id}/events/{event_id}/replay">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">replay</a>(eventID, { ...params }) -> EventReplayResponse</code>
+- <code title="get /webhooks/{id}/events/{eventId}/deliveries">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">deliveries</a>(eventID, { ...params }) -> EventDeliveriesResponse</code>
+- <code title="post /webhooks/{id}/events/{eventId}/replay">client.webhooks.events.<a href="./src/resources/webhooks/events.ts">replay</a>(eventID, { ...params }) -> EventReplayResponse</code>
 
 # Organizations
 
 Types:
 
 - <code><a href="./src/resources/organizations/organizations.ts">OrganizationRetrieveResponse</a></code>
-- <code><a href="./src/resources/organizations/organizations.ts">OrganizationUpdateResponse</a></code>
 - <code><a href="./src/resources/organizations/organizations.ts">OrganizationListResponse</a></code>
 
 Methods:
 
 - <code title="get /organizations/{id}">client.organizations.<a href="./src/resources/organizations/organizations.ts">retrieve</a>(id) -> OrganizationRetrieveResponse</code>
-- <code title="patch /organizations/{id}">client.organizations.<a href="./src/resources/organizations/organizations.ts">update</a>(id, { ...params }) -> OrganizationUpdateResponse</code>
 - <code title="get /organizations">client.organizations.<a href="./src/resources/organizations/organizations.ts">list</a>({ ...params }) -> OrganizationListResponsesCursorPage</code>
-
-## Memberships
-
-Types:
-
-- <code><a href="./src/resources/organizations/memberships.ts">MembershipListResponse</a></code>
-- <code><a href="./src/resources/organizations/memberships.ts">MembershipRevokeResponse</a></code>
-
-Methods:
-
-- <code title="get /organizations/{id}/memberships">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">list</a>(id, { ...params }) -> MembershipListResponsesCursorPage</code>
-- <code title="delete /organizations/{id}/memberships/{user_id}">client.organizations.memberships.<a href="./src/resources/organizations/memberships.ts">revoke</a>(userID, { ...params }) -> MembershipRevokeResponse</code>
-
-## Invitations
-
-Types:
-
-- <code><a href="./src/resources/organizations/invitations.ts">InvitationListResponse</a></code>
-- <code><a href="./src/resources/organizations/invitations.ts">InvitationDeleteResponse</a></code>
-- <code><a href="./src/resources/organizations/invitations.ts">InvitationSendResponse</a></code>
-
-Methods:
-
-- <code title="get /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">list</a>(id, { ...params }) -> InvitationListResponsesCursorPage</code>
-- <code title="delete /organizations/{id}/invitations/{invitation_id}">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">delete</a>(invitationID, { ...params }) -> InvitationDeleteResponse</code>
-- <code title="post /organizations/{id}/invitations">client.organizations.invitations.<a href="./src/resources/organizations/invitations.ts">send</a>(id, { ...params }) -> InvitationSendResponse</code>
-
-## Subscriptions
-
-Types:
-
-- <code><a href="./src/resources/organizations/subscriptions.ts">SubscriptionListResponse</a></code>
-
-Methods:
-
-- <code title="get /organizations/{id}/subscriptions">client.organizations.subscriptions.<a href="./src/resources/organizations/subscriptions.ts">list</a>(id) -> SubscriptionListResponse</code>
 
 ## Usage
 
@@ -205,15 +169,3 @@ Types:
 Methods:
 
 - <code title="get /organizations/{id}/usage">client.organizations.usage.<a href="./src/resources/organizations/usage.ts">retrieve</a>(id) -> UsageRetrieveResponse</code>
-
-# Account
-
-Types:
-
-- <code><a href="./src/resources/account.ts">AccountRetrieveResponse</a></code>
-- <code><a href="./src/resources/account.ts">AccountUpdateResponse</a></code>
-
-Methods:
-
-- <code title="get /account">client.account.<a href="./src/resources/account.ts">retrieve</a>() -> AccountRetrieveResponse</code>
-- <code title="patch /account">client.account.<a href="./src/resources/account.ts">update</a>({ ...params }) -> AccountUpdateResponse</code>
