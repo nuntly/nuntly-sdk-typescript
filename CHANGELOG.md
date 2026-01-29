@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.11.0 (2026-01-29)
+
+Full Changelog: [v0.10.2...v0.11.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.2...v0.11.0)
+
+### Features
+
+* **api:** prepare the next version of the API ([2505e7e](https://github.com/nuntly/nuntly-sdk-typescript/commit/2505e7e4662fa1165af1a5eaa7d424855d724c0f))
+* **doc:** add more examples ([b99734f](https://github.com/nuntly/nuntly-sdk-typescript/commit/b99734f555a7582425afc5d93bad11a628009b2f))
+* **safe:** safely use async/await without all the try catch blocks ([d138bc6](https://github.com/nuntly/nuntly-sdk-typescript/commit/d138bc63da390711bcdc6c2aecd62e43e4437e7e))
+* **safe:** safely use async/await without all the try catch blocks ([b99734f](https://github.com/nuntly/nuntly-sdk-typescript/commit/b99734f555a7582425afc5d93bad11a628009b2f))
+
+
+### Chores
+
+* remove custom code ([4c1ca22](https://github.com/nuntly/nuntly-sdk-typescript/commit/4c1ca22aedef85ff7dc0227723d0de1ea529d19b))
+
 ## 0.10.2 (2026-01-29)
 
 Full Changelog: [v0.10.1...v0.10.2](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.10.1...v0.10.2)
