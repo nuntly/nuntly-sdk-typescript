@@ -22,18 +22,7 @@ export class Webhooks extends APIResource {
   events: EventsAPI.Events = new EventsAPI.Events(this._client);
 
   /**
-   * Create a webhook so the endpoint is notified from Nuntly platform events (Emails
-   * events)
-   *
-   * @example
-   * ```ts
-   * const webhook = await client.webhooks.create({
-   *   endpoint_url:
-   *     'https://webhook.site/12345678-1234-5678-1234-123456789012',
-   *   events: ['email.delivered', 'email.sent'],
-   *   status: 'enabled',
-   * });
-   * ```
+   * Create a webhook
    */
   create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
     return (
@@ -42,14 +31,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Return the webhook with the given ID
-   *
-   * @example
-   * ```ts
-   * const webhook = await client.webhooks.retrieve(
-   *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
-   * );
-   * ```
+   * Retrieve a webhook
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<WebhookRetrieveResponse> {
     return (
@@ -58,16 +40,13 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Updates a webhook with the given ID
-   *
-   * @example
-   * ```ts
-   * const webhook = await client.webhooks.update(
-   *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
-   * );
-   * ```
+   * Update a webhook
    */
-  update(id: string, body: WebhookUpdateParams, options?: RequestOptions): APIPromise<WebhookUpdateResponse> {
+  update(
+    id: string,
+    body: WebhookUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<WebhookUpdateResponse> {
     return (
       this._client.put(path`/webhooks/${id}`, { body, ...options }) as APIPromise<{
         data: WebhookUpdateResponse;
@@ -76,15 +55,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Return a list of your webhooks
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const webhookListResponse of client.webhooks.list()) {
-   *   // ...
-   * }
-   * ```
+   * List webhooks
    */
   list(
     query: WebhookListParams | null | undefined = {},
@@ -94,14 +65,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Delete the webhook with the given ID
-   *
-   * @example
-   * ```ts
-   * const webhook = await client.webhooks.delete(
-   *   'wh_YNtYn86oYZmP1ZHbnUBvXXFt',
-   * );
-   * ```
+   * Delete a webhook
    */
   delete(id: string, options?: RequestOptions): APIPromise<WebhookDeleteResponse> {
     return (
@@ -116,128 +80,794 @@ export class Webhooks extends APIResource {
 
 export type WebhookListResponsesCursorPage = CursorPage<WebhookListResponse>;
 
-export interface BaseEvent {
+/**
+ * Event triggered when an email bounces.
+ */
+export interface EmailBouncedEvent {
   id: string;
 
-  created_at: string;
+  createdAt: string;
 
-  type: SharedAPI.EventType;
-
-  kind?: 'event';
-}
-
-export interface EmailBouncedEvent extends Omit<BaseEvent, 'type'> {
   data: EmailBouncedEvent.Data;
 
-  type?: 'email.bounced';
+  type: 'email.bounced';
 }
 
 export namespace EmailBouncedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    bounce: SharedAPI.BounceDetail;
+  export interface Data {
+    id: string;
+
+    bounce: Data.Bounce;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
   }
-}
 
-export interface EmailClickedEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailClickedEvent.Data;
+  export namespace Data {
+    export interface Bounce {
+      bouncedAt: string;
 
-  type?: 'email.clicked';
-}
+      bouncedRecipients: Array<Bounce.BouncedRecipient>;
 
-export namespace EmailClickedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    click: SharedAPI.ClickDetail;
-  }
-}
+      bounceSubType:
+        | 'Undetermined'
+        | 'General'
+        | 'NoEmail'
+        | 'Suppressed'
+        | 'OnAccountSuppressionList'
+        | 'MailboxFull'
+        | 'MessageTooLarge'
+        | 'CustomTimeoutExceeded'
+        | 'ContentRejected'
+        | 'AttachmentRejected';
 
-export interface EmailComplainedEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailComplainedEvent.Data;
+      bounceType: 'Permanent' | 'Undetermined' | 'Transient';
 
-  type?: 'email.complained';
-}
+      feedbackId: string;
 
-export namespace EmailComplainedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    complaint: SharedAPI.ComplaintDetail;
-  }
-}
+      reportingMta?: string;
+    }
 
-export interface EmailDeliveredEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailDeliveredEvent.Data;
+    export namespace Bounce {
+      export interface BouncedRecipient {
+        email: string;
 
-  type?: 'email.delivered';
-}
+        action?: string;
 
-export namespace EmailDeliveredEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    delivery: SharedAPI.DeliveryDetail;
-  }
-}
+        diagnosticCode?: string;
 
-export interface EmailDeliveryDelayedEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailDeliveryDelayedEvent.Data;
+        status?: string;
+      }
+    }
 
-  type?: 'email.delivery_delayed';
-}
+    export interface Header {
+      name: string;
 
-export namespace EmailDeliveryDelayedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    delivery_delay: SharedAPI.DeliveryDelayDetail;
-  }
-}
-
-export interface EmailFailedEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailFailedEvent.Data;
-
-  type?: 'email.failed';
-}
-
-export namespace EmailFailedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    failure: SharedAPI.FailureDetail;
-  }
-}
-
-export interface EmailOpenedEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailOpenedEvent.Data;
-
-  type?: 'email.opened';
-}
-
-export namespace EmailOpenedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    open: SharedAPI.OpenDetail;
-  }
-}
-
-export interface EmailRejectedEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailRejectedEvent.Data;
-
-  type?: 'email.rejected';
-}
-
-export namespace EmailRejectedEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    reject: SharedAPI.RejectDetail;
-  }
-}
-
-export interface EmailSentEvent extends Omit<BaseEvent, 'type'> {
-  data: EmailSentEvent.Data;
-
-  type?: 'email.sent';
-}
-
-export namespace EmailSentEvent {
-  export interface Data extends SharedAPI.EmailEvent {
-    send: SharedAPI.SendDetail;
+      value: string;
+    }
   }
 }
 
 /**
- * The event payload
+ * Event triggered when a link within an email is clicked by the recipient.
+ */
+export interface EmailClickedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailClickedEvent.Data;
+
+  type: 'email.clicked';
+}
+
+export namespace EmailClickedEvent {
+  export interface Data {
+    id: string;
+
+    click: Data.Click;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Click {
+      clickedAt: string;
+
+      link: string;
+
+      userAgent: string;
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is marked as complained by the recipient.
+ */
+export interface EmailComplainedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailComplainedEvent.Data;
+
+  type: 'email.complained';
+}
+
+export namespace EmailComplainedEvent {
+  export interface Data {
+    id: string;
+
+    complaint: Data.Complaint;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Complaint {
+      complainedAt: string;
+
+      feedbackId: string;
+
+      complainedRecipients?: Array<Complaint.ComplainedRecipient>;
+
+      complaintFeedbackType?: 'abuse' | 'auth-failure' | 'fraud' | 'not-spam' | 'other' | 'virus';
+
+      complaintSubType?: 'OnAccountSuppressionList';
+
+      receivedAt?: string;
+
+      userAgent?: string;
+    }
+
+    export namespace Complaint {
+      export interface ComplainedRecipient {
+        email: string;
+      }
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is delivered successfully.
+ */
+export interface EmailDeliveredEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailDeliveredEvent.Data;
+
+  type: 'email.delivered';
+}
+
+export namespace EmailDeliveredEvent {
+  export interface Data {
+    id: string;
+
+    delivery: Data.Delivery;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Delivery {
+      deliveredAt: string;
+
+      recipients: Array<string>;
+
+      remoteMtaIp: string;
+
+      reportingMta: string;
+
+      smtpResponse: string;
+
+      processingTime?: number;
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email delivery is delayed.
+ */
+export interface EmailDeliveryDelayedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailDeliveryDelayedEvent.Data;
+
+  type: 'email.deliveryDelayed';
+}
+
+export namespace EmailDeliveryDelayedEvent {
+  export interface Data {
+    id: string;
+
+    deliveryDelay: Data.DeliveryDelay;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface DeliveryDelay {
+      delayedAt: string;
+
+      delayedRecipients: Array<DeliveryDelay.DelayedRecipient>;
+
+      delayType:
+        | 'InternalFailure'
+        | 'General'
+        | 'MailboxFull'
+        | 'SpamDetected'
+        | 'RecipientServerError'
+        | 'IPFailure'
+        | 'TransientCommunicationFailure'
+        | 'BYOIPHostNameLookupUnavailable'
+        | 'Undetermined'
+        | 'SendingDeferral';
+
+      deliveryStoppedAt: string;
+
+      reportingMta: string;
+    }
+
+    export namespace DeliveryDelay {
+      export interface DelayedRecipient {
+        email: string;
+
+        diagnosticCode?: string;
+
+        status?: string;
+      }
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email fails to be sent.
+ */
+export interface EmailFailedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailFailedEvent.Data;
+
+  type: 'email.failed';
+}
+
+export namespace EmailFailedEvent {
+  export interface Data {
+    id: string;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    failure: Data.Failure;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Failure {
+      error: unknown;
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is opened by the recipient.
+ */
+export interface EmailOpenedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailOpenedEvent.Data;
+
+  type: 'email.opened';
+}
+
+export namespace EmailOpenedEvent {
+  export interface Data {
+    id: string;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    open: Data.Open;
+
+    orgId: string;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Open {
+      openedAt: string;
+
+      userAgent: string;
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is processed.
+ */
+export interface EmailProcessedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailProcessedEvent.Data;
+
+  type: 'email.processed';
+}
+
+export namespace EmailProcessedEvent {
+  export interface Data {
+    processed: unknown;
+  }
+}
+
+/**
+ * Event triggered when an email is queued for sending.
+ */
+export interface EmailQueuedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailQueuedEvent.Data;
+
+  type: 'email.queued';
+}
+
+export namespace EmailQueuedEvent {
+  export interface Data {
+    queue: unknown;
+  }
+}
+
+/**
+ * Event triggered when an email is rejected.
+ */
+export interface EmailRejectedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailRejectedEvent.Data;
+
+  type: 'email.rejected';
+}
+
+export namespace EmailRejectedEvent {
+  export interface Data {
+    reject: Data.Reject;
+
+    id?: string;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    domainId?: string;
+
+    domainName?: string;
+
+    enqueuedAt?: string;
+
+    from?: string;
+
+    headers?: Array<Data.Header>;
+
+    messageId?: string;
+
+    orgId?: string;
+
+    replyTo?: string | Array<string>;
+
+    sentAt?: string;
+
+    subject?: string;
+
+    tags?: { [key: string]: Array<string> };
+
+    to?: string | Array<string>;
+  }
+
+  export namespace Data {
+    export interface Reject {
+      reason: string;
+    }
+
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is scheduled for sending.
+ */
+export interface EmailScheduledEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailScheduledEvent.Data;
+
+  type: 'email.scheduled';
+}
+
+export namespace EmailScheduledEvent {
+  export interface Data {
+    schedule: Data.Schedule;
+  }
+
+  export namespace Data {
+    export interface Schedule {
+      scheduledAt: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is being sent.
+ */
+export interface EmailSendingEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailSendingEvent.Data;
+
+  type: 'email.sending';
+}
+
+export namespace EmailSendingEvent {
+  export interface Data {
+    id: string;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    sending: unknown;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when an email is sent successfully.
+ */
+export interface EmailSentEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: EmailSentEvent.Data;
+
+  type: 'email.sent';
+}
+
+export namespace EmailSentEvent {
+  export interface Data {
+    id: string;
+
+    domainId: string;
+
+    domainName: string;
+
+    enqueuedAt: string;
+
+    from: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    send: unknown;
+
+    sentAt: string;
+
+    subject: string;
+
+    to: string | Array<string>;
+
+    bcc?: string | Array<string>;
+
+    bulkId?: string;
+
+    cc?: string | Array<string>;
+
+    headers?: Array<Data.Header>;
+
+    replyTo?: string | Array<string>;
+
+    tags?: { [key: string]: Array<string> };
+  }
+
+  export namespace Data {
+    export interface Header {
+      name: string;
+
+      value: string;
+    }
+  }
+}
+
+/**
+ * Payload for webhook events representing email events, eg. sent, bounced, opened,
+ * clicked, complained, etc.
  */
 export type Event =
+  | EmailQueuedEvent
+  | EmailScheduledEvent
+  | EmailProcessedEvent
+  | EmailSendingEvent
   | EmailSentEvent
   | EmailDeliveredEvent
   | EmailOpenedEvent
@@ -248,6 +878,9 @@ export type Event =
   | EmailDeliveryDelayedEvent
   | EmailFailedEvent;
 
+/**
+ * Response after creating a webhook
+ */
 export interface WebhookCreateResponse {
   /**
    * The id of the webhook
@@ -257,34 +890,19 @@ export interface WebhookCreateResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
    * The endpoint URL of the webhook
    */
-  endpoint_url: string;
+  endpointUrl: string;
 
   events: Array<SharedAPI.EventType>;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'webhook';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
    * The signing secret of the webhook.
    */
-  signing_secret: string;
+  signingSecret: string;
 
   /**
    * The status of the webhook.
@@ -292,16 +910,14 @@ export interface WebhookCreateResponse {
   status: 'enabled' | 'disabled' | 'revoked';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
-
-  /**
    * The name of the webhook
    */
   name?: string;
 }
 
+/**
+ * Webhook details
+ */
 export interface WebhookRetrieveResponse {
   /**
    * The id of the webhook
@@ -311,29 +927,14 @@ export interface WebhookRetrieveResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
    * The endpoint URL of the webhook
    */
-  endpoint_url: string;
+  endpointUrl: string;
 
   events: Array<SharedAPI.EventType>;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'webhook';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
 
   /**
    * The status of the webhook.
@@ -341,16 +942,14 @@ export interface WebhookRetrieveResponse {
   status: 'enabled' | 'disabled' | 'revoked';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
-
-  /**
    * The name of the webhook
    */
   name?: string;
 }
 
+/**
+ * Response after updating a webhook
+ */
 export interface WebhookUpdateResponse {
   /**
    * The id of the webhook
@@ -358,19 +957,9 @@ export interface WebhookUpdateResponse {
   id: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'webhook';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
    * The signing secret of the webhook.
    */
-  signing_secret?: string;
+  signingSecret?: string;
 }
 
 export interface WebhookListResponse {
@@ -382,29 +971,14 @@ export interface WebhookListResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
    * The endpoint URL of the webhook
    */
-  endpoint_url: string;
+  endpointUrl: string;
 
   events: Array<SharedAPI.EventType>;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'webhook';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
 
   /**
    * The status of the webhook.
@@ -412,37 +986,30 @@ export interface WebhookListResponse {
   status: 'enabled' | 'disabled' | 'revoked';
 
   /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
-
-  /**
    * The name of the webhook
    */
   name?: string;
 }
 
+/**
+ * Response after deleting a webhook
+ */
 export interface WebhookDeleteResponse {
   /**
    * The id of the webhook
    */
   id: string;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'webhook';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
 }
 
 /**
- * The event payload
+ * Payload for webhook events representing email events, eg. sent, bounced, opened,
+ * clicked, complained, etc.
  */
 export type UnwrapWebhookEvent =
+  | EmailQueuedEvent
+  | EmailScheduledEvent
+  | EmailProcessedEvent
+  | EmailSendingEvent
   | EmailSentEvent
   | EmailDeliveredEvent
   | EmailOpenedEvent
@@ -457,26 +1024,26 @@ export interface WebhookCreateParams {
   /**
    * The endpoint URL of the webhook
    */
-  endpoint_url: string;
+  endpointUrl: string;
 
   events: Array<SharedAPI.EventType>;
-
-  /**
-   * The status of the webhook.
-   */
-  status: 'enabled' | 'disabled' | 'revoked';
 
   /**
    * The name of the webhook
    */
   name?: string;
+
+  /**
+   * The status of the webhook.
+   */
+  status?: 'enabled' | 'disabled' | 'revoked';
 }
 
 export interface WebhookUpdateParams {
   /**
    * The endpoint URL of the webhook
    */
-  endpoint_url?: string;
+  endpointUrl?: string;
 
   events?: Array<SharedAPI.EventType>;
 
@@ -488,12 +1055,12 @@ export interface WebhookUpdateParams {
   /**
    * If true, a new signing secret will be generated
    */
-  rotate_secret?: boolean;
+  rotateSecret?: boolean;
 
   /**
    * The status of the webhook.
    */
-  status?: 'enabled' | 'disabled';
+  status?: 'enabled' | 'disabled' | 'revoked';
 }
 
 export interface WebhookListParams extends CursorPageParams {}
@@ -502,7 +1069,6 @@ Webhooks.Events = Events;
 
 export declare namespace Webhooks {
   export {
-    type BaseEvent as BaseEvent,
     type EmailBouncedEvent as EmailBouncedEvent,
     type EmailClickedEvent as EmailClickedEvent,
     type EmailComplainedEvent as EmailComplainedEvent,
@@ -510,7 +1076,11 @@ export declare namespace Webhooks {
     type EmailDeliveryDelayedEvent as EmailDeliveryDelayedEvent,
     type EmailFailedEvent as EmailFailedEvent,
     type EmailOpenedEvent as EmailOpenedEvent,
+    type EmailProcessedEvent as EmailProcessedEvent,
+    type EmailQueuedEvent as EmailQueuedEvent,
     type EmailRejectedEvent as EmailRejectedEvent,
+    type EmailScheduledEvent as EmailScheduledEvent,
+    type EmailSendingEvent as EmailSendingEvent,
     type EmailSentEvent as EmailSentEvent,
     type Event as Event,
     type WebhookCreateResponse as WebhookCreateResponse,

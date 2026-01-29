@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../core/resource';
 import * as SharedAPI from '../shared';
-import * as WebhooksAPI from './webhooks';
 import { APIPromise } from '../../core/api-promise';
 import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
@@ -10,15 +9,7 @@ import { path } from '../../internal/utils/path';
 
 export class Events extends APIResource {
   /**
-   * Return the last events sent by webhooks
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const eventListResponse of client.webhooks.events.list()) {
-   *   // ...
-   * }
-   * ```
+   * List webhooks events
    */
   list(
     query: EventListParams | null | undefined = {},
@@ -28,15 +19,7 @@ export class Events extends APIResource {
   }
 
   /**
-   * Return the delivery attempts for the given webhook event ID
-   *
-   * @example
-   * ```ts
-   * const response = await client.webhooks.events.deliveries(
-   *   'event_id',
-   *   { id: 'id' },
-   * );
-   * ```
+   * List webhook event deliveries
    */
   deliveries(
     eventID: string,
@@ -52,15 +35,7 @@ export class Events extends APIResource {
   }
 
   /**
-   * Replay the webhook event
-   *
-   * @example
-   * ```ts
-   * const response = await client.webhooks.events.replay(
-   *   'event_id',
-   *   { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' },
-   * );
-   * ```
+   * Replay a webhook event
    */
   replay(
     eventID: string,
@@ -84,25 +59,17 @@ export interface EventListResponse {
    */
   id: string;
 
-  /**
-   * The event payload
-   */
-  data: WebhooksAPI.Event;
+  data: { [key: string]: unknown };
 
   /**
-   * Type of the event
+   * An event
    */
   event: SharedAPI.EventType;
 
   /**
    * The id of the organization
    */
-  org_id: string;
-
-  /**
-   * The timestamp when the event was received by the webhook system
-   */
-  received_at: string;
+  orgId: string;
 
   /**
    * Status of the webhook delivery attempt
@@ -112,9 +79,17 @@ export interface EventListResponse {
   /**
    * The id of the webhook
    */
-  webhook_id: string;
+  webhookId: string;
+
+  /**
+   * The timestamp when the event was successfully delivered to the endpoint
+   */
+  successfulAt?: string;
 }
 
+/**
+ * List of webhook event deliveries
+ */
 export type EventDeliveriesResponse = Array<EventDeliveriesResponse.EventDeliveriesResponseItem>;
 
 export namespace EventDeliveriesResponse {
@@ -123,28 +98,31 @@ export namespace EventDeliveriesResponse {
 
     code: string;
 
-    delivered_at: string;
+    deliveredAt: string;
 
-    response: { [key: string]: string } | null;
+    response: { [key: string]: string };
 
     status: 'pending' | 'success' | 'failed';
   }
 }
 
+/**
+ * Response for webhook event replay
+ */
 export type EventReplayResponse = unknown;
 
 export interface EventListParams extends CursorPageParams {}
 
 export interface EventDeliveriesParams {
   /**
-   * The webhook id
+   * The id of the webhook
    */
   id: string;
 }
 
 export interface EventReplayParams {
   /**
-   * The webhook id
+   * The id of the webhook
    */
   id: string;
 }

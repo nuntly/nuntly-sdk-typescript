@@ -6,12 +6,7 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Stats extends APIResource {
   /**
-   * Return the emails stats
-   *
-   * @example
-   * ```ts
-   * const stats = await client.emails.stats.list();
-   * ```
+   * Retrieve email statistics
    */
   list(options?: RequestOptions): APIPromise<StatListResponse> {
     return (this._client.get('/emails/stats', options) as APIPromise<{ data: StatListResponse }>)._thenUnwrap(
@@ -20,12 +15,15 @@ export class Stats extends APIResource {
   }
 }
 
-/**
- * The emails stats
- */
 export interface StatListResponse {
+  /**
+   * The end date of the stats range
+   */
   end: string;
 
+  /**
+   * The start date of the stats range
+   */
   start: string;
 
   stats: Array<StatListResponse.Stat>;
@@ -33,27 +31,85 @@ export interface StatListResponse {
 
 export namespace StatListResponse {
   export interface Stat {
-    occurred_on: string;
+    /**
+     * Number of emails bounced
+     */
+    bounced: number;
 
-    bounced?: number;
+    /**
+     * Number of emails canceled
+     */
+    canceled: number;
 
-    clicked?: number;
+    /**
+     * Number of emails clicked
+     */
+    clicked: number;
 
-    complaint_received?: number;
+    /**
+     * Number of complaint received
+     */
+    complaintReceived: number;
 
-    delivered?: number;
+    /**
+     * Number of emails delivered
+     */
+    delivered: number;
 
-    delivery_delayed?: number;
+    /**
+     * Number of emails delivered with delay
+     */
+    deliveredDelayed: number;
 
-    opened?: number;
+    /**
+     * Number of emails failed
+     */
+    failed: number;
 
-    rejected?: number;
+    /**
+     * The date of the stats
+     */
+    occurredOn: string;
 
-    rendering_failed?: number;
+    /**
+     * Number of emails opened
+     */
+    opened: number;
 
-    sent?: number;
+    /**
+     * Number of emails processed
+     */
+    processed: number;
 
-    subscribed?: number;
+    /**
+     * Number of emails queued
+     */
+    queued: number;
+
+    /**
+     * Number of emails rejected
+     */
+    rejected: number;
+
+    /**
+     * Number of emails with rendering failed
+     */
+    renderingFailed: number;
+
+    /**
+     * Number of emails scheduled
+     */
+    scheduled: number;
+
+    /**
+     * Number of emails sending
+     */
+    sending: number;
+
+    /**
+     * Number of emails sent
+     */
+    sent: number;
   }
 }
 

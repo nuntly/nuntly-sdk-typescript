@@ -9,7 +9,7 @@ const client = new Nuntly({
 
 describe('resource events', () => {
   test('list', async () => {
-    const responsePromise = client.emails.events.list('em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT');
+    const responsePromise = client.emails.events.list('em_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -17,16 +17,5 @@ describe('resource events', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.emails.events.list(
-        'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
-        { cursor: 'cursor', limit: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 });

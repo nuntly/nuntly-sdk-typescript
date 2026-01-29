@@ -110,7 +110,7 @@ export class PagePromise<
 export interface CursorPageResponse<Item> {
   data: Array<Item>;
 
-  next_cursor: string | null;
+  nextCursor: string | null;
 }
 
 export interface CursorPageParams {
@@ -122,7 +122,7 @@ export interface CursorPageParams {
 export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageResponse<Item> {
   data: Array<Item>;
 
-  next_cursor: string | null;
+  nextCursor: string | null;
 
   constructor(
     client: Nuntly,
@@ -133,7 +133,7 @@ export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageRe
     super(client, response, body, options);
 
     this.data = body.data || [];
-    this.next_cursor = body.next_cursor || null;
+    this.nextCursor = body.nextCursor || null;
   }
 
   getPaginatedItems(): Item[] {
@@ -141,7 +141,7 @@ export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageRe
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const cursor = this.next_cursor;
+    const cursor = this.nextCursor;
     if (!cursor) {
       return null;
     }

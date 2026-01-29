@@ -1,40 +1,23 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as SharedAPI from '../shared';
+import * as EmailsAPI from './emails';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 export class Bulk extends APIResource {
   /**
-   * Return a list of emails
-   *
-   * @example
-   * ```ts
-   * const bulk = await client.emails.bulk.retrieve(
-   *   'blk_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
-   * );
-   * ```
+   * Retrieve bulk emails
    */
-  retrieve(id: string, options?: RequestOptions): APIPromise<BulkRetrieveResponse> {
+  retrieve(bulkID: string, options?: RequestOptions): APIPromise<BulkRetrieveResponse> {
     return (
-      this._client.get(path`/emails/bulk/${id}`, options) as APIPromise<{ data: BulkRetrieveResponse }>
+      this._client.get(path`/emails/bulk/${bulkID}`, options) as APIPromise<{ data: BulkRetrieveResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 
   /**
-   * Send bulk emails
-   *
-   * @example
-   * ```ts
-   * const response = await client.emails.bulk.send({
-   *   emails: [
-   *     { to: 'carlo43@gmail.com' },
-   *     { to: 'pink42@yahoo.com' },
-   *   ],
-   * });
-   * ```
+   * Send bulk emails through Nuntly platform.
    */
   send(body: BulkSendParams, options?: RequestOptions): APIPromise<BulkSendResponse> {
     return (
@@ -43,9 +26,6 @@ export class Bulk extends APIResource {
   }
 }
 
-/**
- * The emails in a given bulk
- */
 export interface BulkRetrieveResponse {
   /**
    * The bulk id
@@ -53,11 +33,6 @@ export interface BulkRetrieveResponse {
   id: string;
 
   emails: Array<BulkRetrieveResponse.Email>;
-
-  /**
-   * The kind of object returned
-   */
-  kind: 'bulk-email';
 }
 
 export namespace BulkRetrieveResponse {
@@ -68,70 +43,40 @@ export namespace BulkRetrieveResponse {
     id: string;
 
     /**
-     * The kind of object returned
-     */
-    kind: 'email';
-
-    /**
-     * The id of the organization
-     */
-    org_id: string;
-
-    /**
      * The status of the email.
      */
-    status: SharedAPI.EmailStatus;
+    status: EmailsAPI.Status;
 
-    /**
-     * Date xhen the status changed
-     */
-    status_at: string;
+    detail?: string;
   }
 }
 
 export interface BulkSendResponse {
-  /**
-   * The bulk id
-   */
-  id: string;
-
   emails: Array<BulkSendResponse.Email>;
 
   /**
-   * The kind of object returned
+   * The bulk id
    */
-  kind: 'bulk-email';
+  id?: string;
 }
 
 export namespace BulkSendResponse {
   export interface Email {
     /**
-     * The kind of object returned
+     * The status of the email.
      */
-    kind: 'email';
-
-    /**
-     * The status of the email in the bulk.
-     */
-    status: SharedAPI.BulkEmailsStatus;
+    status: EmailsAPI.Status;
 
     /**
      * The id of the email
      */
     id?: string;
-
-    error?: string;
-
-    /**
-     * The id of the organization
-     */
-    org_id?: string;
   }
 }
 
 export interface BulkSendParams {
   /**
-   * The emails to send
+   * The bulk emails to send
    */
   emails: Array<BulkSendParams.Email>;
 
@@ -143,11 +88,6 @@ export interface BulkSendParams {
 
 export namespace BulkSendParams {
   export interface Email {
-    /**
-     * The primary recipient(s) of the email
-     */
-    to: Array<string> | string;
-
     /**
      * The blind carbon copy recipient(s) of the email
      */
@@ -161,7 +101,7 @@ export namespace BulkSendParams {
     /**
      * The context for the template
      */
-    context?: unknown;
+    context?: { [key: string]: string | number | boolean | null };
 
     /**
      * The e-mail address of the sender
@@ -171,7 +111,7 @@ export namespace BulkSendParams {
     /**
      * The headers to add to the email
      */
-    headers?: SharedAPI.EmailHeaders;
+    headers?: { [key: string]: string };
 
     /**
      * The HTML version of the email
@@ -182,12 +122,12 @@ export namespace BulkSendParams {
      * The email address where replies should be sent. If a recipient replies, the
      * response will go to this address instead of the sender's email address
      */
-    reply_to?: Array<string> | string;
+    replyTo?: Array<string> | string;
 
     /**
      * The date at which the email is scheduled to be sent
      */
-    scheduled_at?: string;
+    scheduledAt?: string;
 
     /**
      * The subject of the e-mail
@@ -197,29 +137,17 @@ export namespace BulkSendParams {
     /**
      * The tags to add to the email
      */
-    tags?: Array<Email.Tag>;
+    tags?: Array<EmailsAPI.Tag>;
 
     /**
      * The plaintext version of the email
      */
     text?: string;
-  }
 
-  export namespace Email {
     /**
-     * The tag to add to the email and you can get via email id or in webhook events
+     * The primary recipient(s) of the email
      */
-    export interface Tag {
-      /**
-       * The name of the tag
-       */
-      name: string;
-
-      /**
-       * The tag to add to the email
-       */
-      value: string;
-    }
+    to?: Array<string> | string;
   }
 
   /**
@@ -239,7 +167,7 @@ export namespace BulkSendParams {
     /**
      * The context for the template
      */
-    context?: unknown;
+    context?: { [key: string]: string | number | boolean | null };
 
     /**
      * The e-mail address of the sender
@@ -249,7 +177,7 @@ export namespace BulkSendParams {
     /**
      * The headers to add to the email
      */
-    headers?: SharedAPI.EmailHeaders;
+    headers?: { [key: string]: string };
 
     /**
      * The HTML version of the email
@@ -260,12 +188,12 @@ export namespace BulkSendParams {
      * The email address where replies should be sent. If a recipient replies, the
      * response will go to this address instead of the sender's email address
      */
-    reply_to?: Array<string> | string;
+    replyTo?: Array<string> | string;
 
     /**
      * The date at which the email is scheduled to be sent
      */
-    scheduled_at?: string;
+    scheduledAt?: string;
 
     /**
      * The subject of the e-mail
@@ -275,7 +203,7 @@ export namespace BulkSendParams {
     /**
      * The tags to add to the email
      */
-    tags?: Array<Fallback.Tag>;
+    tags?: Array<EmailsAPI.Tag>;
 
     /**
      * The plaintext version of the email
@@ -286,23 +214,6 @@ export namespace BulkSendParams {
      * The primary recipient(s) of the email
      */
     to?: Array<string> | string;
-  }
-
-  export namespace Fallback {
-    /**
-     * The tag to add to the email and you can get via email id or in webhook events
-     */
-    export interface Tag {
-      /**
-       * The name of the tag
-       */
-      name: string;
-
-      /**
-       * The tag to add to the email
-       */
-      value: string;
-    }
   }
 }
 

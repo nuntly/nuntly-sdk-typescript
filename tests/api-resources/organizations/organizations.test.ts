@@ -9,7 +9,7 @@ const client = new Nuntly({
 
 describe('resource organizations', () => {
   test('retrieve', async () => {
-    const responsePromise = client.organizations.retrieve('org_9UTZz2PisZ68YwE3NJu9urQ9');
+    const responsePromise = client.organizations.retrieve('org_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -17,25 +17,6 @@ describe('resource organizations', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('update: only required params', async () => {
-    const responsePromise = client.organizations.update('org_9UTZz2PisZ68YwE3NJu9urQ9', {
-      display_name: 'Ray Tomlinson org.',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('update: required and optional params', async () => {
-    const response = await client.organizations.update('org_9UTZz2PisZ68YwE3NJu9urQ9', {
-      display_name: 'Ray Tomlinson org.',
-    });
   });
 
   test('list', async () => {
