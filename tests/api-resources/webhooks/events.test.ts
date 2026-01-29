@@ -27,7 +27,9 @@ describe('resource events', () => {
   });
 
   test('deliveries: only required params', async () => {
-    const responsePromise = client.webhooks.events.deliveries('event_id', { id: 'id' });
+    const responsePromise = client.webhooks.events.deliveries('evt_01ka8k8s80gvx9604cn9am5st4', {
+      id: 'wh_01ka8k8s80gvx9604cn9am5st4',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,11 +40,15 @@ describe('resource events', () => {
   });
 
   test('deliveries: required and optional params', async () => {
-    const response = await client.webhooks.events.deliveries('event_id', { id: 'id' });
+    const response = await client.webhooks.events.deliveries('evt_01ka8k8s80gvx9604cn9am5st4', {
+      id: 'wh_01ka8k8s80gvx9604cn9am5st4',
+    });
   });
 
   test('replay: only required params', async () => {
-    const responsePromise = client.webhooks.events.replay('event_id', { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' });
+    const responsePromise = client.webhooks.events.replay('evt_01ka8k8s80gvx9604cn9am5st4', {
+      id: 'wh_01ka8k8s80gvx9604cn9am5st4',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -53,6 +59,8 @@ describe('resource events', () => {
   });
 
   test('replay: required and optional params', async () => {
-    const response = await client.webhooks.events.replay('event_id', { id: 'wh_YNtYn86oYZmP1ZHbnUBvXXFt' });
+    const response = await client.webhooks.events.replay('evt_01ka8k8s80gvx9604cn9am5st4', {
+      id: 'wh_01ka8k8s80gvx9604cn9am5st4',
+    });
   });
 });

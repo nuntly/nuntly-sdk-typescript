@@ -1,103 +1,60 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as SharedAPI from '../shared';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 export class Events extends APIResource {
   /**
-   * Return the events related to this email id
-   *
-   * @example
-   * ```ts
-   * const events = await client.emails.events.list(
-   *   'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
-   * );
-   * ```
+   * Retrieve email events by email id
    */
-  list(
-    id: string,
-    query: EventListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<EventListResponse> {
+  list(id: string, options?: RequestOptions): APIPromise<EventListResponse> {
     return (
-      this._client.get(path`/emails/${id}/events`, { query, ...options }) as APIPromise<{
-        data: EventListResponse;
-      }>
+      this._client.get(path`/emails/${id}/events`, options) as APIPromise<{ data: EventListResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
-/**
- * The events email
- */
 export type EventListResponse = Array<EventListResponse.EventListResponseItem>;
 
 export namespace EventListResponse {
+  /**
+   * The event
+   */
   export interface EventListResponseItem {
-    /**
-     * The email event id
-     */
     id: string;
 
     /**
-     * Detail of the event
+     * Date at which the object was created (ISO 8601 format)
      */
-    details: { [key: string]: unknown };
+    createdAt: string;
 
     /**
      * The id of the email
      */
-    email_id: string;
+    emailId: string;
 
     /**
-     * Date at which the events occurs (ISO 8601 format)
+     * An event
      */
-    event_at: string;
-
-    /**
-     * The kind of object returned
-     */
-    kind: 'event-email';
+    eventType: SharedAPI.EventType;
 
     /**
      * The id of the organization
      */
-    org_id: string;
+    orgId: string;
+
+    payload: unknown;
 
     /**
-     * The type of the email event
+     * The date at which the event occurred
      */
-    type:
-      | 'email.queued'
-      | 'email.scheduled'
-      | 'email.processed'
-      | 'email.sending'
-      | 'email.sent'
-      | 'email.delivered'
-      | 'email.opened'
-      | 'email.clicked'
-      | 'email.bounced'
-      | 'email.complained'
-      | 'email.rejected'
-      | 'email.delivery_delayed'
-      | 'email.failed';
+    occurredAt?: string;
   }
 }
 
-export interface EventListParams {
-  /**
-   * The cursor to use for pagination
-   */
-  cursor?: string;
-
-  /**
-   * The maximum number of items to return
-   */
-  limit?: number;
-}
-
 export declare namespace Events {
-  export { type EventListResponse as EventListResponse, type EventListParams as EventListParams };
+  export { type EventListResponse as EventListResponse };
 }

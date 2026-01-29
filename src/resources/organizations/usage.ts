@@ -7,14 +7,7 @@ import { path } from '../../internal/utils/path';
 
 export class Usage extends APIResource {
   /**
-   * Return the organization usage
-   *
-   * @example
-   * ```ts
-   * const usage = await client.organizations.usage.retrieve(
-   *   'id',
-   * );
-   * ```
+   * Retrieve organization usage
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<UsageRetrieveResponse> {
     return (
@@ -26,45 +19,39 @@ export class Usage extends APIResource {
 }
 
 export interface UsageRetrieveResponse {
-  daily: UsageRetrieveResponse.Daily;
-
-  monthly: UsageRetrieveResponse.Monthly;
+  transactional: UsageRetrieveResponse.Transactional;
 }
 
 export namespace UsageRetrieveResponse {
-  export interface Daily {
-    consumed: Daily.Consumed;
+  export interface Transactional {
+    limits: Transactional.Limits;
 
-    period: string;
-
-    quota: Daily.Quota;
+    usage: Transactional.Usage;
   }
 
-  export namespace Daily {
-    export interface Consumed {
-      transac_emails: number;
+  export namespace Transactional {
+    export interface Limits {
+      /**
+       * The daily email limit for the organization
+       */
+      daily: number;
+
+      /**
+       * The monthly email limit for the organization
+       */
+      monthly: number;
     }
 
-    export interface Quota {
-      transac_emails: number;
-    }
-  }
+    export interface Usage {
+      /**
+       * The daily email usage for the organization
+       */
+      daily: number;
 
-  export interface Monthly {
-    consumed: Monthly.Consumed;
-
-    period: string;
-
-    quota: Monthly.Quota;
-  }
-
-  export namespace Monthly {
-    export interface Consumed {
-      transac_emails: number;
-    }
-
-    export interface Quota {
-      transac_emails: number;
+      /**
+       * The monthly email usage for the organization
+       */
+      monthly: number;
     }
   }
 }

@@ -9,7 +9,7 @@ const client = new Nuntly({
 
 describe('resource usage', () => {
   test('retrieve', async () => {
-    const responsePromise = client.organizations.usage.retrieve('id');
+    const responsePromise = client.organizations.usage.retrieve('org_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

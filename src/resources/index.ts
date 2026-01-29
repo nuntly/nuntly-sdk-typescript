@@ -13,12 +13,6 @@ export {
   type APIKeyListResponsesCursorPage,
 } from './api-keys';
 export {
-  Account,
-  type AccountRetrieveResponse,
-  type AccountUpdateResponse,
-  type AccountUpdateParams,
-} from './account';
-export {
   Domains,
   type DomainCreateResponse,
   type DomainRetrieveResponse,
@@ -32,6 +26,8 @@ export {
 } from './domains';
 export {
   Emails,
+  type Status,
+  type Tag,
   type EmailRetrieveResponse,
   type EmailListResponse,
   type EmailCancelResponse,
@@ -43,32 +39,13 @@ export {
 export {
   Organizations,
   type OrganizationRetrieveResponse,
-  type OrganizationUpdateResponse,
   type OrganizationListResponse,
-  type OrganizationUpdateParams,
   type OrganizationListParams,
   type OrganizationListResponsesCursorPage,
 } from './organizations/organizations';
-export {
-  Shared,
-  type BounceDetail,
-  type BulkEmailsStatus,
-  type ClickDetail,
-  type ComplaintDetail,
-  type DeliveryDelayDetail,
-  type DeliveryDetail,
-  type EmailEvent,
-  type EmailHeaders,
-  type EmailStatus,
-  type EventType,
-  type FailureDetail,
-  type OpenDetail,
-  type RejectDetail,
-  type SendDetail,
-} from './shared';
+export { Shared, type EventType } from './shared';
 export {
   Webhooks,
-  type BaseEvent,
   type EmailBouncedEvent,
   type EmailClickedEvent,
   type EmailComplainedEvent,
@@ -76,7 +53,11 @@ export {
   type EmailDeliveryDelayedEvent,
   type EmailFailedEvent,
   type EmailOpenedEvent,
+  type EmailProcessedEvent,
+  type EmailQueuedEvent,
   type EmailRejectedEvent,
+  type EmailScheduledEvent,
+  type EmailSendingEvent,
   type EmailSentEvent,
   type Event,
   type WebhookCreateResponse,

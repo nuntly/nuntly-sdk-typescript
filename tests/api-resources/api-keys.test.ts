@@ -22,12 +22,12 @@ describe('resource apiKeys', () => {
   test('create: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.apiKeys.create({ name: 'My API key' }, { path: '/_stainless_unknown_path' }),
+      client.apiKeys.create({ name: 'name', status: 'enabled' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.apiKeys.retrieve('apk_pdGukGd4BTmHj8dscBDE5Mc9');
+    const responsePromise = client.apiKeys.retrieve('apk_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,7 +38,7 @@ describe('resource apiKeys', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.apiKeys.update('ak_pdGukGd4BTmHj8dscBDE5Mc9', {});
+    const responsePromise = client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -46,6 +46,17 @@ describe('resource apiKeys', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.apiKeys.update(
+        'apk_01ka8k8s80gvx9604cn9am5st4',
+        { name: 'name', status: 'enabled' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('list', async () => {
@@ -67,7 +78,7 @@ describe('resource apiKeys', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.apiKeys.delete('ak_pdGukGd4BTmHj8dscBDE5Mc9');
+    const responsePromise = client.apiKeys.delete('apk_01ka8k8s80gvx9604cn9am5st4');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

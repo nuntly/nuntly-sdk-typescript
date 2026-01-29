@@ -1,11 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as SharedAPI from '../shared';
 import * as BulkAPI from './bulk';
 import { Bulk, BulkRetrieveResponse, BulkSendParams, BulkSendResponse } from './bulk';
+import * as ContentAPI from './content';
+import { Content, ContentRetrieveResponse } from './content';
 import * as EventsAPI from './events';
-import { EventListParams, EventListResponse, Events } from './events';
+import { EventListResponse, Events } from './events';
 import * as StatsAPI from './stats';
 import { StatListResponse, Stats } from './stats';
 import { APIPromise } from '../../core/api-promise';
@@ -16,17 +17,11 @@ import { path } from '../../internal/utils/path';
 export class Emails extends APIResource {
   bulk: BulkAPI.Bulk = new BulkAPI.Bulk(this._client);
   events: EventsAPI.Events = new EventsAPI.Events(this._client);
+  content: ContentAPI.Content = new ContentAPI.Content(this._client);
   stats: StatsAPI.Stats = new StatsAPI.Stats(this._client);
 
   /**
-   * Return the email with the given id
-   *
-   * @example
-   * ```ts
-   * const email = await client.emails.retrieve(
-   *   'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
-   * );
-   * ```
+   * Retrieve an email by its id
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
     return (
@@ -35,15 +30,7 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Return a list of your last emails
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const emailListResponse of client.emails.list()) {
-   *   // ...
-   * }
-   * ```
+   * Return a list of recent emails
    */
   list(
     query: EmailListParams | null | undefined = {},
@@ -54,13 +41,6 @@ export class Emails extends APIResource {
 
   /**
    * Cancel a scheduled email
-   *
-   * @example
-   * ```ts
-   * const response = await client.emails.cancel(
-   *   'em_qiPSkLrTmXvDohbxCcYt3pFEMGgnjHD6kbDL8d4uGKvNGboT',
-   * );
-   * ```
    */
   cancel(id: string, options?: RequestOptions): APIPromise<EmailCancelResponse> {
     return (
@@ -69,17 +49,8 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Send transactional emails through the Nuntly platform. It supports HTML and
+   * Send transactional emails through Nuntly platform. It supports HTML and
    * plain-text emails, attachments, labels, custom headers and scheduling.
-   *
-   * @example
-   * ```ts
-   * const response = await client.emails.send({
-   *   from: 'ray@info.tomlinson.ai',
-   *   subject: 'Welcome to Tomlinson AI!',
-   *   to: 'carlo43@gmail.com',
-   * });
-   * ```
    */
   send(body: EmailSendParams, options?: RequestOptions): APIPromise<EmailSendResponse> {
     return (
@@ -90,6 +61,37 @@ export class Emails extends APIResource {
 
 export type EmailListResponsesCursorPage = CursorPage<EmailListResponse>;
 
+/**
+ * The status of the email.
+ */
+export type Status =
+  | 'queued'
+  | 'scheduled'
+  | 'processed'
+  | 'failed'
+  | 'sending'
+  | 'sent'
+  | 'delivered'
+  | 'bounced'
+  | 'complained'
+  | 'canceled'
+  | 'rejected';
+
+/**
+ * The tag to add to the email and you can get via email id or in webhook events
+ */
+export interface Tag {
+  /**
+   * The name of the tag
+   */
+  name: string;
+
+  /**
+   * The tag to add to the email
+   */
+  value: string;
+}
+
 export interface EmailRetrieveResponse {
   /**
    * The id of the email
@@ -99,7 +101,7 @@ export interface EmailRetrieveResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
    * The e-mail address of the sender
@@ -107,29 +109,14 @@ export interface EmailRetrieveResponse {
   from: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'email';
-
-  /**
    * The id of the organization
    */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
+  orgId: string;
 
   /**
    * The status of the email.
    */
-  status: SharedAPI.EmailStatus;
-
-  /**
-   * Date xhen the status changed
-   */
-  status_at: string;
+  status: Status;
 
   /**
    * The subject of the e-mail
@@ -154,7 +141,7 @@ export interface EmailRetrieveResponse {
   /**
    * The bulk id
    */
-  bulk_id?: string;
+  bulkId?: string;
 
   /**
    * The carbon copy recipient(s) of the email
@@ -164,74 +151,56 @@ export interface EmailRetrieveResponse {
   /**
    * The context for the template
    */
-  context?: unknown;
+  context?: { [key: string]: string | number | boolean | null };
 
   /**
    * The headers to add to the email
    */
-  headers?: SharedAPI.EmailHeaders;
+  headers?: { [key: string]: string };
 
   /**
    * The id from email provider
    */
-  message_id?: string;
-
-  /**
-   * Date at which the object was modified (ISO 8601 format)
-   */
-  modified_at?: string;
+  messageId?: string;
 
   /**
    * The email address where replies should be sent. If a recipient replies, the
    * response will go to this address instead of the sender's email address
    */
-  reply_to?: Array<string> | string;
+  replyTo?: Array<string> | string;
 
   /**
    * The date at which the email is scheduled to be sent
    */
-  scheduled_at?: string;
+  scheduledAt?: string;
 
   /**
    * May provide more informations about the status
    */
-  status_reason?: { [key: string]: unknown };
+  statusReason?: { [key: string]: unknown };
 
   /**
    * The tags to add to the email
    */
-  tags?: Array<EmailRetrieveResponse.Tag>;
+  tags?: Array<Tag>;
 }
 
 export namespace EmailRetrieveResponse {
-  /**
-   * The attachment
-   */
   export interface Attachment {
     /**
      * Content type of the attachment (the MIME type)
      */
-    content_type?: string;
+    contentType?: string;
 
     /**
      * The name of the attached file to be displayed to the recipient
      */
     filename?: string;
-  }
-
-  /**
-   * The tag to add to the email and you can get via email id or in webhook events
-   */
-  export interface Tag {
-    /**
-     * The name of the tag
-     */
-    name: string;
 
     /**
-     * The tag to add to the email
+     * The size of the attachment in bytes
      */
-    value: string;
+    size?: number;
   }
 }
 
@@ -244,7 +213,7 @@ export interface EmailListResponse {
   /**
    * Date at which the object was created (ISO 8601 format)
    */
-  created_at: string;
+  createdAt: string;
 
   /**
    * The e-mail address of the sender
@@ -252,29 +221,9 @@ export interface EmailListResponse {
   from: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'email';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
-   * The region of the related data
-   */
-  region: 'eu-west-1';
-
-  /**
    * The status of the email.
    */
-  status: SharedAPI.EmailStatus;
-
-  /**
-   * Date xhen the status changed
-   */
-  status_at: string;
+  status: Status;
 
   /**
    * The subject of the e-mail
@@ -287,19 +236,9 @@ export interface EmailListResponse {
   to: Array<string> | string;
 
   /**
-   * The bulk id
-   */
-  bulk_id?: string;
-
-  /**
-   * The id from email provider
-   */
-  message_id?: string;
-
-  /**
    * The date at which the email is scheduled to be sent
    */
-  scheduled_at?: string;
+  scheduledAt?: string;
 }
 
 export interface EmailCancelResponse {
@@ -309,14 +248,9 @@ export interface EmailCancelResponse {
   id: string;
 
   /**
-   * The kind of object returned
+   * The status of the email.
    */
-  kind: 'email';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
+  status: Status;
 }
 
 export interface EmailSendResponse {
@@ -326,19 +260,9 @@ export interface EmailSendResponse {
   id: string;
 
   /**
-   * The kind of object returned
-   */
-  kind: 'email';
-
-  /**
-   * The id of the organization
-   */
-  org_id: string;
-
-  /**
    * The status of the email.
    */
-  status: 'queued' | 'scheduled';
+  status: Status;
 }
 
 export interface EmailListParams extends CursorPageParams {}
@@ -377,12 +301,12 @@ export interface EmailSendParams {
   /**
    * The context for the template
    */
-  context?: unknown;
+  context?: { [key: string]: string | number | boolean | null };
 
   /**
    * The headers to add to the email
    */
-  headers?: SharedAPI.EmailHeaders;
+  headers?: { [key: string]: string };
 
   /**
    * The HTML version of the email
@@ -393,17 +317,17 @@ export interface EmailSendParams {
    * The email address where replies should be sent. If a recipient replies, the
    * response will go to this address instead of the sender's email address
    */
-  reply_to?: Array<string> | string;
+  replyTo?: Array<string> | string;
 
   /**
    * The date at which the email is scheduled to be sent
    */
-  scheduled_at?: string;
+  scheduledAt?: string;
 
   /**
    * The tags to add to the email
    */
-  tags?: Array<EmailSendParams.Tag>;
+  tags?: Array<Tag>;
 
   /**
    * The plaintext version of the email
@@ -412,48 +336,33 @@ export interface EmailSendParams {
 }
 
 export namespace EmailSendParams {
-  /**
-   * The attachment
-   */
   export interface Attachment {
     /**
      * The base64-encoded content of the attachment
      */
-    content?: string;
+    content: string;
 
     /**
      * Content type of the attachment (the MIME type)
      */
-    content_type?: string;
+    contentType?: string;
 
     /**
      * The name of the attached file to be displayed to the recipient
      */
     filename?: string;
   }
-
-  /**
-   * The tag to add to the email and you can get via email id or in webhook events
-   */
-  export interface Tag {
-    /**
-     * The name of the tag
-     */
-    name: string;
-
-    /**
-     * The tag to add to the email
-     */
-    value: string;
-  }
 }
 
 Emails.Bulk = Bulk;
 Emails.Events = Events;
+Emails.Content = Content;
 Emails.Stats = Stats;
 
 export declare namespace Emails {
   export {
+    type Status as Status,
+    type Tag as Tag,
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
     type EmailCancelResponse as EmailCancelResponse,
@@ -470,11 +379,9 @@ export declare namespace Emails {
     type BulkSendParams as BulkSendParams,
   };
 
-  export {
-    Events as Events,
-    type EventListResponse as EventListResponse,
-    type EventListParams as EventListParams,
-  };
+  export { Events as Events, type EventListResponse as EventListResponse };
+
+  export { Content as Content, type ContentRetrieveResponse as ContentRetrieveResponse };
 
   export { Stats as Stats, type StatListResponse as StatListResponse };
 }
