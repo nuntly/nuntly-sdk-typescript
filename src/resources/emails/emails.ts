@@ -30,7 +30,7 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Return a list of recent emails
+   * Return a list of recent emails.
    */
   list(
     query: EmailListParams | null | undefined = {},
