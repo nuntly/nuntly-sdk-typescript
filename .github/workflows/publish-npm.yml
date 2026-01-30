@@ -12,10 +12,6 @@ on:
   release:
     types: [published]
 
-permissions:
-  id-token: write # Required for OIDC
-  contents: read
-
 jobs:
   publish:
     name: publish
