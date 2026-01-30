@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0 (2026-01-30)
+
+Full Changelog: [v0.11.1...v0.12.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.11.1...v0.12.0)
+
+### Features
+
+* **api:** manual updates ([fc361be](https://github.com/nuntly/nuntly-sdk-typescript/commit/fc361be1ceb4ca94cd84250ef4a3b6f2a17987d9))
+
 ## 0.11.1 (2026-01-30)
 
 Full Changelog: [v0.11.0...v0.11.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.11.0...v0.11.1)
