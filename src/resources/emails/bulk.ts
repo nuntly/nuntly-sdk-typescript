@@ -17,7 +17,7 @@ export class Bulk extends APIResource {
   }
 
   /**
-   * Send bulk emails through Nuntly platform.
+   * Send bulk emails.
    */
   send(body: BulkSendParams, options?: RequestOptions): APIPromise<BulkSendResponse> {
     return (

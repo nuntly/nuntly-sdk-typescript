@@ -9,7 +9,7 @@ import { path } from '../../internal/utils/path';
 
 export class Events extends APIResource {
   /**
-   * List webhooks events
+   * List webhook events
    */
   list(
     query: EventListParams | null | undefined = {},
