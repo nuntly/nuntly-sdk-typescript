@@ -40,6 +40,9 @@ export class Domains extends APIResource {
     )._thenUnwrap((obj) => obj.data);
   }
 
+  /**
+   * List all domains
+   */
   list(
     query: DomainListParams | null | undefined = {},
     options?: RequestOptions,
