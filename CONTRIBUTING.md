@@ -60,7 +60,7 @@ $ yarn link @nuntly/sdk
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global @nuntly/sdk
+$ pnpm link --global @nuntly/sdk
 ```
 
 ## Running tests
