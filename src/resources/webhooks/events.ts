@@ -7,6 +7,9 @@ import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagin
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Operations related to Webhook Events management
+ */
 export class Events extends APIResource {
   /**
    * List webhook events

@@ -4,6 +4,9 @@ import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
+/**
+ * Operations related to Email management
+ */
 export class Stats extends APIResource {
   /**
    * Retrieve email statistics
