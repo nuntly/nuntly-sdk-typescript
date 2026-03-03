@@ -14,6 +14,9 @@ import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagin
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Operations related to Email management
+ */
 export class Emails extends APIResource {
   bulk: BulkAPI.Bulk = new BulkAPI.Bulk(this._client);
   events: EventsAPI.Events = new EventsAPI.Events(this._client);

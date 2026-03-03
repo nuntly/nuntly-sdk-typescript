@@ -5,6 +5,9 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Operations related to Organization management
+ */
 export class Usage extends APIResource {
   /**
    * Retrieve organization usage
