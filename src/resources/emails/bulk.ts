@@ -6,6 +6,9 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Operations related to Email management
+ */
 export class Bulk extends APIResource {
   /**
    * Retrieve bulk emails

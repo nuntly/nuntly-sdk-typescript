@@ -820,10 +820,25 @@ export class Nuntly {
   static toFile = Uploads.toFile;
 
   shared: API.Shared = new API.Shared(this);
+  /**
+   * Operations related to API keys management
+   */
   apiKeys: API.APIKeys = new API.APIKeys(this);
+  /**
+   * Operations related to Domain management
+   */
   domains: API.Domains = new API.Domains(this);
+  /**
+   * Operations related to Email management
+   */
   emails: API.Emails = new API.Emails(this);
+  /**
+   * Operations related to Webhook management
+   */
   webhooks: API.Webhooks = new API.Webhooks(this);
+  /**
+   * Operations related to Organization management
+   */
   organizations: API.Organizations = new API.Organizations(this);
 }
 

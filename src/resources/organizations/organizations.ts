@@ -8,6 +8,9 @@ import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagin
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Operations related to Organization management
+ */
 export class Organizations extends APIResource {
   usage: UsageAPI.Usage = new UsageAPI.Usage(this._client);
 
