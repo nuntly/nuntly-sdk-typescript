@@ -50,9 +50,9 @@ describe('resource emails', () => {
 
   test('send: only required params', async () => {
     const responsePromise = client.emails.send({
-      from: 'from',
-      subject: 'subject',
-      to: ['string'],
+      from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+      subject: 'Verify your email address',
+      to: 'brian67@gmail.com',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -65,25 +65,25 @@ describe('resource emails', () => {
 
   test('send: required and optional params', async () => {
     const response = await client.emails.send({
-      from: 'from',
-      subject: 'subject',
-      to: ['string'],
+      from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+      subject: 'Verify your email address',
+      to: 'brian67@gmail.com',
       attachments: [
         {
-          content: 'content',
-          contentType: 'contentType',
-          filename: 'filename',
+          content: 'SGVsbG8gV29ybGQ=',
+          contentType: 'application/pdf',
+          filename: 'invoice.pdf',
         },
       ],
       bcc: ['string'],
       cc: ['string'],
       context: { foo: 'string' },
       headers: { foo: 'string' },
-      html: 'html',
+      html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
       replyTo: ['string'],
       scheduledAt: 'scheduledAt',
-      tags: [{ name: 'name', value: 'value' }],
-      text: 'text',
+      tags: [{ name: 'category', value: 'transactional' }],
+      text: 'Thank you for signing up! Please verify your email address.',
     });
   });
 });

@@ -9,13 +9,13 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Operations related to Organization management
+ * Manage your organization profile, team members, and account-level settings.
  */
 export class Organizations extends APIResource {
   usage: UsageAPI.Usage = new UsageAPI.Usage(this._client);
 
   /**
-   * Retrieve organization
+   * Returns the organization's profile, plan, region, and account status.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<OrganizationRetrieveResponse> {
     return (
@@ -26,7 +26,7 @@ export class Organizations extends APIResource {
   }
 
   /**
-   * Retrieve organizations
+   * Returns all organizations the authenticated user belongs to.
    */
   list(
     query: OrganizationListParams | null | undefined = {},

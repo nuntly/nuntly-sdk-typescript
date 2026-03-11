@@ -7,11 +7,11 @@ import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
 /**
- * Operations related to API keys management
+ * Create and revoke API keys used to authenticate requests to the Nuntly API.
  */
 export class APIKeys extends APIResource {
   /**
-   * Create an API key
+   * Generate a new API key. The key value is only returned once — store it securely.
    */
   create(
     body: APIKeyCreateParams | null | undefined = {},
@@ -23,7 +23,7 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Retrieve an API key
+   * Returns API key metadata. The key value is never returned after creation.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<APIKeyRetrieveResponse> {
     return (
@@ -32,13 +32,9 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Update an API key
+   * Update the key name, permissions, or restrict it to specific sending domains.
    */
-  update(
-    id: string,
-    body: APIKeyUpdateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<APIKeyUpdateResponse> {
+  update(id: string, body: APIKeyUpdateParams, options?: RequestOptions): APIPromise<APIKeyUpdateResponse> {
     return (
       this._client.put(path`/api-keys/${id}`, { body, ...options }) as APIPromise<{
         data: APIKeyUpdateResponse;
@@ -47,7 +43,8 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * List API keys
+   * Returns all API keys for the organization. Key values are never included in list
+   * responses.
    */
   list(
     query: APIKeyListParams | null | undefined = {},
@@ -57,7 +54,8 @@ export class APIKeys extends APIResource {
   }
 
   /**
-   * Delete an API key
+   * Revoke an API key. Requests authenticating with this key will be rejected
+   * immediately.
    */
   delete(id: string, options?: RequestOptions): APIPromise<APIKeyDeleteResponse> {
     return (
@@ -165,9 +163,19 @@ export interface APIKeyDeleteResponse {
 
 export interface APIKeyCreateParams {
   /**
+   * The domain ids to restrict the api key to (only for sendingAccess)
+   */
+  domainIds?: Array<string>;
+
+  /**
    * The name of the api key
    */
   name?: string;
+
+  /**
+   * The permission type for the api key
+   */
+  permission?: 'fullAccess' | 'sendingAccess';
 
   /**
    * The status for the api key
@@ -176,6 +184,16 @@ export interface APIKeyCreateParams {
 }
 
 export interface APIKeyUpdateParams {
+  /**
+   * The permission type for the api key
+   */
+  permission: 'fullAccess' | 'sendingAccess';
+
+  /**
+   * The domain ids to restrict the api key to (only for sendingAccess)
+   */
+  domainIds?: Array<string>;
+
   /**
    * The name of the api key
    */

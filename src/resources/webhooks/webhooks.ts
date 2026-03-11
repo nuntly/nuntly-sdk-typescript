@@ -19,13 +19,13 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Operations related to Webhook management
+ * Register HTTP endpoints to receive real-time delivery events such as bounces, opens, and clicks.
  */
 export class Webhooks extends APIResource {
   events: EventsAPI.Events = new EventsAPI.Events(this._client);
 
   /**
-   * Create a webhook
+   * Register an endpoint to start receiving webhook events for your organization.
    */
   create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
     return (
@@ -34,7 +34,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Retrieve a webhook
+   * Returns a webhook endpoint with its URL, subscribed events, and configuration.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<WebhookRetrieveResponse> {
     return (
@@ -43,7 +43,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Update a webhook
+   * Update the endpoint URL, subscribed event types, or rotate the signing secret.
    */
   update(
     id: string,
@@ -58,7 +58,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * List webhooks
+   * Returns all registered webhook endpoints for the organization.
    */
   list(
     query: WebhookListParams | null | undefined = {},
@@ -68,7 +68,7 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Delete a webhook
+   * Remove a webhook endpoint. No further events will be delivered to this URL.
    */
   delete(id: string, options?: RequestOptions): APIPromise<WebhookDeleteResponse> {
     return (
@@ -863,8 +863,8 @@ export namespace EmailSentEvent {
 }
 
 /**
- * Payload for webhook events representing email events, eg. sent, bounced, opened,
- * clicked, complained, etc.
+ * Payload for webhook events representing email and inbound events, eg. sent,
+ * bounced, opened, clicked, complained, received, etc.
  */
 export type Event =
   | EmailQueuedEvent
@@ -879,7 +879,187 @@ export type Event =
   | EmailComplainedEvent
   | EmailRejectedEvent
   | EmailDeliveryDelayedEvent
-  | EmailFailedEvent;
+  | EmailFailedEvent
+  | MessageReceivedEvent
+  | MessageSecurityFlaggedEvent
+  | MessageAgentTriggeredEvent
+  | MessageSentEvent
+  | Event.MessageRejectedEvent;
+
+export namespace Event {
+  /**
+   * Event triggered when a received email is rejected before being stored (e.g.,
+   * inbox storage limit exceeded).
+   */
+  export interface MessageRejectedEvent {
+    id: string;
+
+    createdAt: string;
+
+    data: MessageRejectedEvent.Data;
+
+    type: 'message.rejected';
+  }
+
+  export namespace MessageRejectedEvent {
+    export interface Data {
+      domainId: string;
+
+      domainName: string;
+
+      from: string;
+
+      inboxId: string;
+
+      orgId: string;
+
+      reason: 'inbox_storage_limit_exceeded' | 'message_too_large';
+
+      subject: string;
+    }
+  }
+}
+
+/**
+ * Event triggered when a message is received on an inbox with an AI agent.
+ */
+export interface MessageAgentTriggeredEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: MessageAgentTriggeredEvent.Data;
+
+  type: 'message.agent.triggered';
+}
+
+export namespace MessageAgentTriggeredEvent {
+  export interface Data {
+    domainId: string;
+
+    domainName: string;
+
+    from: string;
+
+    inboxId: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    subject: string;
+
+    threadId: string;
+
+    agentId?: string;
+  }
+}
+
+/**
+ * Event triggered when an email is received on a receiving-enabled domain.
+ */
+export interface MessageReceivedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: MessageReceivedEvent.Data;
+
+  type: 'message.received';
+}
+
+export namespace MessageReceivedEvent {
+  export interface Data {
+    domainId: string;
+
+    domainName: string;
+
+    from: string;
+
+    inboxId: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    subject: string;
+
+    threadId: string;
+
+    agentId?: string;
+  }
+}
+
+/**
+ * Event triggered when a received email has a security issue (SPF, DKIM, spam, or
+ * virus).
+ */
+export interface MessageSecurityFlaggedEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: MessageSecurityFlaggedEvent.Data;
+
+  type: 'message.security.flagged';
+}
+
+export namespace MessageSecurityFlaggedEvent {
+  export interface Data {
+    domainId: string;
+
+    domainName: string;
+
+    from: string;
+
+    inboxId: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    subject: string;
+
+    threadId: string;
+
+    agentId?: string;
+  }
+}
+
+/**
+ * Event triggered when a message is sent from an inbox.
+ */
+export interface MessageSentEvent {
+  id: string;
+
+  createdAt: string;
+
+  data: MessageSentEvent.Data;
+
+  type: 'message.sent';
+}
+
+export namespace MessageSentEvent {
+  export interface Data {
+    domainId: string;
+
+    domainName: string;
+
+    from: string;
+
+    inboxId: string;
+
+    messageId: string;
+
+    orgId: string;
+
+    subject: string;
+
+    threadId: string;
+
+    agentId?: string;
+  }
+}
 
 /**
  * Response after creating a webhook
@@ -1005,8 +1185,8 @@ export interface WebhookDeleteResponse {
 }
 
 /**
- * Payload for webhook events representing email events, eg. sent, bounced, opened,
- * clicked, complained, etc.
+ * Payload for webhook events representing email and inbound events, eg. sent,
+ * bounced, opened, clicked, complained, received, etc.
  */
 export type UnwrapWebhookEvent =
   | EmailQueuedEvent
@@ -1021,7 +1201,46 @@ export type UnwrapWebhookEvent =
   | EmailComplainedEvent
   | EmailRejectedEvent
   | EmailDeliveryDelayedEvent
-  | EmailFailedEvent;
+  | EmailFailedEvent
+  | MessageReceivedEvent
+  | MessageSecurityFlaggedEvent
+  | MessageAgentTriggeredEvent
+  | MessageSentEvent
+  | UnwrapWebhookEvent.MessageRejectedEvent;
+
+export namespace UnwrapWebhookEvent {
+  /**
+   * Event triggered when a received email is rejected before being stored (e.g.,
+   * inbox storage limit exceeded).
+   */
+  export interface MessageRejectedEvent {
+    id: string;
+
+    createdAt: string;
+
+    data: MessageRejectedEvent.Data;
+
+    type: 'message.rejected';
+  }
+
+  export namespace MessageRejectedEvent {
+    export interface Data {
+      domainId: string;
+
+      domainName: string;
+
+      from: string;
+
+      inboxId: string;
+
+      orgId: string;
+
+      reason: 'inbox_storage_limit_exceeded' | 'message_too_large';
+
+      subject: string;
+    }
+  }
+}
 
 export interface WebhookCreateParams {
   /**
@@ -1086,6 +1305,10 @@ export declare namespace Webhooks {
     type EmailSendingEvent as EmailSendingEvent,
     type EmailSentEvent as EmailSentEvent,
     type Event as Event,
+    type MessageAgentTriggeredEvent as MessageAgentTriggeredEvent,
+    type MessageReceivedEvent as MessageReceivedEvent,
+    type MessageSecurityFlaggedEvent as MessageSecurityFlaggedEvent,
+    type MessageSentEvent as MessageSentEvent,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookRetrieveResponse as WebhookRetrieveResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,
