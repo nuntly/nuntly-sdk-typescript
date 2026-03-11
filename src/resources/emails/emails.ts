@@ -15,7 +15,7 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Operations related to Email management
+ * Send transactional emails, retrieve sending history, and track delivery status per message.
  */
 export class Emails extends APIResource {
   bulk: BulkAPI.Bulk = new BulkAPI.Bulk(this._client);
@@ -24,7 +24,7 @@ export class Emails extends APIResource {
   stats: StatsAPI.Stats = new StatsAPI.Stats(this._client);
 
   /**
-   * Retrieve an email by its id
+   * Returns an email with its current delivery status and metadata.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
     return (
@@ -33,7 +33,7 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Return a list of recent emails.
+   * Returns sent emails ordered by submission date, newest first.
    */
   list(
     query: EmailListParams | null | undefined = {},
@@ -43,7 +43,8 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Cancel a scheduled email
+   * Cancel a scheduled email before delivery. Only emails with `scheduled` status
+   * can be cancelled.
    */
   cancel(id: string, options?: RequestOptions): APIPromise<EmailCancelResponse> {
     return (
@@ -57,12 +58,34 @@ export class Emails extends APIResource {
    */
   send(body: EmailSendParams, options?: RequestOptions): APIPromise<EmailSendResponse> {
     return (
-      this._client.post('/emails', { body, ...options }) as APIPromise<{ data: EmailSendResponse }>
+      this._client.post('/emails', {
+        body,
+        timeout: (this._client as any)._options.timeout ?? 150,
+        maxRetries: 0,
+        ...options,
+      }) as APIPromise<{ data: EmailSendResponse }>
     )._thenUnwrap((obj) => obj.data);
   }
 }
 
 export type EmailListResponsesCursorPage = CursorPage<EmailListResponse>;
+
+export interface EmailContentItem {
+  /**
+   * Presigned download URL.
+   */
+  downloadUrl: string;
+
+  /**
+   * When the URL expires.
+   */
+  expiresAt: string;
+
+  /**
+   * Uncompressed size in bytes.
+   */
+  size: number | null;
+}
 
 /**
  * The status of the email.
@@ -364,6 +387,7 @@ Emails.Stats = Stats;
 
 export declare namespace Emails {
   export {
+    type EmailContentItem as EmailContentItem,
     type Status as Status,
     type Tag as Tag,
     type EmailRetrieveResponse as EmailRetrieveResponse,

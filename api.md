@@ -44,6 +44,7 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/emails/emails.ts">EmailContentItem</a></code>
 - <code><a href="./src/resources/emails/emails.ts">Status</a></code>
 - <code><a href="./src/resources/emails/emails.ts">Tag</a></code>
 - <code><a href="./src/resources/emails/emails.ts">EmailRetrieveResponse</a></code>
@@ -100,6 +101,124 @@ Methods:
 
 - <code title="get /emails/stats">client.emails.stats.<a href="./src/resources/emails/stats.ts">list</a>() -> StatListResponse</code>
 
+# Namespaces
+
+Types:
+
+- <code><a href="./src/resources/namespaces/namespaces.ts">Namespace</a></code>
+- <code><a href="./src/resources/namespaces/namespaces.ts">NamespaceDetail</a></code>
+- <code><a href="./src/resources/namespaces/namespaces.ts">NamespaceUpdateResponse</a></code>
+- <code><a href="./src/resources/namespaces/namespaces.ts">NamespaceDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /namespaces">client.namespaces.<a href="./src/resources/namespaces/namespaces.ts">create</a>({ ...params }) -> Namespace</code>
+- <code title="get /namespaces/{namespaceId}">client.namespaces.<a href="./src/resources/namespaces/namespaces.ts">retrieve</a>(namespaceID) -> NamespaceDetail</code>
+- <code title="patch /namespaces/{namespaceId}">client.namespaces.<a href="./src/resources/namespaces/namespaces.ts">update</a>(namespaceID, { ...params }) -> NamespaceUpdateResponse</code>
+- <code title="get /namespaces">client.namespaces.<a href="./src/resources/namespaces/namespaces.ts">list</a>({ ...params }) -> NamespacesCursorPage</code>
+- <code title="delete /namespaces/{namespaceId}">client.namespaces.<a href="./src/resources/namespaces/namespaces.ts">delete</a>(namespaceID) -> NamespaceDeleteResponse</code>
+
+## Inboxes
+
+Methods:
+
+- <code title="get /namespaces/{namespaceId}/inboxes">client.namespaces.inboxes.<a href="./src/resources/namespaces/inboxes.ts">list</a>(namespaceID, { ...params }) -> InboxesCursorPage</code>
+
+# Inboxes
+
+Types:
+
+- <code><a href="./src/resources/inboxes/inboxes.ts">Inbox</a></code>
+- <code><a href="./src/resources/inboxes/inboxes.ts">InboxUpdateResponse</a></code>
+- <code><a href="./src/resources/inboxes/inboxes.ts">InboxDeleteResponse</a></code>
+- <code><a href="./src/resources/inboxes/inboxes.ts">InboxSendResponse</a></code>
+
+Methods:
+
+- <code title="post /inboxes">client.inboxes.<a href="./src/resources/inboxes/inboxes.ts">create</a>({ ...params }) -> Inbox</code>
+- <code title="get /inboxes/{inboxId}">client.inboxes.<a href="./src/resources/inboxes/inboxes.ts">retrieve</a>(inboxID) -> Inbox</code>
+- <code title="patch /inboxes/{inboxId}">client.inboxes.<a href="./src/resources/inboxes/inboxes.ts">update</a>(inboxID, { ...params }) -> InboxUpdateResponse</code>
+- <code title="get /inboxes">client.inboxes.<a href="./src/resources/inboxes/inboxes.ts">list</a>({ ...params }) -> InboxesCursorPage</code>
+- <code title="delete /inboxes/{inboxId}">client.inboxes.<a href="./src/resources/inboxes/inboxes.ts">delete</a>(inboxID) -> InboxDeleteResponse</code>
+- <code title="post /inboxes/{inboxId}/messages">client.inboxes.<a href="./src/resources/inboxes/inboxes.ts">send</a>(inboxID, { ...params }) -> InboxSendResponse</code>
+
+## Threads
+
+Methods:
+
+- <code title="get /inboxes/{inboxId}/threads">client.inboxes.threads.<a href="./src/resources/inboxes/threads.ts">list</a>(inboxID, { ...params }) -> ThreadsCursorPage</code>
+
+# Threads
+
+Types:
+
+- <code><a href="./src/resources/threads/threads.ts">Thread</a></code>
+- <code><a href="./src/resources/threads/threads.ts">ThreadUpdateResponse</a></code>
+
+Methods:
+
+- <code title="get /threads/{threadId}">client.threads.<a href="./src/resources/threads/threads.ts">retrieve</a>(threadID) -> Thread</code>
+- <code title="patch /threads/{threadId}">client.threads.<a href="./src/resources/threads/threads.ts">update</a>(threadID, { ...params }) -> ThreadUpdateResponse</code>
+
+## Messages
+
+Types:
+
+- <code><a href="./src/resources/threads/messages.ts">MessageListResponse</a></code>
+
+Methods:
+
+- <code title="get /threads/{threadId}/messages">client.threads.messages.<a href="./src/resources/threads/messages.ts">list</a>(threadID, { ...params }) -> MessageListResponsesCursorPage</code>
+
+# Messages
+
+Types:
+
+- <code><a href="./src/resources/messages/messages.ts">Message</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageAttachment</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageContent</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageContentItem</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageDetail</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageForwardResponse</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageReplyResponse</a></code>
+
+Methods:
+
+- <code title="get /messages/{messageId}">client.messages.<a href="./src/resources/messages/messages.ts">retrieve</a>(messageID) -> MessageDetail</code>
+- <code title="get /messages">client.messages.<a href="./src/resources/messages/messages.ts">list</a>({ ...params }) -> MessagesCursorPage</code>
+- <code title="post /messages/{messageId}/forward">client.messages.<a href="./src/resources/messages/messages.ts">forward</a>(messageID, { ...params }) -> MessageForwardResponse</code>
+- <code title="post /messages/{messageId}/reply">client.messages.<a href="./src/resources/messages/messages.ts">reply</a>(messageID, { ...params }) -> MessageReplyResponse</code>
+
+## Content
+
+Methods:
+
+- <code title="get /messages/{messageId}/content">client.messages.content.<a href="./src/resources/messages/content.ts">retrieve</a>(messageID, { ...params }) -> MessageContent</code>
+
+## Attachments
+
+Types:
+
+- <code><a href="./src/resources/messages/attachments.ts">AttachmentListResponse</a></code>
+
+Methods:
+
+- <code title="get /messages/{messageId}/attachments/{attachmentId}">client.messages.attachments.<a href="./src/resources/messages/attachments.ts">retrieve</a>(attachmentID, { ...params }) -> MessageAttachment</code>
+- <code title="get /messages/{messageId}/attachments">client.messages.attachments.<a href="./src/resources/messages/attachments.ts">list</a>(messageID) -> AttachmentListResponse</code>
+
+# Agents
+
+Types:
+
+- <code><a href="./src/resources/agents/agents.ts">AgentMemory</a></code>
+
+## Memory
+
+Methods:
+
+- <code title="get /agents/{agentId}/memory">client.agents.memory.<a href="./src/resources/agents/memory.ts">retrieve</a>(agentID, { ...params }) -> AgentMemory</code>
+- <code title="put /agents/{agentId}/memory">client.agents.memory.<a href="./src/resources/agents/memory.ts">upsert</a>(agentID, { ...params }) -> AgentMemory</code>
+
 # Webhooks
 
 Types:
@@ -118,6 +237,10 @@ Types:
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailSendingEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">EmailSentEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">Event</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">MessageAgentTriggeredEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">MessageReceivedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">MessageSecurityFlaggedEvent</a></code>
+- <code><a href="./src/resources/webhooks/webhooks.ts">MessageSentEvent</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">WebhookCreateResponse</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">WebhookRetrieveResponse</a></code>
 - <code><a href="./src/resources/webhooks/webhooks.ts">WebhookUpdateResponse</a></code>

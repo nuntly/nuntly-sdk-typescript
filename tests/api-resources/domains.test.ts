@@ -20,7 +20,11 @@ describe('resource domains', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.domains.create({ name: 'name' });
+    const response = await client.domains.create({
+      name: 'name',
+      receiving: true,
+      sending: true,
+    });
   });
 
   test('retrieve', async () => {
@@ -50,7 +54,12 @@ describe('resource domains', () => {
     await expect(
       client.domains.update(
         'dns_01kabn43yqyxn2bx4ve84mczd3',
-        { clickTracking: true, openTracking: true },
+        {
+          clickTracking: true,
+          openTracking: true,
+          receiving: true,
+          sending: true,
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Nuntly.NotFoundError);

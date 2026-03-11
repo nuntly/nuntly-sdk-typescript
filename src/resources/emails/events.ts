@@ -7,11 +7,12 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Operations related to Email management
+ * Send transactional emails, retrieve sending history, and track delivery status per message.
  */
 export class Events extends APIResource {
   /**
-   * Retrieve email events by email id
+   * Returns the full delivery event history for an email (sent, delivered, opened,
+   * bounced, etc.).
    */
   list(id: string, options?: RequestOptions): APIPromise<EventListResponse> {
     return (
