@@ -8,11 +8,11 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Operations related to Webhook Events management
+ * Inspect webhook event history and replay failed deliveries for debugging or recovery.
  */
 export class Events extends APIResource {
   /**
-   * List webhook events
+   * Returns recent webhook events across all registered endpoints.
    */
   list(
     query: EventListParams | null | undefined = {},
@@ -22,7 +22,8 @@ export class Events extends APIResource {
   }
 
   /**
-   * List webhook event deliveries
+   * Returns all delivery attempts for a webhook event, including HTTP status codes
+   * and response times.
    */
   deliveries(
     eventID: string,
@@ -38,7 +39,8 @@ export class Events extends APIResource {
   }
 
   /**
-   * Replay a webhook event
+   * Re-deliver a webhook event to its endpoint. Useful for retrying failed
+   * deliveries.
    */
   replay(
     eventID: string,
@@ -103,7 +105,7 @@ export namespace EventDeliveriesResponse {
 
     deliveredAt: string;
 
-    response: { [key: string]: string };
+    response: { [key: string]: unknown };
 
     status: 'pending' | 'success' | 'failed';
   }

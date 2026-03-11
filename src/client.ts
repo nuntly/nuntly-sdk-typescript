@@ -44,8 +44,10 @@ import {
   Domains,
 } from './resources/domains';
 import { EventType, Shared } from './resources/shared';
+import { AgentMemory, Agents } from './resources/agents/agents';
 import {
   EmailCancelResponse,
+  EmailContentItem,
   EmailListParams,
   EmailListResponse,
   EmailListResponsesCursorPage,
@@ -57,12 +59,50 @@ import {
   Tag,
 } from './resources/emails/emails';
 import {
+  Inbox,
+  InboxCreateParams,
+  InboxDeleteResponse,
+  InboxListParams,
+  InboxSendParams,
+  InboxSendResponse,
+  InboxUpdateParams,
+  InboxUpdateResponse,
+  Inboxes,
+  InboxesCursorPage,
+} from './resources/inboxes/inboxes';
+import {
+  Message,
+  MessageAttachment,
+  MessageContent,
+  MessageContentItem,
+  MessageDetail,
+  MessageForwardParams,
+  MessageForwardResponse,
+  MessageListParams,
+  MessageReplyParams,
+  MessageReplyResponse,
+  Messages,
+  MessagesCursorPage,
+} from './resources/messages/messages';
+import {
+  Namespace,
+  NamespaceCreateParams,
+  NamespaceDeleteResponse,
+  NamespaceDetail,
+  NamespaceListParams,
+  NamespaceUpdateParams,
+  NamespaceUpdateResponse,
+  Namespaces,
+  NamespacesCursorPage,
+} from './resources/namespaces/namespaces';
+import {
   OrganizationListParams,
   OrganizationListResponse,
   OrganizationListResponsesCursorPage,
   OrganizationRetrieveResponse,
   Organizations,
 } from './resources/organizations/organizations';
+import { Thread, ThreadUpdateParams, ThreadUpdateResponse, Threads } from './resources/threads/threads';
 import {
   EmailBouncedEvent,
   EmailClickedEvent,
@@ -78,6 +118,10 @@ import {
   EmailSendingEvent,
   EmailSentEvent,
   Event,
+  MessageAgentTriggeredEvent,
+  MessageReceivedEvent,
+  MessageSecurityFlaggedEvent,
+  MessageSentEvent,
   UnwrapWebhookEvent,
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -289,9 +333,6 @@ export class Nuntly {
     return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
-  /**
-   * Basic re-implementation of `qs.stringify` for primitive types.
-   */
   protected stringifyQuery(query: object | Record<string, unknown>): string {
     return stringifyQuery(query);
   }
@@ -822,23 +863,40 @@ export class Nuntly {
 
   shared: API.Shared = new API.Shared(this);
   /**
-   * Operations related to API keys management
+   * Create and revoke API keys used to authenticate requests to the Nuntly API.
    */
   apiKeys: API.APIKeys = new API.APIKeys(this);
   /**
-   * Operations related to Domain management
+   * Add and verify sending and receiving domains. Manage DKIM records, SPF configuration, and enable inbound email routing.
    */
   domains: API.Domains = new API.Domains(this);
   /**
-   * Operations related to Email management
+   * Send transactional emails, retrieve sending history, and track delivery status per message.
    */
   emails: API.Emails = new API.Emails(this);
   /**
-   * Operations related to Webhook management
+   * Isolate inboxes by tenant, client, or agent using namespaces. Use an external ID to map namespaces to your own data model.
+   */
+  namespaces: API.Namespaces = new API.Namespaces(this);
+  /**
+   * Create email inboxes at a specific address on a verified receiving domain. Assign inboxes to namespaces or AI agents.
+   */
+  inboxes: API.Inboxes = new API.Inboxes(this);
+  /**
+   * Browse email conversations grouped by subject. Mark threads as read or spam, and assign them to an agent.
+   */
+  threads: API.Threads = new API.Threads(this);
+  /**
+   * Access received messages, download attachments, and send replies or forwards from an inbox.
+   */
+  messages: API.Messages = new API.Messages(this);
+  agents: API.Agents = new API.Agents(this);
+  /**
+   * Register HTTP endpoints to receive real-time delivery events such as bounces, opens, and clicks.
    */
   webhooks: API.Webhooks = new API.Webhooks(this);
   /**
-   * Operations related to Organization management
+   * Manage your organization profile, team members, and account-level settings.
    */
   organizations: API.Organizations = new API.Organizations(this);
 }
@@ -847,6 +905,11 @@ Nuntly.Shared = Shared;
 Nuntly.APIKeys = APIKeys;
 Nuntly.Domains = Domains;
 Nuntly.Emails = Emails;
+Nuntly.Namespaces = Namespaces;
+Nuntly.Inboxes = Inboxes;
+Nuntly.Threads = Threads;
+Nuntly.Messages = Messages;
+Nuntly.Agents = Agents;
 Nuntly.Webhooks = Webhooks;
 Nuntly.Organizations = Organizations;
 
@@ -886,6 +949,7 @@ export declare namespace Nuntly {
 
   export {
     Emails as Emails,
+    type EmailContentItem as EmailContentItem,
     type Status as Status,
     type Tag as Tag,
     type EmailRetrieveResponse as EmailRetrieveResponse,
@@ -896,6 +960,55 @@ export declare namespace Nuntly {
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
   };
+
+  export {
+    Namespaces as Namespaces,
+    type Namespace as Namespace,
+    type NamespaceDetail as NamespaceDetail,
+    type NamespaceUpdateResponse as NamespaceUpdateResponse,
+    type NamespaceDeleteResponse as NamespaceDeleteResponse,
+    type NamespacesCursorPage as NamespacesCursorPage,
+    type NamespaceCreateParams as NamespaceCreateParams,
+    type NamespaceUpdateParams as NamespaceUpdateParams,
+    type NamespaceListParams as NamespaceListParams,
+  };
+
+  export {
+    Inboxes as Inboxes,
+    type Inbox as Inbox,
+    type InboxUpdateResponse as InboxUpdateResponse,
+    type InboxDeleteResponse as InboxDeleteResponse,
+    type InboxSendResponse as InboxSendResponse,
+    type InboxesCursorPage as InboxesCursorPage,
+    type InboxCreateParams as InboxCreateParams,
+    type InboxUpdateParams as InboxUpdateParams,
+    type InboxListParams as InboxListParams,
+    type InboxSendParams as InboxSendParams,
+  };
+
+  export {
+    Threads as Threads,
+    type Thread as Thread,
+    type ThreadUpdateResponse as ThreadUpdateResponse,
+    type ThreadUpdateParams as ThreadUpdateParams,
+  };
+
+  export {
+    Messages as Messages,
+    type Message as Message,
+    type MessageAttachment as MessageAttachment,
+    type MessageContent as MessageContent,
+    type MessageContentItem as MessageContentItem,
+    type MessageDetail as MessageDetail,
+    type MessageForwardResponse as MessageForwardResponse,
+    type MessageReplyResponse as MessageReplyResponse,
+    type MessagesCursorPage as MessagesCursorPage,
+    type MessageListParams as MessageListParams,
+    type MessageForwardParams as MessageForwardParams,
+    type MessageReplyParams as MessageReplyParams,
+  };
+
+  export { Agents as Agents, type AgentMemory as AgentMemory };
 
   export {
     Webhooks as Webhooks,
@@ -913,6 +1026,10 @@ export declare namespace Nuntly {
     type EmailSendingEvent as EmailSendingEvent,
     type EmailSentEvent as EmailSentEvent,
     type Event as Event,
+    type MessageAgentTriggeredEvent as MessageAgentTriggeredEvent,
+    type MessageReceivedEvent as MessageReceivedEvent,
+    type MessageSecurityFlaggedEvent as MessageSecurityFlaggedEvent,
+    type MessageSentEvent as MessageSentEvent,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookRetrieveResponse as WebhookRetrieveResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,

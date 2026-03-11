@@ -7,11 +7,11 @@ import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
 /**
- * Operations related to Domain management
+ * Add and verify sending and receiving domains. Manage DKIM records, SPF configuration, and enable inbound email routing.
  */
 export class Domains extends APIResource {
   /**
-   * Create a domain
+   * Add a domain to start configuring DNS records for sending or receiving emails.
    */
   create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
     return (
@@ -20,7 +20,8 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Retrieve a domain
+   * Returns a domain with its DNS record configuration and current verification
+   * status for each record.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
     return (
@@ -29,7 +30,8 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Update a domain
+   * Toggle sending, receiving, open tracking, or click tracking capabilities for a
+   * domain.
    */
   update(
     id: string,
@@ -44,7 +46,7 @@ export class Domains extends APIResource {
   }
 
   /**
-   * List all domains
+   * Returns all domains with their verification and capability status.
    */
   list(
     query: DomainListParams | null | undefined = {},
@@ -54,7 +56,8 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Delete a domain
+   * Remove a domain from the organization. Cannot be deleted if it has active
+   * sending or receiving.
    */
   delete(id: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
     return (
@@ -92,19 +95,44 @@ export interface DomainCreateResponse {
   openTracking: boolean;
 
   /**
+   * Whether receiving is enabled for the domain
+   */
+  receiving: boolean;
+
+  /**
+   * The receiving status for the domain
+   */
+  receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed';
+
+  /**
+   * The date of the latest receiving status change
+   */
+  receivingStatusAt: string;
+
+  /**
+   * The DNS records for your domain.
+   */
+  records: Array<DomainCreateResponse.Record>;
+
+  /**
    * The region of the domain data
    */
   region: 'eu-west-1';
 
   /**
-   * The records for your domain
+   * Whether sending is enabled for the domain
    */
-  sendingRecords: Array<DomainCreateResponse.SendingRecord>;
+  sending: boolean;
 
   /**
    * The sending status for the domain
    */
   sendingStatus: 'enabled' | 'disabled';
+
+  /**
+   * The date of the latest sending status change
+   */
+  sendingStatusAt: string;
 
   /**
    * The status for the domain
@@ -118,7 +146,7 @@ export interface DomainCreateResponse {
 }
 
 export namespace DomainCreateResponse {
-  export interface SendingRecord {
+  export interface Record {
     /**
      * The FQDN of the domain record
      */
@@ -128,7 +156,7 @@ export namespace DomainCreateResponse {
      * The group of group: "DKIM", "SPF", "MX" or "DMARC". It is useful to group the
      * records
      */
-    group: 'DKIM' | 'SPF' | 'MX' | 'DMARC';
+    group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING';
 
     /**
      * The name of the record.
@@ -202,19 +230,44 @@ export interface DomainRetrieveResponse {
   openTracking: boolean;
 
   /**
+   * Whether receiving is enabled for the domain
+   */
+  receiving: boolean;
+
+  /**
+   * The receiving status for the domain
+   */
+  receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed';
+
+  /**
+   * The date of the latest receiving status change
+   */
+  receivingStatusAt: string;
+
+  /**
+   * The DNS records for your domain.
+   */
+  records: Array<DomainRetrieveResponse.Record>;
+
+  /**
    * The region of the domain data
    */
   region: 'eu-west-1';
 
   /**
-   * The records for your domain
+   * Whether sending is enabled for the domain
    */
-  sendingRecords: Array<DomainRetrieveResponse.SendingRecord>;
+  sending: boolean;
 
   /**
    * The sending status for the domain
    */
   sendingStatus: 'enabled' | 'disabled';
+
+  /**
+   * The date of the latest sending status change
+   */
+  sendingStatusAt: string;
 
   /**
    * The status for the domain
@@ -228,7 +281,7 @@ export interface DomainRetrieveResponse {
 }
 
 export namespace DomainRetrieveResponse {
-  export interface SendingRecord {
+  export interface Record {
     /**
      * The FQDN of the domain record
      */
@@ -238,7 +291,7 @@ export namespace DomainRetrieveResponse {
      * The group of group: "DKIM", "SPF", "MX" or "DMARC". It is useful to group the
      * records
      */
-    group: 'DKIM' | 'SPF' | 'MX' | 'DMARC';
+    group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING';
 
     /**
      * The name of the record.
@@ -319,6 +372,11 @@ export interface DomainListResponse {
   name: string;
 
   /**
+   * The receiving status for the domain
+   */
+  receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed';
+
+  /**
    * The region of the domain data
    */
   region: 'eu-west-1';
@@ -346,6 +404,16 @@ export interface DomainCreateParams {
    * The name of the domain to send e-mails'
    */
   name: string;
+
+  /**
+   * Enable receiving
+   */
+  receiving?: boolean;
+
+  /**
+   * Enable sending
+   */
+  sending?: boolean;
 }
 
 export interface DomainUpdateParams {
@@ -358,6 +426,16 @@ export interface DomainUpdateParams {
    * Emit an event for each recipient opens an email their email client
    */
   openTracking?: boolean;
+
+  /**
+   * Enable or disable receiving
+   */
+  receiving?: boolean;
+
+  /**
+   * Enable or disable sending
+   */
+  sending?: boolean;
 }
 
 export interface DomainListParams extends CursorPageParams {}

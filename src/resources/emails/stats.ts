@@ -5,11 +5,11 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
 /**
- * Operations related to Email management
+ * Send transactional emails, retrieve sending history, and track delivery status per message.
  */
 export class Stats extends APIResource {
   /**
-   * Retrieve email statistics
+   * Returns aggregated daily sending statistics for the current period.
    */
   list(options?: RequestOptions): APIPromise<StatListResponse> {
     return (this._client.get('/emails/stats', options) as APIPromise<{ data: StatListResponse }>)._thenUnwrap(
@@ -113,6 +113,16 @@ export namespace StatListResponse {
      * Number of emails sent
      */
     sent: number;
+
+    /**
+     * Number of unique emails clicked
+     */
+    uniqueClicked: number;
+
+    /**
+     * Number of unique emails opened
+     */
+    uniqueOpened: number;
   }
 }
 

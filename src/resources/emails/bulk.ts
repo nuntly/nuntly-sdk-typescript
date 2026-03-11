@@ -7,11 +7,11 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Operations related to Email management
+ * Send transactional emails, retrieve sending history, and track delivery status per message.
  */
 export class Bulk extends APIResource {
   /**
-   * Retrieve bulk emails
+   * Returns the delivery status of all emails submitted in a bulk request.
    */
   retrieve(bulkID: string, options?: RequestOptions): APIPromise<BulkRetrieveResponse> {
     return (
@@ -20,7 +20,8 @@ export class Bulk extends APIResource {
   }
 
   /**
-   * Send bulk emails.
+   * Send up to 100 emails in a single request. Use `fallback` to set default values
+   * shared across all messages.
    */
   send(body: BulkSendParams, options?: RequestOptions): APIPromise<BulkSendResponse> {
     return (

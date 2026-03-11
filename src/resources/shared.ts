@@ -23,7 +23,12 @@ export type EventType =
   | 'email.failed'
   | 'email.renderingFailed'
   | 'email.subscribed'
-  | 'email.unsubscribed';
+  | 'email.unsubscribed'
+  | 'message.received'
+  | 'message.security.flagged'
+  | 'message.agent.triggered'
+  | 'message.sent'
+  | 'message.rejected';
 
 export declare namespace Shared {
   export { type EventType as EventType };

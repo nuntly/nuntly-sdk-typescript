@@ -4,6 +4,7 @@ export { Bulk, type BulkRetrieveResponse, type BulkSendResponse, type BulkSendPa
 export { Content, type ContentRetrieveResponse } from './content';
 export {
   Emails,
+  type EmailContentItem,
   type Status,
   type Tag,
   type EmailRetrieveResponse,

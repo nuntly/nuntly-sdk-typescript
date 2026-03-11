@@ -12,6 +12,7 @@ export {
   type APIKeyListParams,
   type APIKeyListResponsesCursorPage,
 } from './api-keys';
+export { Agents, type AgentMemory } from './agents/agents';
 export {
   Domains,
   type DomainCreateResponse,
@@ -26,6 +27,7 @@ export {
 } from './domains';
 export {
   Emails,
+  type EmailContentItem,
   type Status,
   type Tag,
   type EmailRetrieveResponse,
@@ -37,6 +39,43 @@ export {
   type EmailListResponsesCursorPage,
 } from './emails/emails';
 export {
+  Inboxes,
+  type Inbox,
+  type InboxUpdateResponse,
+  type InboxDeleteResponse,
+  type InboxSendResponse,
+  type InboxCreateParams,
+  type InboxUpdateParams,
+  type InboxListParams,
+  type InboxSendParams,
+  type InboxesCursorPage,
+} from './inboxes/inboxes';
+export {
+  Messages,
+  type Message,
+  type MessageAttachment,
+  type MessageContent,
+  type MessageContentItem,
+  type MessageDetail,
+  type MessageForwardResponse,
+  type MessageReplyResponse,
+  type MessageListParams,
+  type MessageForwardParams,
+  type MessageReplyParams,
+  type MessagesCursorPage,
+} from './messages/messages';
+export {
+  Namespaces,
+  type Namespace,
+  type NamespaceDetail,
+  type NamespaceUpdateResponse,
+  type NamespaceDeleteResponse,
+  type NamespaceCreateParams,
+  type NamespaceUpdateParams,
+  type NamespaceListParams,
+  type NamespacesCursorPage,
+} from './namespaces/namespaces';
+export {
   Organizations,
   type OrganizationRetrieveResponse,
   type OrganizationListResponse,
@@ -44,6 +83,13 @@ export {
   type OrganizationListResponsesCursorPage,
 } from './organizations/organizations';
 export { Shared, type EventType } from './shared';
+export {
+  Threads,
+  type Thread,
+  type ThreadUpdateResponse,
+  type ThreadUpdateParams,
+  type ThreadsCursorPage,
+} from './threads/threads';
 export {
   Webhooks,
   type EmailBouncedEvent,
@@ -60,6 +106,10 @@ export {
   type EmailSendingEvent,
   type EmailSentEvent,
   type Event,
+  type MessageAgentTriggeredEvent,
+  type MessageReceivedEvent,
+  type MessageSecurityFlaggedEvent,
+  type MessageSentEvent,
   type WebhookCreateResponse,
   type WebhookRetrieveResponse,
   type WebhookUpdateResponse,
