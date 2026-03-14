@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.1 (2026-03-14)
+
+Full Changelog: [v0.14.0...v0.14.1](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.14.0...v0.14.1)
+
+### Chores
+
+* **internal:** bump @modelcontextprotocol/sdk, @hono/node-server, and minimatch ([badaa40](https://github.com/nuntly/nuntly-sdk-typescript/commit/badaa401d583d53b38594ded0a0d2e664bfb915f))
+* **internal:** make generated MCP servers compatible with Cloudflare worker environments ([ebfc4a9](https://github.com/nuntly/nuntly-sdk-typescript/commit/ebfc4a924e8cd6e0c232b3736fc71134bf050b82))
+* **internal:** support x-stainless-mcp-client-envs header in MCP servers ([333d88f](https://github.com/nuntly/nuntly-sdk-typescript/commit/333d88f5d6ccfdbb32cc59e1aacdf66a57b2afc8))
+
 ## 0.14.0 (2026-03-11)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.13.0...v0.14.0)
