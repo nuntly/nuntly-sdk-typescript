@@ -77,13 +77,13 @@ describe('resource emails', () => {
       ],
       bcc: ['string'],
       cc: ['string'],
-      context: { foo: 'string' },
       headers: { foo: 'string' },
       html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
       replyTo: ['string'],
       scheduledAt: 'scheduledAt',
       tags: [{ name: 'category', value: 'transactional' }],
       text: 'Thank you for signing up! Please verify your email address.',
+      variables: { foo: 'string' },
     });
   });
 });

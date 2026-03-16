@@ -103,11 +103,6 @@ export namespace BulkSendParams {
     cc?: Array<string> | string;
 
     /**
-     * The context for the template
-     */
-    context?: { [key: string]: string | number | boolean | null };
-
-    /**
      * The e-mail address of the sender
      */
     from?: string;
@@ -152,6 +147,11 @@ export namespace BulkSendParams {
      * The primary recipient(s) of the email
      */
     to?: Array<string> | string;
+
+    /**
+     * The variables for the template
+     */
+    variables?: { [key: string]: string | number | boolean | null };
   }
 
   /**
@@ -169,11 +169,6 @@ export namespace BulkSendParams {
     cc?: Array<string> | string;
 
     /**
-     * The context for the template
-     */
-    context?: { [key: string]: string | number | boolean | null };
-
-    /**
      * The e-mail address of the sender
      */
     from?: string;
@@ -218,6 +213,11 @@ export namespace BulkSendParams {
      * The primary recipient(s) of the email
      */
     to?: Array<string> | string;
+
+    /**
+     * The variables for the template
+     */
+    variables?: { [key: string]: string | number | boolean | null };
   }
 }
 
