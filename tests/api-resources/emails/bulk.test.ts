@@ -36,7 +36,6 @@ describe('resource bulk', () => {
         {
           bcc: ['string'],
           cc: ['string'],
-          context: { foo: 'string' },
           from: 'Tomlinson AI <ray@info.tomlinson.ai>',
           headers: { foo: 'string' },
           html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
@@ -46,12 +45,12 @@ describe('resource bulk', () => {
           tags: [{ name: 'category', value: 'transactional' }],
           text: 'Thank you for signing up! Please verify your email address.',
           to: 'brian67@gmail.com',
+          variables: { foo: 'string' },
         },
       ],
       fallback: {
         bcc: ['string'],
         cc: ['string'],
-        context: { foo: 'string' },
         from: 'Tomlinson AI <ray@info.tomlinson.ai>',
         headers: { foo: 'string' },
         html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
@@ -61,6 +60,7 @@ describe('resource bulk', () => {
         tags: [{ name: 'category', value: 'transactional' }],
         text: 'Thank you for signing up! Please verify your email address.',
         to: 'brian67@gmail.com',
+        variables: { foo: 'string' },
       },
     });
   });
