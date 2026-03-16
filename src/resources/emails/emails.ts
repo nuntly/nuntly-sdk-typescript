@@ -175,11 +175,6 @@ export interface EmailRetrieveResponse {
   cc?: Array<string> | string;
 
   /**
-   * The context for the template
-   */
-  context?: { [key: string]: string | number | boolean | null };
-
-  /**
    * The headers to add to the email
    */
   headers?: { [key: string]: string };
@@ -209,6 +204,11 @@ export interface EmailRetrieveResponse {
    * The tags to add to the email
    */
   tags?: Array<Tag>;
+
+  /**
+   * The variables for the template
+   */
+  variables?: { [key: string]: string | number | boolean | null };
 }
 
 export namespace EmailRetrieveResponse {
@@ -325,11 +325,6 @@ export interface EmailSendParams {
   cc?: Array<string> | string;
 
   /**
-   * The context for the template
-   */
-  context?: { [key: string]: string | number | boolean | null };
-
-  /**
    * The headers to add to the email
    */
   headers?: { [key: string]: string };
@@ -359,6 +354,11 @@ export interface EmailSendParams {
    * The plaintext version of the email
    */
   text?: string;
+
+  /**
+   * The variables for the template
+   */
+  variables?: { [key: string]: string | number | boolean | null };
 }
 
 export namespace EmailSendParams {
