@@ -127,7 +127,7 @@ export interface DomainCreateResponse {
   /**
    * The sending status for the domain
    */
-  sendingStatus: 'enabled' | 'disabled';
+  sendingStatus: 'enabled' | 'disabled' | 'paused';
 
   /**
    * The date of the latest sending status change
@@ -262,7 +262,7 @@ export interface DomainRetrieveResponse {
   /**
    * The sending status for the domain
    */
-  sendingStatus: 'enabled' | 'disabled';
+  sendingStatus: 'enabled' | 'disabled' | 'paused';
 
   /**
    * The date of the latest sending status change
@@ -384,7 +384,7 @@ export interface DomainListResponse {
   /**
    * The sending status for the domain
    */
-  sendingStatus: 'enabled' | 'disabled';
+  sendingStatus: 'enabled' | 'disabled' | 'paused';
 
   /**
    * The status for the domain

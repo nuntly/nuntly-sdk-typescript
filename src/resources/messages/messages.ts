@@ -304,6 +304,11 @@ export interface MessageForwardResponse {
   messageId: string;
 
   /**
+   * The subject of the message.
+   */
+  subject: string;
+
+  /**
    * The id of the thread.
    */
   threadId: string;
@@ -319,6 +324,11 @@ export interface MessageReplyResponse {
    * The RFC 5322 Message-ID header.
    */
   messageId: string;
+
+  /**
+   * The subject of the message.
+   */
+  subject: string;
 
   /**
    * The id of the thread.
