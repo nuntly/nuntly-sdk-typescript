@@ -158,6 +158,11 @@ export interface InboxSendResponse {
   messageId: string;
 
   /**
+   * The subject of the message.
+   */
+  subject: string;
+
+  /**
    * The id of the thread.
    */
   threadId: string;
