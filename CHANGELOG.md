@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.16.0 (2026-03-24)
+
+Full Changelog: [v0.15.0...v0.16.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.15.0...v0.16.0)
+
+### Features
+
+* **api:** add sending status 'paused' for the domain ([217ef19](https://github.com/nuntly/nuntly-sdk-typescript/commit/217ef194126b107905d0f35e65890aae1e188886))
+
+
+### Chores
+
+* **internal:** fix MCP server TS errors that occur with required client options ([a58fae6](https://github.com/nuntly/nuntly-sdk-typescript/commit/a58fae68ccc764e5c7f6b4e76d4aec1df4a0141a))
+* **internal:** support x-stainless-mcp-client-permissions headers in MCP servers ([4333ffa](https://github.com/nuntly/nuntly-sdk-typescript/commit/4333ffa783588fa1f21ddfd1a4f6c4945069f372))
+* **internal:** tweak CI branches ([68e84d9](https://github.com/nuntly/nuntly-sdk-typescript/commit/68e84d9dde4800fbdea48ad31005dda67fe83c1d))
+* **internal:** update gitignore ([6f86011](https://github.com/nuntly/nuntly-sdk-typescript/commit/6f86011eee0de65a285fcf2b1d973747b6f695d5))
+* **tests:** bump steady to v0.19.4 ([915d332](https://github.com/nuntly/nuntly-sdk-typescript/commit/915d332dfa205c205f036cc5ccb61b57d8bef458))
+* **tests:** bump steady to v0.19.5 ([27a248e](https://github.com/nuntly/nuntly-sdk-typescript/commit/27a248e61df36e895e177e96131b6dab15dc7226))
+* **tests:** bump steady to v0.19.6 ([d673017](https://github.com/nuntly/nuntly-sdk-typescript/commit/d673017f689b2760ef44d6788845c3fc390a9a8b))
+
+
+### Refactors
+
+* **tests:** switch from prism to steady ([aabf794](https://github.com/nuntly/nuntly-sdk-typescript/commit/aabf794f78e7df0a5bc4c30a6603bec602d6ecd4))
+
 ## 0.15.0 (2026-03-16)
 
 Full Changelog: [v0.14.0...v0.15.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.14.0...v0.15.0)
