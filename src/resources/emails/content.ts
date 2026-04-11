@@ -13,6 +13,13 @@ export class Content extends APIResource {
   /**
    * Returns presigned URLs to download the HTML, plain-text, and raw MIME source of
    * a sent email.
+   *
+   * @example
+   * ```ts
+   * const content = await client.emails.content.retrieve(
+   *   'em_01ka8k8s80gvx9604cn9am5st4',
+   * );
+   * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<ContentRetrieveResponse> {
     return (

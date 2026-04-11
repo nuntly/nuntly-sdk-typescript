@@ -25,6 +25,13 @@ export class Emails extends APIResource {
 
   /**
    * Returns an email with its current delivery status and metadata.
+   *
+   * @example
+   * ```ts
+   * const email = await client.emails.retrieve(
+   *   'em_01ka8k8s80gvx9604cn9am5st4',
+   * );
+   * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
     return (
@@ -34,6 +41,14 @@ export class Emails extends APIResource {
 
   /**
    * Returns sent emails ordered by submission date, newest first.
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const emailListResponse of client.emails.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query: EmailListParams | null | undefined = {},
@@ -45,6 +60,13 @@ export class Emails extends APIResource {
   /**
    * Cancel a scheduled email before delivery. Only emails with `scheduled` status
    * can be cancelled.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.cancel(
+   *   'em_01ka8k8s80gvx9604cn9am5st4',
+   * );
+   * ```
    */
   cancel(id: string, options?: RequestOptions): APIPromise<EmailCancelResponse> {
     return (
@@ -55,6 +77,15 @@ export class Emails extends APIResource {
   /**
    * Send transactional emails through Nuntly platform. It supports HTML and
    * plain-text emails, attachments, labels, custom headers and scheduling.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.send({
+   *   from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+   *   subject: 'Verify your email address',
+   *   to: 'brian67@gmail.com',
+   * });
+   * ```
    */
   send(body: EmailSendParams, options?: RequestOptions): APIPromise<EmailSendResponse> {
     return (
