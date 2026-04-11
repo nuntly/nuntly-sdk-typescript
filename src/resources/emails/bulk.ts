@@ -12,6 +12,13 @@ import { path } from '../../internal/utils/path';
 export class Bulk extends APIResource {
   /**
    * Returns the delivery status of all emails submitted in a bulk request.
+   *
+   * @example
+   * ```ts
+   * const bulk = await client.emails.bulk.retrieve(
+   *   'blk_01ka8k8s80gvx9604cn9am5st4',
+   * );
+   * ```
    */
   retrieve(bulkID: string, options?: RequestOptions): APIPromise<BulkRetrieveResponse> {
     return (
@@ -22,6 +29,13 @@ export class Bulk extends APIResource {
   /**
    * Send up to 100 emails in a single request. Use `fallback` to set default values
    * shared across all messages.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.bulk.send({
+   *   emails: [{}],
+   * });
+   * ```
    */
   send(body: BulkSendParams, options?: RequestOptions): APIPromise<BulkSendResponse> {
     return (
