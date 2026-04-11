@@ -10,6 +10,11 @@ import { RequestOptions } from '../../internal/request-options';
 export class Stats extends APIResource {
   /**
    * Returns aggregated daily sending statistics for the current period.
+   *
+   * @example
+   * ```ts
+   * const stats = await client.emails.stats.list();
+   * ```
    */
   list(options?: RequestOptions): APIPromise<StatListResponse> {
     return (this._client.get('/emails/stats', options) as APIPromise<{ data: StatListResponse }>)._thenUnwrap(

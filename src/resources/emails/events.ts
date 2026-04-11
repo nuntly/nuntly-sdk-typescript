@@ -13,6 +13,13 @@ export class Events extends APIResource {
   /**
    * Returns the full delivery event history for an email (sent, delivered, opened,
    * bounced, etc.).
+   *
+   * @example
+   * ```ts
+   * const events = await client.emails.events.list(
+   *   'em_01ka8k8s80gvx9604cn9am5st4',
+   * );
+   * ```
    */
   list(id: string, options?: RequestOptions): APIPromise<EventListResponse> {
     return (
