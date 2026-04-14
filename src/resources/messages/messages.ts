@@ -27,6 +27,21 @@ export class Messages extends APIResource {
   }
 
   /**
+   * Update message labels. Only available for messages in user-created inboxes.
+   */
+  update(
+    messageID: string,
+    body: MessageUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<MessageUpdateResponse> {
+    return (
+      this._client.patch(path`/messages/${messageID}`, { body, ...options }) as APIPromise<{
+        data: MessageUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
+  }
+
+  /**
    * List all received messages across inboxes.
    */
   list(
@@ -105,6 +120,11 @@ export interface Message {
    * The id of the inbox, or null if routed to the default catch-all.
    */
   inboxId: string | null;
+
+  /**
+   * The message labels.
+   */
+  labels: Array<string>;
 
   /**
    * The email Message-ID header.
@@ -257,6 +277,11 @@ export interface MessageDetail {
   inboxId: string | null;
 
   /**
+   * The message labels.
+   */
+  labels: Array<string>;
+
+  /**
    * The email Message-ID header.
    */
   messageId: string;
@@ -290,6 +315,13 @@ export interface MessageDetail {
    * The recipient addresses.
    */
   to: Array<string>;
+}
+
+export interface MessageUpdateResponse {
+  /**
+   * The id of the resource.
+   */
+  id: string;
 }
 
 export interface MessageForwardResponse {
@@ -334,6 +366,18 @@ export interface MessageReplyResponse {
    * The id of the thread.
    */
   threadId: string;
+}
+
+export interface MessageUpdateParams {
+  /**
+   * Labels to add to the message.
+   */
+  addLabels?: Array<string>;
+
+  /**
+   * Labels to remove from the message.
+   */
+  removeLabels?: Array<string>;
 }
 
 export interface MessageListParams extends CursorPageParams {
@@ -387,9 +431,11 @@ export declare namespace Messages {
     type MessageContent as MessageContent,
     type MessageContentItem as MessageContentItem,
     type MessageDetail as MessageDetail,
+    type MessageUpdateResponse as MessageUpdateResponse,
     type MessageForwardResponse as MessageForwardResponse,
     type MessageReplyResponse as MessageReplyResponse,
     type MessagesCursorPage as MessagesCursorPage,
+    type MessageUpdateParams as MessageUpdateParams,
     type MessageListParams as MessageListParams,
     type MessageForwardParams as MessageForwardParams,
     type MessageReplyParams as MessageReplyParams,

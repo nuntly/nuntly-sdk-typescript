@@ -57,8 +57,10 @@ export {
   type MessageContent,
   type MessageContentItem,
   type MessageDetail,
+  type MessageUpdateResponse,
   type MessageForwardResponse,
   type MessageReplyResponse,
+  type MessageUpdateParams,
   type MessageListParams,
   type MessageForwardParams,
   type MessageReplyParams,
@@ -87,6 +89,7 @@ export {
   Threads,
   type Thread,
   type ThreadUpdateResponse,
+  type ThreadRetrieveParams,
   type ThreadUpdateParams,
   type ThreadsCursorPage,
 } from './threads/threads';

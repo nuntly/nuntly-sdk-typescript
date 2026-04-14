@@ -227,6 +227,12 @@ export const sdkMethods: SdkMethod[] = [
     httpPath: '/messages/{messageId}',
   },
   {
+    clientCallName: 'client.messages.update',
+    fullyQualifiedName: 'messages.update',
+    httpMethod: 'patch',
+    httpPath: '/messages/{messageId}',
+  },
+  {
     clientCallName: 'client.messages.list',
     fullyQualifiedName: 'messages.list',
     httpMethod: 'get',

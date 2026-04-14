@@ -59,6 +59,11 @@ export interface MessageListResponse {
   from: string;
 
   /**
+   * The message labels.
+   */
+  labels: Array<string>;
+
+  /**
    * The email Message-ID header.
    */
   messageId: string;

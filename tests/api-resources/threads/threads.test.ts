@@ -19,6 +19,17 @@ describe('resource threads', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.threads.retrieve(
+        'thr_01kabn43yqyxn2bx4ve84mczd3',
+        { markRead: 'markRead' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
+  });
+
   test('update', async () => {
     const responsePromise = client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3');
     const rawResponse = await responsePromise.asResponse();
@@ -36,9 +47,9 @@ describe('resource threads', () => {
       client.threads.update(
         'thr_01kabn43yqyxn2bx4ve84mczd3',
         {
+          addLabels: ['x'],
           agentId: 'agentId',
-          isRead: true,
-          isSpam: true,
+          removeLabels: ['x'],
         },
         { path: '/_stainless_unknown_path' },
       ),
