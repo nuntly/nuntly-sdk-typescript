@@ -10,6 +10,7 @@ export {
   Threads,
   type Thread,
   type ThreadUpdateResponse,
+  type ThreadRetrieveParams,
   type ThreadUpdateParams,
   type ThreadsCursorPage,
 } from './threads';

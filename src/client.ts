@@ -81,6 +81,8 @@ import {
   MessageListParams,
   MessageReplyParams,
   MessageReplyResponse,
+  MessageUpdateParams,
+  MessageUpdateResponse,
   Messages,
   MessagesCursorPage,
 } from './resources/messages/messages';
@@ -102,7 +104,13 @@ import {
   OrganizationRetrieveResponse,
   Organizations,
 } from './resources/organizations/organizations';
-import { Thread, ThreadUpdateParams, ThreadUpdateResponse, Threads } from './resources/threads/threads';
+import {
+  Thread,
+  ThreadRetrieveParams,
+  ThreadUpdateParams,
+  ThreadUpdateResponse,
+  Threads,
+} from './resources/threads/threads';
 import {
   EmailBouncedEvent,
   EmailClickedEvent,
@@ -990,6 +998,7 @@ export declare namespace Nuntly {
     Threads as Threads,
     type Thread as Thread,
     type ThreadUpdateResponse as ThreadUpdateResponse,
+    type ThreadRetrieveParams as ThreadRetrieveParams,
     type ThreadUpdateParams as ThreadUpdateParams,
   };
 
@@ -1000,9 +1009,11 @@ export declare namespace Nuntly {
     type MessageContent as MessageContent,
     type MessageContentItem as MessageContentItem,
     type MessageDetail as MessageDetail,
+    type MessageUpdateResponse as MessageUpdateResponse,
     type MessageForwardResponse as MessageForwardResponse,
     type MessageReplyResponse as MessageReplyResponse,
     type MessagesCursorPage as MessagesCursorPage,
+    type MessageUpdateParams as MessageUpdateParams,
     type MessageListParams as MessageListParams,
     type MessageForwardParams as MessageForwardParams,
     type MessageReplyParams as MessageReplyParams,
