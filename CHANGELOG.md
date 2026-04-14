@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.17.0 (2026-04-14)
+
+Full Changelog: [v0.16.0...v0.17.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.16.0...v0.17.0)
+
+### Features
+
+* **api:** implement label ([23cb29d](https://github.com/nuntly/nuntly-sdk-typescript/commit/23cb29dbe8a4fb405673454e17ceb57efc4b41d4))
+
+
+### Bug Fixes
+
+* **internal:** gitignore generated `oidc` dir ([3e218ff](https://github.com/nuntly/nuntly-sdk-typescript/commit/3e218ff6f163d54067610a40f59ace6c48ae5bd6))
+
+
+### Chores
+
+* **ci:** escape input path in publish-npm workflow ([0863fd7](https://github.com/nuntly/nuntly-sdk-typescript/commit/0863fd76fff4af2bb68564707438afc3c309912d))
+* **ci:** skip lint on metadata-only changes ([2ce7ca3](https://github.com/nuntly/nuntly-sdk-typescript/commit/2ce7ca361af86db9925938c892f073bdd082898c))
+* **internal:** codegen related update ([993358b](https://github.com/nuntly/nuntly-sdk-typescript/commit/993358b99c0bcdd25713c7e94801464c5ff11d63))
+* **internal:** codegen related update ([294c3ba](https://github.com/nuntly/nuntly-sdk-typescript/commit/294c3bad86ed1d581ba39547b87db9a422baaac6))
+* **internal:** codegen related update ([8d144b8](https://github.com/nuntly/nuntly-sdk-typescript/commit/8d144b8c473e4a8b39010e5110f8037c5ccfad5e))
+* **internal:** fix MCP docker image builds in yarn projects ([2fcf163](https://github.com/nuntly/nuntly-sdk-typescript/commit/2fcf16311917fe8c1e88973753a1cc4a505892a7))
+* **internal:** fix MCP server import ordering ([bdcdd26](https://github.com/nuntly/nuntly-sdk-typescript/commit/bdcdd261b2146774234eed55bd767f314aa1616c))
+* **internal:** improve local docs search for MCP servers ([488e3fb](https://github.com/nuntly/nuntly-sdk-typescript/commit/488e3fbf2e791869c4e7e63d6803d8b088ae57e3))
+* **internal:** improve local docs search for MCP servers ([615d3f9](https://github.com/nuntly/nuntly-sdk-typescript/commit/615d3f9030f4bfb115bc4ec2a50a2b16a36ce225))
+* **internal:** show error causes in MCP servers when running in local mode ([376cef8](https://github.com/nuntly/nuntly-sdk-typescript/commit/376cef81a256ca403673f955aa3002ca9b9d46e7))
+* **internal:** support custom-instructions-path flag in MCP servers ([6cec2d9](https://github.com/nuntly/nuntly-sdk-typescript/commit/6cec2d9736237843ba3d52f8cc230592d8385872))
+* **internal:** support local docs search in MCP servers ([c44ba9d](https://github.com/nuntly/nuntly-sdk-typescript/commit/c44ba9dfd7d9cbd921f5e994ef006e6f4e59205b))
+* **internal:** support type annotations when running MCP in local execution mode ([806ae49](https://github.com/nuntly/nuntly-sdk-typescript/commit/806ae49b65e838866a7164502e4e30ad326b306b))
+* **internal:** update multipart form array serialization ([0ccddc8](https://github.com/nuntly/nuntly-sdk-typescript/commit/0ccddc811a5edd78a7e4c70e6deb804dd7663012))
+* **internal:** use link instead of file in MCP server package.json files ([72423ee](https://github.com/nuntly/nuntly-sdk-typescript/commit/72423eef8ed71bfca446ce36eff3d30c1181ff1a))
+* **mcp-server:** add support for session id, forward client info ([6976d07](https://github.com/nuntly/nuntly-sdk-typescript/commit/6976d071407a4495c8094a970d751b37275ed3e1))
+* **mcp-server:** increase local docs search result count from 5 to 10 ([50f0728](https://github.com/nuntly/nuntly-sdk-typescript/commit/50f07284281e12626377eff05d868f0708163e69))
+* **mcp-server:** log client info ([6dbae95](https://github.com/nuntly/nuntly-sdk-typescript/commit/6dbae955395cea5551d148fdeffc37d01b487eb6))
+* **tests:** bump steady to v0.19.7 ([592d51d](https://github.com/nuntly/nuntly-sdk-typescript/commit/592d51d9cb4dd47eaf5d544f4d1afbf882072843))
+* **tests:** bump steady to v0.20.1 ([a5a4aa9](https://github.com/nuntly/nuntly-sdk-typescript/commit/a5a4aa9db02d2d8c6075ee529a366bdc327a468b))
+* **tests:** bump steady to v0.20.2 ([bc0528e](https://github.com/nuntly/nuntly-sdk-typescript/commit/bc0528eda877342690f881954f5f9eec0e65ff17))
+
+
+### Documentation
+
+* update examples ([2ec8654](https://github.com/nuntly/nuntly-sdk-typescript/commit/2ec86544a48f5d4c9b2ee52d640bc93f54e9ac6a))
+
 ## 0.16.0 (2026-03-24)
 
 Full Changelog: [v0.15.0...v0.16.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.15.0...v0.16.0)
