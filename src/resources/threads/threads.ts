@@ -15,16 +15,22 @@ export class Threads extends APIResource {
   messages: MessagesAPI.Messages = new MessagesAPI.Messages(this._client);
 
   /**
-   * Retrieve a thread. Auto-marks as read.
+   * Retrieve a thread. Pass ?markRead=true to automatically remove the unread label
+   * from all messages.
    */
-  retrieve(threadID: string, options?: RequestOptions): APIPromise<Thread> {
+  retrieve(
+    threadID: string,
+    query: ThreadRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Thread> {
     return (
-      this._client.get(path`/threads/${threadID}`, options) as APIPromise<{ data: Thread }>
+      this._client.get(path`/threads/${threadID}`, { query, ...options }) as APIPromise<{ data: Thread }>
     )._thenUnwrap((obj) => obj.data);
   }
 
   /**
-   * Update thread properties (read status, spam, agent).
+   * Update thread labels and agent assignment. Label operations apply to all
+   * messages in the thread.
    */
   update(
     threadID: string,
@@ -73,14 +79,9 @@ export interface Thread {
   inboxId: string;
 
   /**
-   * Whether the thread has been read.
+   * Aggregated labels from all messages in the thread.
    */
-  isRead: boolean;
-
-  /**
-   * Whether the thread is marked as spam.
-   */
-  isSpam: boolean;
+  labels: Array<string>;
 
   /**
    * The timestamp of the most recent message.
@@ -110,21 +111,29 @@ export interface ThreadUpdateResponse {
   id: string;
 }
 
+export interface ThreadRetrieveParams {
+  /**
+   * Set to "true" to automatically remove the unread label from all messages in the
+   * thread.
+   */
+  markRead?: string;
+}
+
 export interface ThreadUpdateParams {
+  /**
+   * Labels to add to all messages in the thread.
+   */
+  addLabels?: Array<string>;
+
   /**
    * The AI agent identifier.
    */
   agentId?: string | null;
 
   /**
-   * Mark the thread as read or unread.
+   * Labels to remove from all messages in the thread.
    */
-  isRead?: boolean;
-
-  /**
-   * Mark the thread as spam or not spam.
-   */
-  isSpam?: boolean;
+  removeLabels?: Array<string>;
 }
 
 Threads.Messages = Messages;
@@ -133,6 +142,7 @@ export declare namespace Threads {
   export {
     type Thread as Thread,
     type ThreadUpdateResponse as ThreadUpdateResponse,
+    type ThreadRetrieveParams as ThreadRetrieveParams,
     type ThreadUpdateParams as ThreadUpdateParams,
   };
 

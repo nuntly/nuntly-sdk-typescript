@@ -29,14 +29,11 @@ export class Threads extends APIResource {
 
 export interface ThreadListParams extends CursorPageParams {
   /**
-   * Filter by read status.
+   * Comma-separated labels to filter by (AND logic). Threads with spam/trash are
+   * excluded by default unless explicitly requested via ?labels=spam or
+   * ?labels=trash.
    */
-  isRead?: boolean;
-
-  /**
-   * Filter by spam status.
-   */
-  isSpam?: boolean;
+  labels?: string;
 }
 
 export declare namespace Threads {

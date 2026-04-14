@@ -19,6 +19,28 @@ describe('resource messages', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('update', async () => {
+    const responsePromise = client.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.messages.update(
+        'imsg_01kabn43yqyxn2bx4ve84mczd3',
+        { addLabels: ['x'], removeLabels: ['x'] },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
+  });
+
   test('list', async () => {
     const responsePromise = client.messages.list();
     const rawResponse = await responsePromise.asResponse();

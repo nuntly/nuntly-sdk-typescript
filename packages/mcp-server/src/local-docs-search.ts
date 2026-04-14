@@ -1176,17 +1176,11 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     description: 'List threads in an inbox.',
     stainlessPath: '(resource) inboxes.threads > (method) list',
     qualified: 'client.inboxes.threads.list',
-    params: [
-      'inboxId: string;',
-      'cursor?: string;',
-      'isRead?: boolean;',
-      'isSpam?: boolean;',
-      'limit?: number;',
-    ],
+    params: ['inboxId: string;', 'cursor?: string;', 'labels?: string;', 'limit?: number;'],
     response:
-      '{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; isRead: boolean; isSpam: boolean; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }',
+      '{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }',
     markdown:
-      "## list\n\n`client.inboxes.threads.list(inboxId: string, cursor?: string, isRead?: boolean, isSpam?: boolean, limit?: number): { id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; isRead: boolean; isSpam: boolean; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n**get** `/inboxes/{inboxId}/threads`\n\nList threads in an inbox.\n\n### Parameters\n\n- `inboxId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `isRead?: boolean`\n  Filter by read status.\n\n- `isSpam?: boolean`\n  Filter by spam status.\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; isRead: boolean; isSpam: boolean; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `inboxId: string`\n  - `isRead: boolean`\n  - `isSpam: boolean`\n  - `lastMessageAt: string`\n  - `messageCount: number`\n  - `subject: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const thread of client.inboxes.threads.list('ibx_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(thread);\n}\n```",
+      "## list\n\n`client.inboxes.threads.list(inboxId: string, cursor?: string, labels?: string, limit?: number): { id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n**get** `/inboxes/{inboxId}/threads`\n\nList threads in an inbox.\n\n### Parameters\n\n- `inboxId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `labels?: string`\n  Comma-separated labels to filter by (AND logic). Threads with spam/trash are excluded by default unless explicitly requested via ?labels=spam or ?labels=trash.\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `lastMessageAt: string`\n  - `messageCount: number`\n  - `subject: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const thread of client.inboxes.threads.list('ibx_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(thread);\n}\n```",
     perLanguage: {
       go: {
         method: 'client.Inboxes.Threads.List',
@@ -1214,19 +1208,20 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     endpoint: '/threads/{threadId}',
     httpMethod: 'get',
     summary: 'Retrieve Thread',
-    description: 'Retrieve a thread. Auto-marks as read.',
+    description:
+      'Retrieve a thread. Pass ?markRead=true to automatically remove the unread label from all messages.',
     stainlessPath: '(resource) threads > (method) retrieve',
     qualified: 'client.threads.retrieve',
-    params: ['threadId: string;'],
+    params: ['threadId: string;', 'markRead?: string;'],
     response:
-      '{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; isRead: boolean; isSpam: boolean; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }',
+      '{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }',
     markdown:
-      "## retrieve\n\n`client.threads.retrieve(threadId: string): { id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; isRead: boolean; isSpam: boolean; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n**get** `/threads/{threadId}`\n\nRetrieve a thread. Auto-marks as read.\n\n### Parameters\n\n- `threadId: string`\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; isRead: boolean; isSpam: boolean; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `inboxId: string`\n  - `isRead: boolean`\n  - `isSpam: boolean`\n  - `lastMessageAt: string`\n  - `messageCount: number`\n  - `subject: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst thread = await client.threads.retrieve('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread);\n```",
+      "## retrieve\n\n`client.threads.retrieve(threadId: string, markRead?: string): { id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n**get** `/threads/{threadId}`\n\nRetrieve a thread. Pass ?markRead=true to automatically remove the unread label from all messages.\n\n### Parameters\n\n- `threadId: string`\n\n- `markRead?: string`\n  Set to \"true\" to automatically remove the unread label from all messages in the thread.\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `lastMessageAt: string`\n  - `messageCount: number`\n  - `subject: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst thread = await client.threads.retrieve('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread);\n```",
     perLanguage: {
       go: {
         method: 'client.Threads.Get',
         example:
-          'package main\n\nimport (\n\t"context"\n\t"fmt"\n\n\t"github.com/stainless-sdks/nuntly-go"\n\t"github.com/stainless-sdks/nuntly-go/option"\n)\n\nfunc main() {\n\tclient := nuntly.NewClient(\n\t\toption.WithAPIKey("My API Key"),\n\t)\n\tthread, err := client.Threads.Get(context.TODO(), "thr_01kabn43yqyxn2bx4ve84mczd3")\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf("%+v\\n", thread.ID)\n}\n',
+          'package main\n\nimport (\n\t"context"\n\t"fmt"\n\n\t"github.com/stainless-sdks/nuntly-go"\n\t"github.com/stainless-sdks/nuntly-go/option"\n)\n\nfunc main() {\n\tclient := nuntly.NewClient(\n\t\toption.WithAPIKey("My API Key"),\n\t)\n\tthread, err := client.Threads.Get(\n\t\tcontext.TODO(),\n\t\t"thr_01kabn43yqyxn2bx4ve84mczd3",\n\t\tnuntly.ThreadGetParams{},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf("%+v\\n", thread.ID)\n}\n',
       },
       http: {
         example:
@@ -1249,13 +1244,14 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     endpoint: '/threads/{threadId}',
     httpMethod: 'patch',
     summary: 'Update Thread',
-    description: 'Update thread properties (read status, spam, agent).',
+    description:
+      'Update thread labels and agent assignment. Label operations apply to all messages in the thread.',
     stainlessPath: '(resource) threads > (method) update',
     qualified: 'client.threads.update',
-    params: ['threadId: string;', 'agentId?: string;', 'isRead?: boolean;', 'isSpam?: boolean;'],
+    params: ['threadId: string;', 'addLabels?: string[];', 'agentId?: string;', 'removeLabels?: string[];'],
     response: '{ id: string; }',
     markdown:
-      "## update\n\n`client.threads.update(threadId: string, agentId?: string, isRead?: boolean, isSpam?: boolean): { id: string; }`\n\n**patch** `/threads/{threadId}`\n\nUpdate thread properties (read status, spam, agent).\n\n### Parameters\n\n- `threadId: string`\n\n- `agentId?: string`\n  The AI agent identifier.\n\n- `isRead?: boolean`\n  Mark the thread as read or unread.\n\n- `isSpam?: boolean`\n  Mark the thread as spam or not spam.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst thread = await client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread);\n```",
+      "## update\n\n`client.threads.update(threadId: string, addLabels?: string[], agentId?: string, removeLabels?: string[]): { id: string; }`\n\n**patch** `/threads/{threadId}`\n\nUpdate thread labels and agent assignment. Label operations apply to all messages in the thread.\n\n### Parameters\n\n- `threadId: string`\n\n- `addLabels?: string[]`\n  Labels to add to all messages in the thread.\n\n- `agentId?: string`\n  The AI agent identifier.\n\n- `removeLabels?: string[]`\n  Labels to remove from all messages in the thread.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst thread = await client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread);\n```",
     perLanguage: {
       go: {
         method: 'client.Threads.Update',
@@ -1288,9 +1284,9 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     qualified: 'client.threads.messages.list',
     params: ['threadId: string;', 'cursor?: string;', 'limit?: number;'],
     response:
-      "{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }",
+      "{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }",
     markdown:
-      "## list\n\n`client.threads.messages.list(threadId: string, cursor?: string, limit?: number): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/threads/{threadId}/messages`\n\nList messages in a thread (chronological order).\n\n### Parameters\n\n- `threadId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const messageListResponse of client.threads.messages.list('thr_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(messageListResponse);\n}\n```",
+      "## list\n\n`client.threads.messages.list(threadId: string, cursor?: string, limit?: number): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/threads/{threadId}/messages`\n\nList messages in a thread (chronological order).\n\n### Parameters\n\n- `threadId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `labels: string[]`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const messageListResponse of client.threads.messages.list('thr_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(messageListResponse);\n}\n```",
     perLanguage: {
       go: {
         method: 'client.Threads.Messages.List',
@@ -1323,9 +1319,9 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     qualified: 'client.messages.list',
     params: ['cursor?: string;', 'domainId?: string;', 'from?: string;', 'limit?: number;'],
     response:
-      "{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }",
+      "{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }",
     markdown:
-      "## list\n\n`client.messages.list(cursor?: string, domainId?: string, from?: string, limit?: number): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/messages`\n\nList all received messages across inboxes.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `domainId?: string`\n  Filter by domain.\n\n- `from?: string`\n  Filter by sender address.\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `inboxId: string`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const message of client.messages.list()) {\n  console.log(message);\n}\n```",
+      "## list\n\n`client.messages.list(cursor?: string, domainId?: string, from?: string, limit?: number): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/messages`\n\nList all received messages across inboxes.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `domainId?: string`\n  Filter by domain.\n\n- `from?: string`\n  Filter by sender address.\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const message of client.messages.list()) {\n  console.log(message);\n}\n```",
     perLanguage: {
       go: {
         method: 'client.Messages.List',
@@ -1357,9 +1353,9 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     qualified: 'client.messages.retrieve',
     params: ['messageId: string;'],
     response:
-      "{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }",
+      "{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }",
     markdown:
-      "## retrieve\n\n`client.messages.retrieve(messageId: string): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/messages/{messageId}`\n\nRetrieve a single message with inbox enrichment.\n\n### Parameters\n\n- `messageId: string`\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `headers: object`\n  - `inboxId: string`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst messageDetail = await client.messages.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageDetail);\n```",
+      "## retrieve\n\n`client.messages.retrieve(messageId: string): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/messages/{messageId}`\n\nRetrieve a single message with inbox enrichment.\n\n### Parameters\n\n- `messageId: string`\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `headers: object`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst messageDetail = await client.messages.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageDetail);\n```",
     perLanguage: {
       go: {
         method: 'client.Messages.Get',
@@ -1379,6 +1375,40 @@ const EMBEDDED_METHODS: MethodEntry[] = [
         method: 'client.messages.retrieve',
         example:
           "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageDetail = await client.messages.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageDetail.id);",
+      },
+    },
+  },
+  {
+    name: 'update',
+    endpoint: '/messages/{messageId}',
+    httpMethod: 'patch',
+    summary: 'Update Message',
+    description: 'Update message labels. Only available for messages in user-created inboxes.',
+    stainlessPath: '(resource) messages > (method) update',
+    qualified: 'client.messages.update',
+    params: ['messageId: string;', 'addLabels?: string[];', 'removeLabels?: string[];'],
+    response: '{ id: string; }',
+    markdown:
+      "## update\n\n`client.messages.update(messageId: string, addLabels?: string[], removeLabels?: string[]): { id: string; }`\n\n**patch** `/messages/{messageId}`\n\nUpdate message labels. Only available for messages in user-created inboxes.\n\n### Parameters\n\n- `messageId: string`\n\n- `addLabels?: string[]`\n  Labels to add to the message.\n\n- `removeLabels?: string[]`\n  Labels to remove from the message.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst message = await client.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(message);\n```",
+    perLanguage: {
+      go: {
+        method: 'client.Messages.Update',
+        example:
+          'package main\n\nimport (\n\t"context"\n\t"fmt"\n\n\t"github.com/stainless-sdks/nuntly-go"\n\t"github.com/stainless-sdks/nuntly-go/option"\n)\n\nfunc main() {\n\tclient := nuntly.NewClient(\n\t\toption.WithAPIKey("My API Key"),\n\t)\n\tmessage, err := client.Messages.Update(\n\t\tcontext.TODO(),\n\t\t"imsg_01kabn43yqyxn2bx4ve84mczd3",\n\t\tnuntly.MessageUpdateParams{},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf("%+v\\n", message.ID)\n}\n',
+      },
+      http: {
+        example:
+          'curl https://api.nuntly.com/messages/$MESSAGE_ID \\\n    -X PATCH \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
+      },
+      java: {
+        method: 'messages().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageUpdateParams;\nimport com.nuntly.models.messages.MessageUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageUpdateResponse message = client.messages().update("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
+      typescript: {
+        method: 'client.messages.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst message = await client.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(message.id);",
       },
     },
   },

@@ -157,7 +157,7 @@ Types:
 
 Methods:
 
-- <code title="get /threads/{threadId}">client.threads.<a href="./src/resources/threads/threads.ts">retrieve</a>(threadID) -> Thread</code>
+- <code title="get /threads/{threadId}">client.threads.<a href="./src/resources/threads/threads.ts">retrieve</a>(threadID, { ...params }) -> Thread</code>
 - <code title="patch /threads/{threadId}">client.threads.<a href="./src/resources/threads/threads.ts">update</a>(threadID, { ...params }) -> ThreadUpdateResponse</code>
 
 ## Messages
@@ -179,12 +179,14 @@ Types:
 - <code><a href="./src/resources/messages/messages.ts">MessageContent</a></code>
 - <code><a href="./src/resources/messages/messages.ts">MessageContentItem</a></code>
 - <code><a href="./src/resources/messages/messages.ts">MessageDetail</a></code>
+- <code><a href="./src/resources/messages/messages.ts">MessageUpdateResponse</a></code>
 - <code><a href="./src/resources/messages/messages.ts">MessageForwardResponse</a></code>
 - <code><a href="./src/resources/messages/messages.ts">MessageReplyResponse</a></code>
 
 Methods:
 
 - <code title="get /messages/{messageId}">client.messages.<a href="./src/resources/messages/messages.ts">retrieve</a>(messageID) -> MessageDetail</code>
+- <code title="patch /messages/{messageId}">client.messages.<a href="./src/resources/messages/messages.ts">update</a>(messageID, { ...params }) -> MessageUpdateResponse</code>
 - <code title="get /messages">client.messages.<a href="./src/resources/messages/messages.ts">list</a>({ ...params }) -> MessagesCursorPage</code>
 - <code title="post /messages/{messageId}/forward">client.messages.<a href="./src/resources/messages/messages.ts">forward</a>(messageID, { ...params }) -> MessageForwardResponse</code>
 - <code title="post /messages/{messageId}/reply">client.messages.<a href="./src/resources/messages/messages.ts">reply</a>(messageID, { ...params }) -> MessageReplyResponse</code>

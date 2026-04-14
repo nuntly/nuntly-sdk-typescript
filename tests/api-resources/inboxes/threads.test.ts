@@ -26,8 +26,7 @@ describe('resource threads', () => {
         'ibx_01kabn43yqyxn2bx4ve84mczd3',
         {
           cursor: 'cursor',
-          isRead: true,
-          isSpam: true,
+          labels: 'labels',
           limit: 1,
         },
         { path: '/_stainless_unknown_path' },
