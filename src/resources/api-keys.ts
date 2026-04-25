@@ -13,43 +13,29 @@ export class APIKeys extends APIResource {
   /**
    * Generate a new API key. The key value is only returned once — store it securely.
    */
-  create(
-    body: APIKeyCreateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<APIKeyCreateResponse> {
-    return (
-      this._client.post('/api-keys', { body, ...options }) as APIPromise<{ data: APIKeyCreateResponse }>
-    )._thenUnwrap((obj) => obj.data);
+  create(body: APIKeyCreateParams | null | undefined = {}, options?: RequestOptions): APIPromise<APIKeyCreateResponse> {
+    return (this._client.post('/api-keys', { body, ...options }) as APIPromise<{ data: APIKeyCreateResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Returns API key metadata. The key value is never returned after creation.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<APIKeyRetrieveResponse> {
-    return (
-      this._client.get(path`/api-keys/${id}`, options) as APIPromise<{ data: APIKeyRetrieveResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/api-keys/${id}`, options) as APIPromise<{ data: APIKeyRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update the key name, permissions, or restrict it to specific sending domains.
    */
   update(id: string, body: APIKeyUpdateParams, options?: RequestOptions): APIPromise<APIKeyUpdateResponse> {
-    return (
-      this._client.put(path`/api-keys/${id}`, { body, ...options }) as APIPromise<{
-        data: APIKeyUpdateResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.put(path`/api-keys/${id}`, { body, ...options }) as APIPromise<{ data: APIKeyUpdateResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Returns all API keys for the organization. Key values are never included in list
    * responses.
    */
-  list(
-    query: APIKeyListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<APIKeyListResponsesCursorPage, APIKeyListResponse> {
+  list(query: APIKeyListParams | null | undefined = {}, options?: RequestOptions): PagePromise<APIKeyListResponsesCursorPage, APIKeyListResponse> {
     return this._client.getAPIList('/api-keys', CursorPage<APIKeyListResponse>, { query, ...options });
   }
 
@@ -58,13 +44,11 @@ export class APIKeys extends APIResource {
    * immediately.
    */
   delete(id: string, options?: RequestOptions): APIPromise<APIKeyDeleteResponse> {
-    return (
-      this._client.delete(path`/api-keys/${id}`, options) as APIPromise<{ data: APIKeyDeleteResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.delete(path`/api-keys/${id}`, options) as APIPromise<{ data: APIKeyDeleteResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type APIKeyListResponsesCursorPage = CursorPage<APIKeyListResponse>;
+export type APIKeyListResponsesCursorPage = CursorPage<APIKeyListResponse>
 
 export interface APIKeyCreateResponse {
   /**
@@ -202,7 +186,8 @@ export interface APIKeyUpdateParams {
   status?: 'enabled' | 'disabled';
 }
 
-export interface APIKeyListParams extends CursorPageParams {}
+export interface APIKeyListParams extends CursorPageParams {
+}
 
 export declare namespace APIKeys {
   export {
@@ -214,6 +199,6 @@ export declare namespace APIKeys {
     type APIKeyListResponsesCursorPage as APIKeyListResponsesCursorPage,
     type APIKeyCreateParams as APIKeyCreateParams,
     type APIKeyUpdateParams as APIKeyUpdateParams,
-    type APIKeyListParams as APIKeyListParams,
+    type APIKeyListParams as APIKeyListParams
   };
 }

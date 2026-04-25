@@ -13,31 +13,15 @@ export class Memory extends APIResource {
   /**
    * Retrieve the memory for an AI agent.
    */
-  retrieve(
-    agentID: string,
-    query: MemoryRetrieveParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<AgentsAPI.AgentMemory> {
-    return (
-      this._client.get(path`/agents/${agentID}/memory`, { query, ...options }) as APIPromise<{
-        data: AgentsAPI.AgentMemory;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  retrieve(agentID: string, query: MemoryRetrieveParams | null | undefined = {}, options?: RequestOptions): APIPromise<AgentsAPI.AgentMemory> {
+    return (this._client.get(path`/agents/${agentID}/memory`, { query, ...options }) as APIPromise<{ data: AgentsAPI.AgentMemory }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Create or update the memory for an AI agent.
    */
-  upsert(
-    agentID: string,
-    body: MemoryUpsertParams,
-    options?: RequestOptions,
-  ): APIPromise<AgentsAPI.AgentMemory> {
-    return (
-      this._client.put(path`/agents/${agentID}/memory`, { body, ...options }) as APIPromise<{
-        data: AgentsAPI.AgentMemory;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  upsert(agentID: string, body: MemoryUpsertParams, options?: RequestOptions): APIPromise<AgentsAPI.AgentMemory> {
+    return (this._client.put(path`/agents/${agentID}/memory`, { body, ...options }) as APIPromise<{ data: AgentsAPI.AgentMemory }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
@@ -76,5 +60,8 @@ export interface MemoryUpsertParams {
 }
 
 export declare namespace Memory {
-  export { type MemoryRetrieveParams as MemoryRetrieveParams, type MemoryUpsertParams as MemoryUpsertParams };
+  export {
+    type MemoryRetrieveParams as MemoryRetrieveParams,
+    type MemoryUpsertParams as MemoryUpsertParams
+  };
 }

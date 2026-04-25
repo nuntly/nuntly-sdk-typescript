@@ -34,9 +34,7 @@ export class Emails extends APIResource {
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<EmailRetrieveResponse> {
-    return (
-      this._client.get(path`/emails/${id}`, options) as APIPromise<{ data: EmailRetrieveResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/emails/${id}`, options) as APIPromise<{ data: EmailRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -50,10 +48,7 @@ export class Emails extends APIResource {
    * }
    * ```
    */
-  list(
-    query: EmailListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<EmailListResponsesCursorPage, EmailListResponse> {
+  list(query: EmailListParams | null | undefined = {}, options?: RequestOptions): PagePromise<EmailListResponsesCursorPage, EmailListResponse> {
     return this._client.getAPIList('/emails', CursorPage<EmailListResponse>, { query, ...options });
   }
 
@@ -69,9 +64,7 @@ export class Emails extends APIResource {
    * ```
    */
   cancel(id: string, options?: RequestOptions): APIPromise<EmailCancelResponse> {
-    return (
-      this._client.delete(path`/emails/${id}`, options) as APIPromise<{ data: EmailCancelResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.delete(path`/emails/${id}`, options) as APIPromise<{ data: EmailCancelResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -88,18 +81,11 @@ export class Emails extends APIResource {
    * ```
    */
   send(body: EmailSendParams, options?: RequestOptions): APIPromise<EmailSendResponse> {
-    return (
-      this._client.post('/emails', {
-        body,
-        timeout: (this._client as any)._options.timeout ?? 150,
-        maxRetries: 0,
-        ...options,
-      }) as APIPromise<{ data: EmailSendResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.post('/emails', { body, timeout: (this._client as any)._options.timeout ?? 150, maxRetries: 0, ...options }) as APIPromise<{ data: EmailSendResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type EmailListResponsesCursorPage = CursorPage<EmailListResponse>;
+export type EmailListResponsesCursorPage = CursorPage<EmailListResponse>
 
 export interface EmailContentItem {
   /**
@@ -121,18 +107,7 @@ export interface EmailContentItem {
 /**
  * The status of the email.
  */
-export type Status =
-  | 'queued'
-  | 'scheduled'
-  | 'processed'
-  | 'failed'
-  | 'sending'
-  | 'sent'
-  | 'delivered'
-  | 'bounced'
-  | 'complained'
-  | 'canceled'
-  | 'rejected';
+export type Status = 'queued' | 'scheduled' | 'processed' | 'failed' | 'sending' | 'sent' | 'delivered' | 'bounced' | 'complained' | 'canceled' | 'rejected'
 
 /**
  * The tag to add to the email and you can get via email id or in webhook events
@@ -322,7 +297,8 @@ export interface EmailSendResponse {
   status: Status;
 }
 
-export interface EmailListParams extends CursorPageParams {}
+export interface EmailListParams extends CursorPageParams {
+}
 
 export interface EmailSendParams {
   /**
@@ -427,19 +403,28 @@ export declare namespace Emails {
     type EmailSendResponse as EmailSendResponse,
     type EmailListResponsesCursorPage as EmailListResponsesCursorPage,
     type EmailListParams as EmailListParams,
-    type EmailSendParams as EmailSendParams,
+    type EmailSendParams as EmailSendParams
   };
 
   export {
     Bulk as Bulk,
     type BulkRetrieveResponse as BulkRetrieveResponse,
     type BulkSendResponse as BulkSendResponse,
-    type BulkSendParams as BulkSendParams,
+    type BulkSendParams as BulkSendParams
   };
 
-  export { Events as Events, type EventListResponse as EventListResponse };
+  export {
+    Events as Events,
+    type EventListResponse as EventListResponse
+  };
 
-  export { Content as Content, type ContentRetrieveResponse as ContentRetrieveResponse };
+  export {
+    Content as Content,
+    type ContentRetrieveResponse as ContentRetrieveResponse
+  };
 
-  export { Stats as Stats, type StatListResponse as StatListResponse };
+  export {
+    Stats as Stats,
+    type StatListResponse as StatListResponse
+  };
 }

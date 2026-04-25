@@ -14,16 +14,8 @@ export class Content extends APIResource {
    * Returns presigned URLs to download the HTML, plain-text, and raw MIME source of
    * a received message.
    */
-  retrieve(
-    messageID: string,
-    query: ContentRetrieveParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<MessagesAPI.MessageContent> {
-    return (
-      this._client.get(path`/messages/${messageID}/content`, { query, ...options }) as APIPromise<{
-        data: MessagesAPI.MessageContent;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  retrieve(messageID: string, query: ContentRetrieveParams | null | undefined = {}, options?: RequestOptions): APIPromise<MessagesAPI.MessageContent> {
+    return (this._client.get(path`/messages/${messageID}/content`, { query, ...options }) as APIPromise<{ data: MessagesAPI.MessageContent }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
@@ -35,5 +27,7 @@ export interface ContentRetrieveParams {
 }
 
 export declare namespace Content {
-  export { type ContentRetrieveParams as ContentRetrieveParams };
+  export {
+    type ContentRetrieveParams as ContentRetrieveParams
+  };
 }

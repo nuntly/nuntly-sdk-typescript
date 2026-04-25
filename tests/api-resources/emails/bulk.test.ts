@@ -2,10 +2,7 @@
 
 import Nuntly from '@nuntly/sdk';
 
-const client = new Nuntly({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Nuntly({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
 
 describe('resource bulk', () => {
   test('retrieve', async () => {
@@ -32,36 +29,34 @@ describe('resource bulk', () => {
 
   test('send: required and optional params', async () => {
     const response = await client.emails.bulk.send({
-      emails: [
-        {
-          bcc: ['string'],
-          cc: ['string'],
-          from: 'Tomlinson AI <ray@info.tomlinson.ai>',
-          headers: { foo: 'string' },
-          html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
-          replyTo: ['string'],
-          scheduledAt: 'scheduledAt',
-          subject: 'Verify your email address',
-          tags: [{ name: 'category', value: 'transactional' }],
-          text: 'Thank you for signing up! Please verify your email address.',
-          to: 'brian67@gmail.com',
-          variables: { foo: 'string' },
-        },
-      ],
-      fallback: {
-        bcc: ['string'],
-        cc: ['string'],
-        from: 'Tomlinson AI <ray@info.tomlinson.ai>',
-        headers: { foo: 'string' },
-        html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
-        replyTo: ['string'],
-        scheduledAt: 'scheduledAt',
-        subject: 'Verify your email address',
-        tags: [{ name: 'category', value: 'transactional' }],
-        text: 'Thank you for signing up! Please verify your email address.',
-        to: 'brian67@gmail.com',
-        variables: { foo: 'string' },
-      },
-    });
+    emails: [{
+    bcc: ['string'],
+    cc: ['string'],
+    from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+    headers: { foo: 'string' },
+    html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
+    replyTo: ['string'],
+    scheduledAt: 'scheduledAt',
+    subject: 'Verify your email address',
+    tags: [{ name: 'category', value: 'transactional' }],
+    text: 'Thank you for signing up! Please verify your email address.',
+    to: 'brian67@gmail.com',
+    variables: { foo: 'string' },
+  }],
+    fallback: {
+    bcc: ['string'],
+    cc: ['string'],
+    from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+    headers: { foo: 'string' },
+    html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
+    replyTo: ['string'],
+    scheduledAt: 'scheduledAt',
+    subject: 'Verify your email address',
+    tags: [{ name: 'category', value: 'transactional' }],
+    text: 'Thank you for signing up! Please verify your email address.',
+    to: 'brian67@gmail.com',
+    variables: { foo: 'string' },
+  },
+  });
   });
 });

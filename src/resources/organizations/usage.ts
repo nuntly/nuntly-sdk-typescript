@@ -14,11 +14,7 @@ export class Usage extends APIResource {
    * receiving, against your plan limits.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<UsageRetrieveResponse> {
-    return (
-      this._client.get(path`/organizations/${id}/usage`, options) as APIPromise<{
-        data: UsageRetrieveResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/organizations/${id}/usage`, options) as APIPromise<{ data: UsageRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
@@ -101,5 +97,7 @@ export namespace UsageRetrieveResponse {
 }
 
 export declare namespace Usage {
-  export { type UsageRetrieveResponse as UsageRetrieveResponse };
+  export {
+    type UsageRetrieveResponse as UsageRetrieveResponse
+  };
 }

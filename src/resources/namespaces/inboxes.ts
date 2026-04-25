@@ -14,22 +14,18 @@ export class Inboxes extends APIResource {
   /**
    * List inboxes in a namespace.
    */
-  list(
-    namespaceID: string,
-    query: InboxListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<InboxesCursorPage, InboxesAPI.Inbox> {
-    return this._client.getAPIList(path`/namespaces/${namespaceID}/inboxes`, CursorPage<InboxesAPI.Inbox>, {
-      query,
-      ...options,
-    });
+  list(namespaceID: string, query: InboxListParams | null | undefined = {}, options?: RequestOptions): PagePromise<InboxesCursorPage, InboxesAPI.Inbox> {
+    return this._client.getAPIList(path`/namespaces/${namespaceID}/inboxes`, CursorPage<InboxesAPI.Inbox>, { query, ...options });
   }
 }
 
-export interface InboxListParams extends CursorPageParams {}
-
-export declare namespace Inboxes {
-  export { type InboxListParams as InboxListParams };
+export interface InboxListParams extends CursorPageParams {
 }
 
-export { type InboxesCursorPage };
+export declare namespace Inboxes {
+  export {
+    type InboxListParams as InboxListParams
+  };
+}
+
+export { type InboxesCursorPage }

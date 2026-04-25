@@ -2,10 +2,7 @@
 
 import Nuntly from '@nuntly/sdk';
 
-const client = new Nuntly({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Nuntly({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
 
 describe('resource content', () => {
   test('retrieve', async () => {
@@ -21,12 +18,8 @@ describe('resource content', () => {
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.messages.content.retrieve(
-        'imsg_01kabn43yqyxn2bx4ve84mczd3',
-        { format: ['html'] },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Nuntly.NotFoundError);
+    await expect(client.messages.content.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3', { format: ['html'] }, { path: '/_stainless_unknown_path' }))
+      .rejects
+      .toThrow(Nuntly.NotFoundError);
   });
 });

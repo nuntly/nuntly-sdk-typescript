@@ -22,9 +22,7 @@ export class Content extends APIResource {
    * ```
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<ContentRetrieveResponse> {
-    return (
-      this._client.get(path`/emails/${id}/content`, options) as APIPromise<{ data: ContentRetrieveResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/emails/${id}/content`, options) as APIPromise<{ data: ContentRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
@@ -64,5 +62,7 @@ export interface ContentRetrieveResponse {
 }
 
 export declare namespace Content {
-  export { type ContentRetrieveResponse as ContentRetrieveResponse };
+  export {
+    type ContentRetrieveResponse as ContentRetrieveResponse
+  };
 }
