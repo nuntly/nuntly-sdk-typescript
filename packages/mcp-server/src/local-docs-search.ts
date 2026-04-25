@@ -64,6 +64,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.apiKeys.retrieve(id: string): { id: string; createdAt: string; shortToken: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n**get** `/api-keys/{id}`\n\nReturns API key metadata. The key value is never returned after creation.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; createdAt: string; shortToken: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `shortToken: string`\n  - `status: 'enabled' | 'disabled' | 'revoked'`\n  - `name?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst apiKey = await client.apiKeys.retrieve('apk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(apiKey);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.apiKeys.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.retrieve('apk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(apiKey.id);",
+      },
+      java: {
+        method: 'apiKeys().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyRetrieveParams;\nimport com.nuntly.models.apikeys.ApiKeyRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyRetrieveResponse apiKey = client.apiKeys().retrieve("apk_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.APIKeys.Get',
         example:
@@ -72,16 +82,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/api-keys/$ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'apiKeys().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyRetrieveParams;\nimport com.nuntly.models.apikeys.ApiKeyRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyRetrieveResponse apiKey = client.apiKeys().retrieve("apk_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.apiKeys.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.retrieve('apk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(apiKey.id);",
       },
     },
   },
@@ -104,6 +104,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.apiKeys.update(id: string, permission: 'fullAccess' | 'sendingAccess', domainIds?: string[], name?: string, status?: 'enabled' | 'disabled'): { id: string; }`\n\n**put** `/api-keys/{id}`\n\nUpdate the key name, permissions, or restrict it to specific sending domains.\n\n### Parameters\n\n- `id: string`\n\n- `permission: 'fullAccess' | 'sendingAccess'`\n  The permission type for the api key\n\n- `domainIds?: string[]`\n  The domain ids to restrict the api key to (only for sendingAccess)\n\n- `name?: string`\n  The name of the api key\n\n- `status?: 'enabled' | 'disabled'`\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst apiKey = await client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', { permission: 'fullAccess' });\n\nconsole.log(apiKey);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.apiKeys.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', {\n  permission: 'fullAccess',\n});\n\nconsole.log(apiKey.id);",
+      },
+      java: {
+        method: 'apiKeys().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyUpdateParams;\nimport com.nuntly.models.apikeys.ApiKeyUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyUpdateParams params = ApiKeyUpdateParams.builder()\n            .id("apk_01ka8k8s80gvx9604cn9am5st4")\n            .permission(ApiKeyUpdateParams.Permission.FULL_ACCESS)\n            .build();\n        ApiKeyUpdateResponse apiKey = client.apiKeys().update(params);\n    }\n}',
+      },
       go: {
         method: 'client.APIKeys.Update',
         example:
@@ -112,16 +122,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/api-keys/$ID \\\n    -X PUT \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "permission": "fullAccess"\n        }\'',
-      },
-      java: {
-        method: 'apiKeys().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyUpdateParams;\nimport com.nuntly.models.apikeys.ApiKeyUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyUpdateParams params = ApiKeyUpdateParams.builder()\n            .id("apk_01ka8k8s80gvx9604cn9am5st4")\n            .permission(ApiKeyUpdateParams.Permission.FULL_ACCESS)\n            .build();\n        ApiKeyUpdateResponse apiKey = client.apiKeys().update(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.apiKeys.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', {\n  permission: 'fullAccess',\n});\n\nconsole.log(apiKey.id);",
       },
     },
   },
@@ -138,6 +138,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## delete\n\n`client.apiKeys.delete(id: string): { id: string; }`\n\n**delete** `/api-keys/{id}`\n\nRevoke an API key. Requests authenticating with this key will be rejected immediately.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst apiKey = await client.apiKeys.delete('apk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(apiKey);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.apiKeys.delete',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.delete('apk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(apiKey.id);",
+      },
+      java: {
+        method: 'apiKeys().delete',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyDeleteParams;\nimport com.nuntly.models.apikeys.ApiKeyDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyDeleteResponse apiKey = client.apiKeys().delete("apk_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.APIKeys.Delete',
         example:
@@ -146,16 +156,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/api-keys/$ID \\\n    -X DELETE \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'apiKeys().delete',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyDeleteParams;\nimport com.nuntly.models.apikeys.ApiKeyDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyDeleteResponse apiKey = client.apiKeys().delete("apk_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.apiKeys.delete',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.delete('apk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(apiKey.id);",
       },
     },
   },
@@ -178,6 +178,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## create\n\n`client.apiKeys.create(domainIds?: string[], name?: string, permission?: 'fullAccess' | 'sendingAccess', status?: 'enabled' | 'disabled' | 'revoked'): { id: string; apiKey: string; shortToken: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n**post** `/api-keys`\n\nGenerate a new API key. The key value is only returned once — store it securely.\n\n### Parameters\n\n- `domainIds?: string[]`\n  The domain ids to restrict the api key to (only for sendingAccess)\n\n- `name?: string`\n  The name of the api key\n\n- `permission?: 'fullAccess' | 'sendingAccess'`\n  The permission type for the api key\n\n- `status?: 'enabled' | 'disabled' | 'revoked'`\n  The status for the api key\n\n### Returns\n\n- `{ id: string; apiKey: string; shortToken: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n  - `id: string`\n  - `apiKey: string`\n  - `shortToken: string`\n  - `status: 'enabled' | 'disabled' | 'revoked'`\n  - `name?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst apiKey = await client.apiKeys.create();\n\nconsole.log(apiKey);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.apiKeys.create',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.create();\n\nconsole.log(apiKey.id);",
+      },
+      java: {
+        method: 'apiKeys().create',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyCreateParams;\nimport com.nuntly.models.apikeys.ApiKeyCreateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyCreateResponse apiKey = client.apiKeys().create();\n    }\n}',
+      },
       go: {
         method: 'client.APIKeys.New',
         example:
@@ -186,16 +196,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/api-keys \\\n    -X POST \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'apiKeys().create',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyCreateParams;\nimport com.nuntly.models.apikeys.ApiKeyCreateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyCreateResponse apiKey = client.apiKeys().create();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.apiKeys.create',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst apiKey = await client.apiKeys.create();\n\nconsole.log(apiKey.id);",
       },
     },
   },
@@ -214,6 +214,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.apiKeys.list(cursor?: string, limit?: number): { id: string; createdAt: string; shortToken: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n**get** `/api-keys`\n\nReturns all API keys for the organization. Key values are never included in list responses.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; createdAt: string; shortToken: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `shortToken: string`\n  - `status: 'enabled' | 'disabled' | 'revoked'`\n  - `name?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const apiKeyListResponse of client.apiKeys.list()) {\n  console.log(apiKeyListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.apiKeys.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const apiKeyListResponse of client.apiKeys.list()) {\n  console.log(apiKeyListResponse.id);\n}",
+      },
+      java: {
+        method: 'apiKeys().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyListPage;\nimport com.nuntly.models.apikeys.ApiKeyListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyListPage page = client.apiKeys().list();\n    }\n}',
+      },
       go: {
         method: 'client.APIKeys.List',
         example:
@@ -221,16 +231,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/api-keys \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'apiKeys().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.apikeys.ApiKeyListPage;\nimport com.nuntly.models.apikeys.ApiKeyListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ApiKeyListPage page = client.apiKeys().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.apiKeys.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const apiKeyListResponse of client.apiKeys.list()) {\n  console.log(apiKeyListResponse.id);\n}",
       },
     },
   },
@@ -249,6 +249,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.domains.retrieve(id: string): { id: string; clickTracking: boolean; createdAt: string; name: string; openTracking: boolean; receiving: boolean; receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'; receivingStatusAt: string; records: object[]; region: 'eu-west-1'; sending: boolean; sendingStatus: 'enabled' | 'disabled' | 'paused'; sendingStatusAt: string; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; }`\n\n**get** `/domains/{id}`\n\nReturns a domain with its DNS record configuration and current verification status for each record.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; clickTracking: boolean; createdAt: string; name: string; openTracking: boolean; receiving: boolean; receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'; receivingStatusAt: string; records: { fullname: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; name: string; recordType: 'TXT' | 'MX' | 'CNAME'; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; ttl: string; value: string; priority?: string; selector?: string; }[]; region: 'eu-west-1'; sending: boolean; sendingStatus: 'enabled' | 'disabled' | 'paused'; sendingStatusAt: string; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; }`\n\n  - `id: string`\n  - `clickTracking: boolean`\n  - `createdAt: string`\n  - `name: string`\n  - `openTracking: boolean`\n  - `receiving: boolean`\n  - `receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'`\n  - `receivingStatusAt: string`\n  - `records: { fullname: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; name: string; recordType: 'TXT' | 'MX' | 'CNAME'; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; ttl: string; value: string; priority?: string; selector?: string; }[]`\n  - `region: 'eu-west-1'`\n  - `sending: boolean`\n  - `sendingStatus: 'enabled' | 'disabled' | 'paused'`\n  - `sendingStatusAt: string`\n  - `status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'`\n  - `statusAt: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst domain = await client.domains.retrieve('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.domains.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.retrieve('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain.id);",
+      },
+      java: {
+        method: 'domains().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainRetrieveParams;\nimport com.nuntly.models.domains.DomainRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainRetrieveResponse domain = client.domains().retrieve("dns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Domains.Get',
         example:
@@ -256,16 +266,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/domains/$ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'domains().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainRetrieveParams;\nimport com.nuntly.models.domains.DomainRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainRetrieveResponse domain = client.domains().retrieve("dns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.domains.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.retrieve('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain.id);",
       },
     },
   },
@@ -288,6 +288,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.domains.update(id: string, clickTracking?: boolean, openTracking?: boolean, receiving?: boolean, sending?: boolean): { id: string; clickTracking: boolean; openTracking: boolean; }`\n\n**patch** `/domains/{id}`\n\nToggle sending, receiving, open tracking, or click tracking capabilities for a domain.\n\n### Parameters\n\n- `id: string`\n\n- `clickTracking?: boolean`\n  Emit an event for each time the recipient clicks a link in the email\n\n- `openTracking?: boolean`\n  Emit an event for each recipient opens an email their email client\n\n- `receiving?: boolean`\n  Enable or disable receiving\n\n- `sending?: boolean`\n  Enable or disable sending\n\n### Returns\n\n- `{ id: string; clickTracking: boolean; openTracking: boolean; }`\n\n  - `id: string`\n  - `clickTracking: boolean`\n  - `openTracking: boolean`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst domain = await client.domains.update('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.domains.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.update('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain.id);",
+      },
+      java: {
+        method: 'domains().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainUpdateParams;\nimport com.nuntly.models.domains.DomainUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainUpdateResponse domain = client.domains().update("dns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Domains.Update',
         example:
@@ -296,16 +306,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/domains/$ID \\\n    -X PATCH \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'domains().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainUpdateParams;\nimport com.nuntly.models.domains.DomainUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainUpdateResponse domain = client.domains().update("dns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.domains.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.update('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain.id);",
       },
     },
   },
@@ -323,6 +323,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## delete\n\n`client.domains.delete(id: string): { id: string; }`\n\n**delete** `/domains/{id}`\n\nRemove a domain from the organization. Cannot be deleted if it has active sending or receiving.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst domain = await client.domains.delete('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.domains.delete',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.delete('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain.id);",
+      },
+      java: {
+        method: 'domains().delete',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainDeleteParams;\nimport com.nuntly.models.domains.DomainDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainDeleteResponse domain = client.domains().delete("dns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Domains.Delete',
         example:
@@ -331,16 +341,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/domains/$ID \\\n    -X DELETE \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'domains().delete',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainDeleteParams;\nimport com.nuntly.models.domains.DomainDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainDeleteResponse domain = client.domains().delete("dns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.domains.delete',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.delete('dns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(domain.id);",
       },
     },
   },
@@ -358,6 +358,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## create\n\n`client.domains.create(name: string, receiving?: boolean, sending?: boolean): { id: string; clickTracking: boolean; createdAt: string; name: string; openTracking: boolean; receiving: boolean; receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'; receivingStatusAt: string; records: object[]; region: 'eu-west-1'; sending: boolean; sendingStatus: 'enabled' | 'disabled' | 'paused'; sendingStatusAt: string; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; }`\n\n**post** `/domains`\n\nAdd a domain to start configuring DNS records for sending or receiving emails.\n\n### Parameters\n\n- `name: string`\n  The name of the domain to send e-mails'\n\n- `receiving?: boolean`\n  Enable receiving\n\n- `sending?: boolean`\n  Enable sending\n\n### Returns\n\n- `{ id: string; clickTracking: boolean; createdAt: string; name: string; openTracking: boolean; receiving: boolean; receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'; receivingStatusAt: string; records: { fullname: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; name: string; recordType: 'TXT' | 'MX' | 'CNAME'; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; ttl: string; value: string; priority?: string; selector?: string; }[]; region: 'eu-west-1'; sending: boolean; sendingStatus: 'enabled' | 'disabled' | 'paused'; sendingStatusAt: string; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; }`\n\n  - `id: string`\n  - `clickTracking: boolean`\n  - `createdAt: string`\n  - `name: string`\n  - `openTracking: boolean`\n  - `receiving: boolean`\n  - `receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'`\n  - `receivingStatusAt: string`\n  - `records: { fullname: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; name: string; recordType: 'TXT' | 'MX' | 'CNAME'; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; statusAt: string; ttl: string; value: string; priority?: string; selector?: string; }[]`\n  - `region: 'eu-west-1'`\n  - `sending: boolean`\n  - `sendingStatus: 'enabled' | 'disabled' | 'paused'`\n  - `sendingStatusAt: string`\n  - `status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'`\n  - `statusAt: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst domain = await client.domains.create({ name: 'name' });\n\nconsole.log(domain);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.domains.create',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.create({ name: 'name' });\n\nconsole.log(domain.id);",
+      },
+      java: {
+        method: 'domains().create',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainCreateParams;\nimport com.nuntly.models.domains.DomainCreateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainCreateParams params = DomainCreateParams.builder()\n            .name("name")\n            .build();\n        DomainCreateResponse domain = client.domains().create(params);\n    }\n}',
+      },
       go: {
         method: 'client.Domains.New',
         example:
@@ -366,16 +376,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/domains \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "name": "name"\n        }\'',
-      },
-      java: {
-        method: 'domains().create',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainCreateParams;\nimport com.nuntly.models.domains.DomainCreateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainCreateParams params = DomainCreateParams.builder()\n            .name("name")\n            .build();\n        DomainCreateResponse domain = client.domains().create(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.domains.create',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst domain = await client.domains.create({ name: 'name' });\n\nconsole.log(domain.id);",
       },
     },
   },
@@ -393,6 +393,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.domains.list(cursor?: string, limit?: number): { id: string; createdAt: string; name: string; receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'; region: 'eu-west-1'; sendingStatus: 'enabled' | 'disabled' | 'paused'; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; }`\n\n**get** `/domains`\n\nReturns all domains with their verification and capability status.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; createdAt: string; name: string; receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'; region: 'eu-west-1'; sendingStatus: 'enabled' | 'disabled' | 'paused'; status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `name: string`\n  - `receivingStatus: 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed'`\n  - `region: 'eu-west-1'`\n  - `sendingStatus: 'enabled' | 'disabled' | 'paused'`\n  - `status: 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure'`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const domainListResponse of client.domains.list()) {\n  console.log(domainListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.domains.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const domainListResponse of client.domains.list()) {\n  console.log(domainListResponse.id);\n}",
+      },
+      java: {
+        method: 'domains().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainListPage;\nimport com.nuntly.models.domains.DomainListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainListPage page = client.domains().list();\n    }\n}',
+      },
       go: {
         method: 'client.Domains.List',
         example:
@@ -400,16 +410,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/domains \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'domains().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.domains.DomainListPage;\nimport com.nuntly.models.domains.DomainListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        DomainListPage page = client.domains().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.domains.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const domainListResponse of client.domains.list()) {\n  console.log(domainListResponse.id);\n}",
       },
     },
   },
@@ -427,6 +427,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.emails.retrieve(id: string): { id: string; createdAt: string; from: string; orgId: string; status: status; subject: string; to: string[] | string; attachments?: object[]; bcc?: string[] | string; bulkId?: string; cc?: string[] | string; headers?: object; messageId?: string; replyTo?: string[] | string; scheduledAt?: string; statusReason?: object; tags?: tag[]; variables?: object; }`\n\n**get** `/emails/{id}`\n\nReturns an email with its current delivery status and metadata.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; createdAt: string; from: string; orgId: string; status: string; subject: string; to: string[] | string; attachments?: { contentType?: string; filename?: string; size?: number; }[]; bcc?: string[] | string; bulkId?: string; cc?: string[] | string; headers?: object; messageId?: string; replyTo?: string[] | string; scheduledAt?: string; statusReason?: object; tags?: { name: string; value: string; }[]; variables?: object; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `from: string`\n  - `orgId: string`\n  - `status: string`\n  - `subject: string`\n  - `to: string[] | string`\n  - `attachments?: { contentType?: string; filename?: string; size?: number; }[]`\n  - `bcc?: string[] | string`\n  - `bulkId?: string`\n  - `cc?: string[] | string`\n  - `headers?: object`\n  - `messageId?: string`\n  - `replyTo?: string[] | string`\n  - `scheduledAt?: string`\n  - `statusReason?: object`\n  - `tags?: { name: string; value: string; }[]`\n  - `variables?: object`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst email = await client.emails.retrieve('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(email);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst email = await client.emails.retrieve('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(email.id);",
+      },
+      java: {
+        method: 'emails().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailRetrieveParams;\nimport com.nuntly.models.emails.EmailRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailRetrieveResponse email = client.emails().retrieve("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Get',
         example:
@@ -434,16 +444,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/emails/$ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailRetrieveParams;\nimport com.nuntly.models.emails.EmailRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailRetrieveResponse email = client.emails().retrieve("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst email = await client.emails.retrieve('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(email.id);",
       },
     },
   },
@@ -461,6 +461,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## cancel\n\n`client.emails.cancel(id: string): { id: string; status: status; }`\n\n**delete** `/emails/{id}`\n\nCancel a scheduled email before delivery. Only emails with `scheduled` status can be cancelled.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; status: string; }`\n\n  - `id: string`\n  - `status: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.emails.cancel('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.cancel',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.emails.cancel('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(response.id);",
+      },
+      java: {
+        method: 'emails().cancel',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailCancelParams;\nimport com.nuntly.models.emails.EmailCancelResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailCancelResponse response = client.emails().cancel("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Cancel',
         example:
@@ -469,16 +479,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails/$ID \\\n    -X DELETE \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().cancel',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailCancelParams;\nimport com.nuntly.models.emails.EmailCancelResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailCancelResponse response = client.emails().cancel("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.cancel',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.emails.cancel('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(response.id);",
       },
     },
   },
@@ -496,6 +496,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.emails.list(cursor?: string, limit?: number): { id: string; createdAt: string; from: string; status: status; subject: string; to: string[] | string; scheduledAt?: string; }`\n\n**get** `/emails`\n\nReturns sent emails ordered by submission date, newest first.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; createdAt: string; from: string; status: string; subject: string; to: string[] | string; scheduledAt?: string; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `from: string`\n  - `status: string`\n  - `subject: string`\n  - `to: string[] | string`\n  - `scheduledAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const emailListResponse of client.emails.list()) {\n  console.log(emailListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const emailListResponse of client.emails.list()) {\n  console.log(emailListResponse.id);\n}",
+      },
+      java: {
+        method: 'emails().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailListPage;\nimport com.nuntly.models.emails.EmailListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailListPage page = client.emails().list();\n    }\n}',
+      },
       go: {
         method: 'client.Emails.List',
         example:
@@ -503,16 +513,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/emails \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailListPage;\nimport com.nuntly.models.emails.EmailListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailListPage page = client.emails().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const emailListResponse of client.emails.list()) {\n  console.log(emailListResponse.id);\n}",
       },
     },
   },
@@ -544,6 +544,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## send\n\n`client.emails.send(from: string, subject: string, to: string[] | string, attachments?: { content: string; contentType?: string; filename?: string; }[], bcc?: string[] | string, cc?: string[] | string, headers?: object, html?: string, replyTo?: string[] | string, scheduledAt?: string, tags?: { name: string; value: string; }[], text?: string, variables?: object): { id: string; status: status; }`\n\n**post** `/emails`\n\nSend transactional emails through Nuntly platform. It supports HTML and plain-text emails, attachments, labels, custom headers and scheduling.\n\n### Parameters\n\n- `from: string`\n  The e-mail address of the sender\n\n- `subject: string`\n  The subject of the e-mail\n\n- `to: string[] | string`\n  The primary recipient(s) of the email\n\n- `attachments?: { content: string; contentType?: string; filename?: string; }[]`\n  The attachements to add to the email\n\n- `bcc?: string[] | string`\n  The blind carbon copy recipient(s) of the email\n\n- `cc?: string[] | string`\n  The carbon copy recipient(s) of the email\n\n- `headers?: object`\n  The headers to add to the email\n\n- `html?: string`\n  The HTML version of the email\n\n- `replyTo?: string[] | string`\n  The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address\n\n- `scheduledAt?: string`\n  The date at which the email is scheduled to be sent\n\n- `tags?: { name: string; value: string; }[]`\n  The tags to add to the email\n\n- `text?: string`\n  The plaintext version of the email\n\n- `variables?: object`\n  The variables for the template\n\n### Returns\n\n- `{ id: string; status: string; }`\n\n  - `id: string`\n  - `status: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.emails.send({\n  from: 'Tomlinson AI <ray@info.tomlinson.ai>',\n  subject: 'Verify your email address',\n  to: 'brian67@gmail.com',\n});\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.send',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.emails.send({\n  from: 'Tomlinson AI <ray@info.tomlinson.ai>',\n  subject: 'Verify your email address',\n  to: 'brian67@gmail.com',\n});\n\nconsole.log(response.id);",
+      },
+      java: {
+        method: 'emails().send',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailSendParams;\nimport com.nuntly.models.emails.EmailSendResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailSendParams params = EmailSendParams.builder()\n            .from("Tomlinson AI <ray@info.tomlinson.ai>")\n            .subject("Verify your email address")\n            .to("brian67@gmail.com")\n            .build();\n        EmailSendResponse response = client.emails().send(params);\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Send',
         example:
@@ -552,16 +562,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    --retry 0 \\\n    --max-time 0.15 \\\n    -d \'{\n          "from": "Tomlinson AI <ray@info.tomlinson.ai>",\n          "subject": "Verify your email address",\n          "to": "brian67@gmail.com"\n        }\'',
-      },
-      java: {
-        method: 'emails().send',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.EmailSendParams;\nimport com.nuntly.models.emails.EmailSendResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EmailSendParams params = EmailSendParams.builder()\n            .from("Tomlinson AI <ray@info.tomlinson.ai>")\n            .subject("Verify your email address")\n            .to("brian67@gmail.com")\n            .build();\n        EmailSendResponse response = client.emails().send(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.send',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.emails.send({\n  from: 'Tomlinson AI <ray@info.tomlinson.ai>',\n  subject: 'Verify your email address',\n  to: 'brian67@gmail.com',\n});\n\nconsole.log(response.id);",
       },
     },
   },
@@ -582,6 +582,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## send\n\n`client.emails.bulk.send(emails: { bcc?: string[] | string; cc?: string[] | string; from?: string; headers?: object; html?: string; replyTo?: string[] | string; scheduledAt?: string; subject?: string; tags?: object[]; text?: string; to?: string[] | string; variables?: object; }[], fallback?: { bcc?: string[] | string; cc?: string[] | string; from?: string; headers?: object; html?: string; replyTo?: string[] | string; scheduledAt?: string; subject?: string; tags?: object[]; text?: string; to?: string[] | string; variables?: object; }): { emails: object[]; id?: string; }`\n\n**post** `/emails/bulk`\n\nSend up to 100 emails in a single request. Use `fallback` to set default values shared across all messages.\n\n### Parameters\n\n- `emails: { bcc?: string[] | string; cc?: string[] | string; from?: string; headers?: object; html?: string; replyTo?: string[] | string; scheduledAt?: string; subject?: string; tags?: { name: string; value: string; }[]; text?: string; to?: string[] | string; variables?: object; }[]`\n  The bulk emails to send\n\n- `fallback?: { bcc?: string[] | string; cc?: string[] | string; from?: string; headers?: object; html?: string; replyTo?: string[] | string; scheduledAt?: string; subject?: string; tags?: { name: string; value: string; }[]; text?: string; to?: string[] | string; variables?: object; }`\n  Used as a fallback field email value if no value is present in emails\n  - `bcc?: string[] | string`\n    The blind carbon copy recipient(s) of the email\n  - `cc?: string[] | string`\n    The carbon copy recipient(s) of the email\n  - `from?: string`\n    The e-mail address of the sender\n  - `headers?: object`\n    The headers to add to the email\n  - `html?: string`\n    The HTML version of the email\n  - `replyTo?: string[] | string`\n    The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address\n  - `scheduledAt?: string`\n    The date at which the email is scheduled to be sent\n  - `subject?: string`\n    The subject of the e-mail\n  - `tags?: { name: string; value: string; }[]`\n    The tags to add to the email\n  - `text?: string`\n    The plaintext version of the email\n  - `to?: string[] | string`\n    The primary recipient(s) of the email\n  - `variables?: object`\n    The variables for the template\n\n### Returns\n\n- `{ emails: { status: string; id?: string; }[]; id?: string; }`\n\n  - `emails: { status: string; id?: string; }[]`\n  - `id?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.emails.bulk.send({ emails: [{}] });\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.bulk.send',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.emails.bulk.send({ emails: [{}] });\n\nconsole.log(response.id);",
+      },
+      java: {
+        method: 'emails().bulk().send',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.bulk.BulkSendParams;\nimport com.nuntly.models.emails.bulk.BulkSendResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        BulkSendParams params = BulkSendParams.builder()\n            .addEmail(BulkSendParams.Email.builder().build())\n            .build();\n        BulkSendResponse response = client.emails().bulk().send(params);\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Bulk.Send',
         example:
@@ -590,16 +600,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails/bulk \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "emails": [\n            {}\n          ]\n        }\'',
-      },
-      java: {
-        method: 'emails().bulk().send',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.bulk.BulkSendParams;\nimport com.nuntly.models.emails.bulk.BulkSendResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        BulkSendParams params = BulkSendParams.builder()\n            .addEmail(BulkSendParams.Email.builder().build())\n            .build();\n        BulkSendResponse response = client.emails().bulk().send(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.bulk.send',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.emails.bulk.send({ emails: [{}] });\n\nconsole.log(response.id);",
       },
     },
   },
@@ -616,6 +616,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.emails.bulk.retrieve(bulkId: string): { id: string; emails: object[]; }`\n\n**get** `/emails/bulk/{bulkId}`\n\nReturns the delivery status of all emails submitted in a bulk request.\n\n### Parameters\n\n- `bulkId: string`\n  The bulk id\n\n### Returns\n\n- `{ id: string; emails: { id: string; status: string; detail?: string; }[]; }`\n\n  - `id: string`\n  - `emails: { id: string; status: string; detail?: string; }[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst bulk = await client.emails.bulk.retrieve('blk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(bulk);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.bulk.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst bulk = await client.emails.bulk.retrieve('blk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(bulk.id);",
+      },
+      java: {
+        method: 'emails().bulk().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.bulk.BulkRetrieveParams;\nimport com.nuntly.models.emails.bulk.BulkRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        BulkRetrieveResponse bulk = client.emails().bulk().retrieve("blk_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Bulk.Get',
         example:
@@ -624,16 +634,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails/bulk/$BULK_ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().bulk().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.bulk.BulkRetrieveParams;\nimport com.nuntly.models.emails.bulk.BulkRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        BulkRetrieveResponse bulk = client.emails().bulk().retrieve("blk_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.bulk.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst bulk = await client.emails.bulk.retrieve('blk_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(bulk.id);",
       },
     },
   },
@@ -652,6 +652,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.emails.events.list(id: string): { id: string; createdAt: string; emailId: string; eventType: event_type; orgId: string; payload: object; occurredAt?: string; }[]`\n\n**get** `/emails/{id}/events`\n\nReturns the full delivery event history for an email (sent, delivered, opened, bounced, etc.).\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; createdAt: string; emailId: string; eventType: string; orgId: string; payload: object; occurredAt?: string; }[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst events = await client.emails.events.list('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(events);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.events.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst events = await client.emails.events.list('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(events);",
+      },
+      java: {
+        method: 'emails().events().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.events.EventListParams;\nimport com.nuntly.models.emails.events.EventListResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        List<EventListResponse> events = client.emails().events().list("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Events.List',
         example:
@@ -660,16 +670,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails/$ID/events \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().events().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.events.EventListParams;\nimport com.nuntly.models.emails.events.EventListResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        List<EventListResponse> events = client.emails().events().list("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.events.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst events = await client.emails.events.list('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(events);",
       },
     },
   },
@@ -688,6 +688,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.emails.content.retrieve(id: string): { html: email_content_item; htmlTemplate: email_content_item; mime: email_content_item; subjectTemplate: email_content_item; text: email_content_item; textTemplate: email_content_item; }`\n\n**get** `/emails/{id}/content`\n\nReturns presigned URLs to download the HTML, plain-text, and raw MIME source of a sent email.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ html: { downloadUrl: string; expiresAt: string; size: number; }; htmlTemplate: { downloadUrl: string; expiresAt: string; size: number; }; mime: { downloadUrl: string; expiresAt: string; size: number; }; subjectTemplate: { downloadUrl: string; expiresAt: string; size: number; }; text: { downloadUrl: string; expiresAt: string; size: number; }; textTemplate: { downloadUrl: string; expiresAt: string; size: number; }; }`\n\n  - `html: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `htmlTemplate: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `mime: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `subjectTemplate: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `text: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `textTemplate: { downloadUrl: string; expiresAt: string; size: number; }`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst content = await client.emails.content.retrieve('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(content);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.content.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst content = await client.emails.content.retrieve('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(content.html);",
+      },
+      java: {
+        method: 'emails().content().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.content.ContentRetrieveParams;\nimport com.nuntly.models.emails.content.ContentRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ContentRetrieveResponse content = client.emails().content().retrieve("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Content.Get',
         example:
@@ -696,16 +706,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails/$ID/content \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().content().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.content.ContentRetrieveParams;\nimport com.nuntly.models.emails.content.ContentRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ContentRetrieveResponse content = client.emails().content().retrieve("em_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.content.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst content = await client.emails.content.retrieve('em_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(content.html);",
       },
     },
   },
@@ -722,6 +722,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.emails.stats.list(): { end: string; start: string; stats: object[]; }`\n\n**get** `/emails/stats`\n\nReturns aggregated daily sending statistics for the current period.\n\n### Returns\n\n- `{ end: string; start: string; stats: { bounced: number; canceled: number; clicked: number; complaintReceived: number; delivered: number; deliveredDelayed: number; failed: number; occurredOn: string; opened: number; processed: number; queued: number; rejected: number; renderingFailed: number; scheduled: number; sending: number; sent: number; uniqueClicked: number; uniqueOpened: number; }[]; }`\n\n  - `end: string`\n  - `start: string`\n  - `stats: { bounced: number; canceled: number; clicked: number; complaintReceived: number; delivered: number; deliveredDelayed: number; failed: number; occurredOn: string; opened: number; processed: number; queued: number; rejected: number; renderingFailed: number; scheduled: number; sending: number; sent: number; uniqueClicked: number; uniqueOpened: number; }[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst stats = await client.emails.stats.list();\n\nconsole.log(stats);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.emails.stats.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst stats = await client.emails.stats.list();\n\nconsole.log(stats.end);",
+      },
+      java: {
+        method: 'emails().stats().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.stats.StatListParams;\nimport com.nuntly.models.emails.stats.StatListResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        StatListResponse stats = client.emails().stats().list();\n    }\n}',
+      },
       go: {
         method: 'client.Emails.Stats.List',
         example:
@@ -730,16 +740,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/emails/stats \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'emails().stats().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.emails.stats.StatListParams;\nimport com.nuntly.models.emails.stats.StatListResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        StatListResponse stats = client.emails().stats().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.emails.stats.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst stats = await client.emails.stats.list();\n\nconsole.log(stats.end);",
       },
     },
   },
@@ -756,6 +756,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## create\n\n`client.namespaces.create(name: string, externalId?: string): { id: string; createdAt: string; externalId: string; name: string; updatedAt?: string; }`\n\n**post** `/namespaces`\n\nCreate a new namespace.\n\n### Parameters\n\n- `name: string`\n  The display name of the namespace.\n\n- `externalId?: string`\n  An optional external identifier for the namespace.\n\n### Returns\n\n- `{ id: string; createdAt: string; externalId: string; name: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `externalId: string`\n  - `name: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst namespace = await client.namespaces.create({ name: 'x' });\n\nconsole.log(namespace);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.namespaces.create',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespace = await client.namespaces.create({ name: 'x' });\n\nconsole.log(namespace.id);",
+      },
+      java: {
+        method: 'namespaces().create',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.Namespace;\nimport com.nuntly.models.namespaces.NamespaceCreateParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceCreateParams params = NamespaceCreateParams.builder()\n            .name("x")\n            .build();\n        Namespace namespace = client.namespaces().create(params);\n    }\n}',
+      },
       go: {
         method: 'client.Namespaces.New',
         example:
@@ -764,16 +774,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/namespaces \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "name": "x"\n        }\'',
-      },
-      java: {
-        method: 'namespaces().create',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.Namespace;\nimport com.nuntly.models.namespaces.NamespaceCreateParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceCreateParams params = NamespaceCreateParams.builder()\n            .name("x")\n            .build();\n        Namespace namespace = client.namespaces().create(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.namespaces.create',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespace = await client.namespaces.create({ name: 'x' });\n\nconsole.log(namespace.id);",
       },
     },
   },
@@ -790,6 +790,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.namespaces.list(cursor?: string, limit?: number): { id: string; createdAt: string; externalId: string; name: string; updatedAt?: string; }`\n\n**get** `/namespaces`\n\nList all namespaces.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; createdAt: string; externalId: string; name: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `externalId: string`\n  - `name: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const namespace of client.namespaces.list()) {\n  console.log(namespace);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.namespaces.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const namespace of client.namespaces.list()) {\n  console.log(namespace.id);\n}",
+      },
+      java: {
+        method: 'namespaces().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceListPage;\nimport com.nuntly.models.namespaces.NamespaceListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceListPage page = client.namespaces().list();\n    }\n}',
+      },
       go: {
         method: 'client.Namespaces.List',
         example:
@@ -797,16 +807,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/namespaces \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'namespaces().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceListPage;\nimport com.nuntly.models.namespaces.NamespaceListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceListPage page = client.namespaces().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.namespaces.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const namespace of client.namespaces.list()) {\n  console.log(namespace.id);\n}",
       },
     },
   },
@@ -824,6 +824,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.namespaces.retrieve(namespaceId: string): { id: string; activeInboxCount: number; createdAt: string; externalId: string; inboxCount: number; name: string; updatedAt?: string; }`\n\n**get** `/namespaces/{namespaceId}`\n\nRetrieve a namespace with inbox stats.\n\n### Parameters\n\n- `namespaceId: string`\n\n### Returns\n\n- `{ id: string; activeInboxCount: number; createdAt: string; externalId: string; inboxCount: number; name: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `activeInboxCount: number`\n  - `createdAt: string`\n  - `externalId: string`\n  - `inboxCount: number`\n  - `name: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst namespaceDetail = await client.namespaces.retrieve('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespaceDetail);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.namespaces.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespaceDetail = await client.namespaces.retrieve('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespaceDetail.id);",
+      },
+      java: {
+        method: 'namespaces().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceDetail;\nimport com.nuntly.models.namespaces.NamespaceRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceDetail namespaceDetail = client.namespaces().retrieve("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Namespaces.Get',
         example:
@@ -832,16 +842,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/namespaces/$NAMESPACE_ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'namespaces().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceDetail;\nimport com.nuntly.models.namespaces.NamespaceRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceDetail namespaceDetail = client.namespaces().retrieve("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.namespaces.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespaceDetail = await client.namespaces.retrieve('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespaceDetail.id);",
       },
     },
   },
@@ -858,6 +858,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.namespaces.update(namespaceId: string, externalId?: string, name?: string): { id: string; }`\n\n**patch** `/namespaces/{namespaceId}`\n\nUpdate a namespace.\n\n### Parameters\n\n- `namespaceId: string`\n\n- `externalId?: string`\n  An optional external identifier for the namespace.\n\n- `name?: string`\n  The display name of the namespace.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst namespace = await client.namespaces.update('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespace);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.namespaces.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespace = await client.namespaces.update('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespace.id);",
+      },
+      java: {
+        method: 'namespaces().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceUpdateParams;\nimport com.nuntly.models.namespaces.NamespaceUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceUpdateResponse namespace = client.namespaces().update("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Namespaces.Update',
         example:
@@ -866,16 +876,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/namespaces/$NAMESPACE_ID \\\n    -X PATCH \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'namespaces().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceUpdateParams;\nimport com.nuntly.models.namespaces.NamespaceUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceUpdateResponse namespace = client.namespaces().update("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.namespaces.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespace = await client.namespaces.update('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespace.id);",
       },
     },
   },
@@ -892,6 +892,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## delete\n\n`client.namespaces.delete(namespaceId: string): { id: string; }`\n\n**delete** `/namespaces/{namespaceId}`\n\nSoft-delete a namespace. Rejects if it has active inboxes.\n\n### Parameters\n\n- `namespaceId: string`\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst namespace = await client.namespaces.delete('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespace);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.namespaces.delete',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespace = await client.namespaces.delete('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespace.id);",
+      },
+      java: {
+        method: 'namespaces().delete',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceDeleteParams;\nimport com.nuntly.models.namespaces.NamespaceDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceDeleteResponse namespace = client.namespaces().delete("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Namespaces.Delete',
         example:
@@ -900,16 +910,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/namespaces/$NAMESPACE_ID \\\n    -X DELETE \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'namespaces().delete',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.NamespaceDeleteParams;\nimport com.nuntly.models.namespaces.NamespaceDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        NamespaceDeleteResponse namespace = client.namespaces().delete("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.namespaces.delete',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst namespace = await client.namespaces.delete('ns_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(namespace.id);",
       },
     },
   },
@@ -927,6 +927,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.namespaces.inboxes.list(namespaceId: string, cursor?: string, limit?: number): { id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n**get** `/namespaces/{namespaceId}/inboxes`\n\nList inboxes in a namespace.\n\n### Parameters\n\n- `namespaceId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `address: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `name: string`\n  - `namespaceId: string`\n  - `namespaceName: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const inbox of client.namespaces.inboxes.list('ns_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(inbox);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.namespaces.inboxes.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const inbox of client.namespaces.inboxes.list('ns_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(inbox.id);\n}",
+      },
+      java: {
+        method: 'namespaces().inboxes().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.inboxes.InboxListPage;\nimport com.nuntly.models.namespaces.inboxes.InboxListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxListPage page = client.namespaces().inboxes().list("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Namespaces.Inboxes.List',
         example:
@@ -935,16 +945,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/namespaces/$NAMESPACE_ID/inboxes \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'namespaces().inboxes().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.namespaces.inboxes.InboxListPage;\nimport com.nuntly.models.namespaces.inboxes.InboxListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxListPage page = client.namespaces().inboxes().list("ns_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.namespaces.inboxes.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const inbox of client.namespaces.inboxes.list('ns_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(inbox.id);\n}",
       },
     },
   },
@@ -968,6 +968,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## create\n\n`client.inboxes.create(address: string, agentId?: string, domainId?: string, name?: string, namespaceId?: string): { id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n**post** `/inboxes`\n\nCreate a new inbox on a verified domain.\n\n### Parameters\n\n- `address: string`\n  The local-part of the email address (before the @).\n\n- `agentId?: string`\n  The external AI agent identifier.\n\n- `domainId?: string`\n  The id of the domain for this inbox. Defaults to your provided domain when omitted.\n\n- `name?: string`\n  The display name of the inbox.\n\n- `namespaceId?: string`\n  The id of the namespace to assign the inbox to.\n\n### Returns\n\n- `{ id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `address: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `name: string`\n  - `namespaceId: string`\n  - `namespaceName: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst inbox = await client.inboxes.create({ address: 'x' });\n\nconsole.log(inbox);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.create',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.create({ address: 'x' });\n\nconsole.log(inbox.id);",
+      },
+      java: {
+        method: 'inboxes().create',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.Inbox;\nimport com.nuntly.models.inboxes.InboxCreateParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxCreateParams params = InboxCreateParams.builder()\n            .address("x")\n            .build();\n        Inbox inbox = client.inboxes().create(params);\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.New',
         example:
@@ -976,16 +986,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/inboxes \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "address": "x"\n        }\'',
-      },
-      java: {
-        method: 'inboxes().create',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.Inbox;\nimport com.nuntly.models.inboxes.InboxCreateParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxCreateParams params = InboxCreateParams.builder()\n            .address("x")\n            .build();\n        Inbox inbox = client.inboxes().create(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.create',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.create({ address: 'x' });\n\nconsole.log(inbox.id);",
       },
     },
   },
@@ -1003,6 +1003,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.inboxes.list(cursor?: string, limit?: number, namespaceId?: string): { id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n**get** `/inboxes`\n\nList all inboxes.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n- `namespaceId?: string`\n  Filter by namespace.\n\n### Returns\n\n- `{ id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `address: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `name: string`\n  - `namespaceId: string`\n  - `namespaceName: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const inbox of client.inboxes.list()) {\n  console.log(inbox);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const inbox of client.inboxes.list()) {\n  console.log(inbox.id);\n}",
+      },
+      java: {
+        method: 'inboxes().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxListPage;\nimport com.nuntly.models.inboxes.InboxListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxListPage page = client.inboxes().list();\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.List',
         example:
@@ -1010,16 +1020,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/inboxes \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'inboxes().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxListPage;\nimport com.nuntly.models.inboxes.InboxListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxListPage page = client.inboxes().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const inbox of client.inboxes.list()) {\n  console.log(inbox.id);\n}",
       },
     },
   },
@@ -1037,6 +1037,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.inboxes.retrieve(inboxId: string): { id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n**get** `/inboxes/{inboxId}`\n\nRetrieve an inbox with thread stats.\n\n### Parameters\n\n- `inboxId: string`\n\n### Returns\n\n- `{ id: string; address: string; agentId: string; createdAt: string; domainId: string; domainName: string; name: string; namespaceId: string; namespaceName: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `address: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `name: string`\n  - `namespaceId: string`\n  - `namespaceName: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst inbox = await client.inboxes.retrieve('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.retrieve('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox.id);",
+      },
+      java: {
+        method: 'inboxes().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.Inbox;\nimport com.nuntly.models.inboxes.InboxRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        Inbox inbox = client.inboxes().retrieve("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.Get',
         example:
@@ -1045,16 +1055,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/inboxes/$INBOX_ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'inboxes().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.Inbox;\nimport com.nuntly.models.inboxes.InboxRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        Inbox inbox = client.inboxes().retrieve("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.retrieve('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox.id);",
       },
     },
   },
@@ -1071,6 +1071,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.inboxes.update(inboxId: string, name?: string): { id: string; }`\n\n**patch** `/inboxes/{inboxId}`\n\nUpdate an inbox.\n\n### Parameters\n\n- `inboxId: string`\n\n- `name?: string`\n  The display name of the inbox.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst inbox = await client.inboxes.update('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.update('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox.id);",
+      },
+      java: {
+        method: 'inboxes().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxUpdateParams;\nimport com.nuntly.models.inboxes.InboxUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxUpdateResponse inbox = client.inboxes().update("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.Update',
         example:
@@ -1079,16 +1089,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/inboxes/$INBOX_ID \\\n    -X PATCH \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'inboxes().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxUpdateParams;\nimport com.nuntly.models.inboxes.InboxUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxUpdateResponse inbox = client.inboxes().update("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.update('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox.id);",
       },
     },
   },
@@ -1105,6 +1105,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## delete\n\n`client.inboxes.delete(inboxId: string): { id: string; }`\n\n**delete** `/inboxes/{inboxId}`\n\nSoft-delete an inbox.\n\n### Parameters\n\n- `inboxId: string`\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst inbox = await client.inboxes.delete('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.delete',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.delete('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox.id);",
+      },
+      java: {
+        method: 'inboxes().delete',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxDeleteParams;\nimport com.nuntly.models.inboxes.InboxDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxDeleteResponse inbox = client.inboxes().delete("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.Delete',
         example:
@@ -1113,16 +1123,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/inboxes/$INBOX_ID \\\n    -X DELETE \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'inboxes().delete',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxDeleteParams;\nimport com.nuntly.models.inboxes.InboxDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxDeleteResponse inbox = client.inboxes().delete("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.delete',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst inbox = await client.inboxes.delete('ibx_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(inbox.id);",
       },
     },
   },
@@ -1147,6 +1147,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## send\n\n`client.inboxes.send(inboxId: string, subject: string, to: string[], bcc?: string[], cc?: string[], html?: string, text?: string): { id: string; messageId: string; subject: string; threadId: string; }`\n\n**post** `/inboxes/{inboxId}/messages`\n\nSend a new message from an inbox.\n\n### Parameters\n\n- `inboxId: string`\n\n- `subject: string`\n  The message subject.\n\n- `to: string[]`\n  The recipient addresses.\n\n- `bcc?: string[]`\n  The BCC addresses.\n\n- `cc?: string[]`\n  The CC addresses.\n\n- `html?: string`\n  The HTML body.\n\n- `text?: string`\n  The plain text body.\n\n### Returns\n\n- `{ id: string; messageId: string; subject: string; threadId: string; }`\n\n  - `id: string`\n  - `messageId: string`\n  - `subject: string`\n  - `threadId: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.inboxes.send('ibx_01kabn43yqyxn2bx4ve84mczd3', { subject: 'x', to: ['dev@stainless.com'] });\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.send',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.inboxes.send('ibx_01kabn43yqyxn2bx4ve84mczd3', {\n  subject: 'x',\n  to: ['dev@stainless.com'],\n});\n\nconsole.log(response.id);",
+      },
+      java: {
+        method: 'inboxes().send',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxSendParams;\nimport com.nuntly.models.inboxes.InboxSendResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxSendParams params = InboxSendParams.builder()\n            .inboxId("ibx_01kabn43yqyxn2bx4ve84mczd3")\n            .subject("x")\n            .addTo("dev@stainless.com")\n            .build();\n        InboxSendResponse response = client.inboxes().send(params);\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.Send',
         example:
@@ -1155,16 +1165,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/inboxes/$INBOX_ID/messages \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "subject": "x",\n          "to": [\n            "dev@stainless.com"\n          ]\n        }\'',
-      },
-      java: {
-        method: 'inboxes().send',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.InboxSendParams;\nimport com.nuntly.models.inboxes.InboxSendResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        InboxSendParams params = InboxSendParams.builder()\n            .inboxId("ibx_01kabn43yqyxn2bx4ve84mczd3")\n            .subject("x")\n            .addTo("dev@stainless.com")\n            .build();\n        InboxSendResponse response = client.inboxes().send(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.send',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.inboxes.send('ibx_01kabn43yqyxn2bx4ve84mczd3', {\n  subject: 'x',\n  to: ['dev@stainless.com'],\n});\n\nconsole.log(response.id);",
       },
     },
   },
@@ -1182,6 +1182,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.inboxes.threads.list(inboxId: string, cursor?: string, labels?: string, limit?: number): { id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n**get** `/inboxes/{inboxId}/threads`\n\nList threads in an inbox.\n\n### Parameters\n\n- `inboxId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `labels?: string`\n  Comma-separated labels to filter by (AND logic). Threads with spam/trash are excluded by default unless explicitly requested via ?labels=spam or ?labels=trash.\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `lastMessageAt: string`\n  - `messageCount: number`\n  - `subject: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const thread of client.inboxes.threads.list('ibx_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(thread);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.inboxes.threads.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const thread of client.inboxes.threads.list('ibx_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(thread.id);\n}",
+      },
+      java: {
+        method: 'inboxes().threads().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.threads.ThreadListPage;\nimport com.nuntly.models.inboxes.threads.ThreadListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ThreadListPage page = client.inboxes().threads().list("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Inboxes.Threads.List',
         example:
@@ -1190,16 +1200,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/inboxes/$INBOX_ID/threads \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'inboxes().threads().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.inboxes.threads.ThreadListPage;\nimport com.nuntly.models.inboxes.threads.ThreadListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ThreadListPage page = client.inboxes().threads().list("ibx_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.inboxes.threads.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const thread of client.inboxes.threads.list('ibx_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(thread.id);\n}",
       },
     },
   },
@@ -1218,6 +1218,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.threads.retrieve(threadId: string, markRead?: string): { id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n**get** `/threads/{threadId}`\n\nRetrieve a thread. Pass ?markRead=true to automatically remove the unread label from all messages.\n\n### Parameters\n\n- `threadId: string`\n\n- `markRead?: string`\n  Set to \"true\" to automatically remove the unread label from all messages in the thread.\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; domainId: string; domainName: string; inboxId: string; labels: string[]; lastMessageAt: string; messageCount: number; subject: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `domainId: string`\n  - `domainName: string`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `lastMessageAt: string`\n  - `messageCount: number`\n  - `subject: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst thread = await client.threads.retrieve('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.threads.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst thread = await client.threads.retrieve('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread.id);",
+      },
+      java: {
+        method: 'threads().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.threads.Thread;\nimport com.nuntly.models.threads.ThreadRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        Thread thread = client.threads().retrieve("thr_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Threads.Get',
         example:
@@ -1226,16 +1236,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/threads/$THREAD_ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'threads().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.threads.Thread;\nimport com.nuntly.models.threads.ThreadRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        Thread thread = client.threads().retrieve("thr_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.threads.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst thread = await client.threads.retrieve('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread.id);",
       },
     },
   },
@@ -1253,6 +1253,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.threads.update(threadId: string, addLabels?: string[], agentId?: string, removeLabels?: string[]): { id: string; }`\n\n**patch** `/threads/{threadId}`\n\nUpdate thread labels and agent assignment. Label operations apply to all messages in the thread.\n\n### Parameters\n\n- `threadId: string`\n\n- `addLabels?: string[]`\n  Labels to add to all messages in the thread.\n\n- `agentId?: string`\n  The AI agent identifier.\n\n- `removeLabels?: string[]`\n  Labels to remove from all messages in the thread.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst thread = await client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.threads.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst thread = await client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread.id);",
+      },
+      java: {
+        method: 'threads().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.threads.ThreadUpdateParams;\nimport com.nuntly.models.threads.ThreadUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ThreadUpdateResponse thread = client.threads().update("thr_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Threads.Update',
         example:
@@ -1261,16 +1271,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/threads/$THREAD_ID \\\n    -X PATCH \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'threads().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.threads.ThreadUpdateParams;\nimport com.nuntly.models.threads.ThreadUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        ThreadUpdateResponse thread = client.threads().update("thr_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.threads.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst thread = await client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(thread.id);",
       },
     },
   },
@@ -1288,6 +1288,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.threads.messages.list(threadId: string, cursor?: string, limit?: number): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/threads/{threadId}/messages`\n\nList messages in a thread (chronological order).\n\n### Parameters\n\n- `threadId: string`\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `labels: string[]`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const messageListResponse of client.threads.messages.list('thr_01kabn43yqyxn2bx4ve84mczd3')) {\n  console.log(messageListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.threads.messages.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const messageListResponse of client.threads.messages.list(\n  'thr_01kabn43yqyxn2bx4ve84mczd3',\n)) {\n  console.log(messageListResponse.id);\n}",
+      },
+      java: {
+        method: 'threads().messages().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.threads.messages.MessageListPage;\nimport com.nuntly.models.threads.messages.MessageListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageListPage page = client.threads().messages().list("thr_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Threads.Messages.List',
         example:
@@ -1296,16 +1306,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/threads/$THREAD_ID/messages \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'threads().messages().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.threads.messages.MessageListPage;\nimport com.nuntly.models.threads.messages.MessageListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageListPage page = client.threads().messages().list("thr_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.threads.messages.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const messageListResponse of client.threads.messages.list(\n  'thr_01kabn43yqyxn2bx4ve84mczd3',\n)) {\n  console.log(messageListResponse.id);\n}",
       },
     },
   },
@@ -1323,6 +1323,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.messages.list(cursor?: string, domainId?: string, from?: string, limit?: number): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/messages`\n\nList all received messages across inboxes.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `domainId?: string`\n  Filter by domain.\n\n- `from?: string`\n  Filter by sender address.\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const message of client.messages.list()) {\n  console.log(message);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const message of client.messages.list()) {\n  console.log(message.id);\n}",
+      },
+      java: {
+        method: 'messages().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageListPage;\nimport com.nuntly.models.messages.MessageListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageListPage page = client.messages().list();\n    }\n}',
+      },
       go: {
         method: 'client.Messages.List',
         example:
@@ -1330,16 +1340,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/messages \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageListPage;\nimport com.nuntly.models.messages.MessageListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageListPage page = client.messages().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const message of client.messages.list()) {\n  console.log(message.id);\n}",
       },
     },
   },
@@ -1357,6 +1357,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.messages.retrieve(messageId: string): { id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n**get** `/messages/{messageId}`\n\nRetrieve a single message with inbox enrichment.\n\n### Parameters\n\n- `messageId: string`\n\n### Returns\n\n- `{ id: string; attachmentCount: number; bcc: string[]; cc: string[]; createdAt: string; from: string; headers: object; inboxId: string; labels: string[]; messageId: string; receivedAt: string; replyTo: string[]; status: 'received' | 'sent' | 'discarded' | 'failed'; subject: string; threadId: string; to: string[]; }`\n\n  - `id: string`\n  - `attachmentCount: number`\n  - `bcc: string[]`\n  - `cc: string[]`\n  - `createdAt: string`\n  - `from: string`\n  - `headers: object`\n  - `inboxId: string`\n  - `labels: string[]`\n  - `messageId: string`\n  - `receivedAt: string`\n  - `replyTo: string[]`\n  - `status: 'received' | 'sent' | 'discarded' | 'failed'`\n  - `subject: string`\n  - `threadId: string`\n  - `to: string[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst messageDetail = await client.messages.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageDetail);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageDetail = await client.messages.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageDetail.id);",
+      },
+      java: {
+        method: 'messages().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageDetail;\nimport com.nuntly.models.messages.MessageRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageDetail messageDetail = client.messages().retrieve("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Get',
         example:
@@ -1365,16 +1375,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageDetail;\nimport com.nuntly.models.messages.MessageRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageDetail messageDetail = client.messages().retrieve("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageDetail = await client.messages.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageDetail.id);",
       },
     },
   },
@@ -1391,6 +1391,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.messages.update(messageId: string, addLabels?: string[], removeLabels?: string[]): { id: string; }`\n\n**patch** `/messages/{messageId}`\n\nUpdate message labels. Only available for messages in user-created inboxes.\n\n### Parameters\n\n- `messageId: string`\n\n- `addLabels?: string[]`\n  Labels to add to the message.\n\n- `removeLabels?: string[]`\n  Labels to remove from the message.\n\n### Returns\n\n- `{ id: string; }`\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst message = await client.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(message);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst message = await client.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(message.id);",
+      },
+      java: {
+        method: 'messages().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageUpdateParams;\nimport com.nuntly.models.messages.MessageUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageUpdateResponse message = client.messages().update("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Update',
         example:
@@ -1399,16 +1409,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID \\\n    -X PATCH \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageUpdateParams;\nimport com.nuntly.models.messages.MessageUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageUpdateResponse message = client.messages().update("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst message = await client.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(message.id);",
       },
     },
   },
@@ -1425,6 +1425,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## reply\n\n`client.messages.reply(messageId: string, html?: string, replyAll?: boolean, text?: string): { id: string; messageId: string; subject: string; threadId: string; }`\n\n**post** `/messages/{messageId}/reply`\n\nReply to a message. Set replyAll to true to reply to all recipients.\n\n### Parameters\n\n- `messageId: string`\n\n- `html?: string`\n  The HTML body.\n\n- `replyAll?: boolean`\n  Whether to reply to all recipients.\n\n- `text?: string`\n  The plain text body.\n\n### Returns\n\n- `{ id: string; messageId: string; subject: string; threadId: string; }`\n\n  - `id: string`\n  - `messageId: string`\n  - `subject: string`\n  - `threadId: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.messages.reply('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.reply',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.messages.reply('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(response.id);",
+      },
+      java: {
+        method: 'messages().reply',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageReplyParams;\nimport com.nuntly.models.messages.MessageReplyResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageReplyResponse response = client.messages().reply("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Reply',
         example:
@@ -1433,16 +1443,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID/reply \\\n    -X POST \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().reply',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageReplyParams;\nimport com.nuntly.models.messages.MessageReplyResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageReplyResponse response = client.messages().reply("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.reply',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.messages.reply('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(response.id);",
       },
     },
   },
@@ -1459,6 +1459,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## forward\n\n`client.messages.forward(messageId: string, to: string[], text?: string): { id: string; messageId: string; subject: string; threadId: string; }`\n\n**post** `/messages/{messageId}/forward`\n\nForward a message to new recipients.\n\n### Parameters\n\n- `messageId: string`\n\n- `to: string[]`\n  The recipient addresses to forward to.\n\n- `text?: string`\n  An optional comment to prepend.\n\n### Returns\n\n- `{ id: string; messageId: string; subject: string; threadId: string; }`\n\n  - `id: string`\n  - `messageId: string`\n  - `subject: string`\n  - `threadId: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.messages.forward('imsg_01kabn43yqyxn2bx4ve84mczd3', { to: ['dev@stainless.com'] });\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.forward',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.messages.forward('imsg_01kabn43yqyxn2bx4ve84mczd3', {\n  to: ['dev@stainless.com'],\n});\n\nconsole.log(response.id);",
+      },
+      java: {
+        method: 'messages().forward',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageForwardParams;\nimport com.nuntly.models.messages.MessageForwardResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageForwardParams params = MessageForwardParams.builder()\n            .messageId("imsg_01kabn43yqyxn2bx4ve84mczd3")\n            .addTo("dev@stainless.com")\n            .build();\n        MessageForwardResponse response = client.messages().forward(params);\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Forward',
         example:
@@ -1467,16 +1477,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID/forward \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "to": [\n            "dev@stainless.com"\n          ]\n        }\'',
-      },
-      java: {
-        method: 'messages().forward',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageForwardParams;\nimport com.nuntly.models.messages.MessageForwardResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageForwardParams params = MessageForwardParams.builder()\n            .messageId("imsg_01kabn43yqyxn2bx4ve84mczd3")\n            .addTo("dev@stainless.com")\n            .build();\n        MessageForwardResponse response = client.messages().forward(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.forward',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.messages.forward('imsg_01kabn43yqyxn2bx4ve84mczd3', {\n  to: ['dev@stainless.com'],\n});\n\nconsole.log(response.id);",
       },
     },
   },
@@ -1495,6 +1495,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.messages.content.retrieve(messageId: string, format?: 'html' | 'text' | 'mime'[]): { html: message_content_item; mime: message_content_item; text: message_content_item; }`\n\n**get** `/messages/{messageId}/content`\n\nReturns presigned URLs to download the HTML, plain-text, and raw MIME source of a received message.\n\n### Parameters\n\n- `messageId: string`\n\n- `format?: 'html' | 'text' | 'mime'[]`\n  Content formats to retrieve. Defaults to `html` only.\n\n### Returns\n\n- `{ html: { downloadUrl: string; expiresAt: string; size: number; }; mime: { downloadUrl: string; expiresAt: string; size: number; }; text: { downloadUrl: string; expiresAt: string; size: number; }; }`\n\n  - `html: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `mime: { downloadUrl: string; expiresAt: string; size: number; }`\n  - `text: { downloadUrl: string; expiresAt: string; size: number; }`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst messageContent = await client.messages.content.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageContent);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.content.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageContent = await client.messages.content.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageContent.html);",
+      },
+      java: {
+        method: 'messages().content().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageContent;\nimport com.nuntly.models.messages.content.ContentRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageContent messageContent = client.messages().content().retrieve("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Content.Get',
         example:
@@ -1503,16 +1513,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID/content \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().content().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageContent;\nimport com.nuntly.models.messages.content.ContentRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MessageContent messageContent = client.messages().content().retrieve("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.content.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageContent = await client.messages.content.retrieve('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageContent.html);",
       },
     },
   },
@@ -1530,6 +1530,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.messages.attachments.list(messageId: string): object[]`\n\n**get** `/messages/{messageId}/attachments`\n\nList all attachments for a message.\n\n### Parameters\n\n- `messageId: string`\n\n### Returns\n\n- `{ id: string; contentDisposition: string; contentId: string; contentType: string; filename: string; size: number; downloadUrl?: string; }[]`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst messageAttachments = await client.messages.attachments.list('imsg_01kabn43yqyxn2bx4ve84mczd3');\n\nconsole.log(messageAttachments);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.attachments.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageAttachments = await client.messages.attachments.list(\n  'imsg_01kabn43yqyxn2bx4ve84mczd3',\n);\n\nconsole.log(messageAttachments);",
+      },
+      java: {
+        method: 'messages().attachments().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageAttachment;\nimport com.nuntly.models.messages.attachments.AttachmentListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        List<MessageAttachment> messageAttachments = client.messages().attachments().list("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Attachments.List',
         example:
@@ -1538,16 +1548,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID/attachments \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().attachments().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageAttachment;\nimport com.nuntly.models.messages.attachments.AttachmentListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        List<MessageAttachment> messageAttachments = client.messages().attachments().list("imsg_01kabn43yqyxn2bx4ve84mczd3");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.attachments.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageAttachments = await client.messages.attachments.list(\n  'imsg_01kabn43yqyxn2bx4ve84mczd3',\n);\n\nconsole.log(messageAttachments);",
       },
     },
   },
@@ -1565,6 +1565,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.messages.attachments.retrieve(messageId: string, attachmentId: string): { id: string; contentDisposition: string; contentId: string; contentType: string; filename: string; size: number; downloadUrl?: string; }`\n\n**get** `/messages/{messageId}/attachments/{attachmentId}`\n\nRetrieve an attachment with a presigned download URL.\n\n### Parameters\n\n- `messageId: string`\n\n- `attachmentId: string`\n\n### Returns\n\n- `{ id: string; contentDisposition: string; contentId: string; contentType: string; filename: string; size: number; downloadUrl?: string; }`\n\n  - `id: string`\n  - `contentDisposition: string`\n  - `contentId: string`\n  - `contentType: string`\n  - `filename: string`\n  - `size: number`\n  - `downloadUrl?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst messageAttachment = await client.messages.attachments.retrieve('iatt_01kabn43yqyxn2bx4ve84mczd3', { messageId: 'imsg_01kabn43yqyxn2bx4ve84mczd3' });\n\nconsole.log(messageAttachment);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.messages.attachments.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageAttachment = await client.messages.attachments.retrieve(\n  'iatt_01kabn43yqyxn2bx4ve84mczd3',\n  { messageId: 'imsg_01kabn43yqyxn2bx4ve84mczd3' },\n);\n\nconsole.log(messageAttachment.id);",
+      },
+      java: {
+        method: 'messages().attachments().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageAttachment;\nimport com.nuntly.models.messages.attachments.AttachmentRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        AttachmentRetrieveParams params = AttachmentRetrieveParams.builder()\n            .messageId("imsg_01kabn43yqyxn2bx4ve84mczd3")\n            .attachmentId("iatt_01kabn43yqyxn2bx4ve84mczd3")\n            .build();\n        MessageAttachment messageAttachment = client.messages().attachments().retrieve(params);\n    }\n}',
+      },
       go: {
         method: 'client.Messages.Attachments.Get',
         example:
@@ -1573,16 +1583,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/messages/$MESSAGE_ID/attachments/$ATTACHMENT_ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'messages().attachments().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.messages.MessageAttachment;\nimport com.nuntly.models.messages.attachments.AttachmentRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        AttachmentRetrieveParams params = AttachmentRetrieveParams.builder()\n            .messageId("imsg_01kabn43yqyxn2bx4ve84mczd3")\n            .attachmentId("iatt_01kabn43yqyxn2bx4ve84mczd3")\n            .build();\n        MessageAttachment messageAttachment = client.messages().attachments().retrieve(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.messages.attachments.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst messageAttachment = await client.messages.attachments.retrieve(\n  'iatt_01kabn43yqyxn2bx4ve84mczd3',\n  { messageId: 'imsg_01kabn43yqyxn2bx4ve84mczd3' },\n);\n\nconsole.log(messageAttachment.id);",
       },
     },
   },
@@ -1600,6 +1600,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.agents.memory.retrieve(agentId: string, inboxId?: string, threadId?: string): { id: string; agentId: string; createdAt: string; inboxId: string; memory: object; summary: string; threadId: string; updatedAt?: string; }`\n\n**get** `/agents/{agentId}/memory`\n\nRetrieve the memory for an AI agent.\n\n### Parameters\n\n- `agentId: string`\n\n- `inboxId?: string`\n  Scope memory to a specific inbox.\n\n- `threadId?: string`\n  Scope memory to a specific thread.\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; inboxId: string; memory: object; summary: string; threadId: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `inboxId: string`\n  - `memory: object`\n  - `summary: string`\n  - `threadId: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst agentMemory = await client.agents.memory.retrieve('x');\n\nconsole.log(agentMemory);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.agents.memory.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst agentMemory = await client.agents.memory.retrieve('x');\n\nconsole.log(agentMemory.id);",
+      },
+      java: {
+        method: 'agents().memory().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.agents.AgentMemory;\nimport com.nuntly.models.agents.memory.MemoryRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        AgentMemory agentMemory = client.agents().memory().retrieve("x");\n    }\n}',
+      },
       go: {
         method: 'client.Agents.Memory.Get',
         example:
@@ -1608,16 +1618,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/agents/$AGENT_ID/memory \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'agents().memory().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.agents.AgentMemory;\nimport com.nuntly.models.agents.memory.MemoryRetrieveParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        AgentMemory agentMemory = client.agents().memory().retrieve("x");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.agents.memory.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst agentMemory = await client.agents.memory.retrieve('x');\n\nconsole.log(agentMemory.id);",
       },
     },
   },
@@ -1641,6 +1641,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## upsert\n\n`client.agents.memory.upsert(agentId: string, memory: object, inboxId?: string, summary?: string, threadId?: string): { id: string; agentId: string; createdAt: string; inboxId: string; memory: object; summary: string; threadId: string; updatedAt?: string; }`\n\n**put** `/agents/{agentId}/memory`\n\nCreate or update the memory for an AI agent.\n\n### Parameters\n\n- `agentId: string`\n\n- `memory: object`\n  The agent memory key-value data.\n\n- `inboxId?: string`\n  The inbox id to scope the memory to.\n\n- `summary?: string`\n  A human-readable conversation summary.\n\n- `threadId?: string`\n  The thread id to scope the memory to.\n\n### Returns\n\n- `{ id: string; agentId: string; createdAt: string; inboxId: string; memory: object; summary: string; threadId: string; updatedAt?: string; }`\n\n  - `id: string`\n  - `agentId: string`\n  - `createdAt: string`\n  - `inboxId: string`\n  - `memory: object`\n  - `summary: string`\n  - `threadId: string`\n  - `updatedAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst agentMemory = await client.agents.memory.upsert('x', { memory: { foo: 'string' } });\n\nconsole.log(agentMemory);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.agents.memory.upsert',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst agentMemory = await client.agents.memory.upsert('x', { memory: { foo: 'string' } });\n\nconsole.log(agentMemory.id);",
+      },
+      java: {
+        method: 'agents().memory().upsert',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.core.JsonValue;\nimport com.nuntly.models.agents.AgentMemory;\nimport com.nuntly.models.agents.memory.MemoryUpsertParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MemoryUpsertParams params = MemoryUpsertParams.builder()\n            .agentId("x")\n            .memory(MemoryUpsertParams.Memory.builder()\n                .putAdditionalProperty("foo", JsonValue.from("string"))\n                .build())\n            .build();\n        AgentMemory agentMemory = client.agents().memory().upsert(params);\n    }\n}',
+      },
       go: {
         method: 'client.Agents.Memory.Upsert',
         example:
@@ -1649,16 +1659,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/agents/$AGENT_ID/memory \\\n    -X PUT \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "memory": {\n            "foo": "string"\n          }\n        }\'',
-      },
-      java: {
-        method: 'agents().memory().upsert',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.core.JsonValue;\nimport com.nuntly.models.agents.AgentMemory;\nimport com.nuntly.models.agents.memory.MemoryUpsertParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        MemoryUpsertParams params = MemoryUpsertParams.builder()\n            .agentId("x")\n            .memory(MemoryUpsertParams.Memory.builder()\n                .putAdditionalProperty("foo", JsonValue.from("string"))\n                .build())\n            .build();\n        AgentMemory agentMemory = client.agents().memory().upsert(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.agents.memory.upsert',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst agentMemory = await client.agents.memory.upsert('x', { memory: { foo: 'string' } });\n\nconsole.log(agentMemory.id);",
       },
     },
   },
@@ -1671,19 +1671,19 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     stainlessPath: '(resource) webhooks > (method) unwrap',
     qualified: 'client.webhooks.unwrap',
     perLanguage: {
-      go: {
-        method: 'client.Webhooks.Unwrap',
+      typescript: {
+        method: 'client.webhooks.unwrap',
         example:
-          'package main\n\nimport (\n\t"context"\n\n\t"github.com/stainless-sdks/nuntly-go"\n\t"github.com/stainless-sdks/nuntly-go/option"\n)\n\nfunc main() {\n\tclient := nuntly.NewClient(\n\t\toption.WithAPIKey("My API Key"),\n\t)\n\terr := client.Webhooks.Unwrap(context.TODO())\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n}\n',
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nawait client.webhooks.unwrap();",
       },
       java: {
         example:
           'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookUnwrapParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        client.webhooks().unwrap();\n    }\n}',
       },
-      typescript: {
-        method: 'client.webhooks.unwrap',
+      go: {
+        method: 'client.Webhooks.Unwrap',
         example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nawait client.webhooks.unwrap();",
+          'package main\n\nimport (\n\t"context"\n\n\t"github.com/stainless-sdks/nuntly-go"\n\t"github.com/stainless-sdks/nuntly-go/option"\n)\n\nfunc main() {\n\tclient := nuntly.NewClient(\n\t\toption.WithAPIKey("My API Key"),\n\t)\n\terr := client.Webhooks.Unwrap(context.TODO())\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n}\n',
       },
     },
   },
@@ -1701,6 +1701,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.webhooks.retrieve(id: string): { id: string; createdAt: string; endpointUrl: string; events: event_type[]; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n**get** `/webhooks/{id}`\n\nReturns a webhook endpoint with its URL, subscribed events, and configuration.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; createdAt: string; endpointUrl: string; events: string[]; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n  Webhook details\n\n  - `id: string`\n  - `createdAt: string`\n  - `endpointUrl: string`\n  - `events: string[]`\n  - `status: 'enabled' | 'disabled' | 'revoked'`\n  - `name?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst webhook = await client.webhooks.retrieve('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.retrieve('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook.id);",
+      },
+      java: {
+        method: 'webhooks().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookRetrieveParams;\nimport com.nuntly.models.webhooks.WebhookRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookRetrieveResponse webhook = client.webhooks().retrieve("wh_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.Get',
         example:
@@ -1709,16 +1719,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks/$ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookRetrieveParams;\nimport com.nuntly.models.webhooks.WebhookRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookRetrieveResponse webhook = client.webhooks().retrieve("wh_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.retrieve('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook.id);",
       },
     },
   },
@@ -1742,6 +1742,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## update\n\n`client.webhooks.update(id: string, endpointUrl?: string, events?: string[], name?: string, rotateSecret?: boolean, status?: 'enabled' | 'disabled' | 'revoked'): { id: string; signingSecret?: string; }`\n\n**put** `/webhooks/{id}`\n\nUpdate the endpoint URL, subscribed event types, or rotate the signing secret.\n\n### Parameters\n\n- `id: string`\n\n- `endpointUrl?: string`\n  The endpoint URL of the webhook\n\n- `events?: string[]`\n\n- `name?: string`\n  The name of the webhook\n\n- `rotateSecret?: boolean`\n  If true, a new signing secret will be generated\n\n- `status?: 'enabled' | 'disabled' | 'revoked'`\n  The status of the webhook.\n\n### Returns\n\n- `{ id: string; signingSecret?: string; }`\n  Response after updating a webhook\n\n  - `id: string`\n  - `signingSecret?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst webhook = await client.webhooks.update('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.update',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.update('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook.id);",
+      },
+      java: {
+        method: 'webhooks().update',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookUpdateParams;\nimport com.nuntly.models.webhooks.WebhookUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookUpdateResponse webhook = client.webhooks().update("wh_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.Update',
         example:
@@ -1750,16 +1760,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks/$ID \\\n    -X PUT \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().update',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookUpdateParams;\nimport com.nuntly.models.webhooks.WebhookUpdateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookUpdateResponse webhook = client.webhooks().update("wh_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.update',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.update('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook.id);",
       },
     },
   },
@@ -1776,6 +1776,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## delete\n\n`client.webhooks.delete(id: string): { id: string; }`\n\n**delete** `/webhooks/{id}`\n\nRemove a webhook endpoint. No further events will be delivered to this URL.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; }`\n  Response after deleting a webhook\n\n  - `id: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst webhook = await client.webhooks.delete('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.delete',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.delete('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook.id);",
+      },
+      java: {
+        method: 'webhooks().delete',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookDeleteParams;\nimport com.nuntly.models.webhooks.WebhookDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookDeleteResponse webhook = client.webhooks().delete("wh_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.Delete',
         example:
@@ -1784,16 +1794,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks/$ID \\\n    -X DELETE \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().delete',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookDeleteParams;\nimport com.nuntly.models.webhooks.WebhookDeleteResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookDeleteResponse webhook = client.webhooks().delete("wh_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.delete',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.delete('wh_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(webhook.id);",
       },
     },
   },
@@ -1816,6 +1816,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## create\n\n`client.webhooks.create(endpointUrl: string, events: string[], name?: string, status?: 'enabled' | 'disabled' | 'revoked'): { id: string; createdAt: string; endpointUrl: string; events: event_type[]; signingSecret: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n**post** `/webhooks`\n\nRegister an endpoint to start receiving webhook events for your organization.\n\n### Parameters\n\n- `endpointUrl: string`\n  The endpoint URL of the webhook\n\n- `events: string[]`\n\n- `name?: string`\n  The name of the webhook\n\n- `status?: 'enabled' | 'disabled' | 'revoked'`\n  The status of the webhook.\n\n### Returns\n\n- `{ id: string; createdAt: string; endpointUrl: string; events: string[]; signingSecret: string; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n  Response after creating a webhook\n\n  - `id: string`\n  - `createdAt: string`\n  - `endpointUrl: string`\n  - `events: string[]`\n  - `signingSecret: string`\n  - `status: 'enabled' | 'disabled' | 'revoked'`\n  - `name?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst webhook = await client.webhooks.create({ endpointUrl: 'https://example.com', events: ['email.queued'] });\n\nconsole.log(webhook);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.create',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.create({\n  endpointUrl: 'https://example.com',\n  events: ['email.queued'],\n});\n\nconsole.log(webhook.id);",
+      },
+      java: {
+        method: 'webhooks().create',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.shared.EventType;\nimport com.nuntly.models.webhooks.WebhookCreateParams;\nimport com.nuntly.models.webhooks.WebhookCreateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookCreateParams params = WebhookCreateParams.builder()\n            .endpointUrl("https://example.com")\n            .addEvent(EventType.EMAIL_QUEUED)\n            .build();\n        WebhookCreateResponse webhook = client.webhooks().create(params);\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.New',
         example:
@@ -1824,16 +1834,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks \\\n    -H \'Content-Type: application/json\' \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY" \\\n    -d \'{\n          "endpointUrl": "https://example.com",\n          "events": [\n            "email.queued"\n          ]\n        }\'',
-      },
-      java: {
-        method: 'webhooks().create',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.shared.EventType;\nimport com.nuntly.models.webhooks.WebhookCreateParams;\nimport com.nuntly.models.webhooks.WebhookCreateResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookCreateParams params = WebhookCreateParams.builder()\n            .endpointUrl("https://example.com")\n            .addEvent(EventType.EMAIL_QUEUED)\n            .build();\n        WebhookCreateResponse webhook = client.webhooks().create(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.create',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst webhook = await client.webhooks.create({\n  endpointUrl: 'https://example.com',\n  events: ['email.queued'],\n});\n\nconsole.log(webhook.id);",
       },
     },
   },
@@ -1851,6 +1851,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.webhooks.list(cursor?: string, limit?: number): { id: string; createdAt: string; endpointUrl: string; events: event_type[]; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n**get** `/webhooks`\n\nReturns all registered webhook endpoints for the organization.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; createdAt: string; endpointUrl: string; events: string[]; status: 'enabled' | 'disabled' | 'revoked'; name?: string; }`\n\n  - `id: string`\n  - `createdAt: string`\n  - `endpointUrl: string`\n  - `events: string[]`\n  - `status: 'enabled' | 'disabled' | 'revoked'`\n  - `name?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const webhookListResponse of client.webhooks.list()) {\n  console.log(webhookListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const webhookListResponse of client.webhooks.list()) {\n  console.log(webhookListResponse.id);\n}",
+      },
+      java: {
+        method: 'webhooks().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookListPage;\nimport com.nuntly.models.webhooks.WebhookListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookListPage page = client.webhooks().list();\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.List',
         example:
@@ -1858,16 +1868,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       },
       http: {
         example: 'curl https://api.nuntly.com/webhooks \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.WebhookListPage;\nimport com.nuntly.models.webhooks.WebhookListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        WebhookListPage page = client.webhooks().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const webhookListResponse of client.webhooks.list()) {\n  console.log(webhookListResponse.id);\n}",
       },
     },
   },
@@ -1884,6 +1884,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## replay\n\n`client.webhooks.events.replay(id: string, eventId: string): object`\n\n**post** `/webhooks/{id}/events/{eventId}/replay`\n\nRe-deliver a webhook event to its endpoint. Useful for retrying failed deliveries.\n\n### Parameters\n\n- `id: string`\n\n- `eventId: string`\n\n### Returns\n\n- `object`\n  Response for webhook event replay\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.webhooks.events.replay('evt_01ka8k8s80gvx9604cn9am5st4', { id: 'wh_01ka8k8s80gvx9604cn9am5st4' });\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.events.replay',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.webhooks.events.replay('evt_01ka8k8s80gvx9604cn9am5st4', {\n  id: 'wh_01ka8k8s80gvx9604cn9am5st4',\n});\n\nconsole.log(response);",
+      },
+      java: {
+        method: 'webhooks().events().replay',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.events.EventReplayParams;\nimport com.nuntly.models.webhooks.events.EventReplayResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EventReplayParams params = EventReplayParams.builder()\n            .id("wh_01ka8k8s80gvx9604cn9am5st4")\n            .eventId("evt_01ka8k8s80gvx9604cn9am5st4")\n            .build();\n        EventReplayResponse response = client.webhooks().events().replay(params);\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.Events.Replay',
         example:
@@ -1892,16 +1902,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks/$ID/events/$EVENT_ID/replay \\\n    -X POST \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().events().replay',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.events.EventReplayParams;\nimport com.nuntly.models.webhooks.events.EventReplayResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EventReplayParams params = EventReplayParams.builder()\n            .id("wh_01ka8k8s80gvx9604cn9am5st4")\n            .eventId("evt_01ka8k8s80gvx9604cn9am5st4")\n            .build();\n        EventReplayResponse response = client.webhooks().events().replay(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.events.replay',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.webhooks.events.replay('evt_01ka8k8s80gvx9604cn9am5st4', {\n  id: 'wh_01ka8k8s80gvx9604cn9am5st4',\n});\n\nconsole.log(response);",
       },
     },
   },
@@ -1920,6 +1920,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## deliveries\n\n`client.webhooks.events.deliveries(id: string, eventId: string): { id: string; code: string; deliveredAt: string; response: object; status: 'pending' | 'success' | 'failed'; }[]`\n\n**get** `/webhooks/{id}/events/{eventId}/deliveries`\n\nReturns all delivery attempts for a webhook event, including HTTP status codes and response times.\n\n### Parameters\n\n- `id: string`\n\n- `eventId: string`\n\n### Returns\n\n- `{ id: string; code: string; deliveredAt: string; response: object; status: 'pending' | 'success' | 'failed'; }[]`\n  List of webhook event deliveries\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst response = await client.webhooks.events.deliveries('evt_01ka8k8s80gvx9604cn9am5st4', { id: 'wh_01ka8k8s80gvx9604cn9am5st4' });\n\nconsole.log(response);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.events.deliveries',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.webhooks.events.deliveries('evt_01ka8k8s80gvx9604cn9am5st4', {\n  id: 'wh_01ka8k8s80gvx9604cn9am5st4',\n});\n\nconsole.log(response);",
+      },
+      java: {
+        method: 'webhooks().events().deliveries',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.events.EventDeliveriesParams;\nimport com.nuntly.models.webhooks.events.EventDeliveriesResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EventDeliveriesParams params = EventDeliveriesParams.builder()\n            .id("wh_01ka8k8s80gvx9604cn9am5st4")\n            .eventId("evt_01ka8k8s80gvx9604cn9am5st4")\n            .build();\n        List<EventDeliveriesResponse> response = client.webhooks().events().deliveries(params);\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.Events.Deliveries',
         example:
@@ -1928,16 +1938,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks/$ID/events/$EVENT_ID/deliveries \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().events().deliveries',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.events.EventDeliveriesParams;\nimport com.nuntly.models.webhooks.events.EventDeliveriesResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EventDeliveriesParams params = EventDeliveriesParams.builder()\n            .id("wh_01ka8k8s80gvx9604cn9am5st4")\n            .eventId("evt_01ka8k8s80gvx9604cn9am5st4")\n            .build();\n        List<EventDeliveriesResponse> response = client.webhooks().events().deliveries(params);\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.events.deliveries',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst response = await client.webhooks.events.deliveries('evt_01ka8k8s80gvx9604cn9am5st4', {\n  id: 'wh_01ka8k8s80gvx9604cn9am5st4',\n});\n\nconsole.log(response);",
       },
     },
   },
@@ -1955,6 +1955,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.webhooks.events.list(cursor?: string, limit?: number): { id: string; data: object; event: event_type; orgId: string; status: 'success' | 'pending' | 'failed'; webhookId: string; successfulAt?: string; }`\n\n**get** `/webhooks/events`\n\nReturns recent webhook events across all registered endpoints.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; data: object; event: string; orgId: string; status: 'success' | 'pending' | 'failed'; webhookId: string; successfulAt?: string; }`\n\n  - `id: string`\n  - `data: object`\n  - `event: string`\n  - `orgId: string`\n  - `status: 'success' | 'pending' | 'failed'`\n  - `webhookId: string`\n  - `successfulAt?: string`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const eventListResponse of client.webhooks.events.list()) {\n  console.log(eventListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.webhooks.events.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const eventListResponse of client.webhooks.events.list()) {\n  console.log(eventListResponse.id);\n}",
+      },
+      java: {
+        method: 'webhooks().events().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.events.EventListPage;\nimport com.nuntly.models.webhooks.events.EventListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EventListPage page = client.webhooks().events().list();\n    }\n}',
+      },
       go: {
         method: 'client.Webhooks.Events.List',
         example:
@@ -1963,16 +1973,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/webhooks/events \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'webhooks().events().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.webhooks.events.EventListPage;\nimport com.nuntly.models.webhooks.events.EventListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        EventListPage page = client.webhooks().events().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.webhooks.events.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const eventListResponse of client.webhooks.events.list()) {\n  console.log(eventListResponse.id);\n}",
       },
     },
   },
@@ -1989,6 +1989,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## list\n\n`client.organizations.list(cursor?: string, limit?: number): { id: string; name: string; status: 'enabled' | 'disabled'; }`\n\n**get** `/organizations`\n\nReturns all organizations the authenticated user belongs to.\n\n### Parameters\n\n- `cursor?: string`\n  The cursor to retrieve the next page of results\n\n- `limit?: number`\n  The maximum number of results to return\n\n### Returns\n\n- `{ id: string; name: string; status: 'enabled' | 'disabled'; }`\n\n  - `id: string`\n  - `name: string`\n  - `status: 'enabled' | 'disabled'`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\n// Automatically fetches more pages as needed.\nfor await (const organizationListResponse of client.organizations.list()) {\n  console.log(organizationListResponse);\n}\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.organizations.list',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const organizationListResponse of client.organizations.list()) {\n  console.log(organizationListResponse.id);\n}",
+      },
+      java: {
+        method: 'organizations().list',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.organizations.OrganizationListPage;\nimport com.nuntly.models.organizations.OrganizationListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        OrganizationListPage page = client.organizations().list();\n    }\n}',
+      },
       go: {
         method: 'client.Organizations.List',
         example:
@@ -1997,16 +2007,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/organizations \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'organizations().list',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.organizations.OrganizationListPage;\nimport com.nuntly.models.organizations.OrganizationListParams;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        OrganizationListPage page = client.organizations().list();\n    }\n}',
-      },
-      typescript: {
-        method: 'client.organizations.list',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\n// Automatically fetches more pages as needed.\nfor await (const organizationListResponse of client.organizations.list()) {\n  console.log(organizationListResponse.id);\n}",
       },
     },
   },
@@ -2023,6 +2023,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.organizations.retrieve(id: string): { id: string; name: string; status: 'enabled' | 'disabled'; }`\n\n**get** `/organizations/{id}`\n\nReturns the organization's profile, plan, region, and account status.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ id: string; name: string; status: 'enabled' | 'disabled'; }`\n\n  - `id: string`\n  - `name: string`\n  - `status: 'enabled' | 'disabled'`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst organization = await client.organizations.retrieve('org_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(organization);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.organizations.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst organization = await client.organizations.retrieve('org_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(organization.id);",
+      },
+      java: {
+        method: 'organizations().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.organizations.OrganizationRetrieveParams;\nimport com.nuntly.models.organizations.OrganizationRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        OrganizationRetrieveResponse organization = client.organizations().retrieve("org_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Organizations.Get',
         example:
@@ -2031,16 +2041,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/organizations/$ID \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'organizations().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.organizations.OrganizationRetrieveParams;\nimport com.nuntly.models.organizations.OrganizationRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        OrganizationRetrieveResponse organization = client.organizations().retrieve("org_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.organizations.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst organization = await client.organizations.retrieve('org_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(organization.id);",
       },
     },
   },
@@ -2059,6 +2059,16 @@ const EMBEDDED_METHODS: MethodEntry[] = [
     markdown:
       "## retrieve\n\n`client.organizations.usage.retrieve(id: string): { transactional: object; }`\n\n**get** `/organizations/{id}/usage`\n\nReturns current period usage metrics (daily and monthly) for sending and receiving, against your plan limits.\n\n### Parameters\n\n- `id: string`\n\n### Returns\n\n- `{ transactional: { limits: { daily: number; monthly: number; }; receiving: { daily: number; monthly: number; }; sending: { daily: number; monthly: number; }; usage: { daily: number; monthly: number; }; }; }`\n\n  - `transactional: { limits: { daily: number; monthly: number; }; receiving: { daily: number; monthly: number; }; sending: { daily: number; monthly: number; }; usage: { daily: number; monthly: number; }; }`\n\n### Example\n\n```typescript\nimport Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly();\n\nconst usage = await client.organizations.usage.retrieve('org_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(usage);\n```",
     perLanguage: {
+      typescript: {
+        method: 'client.organizations.usage.retrieve',
+        example:
+          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst usage = await client.organizations.usage.retrieve('org_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(usage.transactional);",
+      },
+      java: {
+        method: 'organizations().usage().retrieve',
+        example:
+          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.organizations.usage.UsageRetrieveParams;\nimport com.nuntly.models.organizations.usage.UsageRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        UsageRetrieveResponse usage = client.organizations().usage().retrieve("org_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
+      },
       go: {
         method: 'client.Organizations.Usage.Get',
         example:
@@ -2067,16 +2077,6 @@ const EMBEDDED_METHODS: MethodEntry[] = [
       http: {
         example:
           'curl https://api.nuntly.com/organizations/$ID/usage \\\n    -H "Authorization: Bearer $NUNTLY_API_KEY"',
-      },
-      java: {
-        method: 'organizations().usage().retrieve',
-        example:
-          'package com.nuntly.example;\n\nimport com.nuntly.client.NuntlyClient;\nimport com.nuntly.client.okhttp.NuntlyOkHttpClient;\nimport com.nuntly.models.organizations.usage.UsageRetrieveParams;\nimport com.nuntly.models.organizations.usage.UsageRetrieveResponse;\n\npublic final class Main {\n    private Main() {}\n\n    public static void main(String[] args) {\n        NuntlyClient client = NuntlyOkHttpClient.fromEnv();\n\n        UsageRetrieveResponse usage = client.organizations().usage().retrieve("org_01ka8k8s80gvx9604cn9am5st4");\n    }\n}',
-      },
-      typescript: {
-        method: 'client.organizations.usage.retrieve',
-        example:
-          "import Nuntly from '@nuntly/sdk';\n\nconst client = new Nuntly({\n  apiKey: process.env['NUNTLY_API_KEY'], // This is the default and can be omitted\n});\n\nconst usage = await client.organizations.usage.retrieve('org_01ka8k8s80gvx9604cn9am5st4');\n\nconsole.log(usage.transactional);",
       },
     },
   },
