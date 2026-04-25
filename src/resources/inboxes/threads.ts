@@ -14,16 +14,8 @@ export class Threads extends APIResource {
   /**
    * List threads in an inbox.
    */
-  list(
-    inboxID: string,
-    query: ThreadListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<ThreadsCursorPage, ResourcesThreadsAPI.Thread> {
-    return this._client.getAPIList(
-      path`/inboxes/${inboxID}/threads`,
-      CursorPage<ResourcesThreadsAPI.Thread>,
-      { query, ...options },
-    );
+  list(inboxID: string, query: ThreadListParams | null | undefined = {}, options?: RequestOptions): PagePromise<ThreadsCursorPage, ResourcesThreadsAPI.Thread> {
+    return this._client.getAPIList(path`/inboxes/${inboxID}/threads`, CursorPage<ResourcesThreadsAPI.Thread>, { query, ...options });
   }
 }
 
@@ -37,7 +29,9 @@ export interface ThreadListParams extends CursorPageParams {
 }
 
 export declare namespace Threads {
-  export { type ThreadListParams as ThreadListParams };
+  export {
+    type ThreadListParams as ThreadListParams
+  };
 }
 
-export { type ThreadsCursorPage };
+export { type ThreadsCursorPage }

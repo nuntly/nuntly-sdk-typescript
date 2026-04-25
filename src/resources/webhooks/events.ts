@@ -14,10 +14,7 @@ export class Events extends APIResource {
   /**
    * Returns recent webhook events across all registered endpoints.
    */
-  list(
-    query: EventListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<EventListResponsesCursorPage, EventListResponse> {
+  list(query: EventListParams | null | undefined = {}, options?: RequestOptions): PagePromise<EventListResponsesCursorPage, EventListResponse> {
     return this._client.getAPIList('/webhooks/events', CursorPage<EventListResponse>, { query, ...options });
   }
 
@@ -25,38 +22,22 @@ export class Events extends APIResource {
    * Returns all delivery attempts for a webhook event, including HTTP status codes
    * and response times.
    */
-  deliveries(
-    eventID: string,
-    params: EventDeliveriesParams,
-    options?: RequestOptions,
-  ): APIPromise<EventDeliveriesResponse> {
-    const { id } = params;
-    return (
-      this._client.get(path`/webhooks/${id}/events/${eventID}/deliveries`, options) as APIPromise<{
-        data: EventDeliveriesResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  deliveries(eventID: string, params: EventDeliveriesParams, options?: RequestOptions): APIPromise<EventDeliveriesResponse> {
+    const { id } = params
+    return (this._client.get(path`/webhooks/${id}/events/${eventID}/deliveries`, options) as APIPromise<{ data: EventDeliveriesResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Re-deliver a webhook event to its endpoint. Useful for retrying failed
    * deliveries.
    */
-  replay(
-    eventID: string,
-    params: EventReplayParams,
-    options?: RequestOptions,
-  ): APIPromise<EventReplayResponse> {
-    const { id } = params;
-    return (
-      this._client.post(path`/webhooks/${id}/events/${eventID}/replay`, options) as APIPromise<{
-        data: EventReplayResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  replay(eventID: string, params: EventReplayParams, options?: RequestOptions): APIPromise<EventReplayResponse> {
+    const { id } = params
+    return (this._client.post(path`/webhooks/${id}/events/${eventID}/replay`, options) as APIPromise<{ data: EventReplayResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type EventListResponsesCursorPage = CursorPage<EventListResponse>;
+export type EventListResponsesCursorPage = CursorPage<EventListResponse>
 
 export interface EventListResponse {
   /**
@@ -95,7 +76,7 @@ export interface EventListResponse {
 /**
  * List of webhook event deliveries
  */
-export type EventDeliveriesResponse = Array<EventDeliveriesResponse.EventDeliveriesResponseItem>;
+export type EventDeliveriesResponse = Array<EventDeliveriesResponse.EventDeliveriesResponseItem>
 
 export namespace EventDeliveriesResponse {
   export interface EventDeliveriesResponseItem {
@@ -114,9 +95,10 @@ export namespace EventDeliveriesResponse {
 /**
  * Response for webhook event replay
  */
-export type EventReplayResponse = unknown;
+export type EventReplayResponse = unknown
 
-export interface EventListParams extends CursorPageParams {}
+export interface EventListParams extends CursorPageParams {
+}
 
 export interface EventDeliveriesParams {
   /**
@@ -140,6 +122,6 @@ export declare namespace Events {
     type EventListResponsesCursorPage as EventListResponsesCursorPage,
     type EventListParams as EventListParams,
     type EventDeliveriesParams as EventDeliveriesParams,
-    type EventReplayParams as EventReplayParams,
+    type EventReplayParams as EventReplayParams
   };
 }

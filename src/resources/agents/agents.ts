@@ -53,11 +53,13 @@ export interface AgentMemory {
 Agents.Memory = Memory;
 
 export declare namespace Agents {
-  export { type AgentMemory as AgentMemory };
+  export {
+    type AgentMemory as AgentMemory
+  };
 
   export {
     Memory as Memory,
     type MemoryRetrieveParams as MemoryRetrieveParams,
-    type MemoryUpsertParams as MemoryUpsertParams,
+    type MemoryUpsertParams as MemoryUpsertParams
   };
 }

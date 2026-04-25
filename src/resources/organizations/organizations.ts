@@ -18,28 +18,18 @@ export class Organizations extends APIResource {
    * Returns the organization's profile, plan, region, and account status.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<OrganizationRetrieveResponse> {
-    return (
-      this._client.get(path`/organizations/${id}`, options) as APIPromise<{
-        data: OrganizationRetrieveResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/organizations/${id}`, options) as APIPromise<{ data: OrganizationRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Returns all organizations the authenticated user belongs to.
    */
-  list(
-    query: OrganizationListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse> {
-    return this._client.getAPIList('/organizations', CursorPage<OrganizationListResponse>, {
-      query,
-      ...options,
-    });
+  list(query: OrganizationListParams | null | undefined = {}, options?: RequestOptions): PagePromise<OrganizationListResponsesCursorPage, OrganizationListResponse> {
+    return this._client.getAPIList('/organizations', CursorPage<OrganizationListResponse>, { query, ...options });
   }
 }
 
-export type OrganizationListResponsesCursorPage = CursorPage<OrganizationListResponse>;
+export type OrganizationListResponsesCursorPage = CursorPage<OrganizationListResponse>
 
 export interface OrganizationRetrieveResponse {
   /**
@@ -75,7 +65,8 @@ export interface OrganizationListResponse {
   status: 'enabled' | 'disabled';
 }
 
-export interface OrganizationListParams extends CursorPageParams {}
+export interface OrganizationListParams extends CursorPageParams {
+}
 
 Organizations.Usage = Usage;
 
@@ -84,8 +75,11 @@ export declare namespace Organizations {
     type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
     type OrganizationListResponse as OrganizationListResponse,
     type OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
-    type OrganizationListParams as OrganizationListParams,
+    type OrganizationListParams as OrganizationListParams
   };
 
-  export { Usage as Usage, type UsageRetrieveResponse as UsageRetrieveResponse };
+  export {
+    Usage as Usage,
+    type UsageRetrieveResponse as UsageRetrieveResponse
+  };
 }

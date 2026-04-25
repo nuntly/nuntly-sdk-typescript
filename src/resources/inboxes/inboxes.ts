@@ -18,42 +18,27 @@ export class Inboxes extends APIResource {
    * Create a new inbox on a verified domain.
    */
   create(body: InboxCreateParams, options?: RequestOptions): APIPromise<Inbox> {
-    return (this._client.post('/inboxes', { body, ...options }) as APIPromise<{ data: Inbox }>)._thenUnwrap(
-      (obj) => obj.data,
-    );
+    return (this._client.post('/inboxes', { body, ...options }) as APIPromise<{ data: Inbox }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Retrieve an inbox with thread stats.
    */
   retrieve(inboxID: string, options?: RequestOptions): APIPromise<Inbox> {
-    return (this._client.get(path`/inboxes/${inboxID}`, options) as APIPromise<{ data: Inbox }>)._thenUnwrap(
-      (obj) => obj.data,
-    );
+    return (this._client.get(path`/inboxes/${inboxID}`, options) as APIPromise<{ data: Inbox }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update an inbox.
    */
-  update(
-    inboxID: string,
-    body: InboxUpdateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<InboxUpdateResponse> {
-    return (
-      this._client.patch(path`/inboxes/${inboxID}`, { body, ...options }) as APIPromise<{
-        data: InboxUpdateResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  update(inboxID: string, body: InboxUpdateParams | null | undefined = {}, options?: RequestOptions): APIPromise<InboxUpdateResponse> {
+    return (this._client.patch(path`/inboxes/${inboxID}`, { body, ...options }) as APIPromise<{ data: InboxUpdateResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * List all inboxes.
    */
-  list(
-    query: InboxListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<InboxesCursorPage, Inbox> {
+  list(query: InboxListParams | null | undefined = {}, options?: RequestOptions): PagePromise<InboxesCursorPage, Inbox> {
     return this._client.getAPIList('/inboxes', CursorPage<Inbox>, { query, ...options });
   }
 
@@ -61,24 +46,18 @@ export class Inboxes extends APIResource {
    * Soft-delete an inbox.
    */
   delete(inboxID: string, options?: RequestOptions): APIPromise<InboxDeleteResponse> {
-    return (
-      this._client.delete(path`/inboxes/${inboxID}`, options) as APIPromise<{ data: InboxDeleteResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.delete(path`/inboxes/${inboxID}`, options) as APIPromise<{ data: InboxDeleteResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Send a new message from an inbox.
    */
   send(inboxID: string, body: InboxSendParams, options?: RequestOptions): APIPromise<InboxSendResponse> {
-    return (
-      this._client.post(path`/inboxes/${inboxID}/messages`, { body, ...options }) as APIPromise<{
-        data: InboxSendResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.post(path`/inboxes/${inboxID}/messages`, { body, ...options }) as APIPromise<{ data: InboxSendResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type InboxesCursorPage = CursorPage<Inbox>;
+export type InboxesCursorPage = CursorPage<Inbox>
 
 export interface Inbox {
   /**
@@ -254,8 +233,11 @@ export declare namespace Inboxes {
     type InboxCreateParams as InboxCreateParams,
     type InboxUpdateParams as InboxUpdateParams,
     type InboxListParams as InboxListParams,
-    type InboxSendParams as InboxSendParams,
+    type InboxSendParams as InboxSendParams
   };
 
-  export { Threads as Threads, type ThreadListParams as ThreadListParams };
+  export {
+    Threads as Threads,
+    type ThreadListParams as ThreadListParams
+  };
 }

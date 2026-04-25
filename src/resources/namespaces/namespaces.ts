@@ -18,42 +18,27 @@ export class Namespaces extends APIResource {
    * Create a new namespace.
    */
   create(body: NamespaceCreateParams, options?: RequestOptions): APIPromise<Namespace> {
-    return (
-      this._client.post('/namespaces', { body, ...options }) as APIPromise<{ data: Namespace }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.post('/namespaces', { body, ...options }) as APIPromise<{ data: Namespace }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Retrieve a namespace with inbox stats.
    */
   retrieve(namespaceID: string, options?: RequestOptions): APIPromise<NamespaceDetail> {
-    return (
-      this._client.get(path`/namespaces/${namespaceID}`, options) as APIPromise<{ data: NamespaceDetail }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/namespaces/${namespaceID}`, options) as APIPromise<{ data: NamespaceDetail }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update a namespace.
    */
-  update(
-    namespaceID: string,
-    body: NamespaceUpdateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<NamespaceUpdateResponse> {
-    return (
-      this._client.patch(path`/namespaces/${namespaceID}`, { body, ...options }) as APIPromise<{
-        data: NamespaceUpdateResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+  update(namespaceID: string, body: NamespaceUpdateParams | null | undefined = {}, options?: RequestOptions): APIPromise<NamespaceUpdateResponse> {
+    return (this._client.patch(path`/namespaces/${namespaceID}`, { body, ...options }) as APIPromise<{ data: NamespaceUpdateResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * List all namespaces.
    */
-  list(
-    query: NamespaceListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<NamespacesCursorPage, Namespace> {
+  list(query: NamespaceListParams | null | undefined = {}, options?: RequestOptions): PagePromise<NamespacesCursorPage, Namespace> {
     return this._client.getAPIList('/namespaces', CursorPage<Namespace>, { query, ...options });
   }
 
@@ -61,15 +46,11 @@ export class Namespaces extends APIResource {
    * Soft-delete a namespace. Rejects if it has active inboxes.
    */
   delete(namespaceID: string, options?: RequestOptions): APIPromise<NamespaceDeleteResponse> {
-    return (
-      this._client.delete(path`/namespaces/${namespaceID}`, options) as APIPromise<{
-        data: NamespaceDeleteResponse;
-      }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.delete(path`/namespaces/${namespaceID}`, options) as APIPromise<{ data: NamespaceDeleteResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type NamespacesCursorPage = CursorPage<Namespace>;
+export type NamespacesCursorPage = CursorPage<Namespace>
 
 export interface Namespace {
   /**
@@ -173,7 +154,8 @@ export interface NamespaceUpdateParams {
   name?: string;
 }
 
-export interface NamespaceListParams extends CursorPageParams {}
+export interface NamespaceListParams extends CursorPageParams {
+}
 
 Namespaces.Inboxes = Inboxes;
 
@@ -186,8 +168,11 @@ export declare namespace Namespaces {
     type NamespacesCursorPage as NamespacesCursorPage,
     type NamespaceCreateParams as NamespaceCreateParams,
     type NamespaceUpdateParams as NamespaceUpdateParams,
-    type NamespaceListParams as NamespaceListParams,
+    type NamespaceListParams as NamespaceListParams
   };
 
-  export { Inboxes as Inboxes, type InboxListParams as InboxListParams };
+  export {
+    Inboxes as Inboxes,
+    type InboxListParams as InboxListParams
+  };
 }

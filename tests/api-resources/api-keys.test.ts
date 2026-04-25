@@ -2,10 +2,7 @@
 
 import Nuntly from '@nuntly/sdk';
 
-const client = new Nuntly({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Nuntly({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
 
 describe('resource apiKeys', () => {
   test('create', async () => {
@@ -21,17 +18,14 @@ describe('resource apiKeys', () => {
 
   test('create: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.apiKeys.create(
-        {
-          domainIds: ['string'],
-          name: 'name',
-          permission: 'fullAccess',
-          status: 'enabled',
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Nuntly.NotFoundError);
+    await expect(client.apiKeys.create({
+    domainIds: ['string'],
+    name: 'name',
+    permission: 'fullAccess',
+    status: 'enabled',
+  }, { path: '/_stainless_unknown_path' }))
+      .rejects
+      .toThrow(Nuntly.NotFoundError);
   });
 
   test('retrieve', async () => {
@@ -46,9 +40,7 @@ describe('resource apiKeys', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', {
-      permission: 'fullAccess',
-    });
+    const responsePromise = client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', { permission: 'fullAccess' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,11 +52,11 @@ describe('resource apiKeys', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', {
-      permission: 'fullAccess',
-      domainIds: ['string'],
-      name: 'name',
-      status: 'enabled',
-    });
+    permission: 'fullAccess',
+    domainIds: ['string'],
+    name: 'name',
+    status: 'enabled',
+  });
   });
 
   test('list', async () => {
@@ -80,9 +72,9 @@ describe('resource apiKeys', () => {
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.apiKeys.list({ cursor: 'cursor', limit: 1 }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Nuntly.NotFoundError);
+    await expect(client.apiKeys.list({ cursor: 'cursor', limit: 1 }, { path: '/_stainless_unknown_path' }))
+      .rejects
+      .toThrow(Nuntly.NotFoundError);
   });
 
   test('delete', async () => {

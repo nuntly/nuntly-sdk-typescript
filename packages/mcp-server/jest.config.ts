@@ -10,7 +10,9 @@ const config: JestConfigWithTsJest = {
     '^@nuntly/sdk-mcp$': '<rootDir>/src/index.ts',
     '^@nuntly/sdk-mcp/(.*)$': '<rootDir>/src/$1',
   },
-  modulePathIgnorePatterns: ['<rootDir>/dist/'],
+  modulePathIgnorePatterns: [
+    '<rootDir>/dist/',
+  ],
   testPathIgnorePatterns: ['scripts'],
 };
 

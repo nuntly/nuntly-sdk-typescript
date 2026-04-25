@@ -21,9 +21,7 @@ export class Bulk extends APIResource {
    * ```
    */
   retrieve(bulkID: string, options?: RequestOptions): APIPromise<BulkRetrieveResponse> {
-    return (
-      this._client.get(path`/emails/bulk/${bulkID}`, options) as APIPromise<{ data: BulkRetrieveResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.get(path`/emails/bulk/${bulkID}`, options) as APIPromise<{ data: BulkRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -38,9 +36,7 @@ export class Bulk extends APIResource {
    * ```
    */
   send(body: BulkSendParams, options?: RequestOptions): APIPromise<BulkSendResponse> {
-    return (
-      this._client.post('/emails/bulk', { body, ...options }) as APIPromise<{ data: BulkSendResponse }>
-    )._thenUnwrap((obj) => obj.data);
+    return (this._client.post('/emails/bulk', { body, ...options }) as APIPromise<{ data: BulkSendResponse }>)._thenUnwrap((obj) => obj.data);
   }
 }
 
@@ -239,6 +235,6 @@ export declare namespace Bulk {
   export {
     type BulkRetrieveResponse as BulkRetrieveResponse,
     type BulkSendResponse as BulkSendResponse,
-    type BulkSendParams as BulkSendParams,
+    type BulkSendParams as BulkSendParams
   };
 }
