@@ -18,20 +18,34 @@ export class Threads extends APIResource {
    * Retrieve a thread. Pass ?markRead=true to automatically remove the unread label
    * from all messages.
    */
-  retrieve(threadID: string, query: ThreadRetrieveParams | null | undefined = {}, options?: RequestOptions): APIPromise<Thread> {
-    return (this._client.get(path`/threads/${threadID}`, { query, ...options }) as APIPromise<{ data: Thread }>)._thenUnwrap((obj) => obj.data);
+  retrieve(
+    threadID: string,
+    query: ThreadRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Thread> {
+    return (
+      this._client.get(path`/threads/${threadID}`, { query, ...options }) as APIPromise<{ data: Thread }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update thread labels and agent assignment. Label operations apply to all
    * messages in the thread.
    */
-  update(threadID: string, body: ThreadUpdateParams | null | undefined = {}, options?: RequestOptions): APIPromise<ThreadUpdateResponse> {
-    return (this._client.patch(path`/threads/${threadID}`, { body, ...options }) as APIPromise<{ data: ThreadUpdateResponse }>)._thenUnwrap((obj) => obj.data);
+  update(
+    threadID: string,
+    body: ThreadUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<ThreadUpdateResponse> {
+    return (
+      this._client.patch(path`/threads/${threadID}`, { body, ...options }) as APIPromise<{
+        data: ThreadUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type ThreadsCursorPage = CursorPage<Thread>
+export type ThreadsCursorPage = CursorPage<Thread>;
 
 export interface Thread {
   /**
@@ -129,13 +143,13 @@ export declare namespace Threads {
     type Thread as Thread,
     type ThreadUpdateResponse as ThreadUpdateResponse,
     type ThreadRetrieveParams as ThreadRetrieveParams,
-    type ThreadUpdateParams as ThreadUpdateParams
+    type ThreadUpdateParams as ThreadUpdateParams,
   };
 
   export {
     Messages as Messages,
     type MessageListResponse as MessageListResponse,
     type MessageListResponsesCursorPage as MessageListResponsesCursorPage,
-    type MessageListParams as MessageListParams
+    type MessageListParams as MessageListParams,
   };
 }

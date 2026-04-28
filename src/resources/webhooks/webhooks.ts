@@ -3,7 +3,16 @@
 import { APIResource } from '../../core/resource';
 import * as SharedAPI from '../shared';
 import * as EventsAPI from './events';
-import { EventDeliveriesParams, EventDeliveriesResponse, EventListParams, EventListResponse, EventListResponsesCursorPage, EventReplayParams, EventReplayResponse, Events } from './events';
+import {
+  EventDeliveriesParams,
+  EventDeliveriesResponse,
+  EventListParams,
+  EventListResponse,
+  EventListResponsesCursorPage,
+  EventReplayParams,
+  EventReplayResponse,
+  Events,
+} from './events';
 import { APIPromise } from '../../core/api-promise';
 import { CursorPage, type CursorPageParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
@@ -19,27 +28,42 @@ export class Webhooks extends APIResource {
    * Register an endpoint to start receiving webhook events for your organization.
    */
   create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
-    return (this._client.post('/webhooks', { body, ...options }) as APIPromise<{ data: WebhookCreateResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.post('/webhooks', { body, ...options }) as APIPromise<{ data: WebhookCreateResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Returns a webhook endpoint with its URL, subscribed events, and configuration.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<WebhookRetrieveResponse> {
-    return (this._client.get(path`/webhooks/${id}`, options) as APIPromise<{ data: WebhookRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.get(path`/webhooks/${id}`, options) as APIPromise<{ data: WebhookRetrieveResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update the endpoint URL, subscribed event types, or rotate the signing secret.
    */
-  update(id: string, body: WebhookUpdateParams | null | undefined = {}, options?: RequestOptions): APIPromise<WebhookUpdateResponse> {
-    return (this._client.put(path`/webhooks/${id}`, { body, ...options }) as APIPromise<{ data: WebhookUpdateResponse }>)._thenUnwrap((obj) => obj.data);
+  update(
+    id: string,
+    body: WebhookUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<WebhookUpdateResponse> {
+    return (
+      this._client.put(path`/webhooks/${id}`, { body, ...options }) as APIPromise<{
+        data: WebhookUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Returns all registered webhook endpoints for the organization.
    */
-  list(query: WebhookListParams | null | undefined = {}, options?: RequestOptions): PagePromise<WebhookListResponsesCursorPage, WebhookListResponse> {
+  list(
+    query: WebhookListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<WebhookListResponsesCursorPage, WebhookListResponse> {
     return this._client.getAPIList('/webhooks', CursorPage<WebhookListResponse>, { query, ...options });
   }
 
@@ -47,7 +71,9 @@ export class Webhooks extends APIResource {
    * Remove a webhook endpoint. No further events will be delivered to this URL.
    */
   delete(id: string, options?: RequestOptions): APIPromise<WebhookDeleteResponse> {
-    return (this._client.delete(path`/webhooks/${id}`, options) as APIPromise<{ data: WebhookDeleteResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.delete(path`/webhooks/${id}`, options) as APIPromise<{ data: WebhookDeleteResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   unwrap(body: string): UnwrapWebhookEvent {
@@ -55,7 +81,7 @@ export class Webhooks extends APIResource {
   }
 }
 
-export type WebhookListResponsesCursorPage = CursorPage<WebhookListResponse>
+export type WebhookListResponsesCursorPage = CursorPage<WebhookListResponse>;
 
 /**
  * Event triggered when an email bounces.
@@ -113,7 +139,17 @@ export namespace EmailBouncedEvent {
 
       bouncedRecipients: Array<Bounce.BouncedRecipient>;
 
-      bounceSubType: 'Undetermined' | 'General' | 'NoEmail' | 'Suppressed' | 'OnAccountSuppressionList' | 'MailboxFull' | 'MessageTooLarge' | 'CustomTimeoutExceeded' | 'ContentRejected' | 'AttachmentRejected';
+      bounceSubType:
+        | 'Undetermined'
+        | 'General'
+        | 'NoEmail'
+        | 'Suppressed'
+        | 'OnAccountSuppressionList'
+        | 'MailboxFull'
+        | 'MessageTooLarge'
+        | 'CustomTimeoutExceeded'
+        | 'ContentRejected'
+        | 'AttachmentRejected';
 
       bounceType: 'Permanent' | 'Undetermined' | 'Transient';
 
@@ -419,7 +455,17 @@ export namespace EmailDeliveryDelayedEvent {
 
       delayedRecipients: Array<DeliveryDelay.DelayedRecipient>;
 
-      delayType: 'InternalFailure' | 'General' | 'MailboxFull' | 'SpamDetected' | 'RecipientServerError' | 'IPFailure' | 'TransientCommunicationFailure' | 'BYOIPHostNameLookupUnavailable' | 'Undetermined' | 'SendingDeferral';
+      delayType:
+        | 'InternalFailure'
+        | 'General'
+        | 'MailboxFull'
+        | 'SpamDetected'
+        | 'RecipientServerError'
+        | 'IPFailure'
+        | 'TransientCommunicationFailure'
+        | 'BYOIPHostNameLookupUnavailable'
+        | 'Undetermined'
+        | 'SendingDeferral';
 
       deliveryStoppedAt: string;
 
@@ -820,7 +866,25 @@ export namespace EmailSentEvent {
  * Payload for webhook events representing email and inbound events, eg. sent,
  * bounced, opened, clicked, complained, received, etc.
  */
-export type Event = EmailQueuedEvent | EmailScheduledEvent | EmailProcessedEvent | EmailSendingEvent | EmailSentEvent | EmailDeliveredEvent | EmailOpenedEvent | EmailClickedEvent | EmailBouncedEvent | EmailComplainedEvent | EmailRejectedEvent | EmailDeliveryDelayedEvent | EmailFailedEvent | MessageReceivedEvent | MessageSecurityFlaggedEvent | MessageAgentTriggeredEvent | MessageSentEvent | Event.MessageRejectedEvent
+export type Event =
+  | EmailQueuedEvent
+  | EmailScheduledEvent
+  | EmailProcessedEvent
+  | EmailSendingEvent
+  | EmailSentEvent
+  | EmailDeliveredEvent
+  | EmailOpenedEvent
+  | EmailClickedEvent
+  | EmailBouncedEvent
+  | EmailComplainedEvent
+  | EmailRejectedEvent
+  | EmailDeliveryDelayedEvent
+  | EmailFailedEvent
+  | MessageReceivedEvent
+  | MessageSecurityFlaggedEvent
+  | MessageAgentTriggeredEvent
+  | MessageSentEvent
+  | Event.MessageRejectedEvent;
 
 export namespace Event {
   /**
@@ -1124,7 +1188,25 @@ export interface WebhookDeleteResponse {
  * Payload for webhook events representing email and inbound events, eg. sent,
  * bounced, opened, clicked, complained, received, etc.
  */
-export type UnwrapWebhookEvent = EmailQueuedEvent | EmailScheduledEvent | EmailProcessedEvent | EmailSendingEvent | EmailSentEvent | EmailDeliveredEvent | EmailOpenedEvent | EmailClickedEvent | EmailBouncedEvent | EmailComplainedEvent | EmailRejectedEvent | EmailDeliveryDelayedEvent | EmailFailedEvent | MessageReceivedEvent | MessageSecurityFlaggedEvent | MessageAgentTriggeredEvent | MessageSentEvent | UnwrapWebhookEvent.MessageRejectedEvent
+export type UnwrapWebhookEvent =
+  | EmailQueuedEvent
+  | EmailScheduledEvent
+  | EmailProcessedEvent
+  | EmailSendingEvent
+  | EmailSentEvent
+  | EmailDeliveredEvent
+  | EmailOpenedEvent
+  | EmailClickedEvent
+  | EmailBouncedEvent
+  | EmailComplainedEvent
+  | EmailRejectedEvent
+  | EmailDeliveryDelayedEvent
+  | EmailFailedEvent
+  | MessageReceivedEvent
+  | MessageSecurityFlaggedEvent
+  | MessageAgentTriggeredEvent
+  | MessageSentEvent
+  | UnwrapWebhookEvent.MessageRejectedEvent;
 
 export namespace UnwrapWebhookEvent {
   /**
@@ -1203,8 +1285,7 @@ export interface WebhookUpdateParams {
   status?: 'enabled' | 'disabled' | 'revoked';
 }
 
-export interface WebhookListParams extends CursorPageParams {
-}
+export interface WebhookListParams extends CursorPageParams {}
 
 Webhooks.Events = Events;
 
@@ -1237,7 +1318,7 @@ export declare namespace Webhooks {
     type WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
-    type WebhookListParams as WebhookListParams
+    type WebhookListParams as WebhookListParams,
   };
 
   export {
@@ -1248,6 +1329,6 @@ export declare namespace Webhooks {
     type EventListResponsesCursorPage as EventListResponsesCursorPage,
     type EventListParams as EventListParams,
     type EventDeliveriesParams as EventDeliveriesParams,
-    type EventReplayParams as EventReplayParams
+    type EventReplayParams as EventReplayParams,
   };
 }

@@ -17,7 +17,9 @@ export class Stats extends APIResource {
    * ```
    */
   list(options?: RequestOptions): APIPromise<StatListResponse> {
-    return (this._client.get('/emails/stats', options) as APIPromise<{ data: StatListResponse }>)._thenUnwrap((obj) => obj.data);
+    return (this._client.get('/emails/stats', options) as APIPromise<{ data: StatListResponse }>)._thenUnwrap(
+      (obj) => obj.data,
+    );
   }
 }
 
@@ -130,7 +132,5 @@ export namespace StatListResponse {
 }
 
 export declare namespace Stats {
-  export {
-    type StatListResponse as StatListResponse
-  };
+  export { type StatListResponse as StatListResponse };
 }

@@ -13,20 +13,32 @@ export class Attachments extends APIResource {
   /**
    * Retrieve an attachment with a presigned download URL.
    */
-  retrieve(attachmentID: string, params: AttachmentRetrieveParams, options?: RequestOptions): APIPromise<MessagesAPI.MessageAttachment> {
-    const { messageId } = params
-    return (this._client.get(path`/messages/${messageId}/attachments/${attachmentID}`, options) as APIPromise<{ data: MessagesAPI.MessageAttachment }>)._thenUnwrap((obj) => obj.data);
+  retrieve(
+    attachmentID: string,
+    params: AttachmentRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<MessagesAPI.MessageAttachment> {
+    const { messageId } = params;
+    return (
+      this._client.get(path`/messages/${messageId}/attachments/${attachmentID}`, options) as APIPromise<{
+        data: MessagesAPI.MessageAttachment;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * List all attachments for a message.
    */
   list(messageID: string, options?: RequestOptions): APIPromise<AttachmentListResponse> {
-    return (this._client.get(path`/messages/${messageID}/attachments`, options) as APIPromise<{ data: AttachmentListResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.get(path`/messages/${messageID}/attachments`, options) as APIPromise<{
+        data: AttachmentListResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type AttachmentListResponse = Array<MessagesAPI.MessageAttachment>
+export type AttachmentListResponse = Array<MessagesAPI.MessageAttachment>;
 
 export interface AttachmentRetrieveParams {
   /**
@@ -38,6 +50,6 @@ export interface AttachmentRetrieveParams {
 export declare namespace Attachments {
   export {
     type AttachmentListResponse as AttachmentListResponse,
-    type AttachmentRetrieveParams as AttachmentRetrieveParams
+    type AttachmentRetrieveParams as AttachmentRetrieveParams,
   };
 }

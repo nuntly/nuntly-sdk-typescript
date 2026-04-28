@@ -19,22 +19,140 @@ import { AbstractPage, type CursorPageParams, CursorPageResponse } from './core/
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import { APIKeyCreateParams, APIKeyCreateResponse, APIKeyDeleteResponse, APIKeyListParams, APIKeyListResponse, APIKeyListResponsesCursorPage, APIKeyRetrieveResponse, APIKeyUpdateParams, APIKeyUpdateResponse, APIKeys } from './resources/api-keys';
-import { DomainCreateParams, DomainCreateResponse, DomainDeleteResponse, DomainListParams, DomainListResponse, DomainListResponsesCursorPage, DomainRetrieveResponse, DomainUpdateParams, DomainUpdateResponse, Domains } from './resources/domains';
+import {
+  APIKeyCreateParams,
+  APIKeyCreateResponse,
+  APIKeyDeleteResponse,
+  APIKeyListParams,
+  APIKeyListResponse,
+  APIKeyListResponsesCursorPage,
+  APIKeyRetrieveResponse,
+  APIKeyUpdateParams,
+  APIKeyUpdateResponse,
+  APIKeys,
+} from './resources/api-keys';
+import {
+  DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteResponse,
+  DomainListParams,
+  DomainListResponse,
+  DomainListResponsesCursorPage,
+  DomainRetrieveResponse,
+  DomainUpdateParams,
+  DomainUpdateResponse,
+  Domains,
+} from './resources/domains';
 import { EventType, Shared } from './resources/shared';
 import { AgentMemory, Agents } from './resources/agents/agents';
-import { EmailCancelResponse, EmailContentItem, EmailListParams, EmailListResponse, EmailListResponsesCursorPage, EmailRetrieveResponse, EmailSendParams, EmailSendResponse, Emails, Status, Tag } from './resources/emails/emails';
-import { Inbox, InboxCreateParams, InboxDeleteResponse, InboxListParams, InboxSendParams, InboxSendResponse, InboxUpdateParams, InboxUpdateResponse, Inboxes, InboxesCursorPage } from './resources/inboxes/inboxes';
-import { Message, MessageAttachment, MessageContent, MessageContentItem, MessageDetail, MessageForwardParams, MessageForwardResponse, MessageListParams, MessageReplyParams, MessageReplyResponse, MessageUpdateParams, MessageUpdateResponse, Messages, MessagesCursorPage } from './resources/messages/messages';
-import { Namespace, NamespaceCreateParams, NamespaceDeleteResponse, NamespaceDetail, NamespaceListParams, NamespaceUpdateParams, NamespaceUpdateResponse, Namespaces, NamespacesCursorPage } from './resources/namespaces/namespaces';
-import { OrganizationListParams, OrganizationListResponse, OrganizationListResponsesCursorPage, OrganizationRetrieveResponse, Organizations } from './resources/organizations/organizations';
-import { Thread, ThreadRetrieveParams, ThreadUpdateParams, ThreadUpdateResponse, Threads } from './resources/threads/threads';
-import { EmailBouncedEvent, EmailClickedEvent, EmailComplainedEvent, EmailDeliveredEvent, EmailDeliveryDelayedEvent, EmailFailedEvent, EmailOpenedEvent, EmailProcessedEvent, EmailQueuedEvent, EmailRejectedEvent, EmailScheduledEvent, EmailSendingEvent, EmailSentEvent, Event, MessageAgentTriggeredEvent, MessageReceivedEvent, MessageSecurityFlaggedEvent, MessageSentEvent, UnwrapWebhookEvent, WebhookCreateParams, WebhookCreateResponse, WebhookDeleteResponse, WebhookListParams, WebhookListResponse, WebhookListResponsesCursorPage, WebhookRetrieveResponse, WebhookUpdateParams, WebhookUpdateResponse, Webhooks } from './resources/webhooks/webhooks';
+import {
+  EmailCancelResponse,
+  EmailContentItem,
+  EmailListParams,
+  EmailListResponse,
+  EmailListResponsesCursorPage,
+  EmailRetrieveResponse,
+  EmailSendParams,
+  EmailSendResponse,
+  Emails,
+  Status,
+  Tag,
+} from './resources/emails/emails';
+import {
+  Inbox,
+  InboxCreateParams,
+  InboxDeleteResponse,
+  InboxListParams,
+  InboxSendParams,
+  InboxSendResponse,
+  InboxUpdateParams,
+  InboxUpdateResponse,
+  Inboxes,
+  InboxesCursorPage,
+} from './resources/inboxes/inboxes';
+import {
+  Message,
+  MessageAttachment,
+  MessageContent,
+  MessageContentItem,
+  MessageDetail,
+  MessageForwardParams,
+  MessageForwardResponse,
+  MessageListParams,
+  MessageReplyParams,
+  MessageReplyResponse,
+  MessageUpdateParams,
+  MessageUpdateResponse,
+  Messages,
+  MessagesCursorPage,
+} from './resources/messages/messages';
+import {
+  Namespace,
+  NamespaceCreateParams,
+  NamespaceDeleteResponse,
+  NamespaceDetail,
+  NamespaceListParams,
+  NamespaceUpdateParams,
+  NamespaceUpdateResponse,
+  Namespaces,
+  NamespacesCursorPage,
+} from './resources/namespaces/namespaces';
+import {
+  OrganizationListParams,
+  OrganizationListResponse,
+  OrganizationListResponsesCursorPage,
+  OrganizationRetrieveResponse,
+  Organizations,
+} from './resources/organizations/organizations';
+import {
+  Thread,
+  ThreadRetrieveParams,
+  ThreadUpdateParams,
+  ThreadUpdateResponse,
+  Threads,
+} from './resources/threads/threads';
+import {
+  EmailBouncedEvent,
+  EmailClickedEvent,
+  EmailComplainedEvent,
+  EmailDeliveredEvent,
+  EmailDeliveryDelayedEvent,
+  EmailFailedEvent,
+  EmailOpenedEvent,
+  EmailProcessedEvent,
+  EmailQueuedEvent,
+  EmailRejectedEvent,
+  EmailScheduledEvent,
+  EmailSendingEvent,
+  EmailSentEvent,
+  Event,
+  MessageAgentTriggeredEvent,
+  MessageReceivedEvent,
+  MessageSecurityFlaggedEvent,
+  MessageSentEvent,
+  UnwrapWebhookEvent,
+  WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteResponse,
+  WebhookListParams,
+  WebhookListResponse,
+  WebhookListResponsesCursorPage,
+  WebhookRetrieveResponse,
+  WebhookUpdateParams,
+  WebhookUpdateResponse,
+  Webhooks,
+} from './resources/webhooks/webhooks';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
 import { readEnv } from './internal/utils/env';
-import { type LogLevel, type Logger, formatRequestDetails, loggerFor, parseLogLevel } from './internal/utils/log';
+import {
+  type LogLevel,
+  type Logger,
+  formatRequestDetails,
+  loggerFor,
+  parseLogLevel,
+} from './internal/utils/log';
 import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
@@ -113,7 +231,7 @@ export interface ClientOptions {
 }
 
 /**
- * API Client for interfacing with the Nuntly API. 
+ * API Client for interfacing with the Nuntly API.
  */
 export class Nuntly {
   apiKey: string | null;
@@ -147,7 +265,6 @@ export class Nuntly {
     apiKey = readEnv('NUNTLY_API_KEY') ?? null,
     ...opts
   }: ClientOptions = {}) {
-
     const options: ClientOptions = {
       apiKey,
       ...opts,
@@ -160,7 +277,10 @@ export class Nuntly {
     const defaultLogLevel = 'warn';
     // Set default logLevel early so that we can log a warning in parseLogLevel.
     this.logLevel = defaultLogLevel;
-    this.logLevel = parseLogLevel(options.logLevel, 'ClientOptions.logLevel', this) ?? parseLogLevel(readEnv('NUNTLY_LOG'), 'process.env[\'NUNTLY_LOG\']', this) ?? defaultLogLevel;
+    this.logLevel =
+      parseLogLevel(options.logLevel, 'ClientOptions.logLevel', this) ??
+      parseLogLevel(readEnv('NUNTLY_LOG'), "process.env['NUNTLY_LOG']", this) ??
+      defaultLogLevel;
     this.fetchOptions = options.fetchOptions;
     this.maxRetries = options.maxRetries ?? 2;
     this.fetch = options.fetch ?? Shims.getDefaultFetch();
@@ -185,7 +305,7 @@ export class Nuntly {
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
       apiKey: this.apiKey,
-      ...options
+      ...options,
     });
     return client;
   }
@@ -198,7 +318,7 @@ export class Nuntly {
   }
 
   protected defaultQuery(): Record<string, string | undefined> | undefined {
-    return this._options.defaultQuery
+    return this._options.defaultQuery;
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
@@ -209,7 +329,9 @@ export class Nuntly {
       return;
     }
 
-    throw new Error('Could not resolve authentication method. Expected the apiKey to be set. Or for the "Authorization" headers to be explicitly omitted')
+    throw new Error(
+      'Could not resolve authentication method. Expected the apiKey to be set. Or for the "Authorization" headers to be explicitly omitted',
+    );
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
@@ -240,7 +362,11 @@ export class Nuntly {
     return Errors.APIError.generate(status, error, message, headers);
   }
 
-  buildURL(path: string, query: Record<string, unknown> | null | undefined, defaultBaseURL?: string | undefined): string {
+  buildURL(
+    path: string,
+    query: Record<string, unknown> | null | undefined,
+    defaultBaseURL?: string | undefined,
+  ): string {
     const baseURL = (!this.#baseURLOverridden() && defaultBaseURL) || this.baseURL;
     const url =
       isAbsoluteURL(path) ?
@@ -328,7 +454,9 @@ export class Nuntly {
 
     await this.prepareOptions(options);
 
-    const { req, url, timeout } = await this.buildRequest(options, { retryCount: maxRetries - retriesRemaining });
+    const { req, url, timeout } = await this.buildRequest(options, {
+      retryCount: maxRetries - retriesRemaining,
+    });
 
     await this.prepareRequest(req, { url, options });
 
@@ -337,7 +465,16 @@ export class Nuntly {
     const retryLogStr = retryOfRequestLogID === undefined ? '' : `, retryOf: ${retryOfRequestLogID}`;
     const startTime = Date.now();
 
-    loggerFor(this).debug(`[${requestLogID}] sending request`, formatRequestDetails({ retryOfRequestLogID, method: options.method, url, options, headers: req.headers }));
+    loggerFor(this).debug(
+      `[${requestLogID}] sending request`,
+      formatRequestDetails({
+        retryOfRequestLogID,
+        method: options.method,
+        url,
+        options,
+        headers: req.headers,
+      }),
+    );
 
     if (options.signal?.aborted) {
       throw new Errors.APIUserAbortError();
@@ -356,21 +493,45 @@ export class Nuntly {
       // deno throws "TypeError: error sending request for url (https://example/): client error (Connect): tcp connect error: Operation timed out (os error 60): Operation timed out (os error 60)"
       // undici throws "TypeError: fetch failed" with cause "ConnectTimeoutError: Connect Timeout Error (attempted address: example:443, timeout: 1ms)"
       // others do not provide enough information to distinguish timeouts from other connection errors
-      const isTimeout = isAbortError(response) || /timed? ?out/i.test(String(response) + ('cause' in response ? String(response.cause) : ''))
+      const isTimeout =
+        isAbortError(response) ||
+        /timed? ?out/i.test(String(response) + ('cause' in response ? String(response.cause) : ''));
       if (retriesRemaining) {
-        loggerFor(this).info(`[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} - ${retryMessage}`)
-        loggerFor(this).debug(`[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} (${retryMessage})`, formatRequestDetails({ retryOfRequestLogID, url, durationMs: headersTime - startTime, message: response.message }));
+        loggerFor(this).info(
+          `[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} - ${retryMessage}`,
+        );
+        loggerFor(this).debug(
+          `[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} (${retryMessage})`,
+          formatRequestDetails({
+            retryOfRequestLogID,
+            url,
+            durationMs: headersTime - startTime,
+            message: response.message,
+          }),
+        );
         return this.retryRequest(options, retriesRemaining, retryOfRequestLogID ?? requestLogID);
       }
-      loggerFor(this).info(`[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} - error; no more retries left`)
-      loggerFor(this).debug(`[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} (error; no more retries left)`, formatRequestDetails({ retryOfRequestLogID, url, durationMs: headersTime - startTime, message: response.message }));
+      loggerFor(this).info(
+        `[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} - error; no more retries left`,
+      );
+      loggerFor(this).debug(
+        `[${requestLogID}] connection ${isTimeout ? 'timed out' : 'failed'} (error; no more retries left)`,
+        formatRequestDetails({
+          retryOfRequestLogID,
+          url,
+          durationMs: headersTime - startTime,
+          message: response.message,
+        }),
+      );
       if (isTimeout) {
         throw new Errors.APIConnectionTimeoutError();
       }
       throw new Errors.APIConnectionError({ cause: response });
     }
 
-    const responseInfo = `[${requestLogID}${retryLogStr}] ${req.method} ${url} ${response.ok ? 'succeeded' : 'failed'} with status ${response.status} in ${headersTime - startTime}ms`;
+    const responseInfo = `[${requestLogID}${retryLogStr}] ${req.method} ${url} ${
+      response.ok ? 'succeeded' : 'failed'
+    } with status ${response.status} in ${headersTime - startTime}ms`;
 
     if (!response.ok) {
       const shouldRetry = await this.shouldRetry(response);
@@ -379,27 +540,60 @@ export class Nuntly {
 
         // We don't need the body of this response.
         await Shims.CancelReadableStream(response.body);
-        loggerFor(this).info(`${responseInfo} - ${retryMessage}`)
-        loggerFor(this).debug(`[${requestLogID}] response error (${retryMessage})`, formatRequestDetails({ retryOfRequestLogID, url: response.url, status: response.status, headers: response.headers, durationMs: headersTime - startTime }));
-        return this.retryRequest(options, retriesRemaining, retryOfRequestLogID ?? requestLogID, response.headers);
+        loggerFor(this).info(`${responseInfo} - ${retryMessage}`);
+        loggerFor(this).debug(
+          `[${requestLogID}] response error (${retryMessage})`,
+          formatRequestDetails({
+            retryOfRequestLogID,
+            url: response.url,
+            status: response.status,
+            headers: response.headers,
+            durationMs: headersTime - startTime,
+          }),
+        );
+        return this.retryRequest(
+          options,
+          retriesRemaining,
+          retryOfRequestLogID ?? requestLogID,
+          response.headers,
+        );
       }
 
       const retryMessage = shouldRetry ? `error; no more retries left` : `error; not retryable`;
 
-      loggerFor(this).info(`${responseInfo} - ${retryMessage}`)
+      loggerFor(this).info(`${responseInfo} - ${retryMessage}`);
 
       const errText = await response.text().catch((err: any) => castToError(err).message);
       const errJSON = safeJSON(errText) as any;
       const errMessage = errJSON ? undefined : errText;
 
-      loggerFor(this).debug(`[${requestLogID}] response error (${retryMessage})`, formatRequestDetails({ retryOfRequestLogID, url: response.url, status: response.status, headers: response.headers, message: errMessage, durationMs: Date.now() - startTime }));
+      loggerFor(this).debug(
+        `[${requestLogID}] response error (${retryMessage})`,
+        formatRequestDetails({
+          retryOfRequestLogID,
+          url: response.url,
+          status: response.status,
+          headers: response.headers,
+          message: errMessage,
+          durationMs: Date.now() - startTime,
+        }),
+      );
 
       const err = this.makeStatusError(response.status, errJSON, errMessage, response.headers);
       throw err;
     }
 
-    loggerFor(this).info(responseInfo)
-    loggerFor(this).debug(`[${requestLogID}] response start`, formatRequestDetails({ retryOfRequestLogID, url: response.url, status: response.status, headers: response.headers, durationMs: headersTime - startTime }));
+    loggerFor(this).info(responseInfo);
+    loggerFor(this).debug(
+      `[${requestLogID}] response start`,
+      formatRequestDetails({
+        retryOfRequestLogID,
+        url: response.url,
+        status: response.status,
+        headers: response.headers,
+        durationMs: headersTime - startTime,
+      }),
+    );
 
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
   }
@@ -417,7 +611,10 @@ export class Nuntly {
     );
   }
 
-  requestAPIList<Item = unknown, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
+  requestAPIList<
+    Item = unknown,
+    PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
+  >(
     Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
     options: PromiseOrValue<FinalRequestOptions>,
   ): Pagination.PagePromise<PageClass, Item> {
@@ -437,7 +634,9 @@ export class Nuntly {
 
     const timeout = setTimeout(abort, ms);
 
-    const isReadableBody = ((globalThis as any).ReadableStream && options.body instanceof (globalThis as any).ReadableStream) || (typeof options.body === "object" && options.body !== null && Symbol.asyncIterator in options.body);
+    const isReadableBody =
+      ((globalThis as any).ReadableStream && options.body instanceof (globalThis as any).ReadableStream) ||
+      (typeof options.body === 'object' && options.body !== null && Symbol.asyncIterator in options.body);
 
     const fetchOptions: RequestInit = {
       signal: controller.signal as any,
@@ -452,7 +651,6 @@ export class Nuntly {
     }
 
     try {
-
       // use undefined this binding; fetch errors if bound to something else in browser/cloudflare
       return await this.fetch.call(undefined, url, fetchOptions);
     } finally {
@@ -553,11 +751,12 @@ export class Nuntly {
     const req: FinalizedRequestInit = {
       method,
       headers: reqHeaders,
-      ...(options.signal && { signal: options.signal}),
-      ...((globalThis as any).ReadableStream && body instanceof (globalThis as any).ReadableStream && { duplex: "half" }),
+      ...(options.signal && { signal: options.signal }),
+      ...((globalThis as any).ReadableStream &&
+        body instanceof (globalThis as any).ReadableStream && { duplex: 'half' }),
       ...(body && { body }),
-      ...(this.fetchOptions as any ?? {}),
-      ...(options.fetchOptions as any ?? {}),
+      ...((this.fetchOptions as any) ?? {}),
+      ...((options.fetchOptions as any) ?? {}),
     };
 
     return { req, url, timeout: options.timeout };
@@ -582,15 +781,17 @@ export class Nuntly {
 
     const headers = buildHeaders([
       idempotencyHeaders,
-      {Accept: 'application/json',
-      'User-Agent': this.getUserAgent(),
-      'X-Stainless-Retry-Count': String(retryCount),
-      ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
-      ...getPlatformHeaders()},
+      {
+        Accept: 'application/json',
+        'User-Agent': this.getUserAgent(),
+        'X-Stainless-Retry-Count': String(retryCount),
+        ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
+        ...getPlatformHeaders(),
+      },
       await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
-      options.headers
+      options.headers,
     ]);
 
     this.validateHeaders(headers);
@@ -617,11 +818,9 @@ export class Nuntly {
       ArrayBuffer.isView(body) ||
       body instanceof ArrayBuffer ||
       body instanceof DataView ||
-      (
-        typeof body === 'string' &&
+      (typeof body === 'string' &&
         // Preserve legacy string encoding behavior for now
-        headers.values.has('content-type')
-      ) ||
+        headers.values.has('content-type')) ||
       // `Blob` is superset of `File`
       ((globalThis as any).Blob && body instanceof (globalThis as any).Blob) ||
       // `FormData` -> `multipart/form-data`
@@ -652,7 +851,7 @@ export class Nuntly {
   }
 
   static Nuntly = this;
-  static DEFAULT_TIMEOUT = 60000 // 1 minute
+  static DEFAULT_TIMEOUT = 60000; // 1 minute
 
   static NuntlyError = Errors.NuntlyError;
   static APIError = Errors.APIError;
@@ -723,151 +922,142 @@ Nuntly.Webhooks = Webhooks;
 Nuntly.Organizations = Organizations;
 
 export declare namespace Nuntly {
-      export type RequestOptions = Opts.RequestOptions;
+  export type RequestOptions = Opts.RequestOptions;
 
-      export import CursorPage = Pagination.CursorPage;
-export {
-  type CursorPageParams as CursorPageParams,
-  type CursorPageResponse as CursorPageResponse
-};
+  export import CursorPage = Pagination.CursorPage;
+  export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
-export {
-  Shared as Shared,
-  type EventType as EventType
-};
+  export { Shared as Shared, type EventType as EventType };
 
-export {
-  APIKeys as APIKeys,
-  type APIKeyCreateResponse as APIKeyCreateResponse,
-  type APIKeyRetrieveResponse as APIKeyRetrieveResponse,
-  type APIKeyUpdateResponse as APIKeyUpdateResponse,
-  type APIKeyListResponse as APIKeyListResponse,
-  type APIKeyDeleteResponse as APIKeyDeleteResponse,
-  type APIKeyListResponsesCursorPage as APIKeyListResponsesCursorPage,
-  type APIKeyCreateParams as APIKeyCreateParams,
-  type APIKeyUpdateParams as APIKeyUpdateParams,
-  type APIKeyListParams as APIKeyListParams
-};
+  export {
+    APIKeys as APIKeys,
+    type APIKeyCreateResponse as APIKeyCreateResponse,
+    type APIKeyRetrieveResponse as APIKeyRetrieveResponse,
+    type APIKeyUpdateResponse as APIKeyUpdateResponse,
+    type APIKeyListResponse as APIKeyListResponse,
+    type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    type APIKeyListResponsesCursorPage as APIKeyListResponsesCursorPage,
+    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyUpdateParams as APIKeyUpdateParams,
+    type APIKeyListParams as APIKeyListParams,
+  };
 
-export {
-  Domains as Domains,
-  type DomainCreateResponse as DomainCreateResponse,
-  type DomainRetrieveResponse as DomainRetrieveResponse,
-  type DomainUpdateResponse as DomainUpdateResponse,
-  type DomainListResponse as DomainListResponse,
-  type DomainDeleteResponse as DomainDeleteResponse,
-  type DomainListResponsesCursorPage as DomainListResponsesCursorPage,
-  type DomainCreateParams as DomainCreateParams,
-  type DomainUpdateParams as DomainUpdateParams,
-  type DomainListParams as DomainListParams
-};
+  export {
+    Domains as Domains,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
+    type DomainUpdateResponse as DomainUpdateResponse,
+    type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainListResponsesCursorPage as DomainListResponsesCursorPage,
+    type DomainCreateParams as DomainCreateParams,
+    type DomainUpdateParams as DomainUpdateParams,
+    type DomainListParams as DomainListParams,
+  };
 
-export {
-  Emails as Emails,
-  type EmailContentItem as EmailContentItem,
-  type Status as Status,
-  type Tag as Tag,
-  type EmailRetrieveResponse as EmailRetrieveResponse,
-  type EmailListResponse as EmailListResponse,
-  type EmailCancelResponse as EmailCancelResponse,
-  type EmailSendResponse as EmailSendResponse,
-  type EmailListResponsesCursorPage as EmailListResponsesCursorPage,
-  type EmailListParams as EmailListParams,
-  type EmailSendParams as EmailSendParams
-};
+  export {
+    Emails as Emails,
+    type EmailContentItem as EmailContentItem,
+    type Status as Status,
+    type Tag as Tag,
+    type EmailRetrieveResponse as EmailRetrieveResponse,
+    type EmailListResponse as EmailListResponse,
+    type EmailCancelResponse as EmailCancelResponse,
+    type EmailSendResponse as EmailSendResponse,
+    type EmailListResponsesCursorPage as EmailListResponsesCursorPage,
+    type EmailListParams as EmailListParams,
+    type EmailSendParams as EmailSendParams,
+  };
 
-export {
-  Namespaces as Namespaces,
-  type Namespace as Namespace,
-  type NamespaceDetail as NamespaceDetail,
-  type NamespaceUpdateResponse as NamespaceUpdateResponse,
-  type NamespaceDeleteResponse as NamespaceDeleteResponse,
-  type NamespacesCursorPage as NamespacesCursorPage,
-  type NamespaceCreateParams as NamespaceCreateParams,
-  type NamespaceUpdateParams as NamespaceUpdateParams,
-  type NamespaceListParams as NamespaceListParams
-};
+  export {
+    Namespaces as Namespaces,
+    type Namespace as Namespace,
+    type NamespaceDetail as NamespaceDetail,
+    type NamespaceUpdateResponse as NamespaceUpdateResponse,
+    type NamespaceDeleteResponse as NamespaceDeleteResponse,
+    type NamespacesCursorPage as NamespacesCursorPage,
+    type NamespaceCreateParams as NamespaceCreateParams,
+    type NamespaceUpdateParams as NamespaceUpdateParams,
+    type NamespaceListParams as NamespaceListParams,
+  };
 
-export {
-  Inboxes as Inboxes,
-  type Inbox as Inbox,
-  type InboxUpdateResponse as InboxUpdateResponse,
-  type InboxDeleteResponse as InboxDeleteResponse,
-  type InboxSendResponse as InboxSendResponse,
-  type InboxesCursorPage as InboxesCursorPage,
-  type InboxCreateParams as InboxCreateParams,
-  type InboxUpdateParams as InboxUpdateParams,
-  type InboxListParams as InboxListParams,
-  type InboxSendParams as InboxSendParams
-};
+  export {
+    Inboxes as Inboxes,
+    type Inbox as Inbox,
+    type InboxUpdateResponse as InboxUpdateResponse,
+    type InboxDeleteResponse as InboxDeleteResponse,
+    type InboxSendResponse as InboxSendResponse,
+    type InboxesCursorPage as InboxesCursorPage,
+    type InboxCreateParams as InboxCreateParams,
+    type InboxUpdateParams as InboxUpdateParams,
+    type InboxListParams as InboxListParams,
+    type InboxSendParams as InboxSendParams,
+  };
 
-export {
-  Threads as Threads,
-  type Thread as Thread,
-  type ThreadUpdateResponse as ThreadUpdateResponse,
-  type ThreadRetrieveParams as ThreadRetrieveParams,
-  type ThreadUpdateParams as ThreadUpdateParams
-};
+  export {
+    Threads as Threads,
+    type Thread as Thread,
+    type ThreadUpdateResponse as ThreadUpdateResponse,
+    type ThreadRetrieveParams as ThreadRetrieveParams,
+    type ThreadUpdateParams as ThreadUpdateParams,
+  };
 
-export {
-  Messages as Messages,
-  type Message as Message,
-  type MessageAttachment as MessageAttachment,
-  type MessageContent as MessageContent,
-  type MessageContentItem as MessageContentItem,
-  type MessageDetail as MessageDetail,
-  type MessageUpdateResponse as MessageUpdateResponse,
-  type MessageForwardResponse as MessageForwardResponse,
-  type MessageReplyResponse as MessageReplyResponse,
-  type MessagesCursorPage as MessagesCursorPage,
-  type MessageUpdateParams as MessageUpdateParams,
-  type MessageListParams as MessageListParams,
-  type MessageForwardParams as MessageForwardParams,
-  type MessageReplyParams as MessageReplyParams
-};
+  export {
+    Messages as Messages,
+    type Message as Message,
+    type MessageAttachment as MessageAttachment,
+    type MessageContent as MessageContent,
+    type MessageContentItem as MessageContentItem,
+    type MessageDetail as MessageDetail,
+    type MessageUpdateResponse as MessageUpdateResponse,
+    type MessageForwardResponse as MessageForwardResponse,
+    type MessageReplyResponse as MessageReplyResponse,
+    type MessagesCursorPage as MessagesCursorPage,
+    type MessageUpdateParams as MessageUpdateParams,
+    type MessageListParams as MessageListParams,
+    type MessageForwardParams as MessageForwardParams,
+    type MessageReplyParams as MessageReplyParams,
+  };
 
-export {
-  Agents as Agents,
-  type AgentMemory as AgentMemory
-};
+  export { Agents as Agents, type AgentMemory as AgentMemory };
 
-export {
-  Webhooks as Webhooks,
-  type EmailBouncedEvent as EmailBouncedEvent,
-  type EmailClickedEvent as EmailClickedEvent,
-  type EmailComplainedEvent as EmailComplainedEvent,
-  type EmailDeliveredEvent as EmailDeliveredEvent,
-  type EmailDeliveryDelayedEvent as EmailDeliveryDelayedEvent,
-  type EmailFailedEvent as EmailFailedEvent,
-  type EmailOpenedEvent as EmailOpenedEvent,
-  type EmailProcessedEvent as EmailProcessedEvent,
-  type EmailQueuedEvent as EmailQueuedEvent,
-  type EmailRejectedEvent as EmailRejectedEvent,
-  type EmailScheduledEvent as EmailScheduledEvent,
-  type EmailSendingEvent as EmailSendingEvent,
-  type EmailSentEvent as EmailSentEvent,
-  type Event as Event,
-  type MessageAgentTriggeredEvent as MessageAgentTriggeredEvent,
-  type MessageReceivedEvent as MessageReceivedEvent,
-  type MessageSecurityFlaggedEvent as MessageSecurityFlaggedEvent,
-  type MessageSentEvent as MessageSentEvent,
-  type WebhookCreateResponse as WebhookCreateResponse,
-  type WebhookRetrieveResponse as WebhookRetrieveResponse,
-  type WebhookUpdateResponse as WebhookUpdateResponse,
-  type WebhookListResponse as WebhookListResponse,
-  type WebhookDeleteResponse as WebhookDeleteResponse,
-  type UnwrapWebhookEvent as UnwrapWebhookEvent,
-  type WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
-  type WebhookCreateParams as WebhookCreateParams,
-  type WebhookUpdateParams as WebhookUpdateParams,
-  type WebhookListParams as WebhookListParams
-};
+  export {
+    Webhooks as Webhooks,
+    type EmailBouncedEvent as EmailBouncedEvent,
+    type EmailClickedEvent as EmailClickedEvent,
+    type EmailComplainedEvent as EmailComplainedEvent,
+    type EmailDeliveredEvent as EmailDeliveredEvent,
+    type EmailDeliveryDelayedEvent as EmailDeliveryDelayedEvent,
+    type EmailFailedEvent as EmailFailedEvent,
+    type EmailOpenedEvent as EmailOpenedEvent,
+    type EmailProcessedEvent as EmailProcessedEvent,
+    type EmailQueuedEvent as EmailQueuedEvent,
+    type EmailRejectedEvent as EmailRejectedEvent,
+    type EmailScheduledEvent as EmailScheduledEvent,
+    type EmailSendingEvent as EmailSendingEvent,
+    type EmailSentEvent as EmailSentEvent,
+    type Event as Event,
+    type MessageAgentTriggeredEvent as MessageAgentTriggeredEvent,
+    type MessageReceivedEvent as MessageReceivedEvent,
+    type MessageSecurityFlaggedEvent as MessageSecurityFlaggedEvent,
+    type MessageSentEvent as MessageSentEvent,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type UnwrapWebhookEvent as UnwrapWebhookEvent,
+    type WebhookListResponsesCursorPage as WebhookListResponsesCursorPage,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
+  };
 
-export {
-  Organizations as Organizations,
-  type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
-  type OrganizationListResponse as OrganizationListResponse,
-  type OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
-  type OrganizationListParams as OrganizationListParams
-};
-    }
+  export {
+    Organizations as Organizations,
+    type OrganizationRetrieveResponse as OrganizationRetrieveResponse,
+    type OrganizationListResponse as OrganizationListResponse,
+    type OrganizationListResponsesCursorPage as OrganizationListResponsesCursorPage,
+    type OrganizationListParams as OrganizationListParams,
+  };
+}

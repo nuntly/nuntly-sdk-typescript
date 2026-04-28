@@ -2,7 +2,10 @@
 
 import Nuntly from '@nuntly/sdk';
 
-const client = new Nuntly({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
+const client = new Nuntly({
+  apiKey: 'My API Key',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
 
 describe('resource domains', () => {
   test('create: only required params', async () => {
@@ -18,10 +21,10 @@ describe('resource domains', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.domains.create({
-    name: 'name',
-    receiving: true,
-    sending: true,
-  });
+      name: 'name',
+      receiving: true,
+      sending: true,
+    });
   });
 
   test('retrieve', async () => {
@@ -48,14 +51,18 @@ describe('resource domains', () => {
 
   test('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.domains.update('dns_01kabn43yqyxn2bx4ve84mczd3', {
-    clickTracking: true,
-    openTracking: true,
-    receiving: true,
-    sending: true,
-  }, { path: '/_stainless_unknown_path' }))
-      .rejects
-      .toThrow(Nuntly.NotFoundError);
+    await expect(
+      client.domains.update(
+        'dns_01kabn43yqyxn2bx4ve84mczd3',
+        {
+          clickTracking: true,
+          openTracking: true,
+          receiving: true,
+          sending: true,
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('list', async () => {
@@ -71,9 +78,9 @@ describe('resource domains', () => {
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.domains.list({ cursor: 'cursor', limit: 1 }, { path: '/_stainless_unknown_path' }))
-      .rejects
-      .toThrow(Nuntly.NotFoundError);
+    await expect(
+      client.domains.list({ cursor: 'cursor', limit: 1 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('delete', async () => {

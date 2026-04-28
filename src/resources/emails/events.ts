@@ -22,11 +22,13 @@ export class Events extends APIResource {
    * ```
    */
   list(id: string, options?: RequestOptions): APIPromise<EventListResponse> {
-    return (this._client.get(path`/emails/${id}/events`, options) as APIPromise<{ data: EventListResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.get(path`/emails/${id}/events`, options) as APIPromise<{ data: EventListResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type EventListResponse = Array<EventListResponse.EventListResponseItem>
+export type EventListResponse = Array<EventListResponse.EventListResponseItem>;
 
 export namespace EventListResponse {
   /**
@@ -65,7 +67,5 @@ export namespace EventListResponse {
 }
 
 export declare namespace Events {
-  export {
-    type EventListResponse as EventListResponse
-  };
+  export { type EventListResponse as EventListResponse };
 }

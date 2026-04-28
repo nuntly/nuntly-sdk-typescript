@@ -12,12 +12,19 @@ export class Messages extends APIResource {
   /**
    * List messages in a thread (chronological order).
    */
-  list(threadID: string, query: MessageListParams | null | undefined = {}, options?: RequestOptions): PagePromise<MessageListResponsesCursorPage, MessageListResponse> {
-    return this._client.getAPIList(path`/threads/${threadID}/messages`, CursorPage<MessageListResponse>, { query, ...options });
+  list(
+    threadID: string,
+    query: MessageListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<MessageListResponsesCursorPage, MessageListResponse> {
+    return this._client.getAPIList(path`/threads/${threadID}/messages`, CursorPage<MessageListResponse>, {
+      query,
+      ...options,
+    });
   }
 }
 
-export type MessageListResponsesCursorPage = CursorPage<MessageListResponse>
+export type MessageListResponsesCursorPage = CursorPage<MessageListResponse>;
 
 export interface MessageListResponse {
   /**
@@ -92,13 +99,12 @@ export interface MessageListResponse {
   to: Array<string>;
 }
 
-export interface MessageListParams extends CursorPageParams {
-}
+export interface MessageListParams extends CursorPageParams {}
 
 export declare namespace Messages {
   export {
     type MessageListResponse as MessageListResponse,
     type MessageListResponsesCursorPage as MessageListResponsesCursorPage,
-    type MessageListParams as MessageListParams
+    type MessageListParams as MessageListParams,
   };
 }

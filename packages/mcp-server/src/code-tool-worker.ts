@@ -59,8 +59,8 @@ function getTSDiagnostics(code: string): string[] {
   const codeWithImport = [
     'import { Nuntly } from "@nuntly/sdk";',
     functionSource.type === 'declaration' ?
-      `async function run(${functionSource.client}: Nuntly)` :
-      `const run: (${functionSource.client}: Nuntly) => Promise<unknown> =`,
+      `async function run(${functionSource.client}: Nuntly)`
+    : `const run: (${functionSource.client}: Nuntly) => Promise<unknown> =`,
     functionSource.code,
   ].join('\n');
   const sourcePath = path.resolve('code.ts');
@@ -108,63 +108,63 @@ function getTSDiagnostics(code: string): string[] {
 
 const fuse = new Fuse(
   [
-    "client.apiKeys.create",
-    "client.apiKeys.delete",
-    "client.apiKeys.list",
-    "client.apiKeys.retrieve",
-    "client.apiKeys.update",
-    "client.domains.create",
-    "client.domains.delete",
-    "client.domains.list",
-    "client.domains.retrieve",
-    "client.domains.update",
-    "client.emails.cancel",
-    "client.emails.list",
-    "client.emails.retrieve",
-    "client.emails.send",
-    "client.emails.bulk.retrieve",
-    "client.emails.bulk.send",
-    "client.emails.events.list",
-    "client.emails.content.retrieve",
-    "client.emails.stats.list",
-    "client.namespaces.create",
-    "client.namespaces.delete",
-    "client.namespaces.list",
-    "client.namespaces.retrieve",
-    "client.namespaces.update",
-    "client.namespaces.inboxes.list",
-    "client.inboxes.create",
-    "client.inboxes.delete",
-    "client.inboxes.list",
-    "client.inboxes.retrieve",
-    "client.inboxes.send",
-    "client.inboxes.update",
-    "client.inboxes.threads.list",
-    "client.threads.retrieve",
-    "client.threads.update",
-    "client.threads.messages.list",
-    "client.messages.forward",
-    "client.messages.list",
-    "client.messages.reply",
-    "client.messages.retrieve",
-    "client.messages.update",
-    "client.messages.content.retrieve",
-    "client.messages.attachments.list",
-    "client.messages.attachments.retrieve",
-    "client.agents.memory.retrieve",
-    "client.agents.memory.upsert",
-    "client.webhooks.create",
-    "client.webhooks.delete",
-    "client.webhooks.list",
-    "client.webhooks.retrieve",
-    "client.webhooks.unwrap",
-    "client.webhooks.update",
-    "client.webhooks.events.deliveries",
-    "client.webhooks.events.list",
-    "client.webhooks.events.replay",
-    "client.organizations.list",
-    "client.organizations.retrieve",
-    "client.organizations.usage.retrieve"
+    'client.apiKeys.create',
+    'client.apiKeys.delete',
+    'client.apiKeys.list',
+    'client.apiKeys.retrieve',
+    'client.apiKeys.update',
+    'client.domains.create',
+    'client.domains.delete',
+    'client.domains.list',
+    'client.domains.retrieve',
+    'client.domains.update',
+    'client.emails.cancel',
+    'client.emails.list',
+    'client.emails.retrieve',
+    'client.emails.send',
+    'client.emails.bulk.retrieve',
+    'client.emails.bulk.send',
+    'client.emails.events.list',
+    'client.emails.content.retrieve',
+    'client.emails.stats.list',
+    'client.namespaces.create',
+    'client.namespaces.delete',
+    'client.namespaces.list',
+    'client.namespaces.retrieve',
+    'client.namespaces.update',
+    'client.namespaces.inboxes.list',
+    'client.inboxes.create',
+    'client.inboxes.delete',
+    'client.inboxes.list',
+    'client.inboxes.retrieve',
+    'client.inboxes.send',
+    'client.inboxes.update',
+    'client.inboxes.threads.list',
+    'client.threads.retrieve',
+    'client.threads.update',
+    'client.threads.messages.list',
+    'client.messages.forward',
+    'client.messages.list',
+    'client.messages.reply',
+    'client.messages.retrieve',
+    'client.messages.update',
+    'client.messages.content.retrieve',
+    'client.messages.attachments.list',
+    'client.messages.attachments.retrieve',
+    'client.agents.memory.retrieve',
+    'client.agents.memory.upsert',
+    'client.webhooks.create',
+    'client.webhooks.delete',
+    'client.webhooks.list',
+    'client.webhooks.retrieve',
+    'client.webhooks.unwrap',
+    'client.webhooks.update',
+    'client.webhooks.events.deliveries',
+    'client.webhooks.events.list',
+    'client.webhooks.events.replay',
+    'client.organizations.list',
+    'client.organizations.retrieve',
+    'client.organizations.usage.retrieve',
   ],
   { threshold: 1, shouldSort: true },
 );
@@ -247,7 +247,12 @@ function parseError(code: string, error: unknown): string | undefined {
     // Deno uses V8; the first "<anonymous>:LINE:COLUMN" is the top of stack.
     const lineNumber = error.stack?.match(/<anonymous>:([0-9]+):[0-9]+/)?.[1];
     // -1 for the zero-based indexing
-    const line = lineNumber && code.split('\n').at(parseInt(lineNumber, 10) - 1)?.trim();
+    const line =
+      lineNumber &&
+      code
+        .split('\n')
+        .at(parseInt(lineNumber, 10) - 1)
+        ?.trim();
     return line ? `${message}\n  at line ${lineNumber}\n    ${line}` : message;
   } catch {
     return message;
@@ -259,8 +264,9 @@ const fetch = async (req: Request): Promise<Response> => {
 
   const runFunctionSource = code ? getRunFunctionSource(code) : null;
   if (!runFunctionSource) {
-    const message = code
-      ? 'The code is missing a top-level `run` function.'
+    const message =
+      code ?
+        'The code is missing a top-level `run` function.'
       : 'The code argument is missing. Provide one containing a top-level `run` function.';
     return Response.json(
       {
@@ -305,7 +311,7 @@ const fetch = async (req: Request): Promise<Response> => {
   try {
     let run_ = async (client: any) => {};
     run_ = (await tseval(`${code}\nexport default run;`)).default;
-    const result = await run_(makeSdkProxy(client, { path: ["client"] }));
+    const result = await run_(makeSdkProxy(client, { path: ['client'] }));
     return Response.json({
       is_error: false,
       result,
