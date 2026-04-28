@@ -14,7 +14,9 @@ export class Domains extends APIResource {
    * Add a domain to start configuring DNS records for sending or receiving emails.
    */
   create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
-    return (this._client.post('/domains', { body, ...options }) as APIPromise<{ data: DomainCreateResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.post('/domains', { body, ...options }) as APIPromise<{ data: DomainCreateResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
@@ -22,21 +24,34 @@ export class Domains extends APIResource {
    * status for each record.
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
-    return (this._client.get(path`/domains/${id}`, options) as APIPromise<{ data: DomainRetrieveResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.get(path`/domains/${id}`, options) as APIPromise<{ data: DomainRetrieveResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Toggle sending, receiving, open tracking, or click tracking capabilities for a
    * domain.
    */
-  update(id: string, body: DomainUpdateParams | null | undefined = {}, options?: RequestOptions): APIPromise<DomainUpdateResponse> {
-    return (this._client.patch(path`/domains/${id}`, { body, ...options }) as APIPromise<{ data: DomainUpdateResponse }>)._thenUnwrap((obj) => obj.data);
+  update(
+    id: string,
+    body: DomainUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<DomainUpdateResponse> {
+    return (
+      this._client.patch(path`/domains/${id}`, { body, ...options }) as APIPromise<{
+        data: DomainUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Returns all domains with their verification and capability status.
    */
-  list(query: DomainListParams | null | undefined = {}, options?: RequestOptions): PagePromise<DomainListResponsesCursorPage, DomainListResponse> {
+  list(
+    query: DomainListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<DomainListResponsesCursorPage, DomainListResponse> {
     return this._client.getAPIList('/domains', CursorPage<DomainListResponse>, { query, ...options });
   }
 
@@ -45,11 +60,13 @@ export class Domains extends APIResource {
    * sending or receiving.
    */
   delete(id: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
-    return (this._client.delete(path`/domains/${id}`, options) as APIPromise<{ data: DomainDeleteResponse }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.delete(path`/domains/${id}`, options) as APIPromise<{ data: DomainDeleteResponse }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type DomainListResponsesCursorPage = CursorPage<DomainListResponse>
+export type DomainListResponsesCursorPage = CursorPage<DomainListResponse>;
 
 export interface DomainCreateResponse {
   /**
@@ -421,8 +438,7 @@ export interface DomainUpdateParams {
   sending?: boolean;
 }
 
-export interface DomainListParams extends CursorPageParams {
-}
+export interface DomainListParams extends CursorPageParams {}
 
 export declare namespace Domains {
   export {
@@ -434,6 +450,6 @@ export declare namespace Domains {
     type DomainListResponsesCursorPage as DomainListResponsesCursorPage,
     type DomainCreateParams as DomainCreateParams,
     type DomainUpdateParams as DomainUpdateParams,
-    type DomainListParams as DomainListParams
+    type DomainListParams as DomainListParams,
   };
 }

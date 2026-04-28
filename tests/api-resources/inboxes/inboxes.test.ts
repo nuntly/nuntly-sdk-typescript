@@ -2,7 +2,10 @@
 
 import Nuntly from '@nuntly/sdk';
 
-const client = new Nuntly({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
+const client = new Nuntly({
+  apiKey: 'My API Key',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
 
 describe('resource inboxes', () => {
   test('create: only required params', async () => {
@@ -18,12 +21,12 @@ describe('resource inboxes', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.inboxes.create({
-    address: 'x',
-    agentId: 'agentId',
-    domainId: 'domainId',
-    name: 'name',
-    namespaceId: 'namespaceId',
-  });
+      address: 'x',
+      agentId: 'agentId',
+      domainId: 'domainId',
+      name: 'name',
+      namespaceId: 'namespaceId',
+    });
   });
 
   test('retrieve', async () => {
@@ -50,9 +53,13 @@ describe('resource inboxes', () => {
 
   test('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.inboxes.update('ibx_01kabn43yqyxn2bx4ve84mczd3', { name: 'name' }, { path: '/_stainless_unknown_path' }))
-      .rejects
-      .toThrow(Nuntly.NotFoundError);
+    await expect(
+      client.inboxes.update(
+        'ibx_01kabn43yqyxn2bx4ve84mczd3',
+        { name: 'name' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('list', async () => {
@@ -68,13 +75,16 @@ describe('resource inboxes', () => {
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.inboxes.list({
-    cursor: 'cursor',
-    limit: 1,
-    namespaceId: 'namespaceId',
-  }, { path: '/_stainless_unknown_path' }))
-      .rejects
-      .toThrow(Nuntly.NotFoundError);
+    await expect(
+      client.inboxes.list(
+        {
+          cursor: 'cursor',
+          limit: 1,
+          namespaceId: 'namespaceId',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('delete', async () => {
@@ -89,7 +99,10 @@ describe('resource inboxes', () => {
   });
 
   test('send: only required params', async () => {
-    const responsePromise = client.inboxes.send('ibx_01kabn43yqyxn2bx4ve84mczd3', { subject: 'x', to: ['dev@stainless.com'] });
+    const responsePromise = client.inboxes.send('ibx_01kabn43yqyxn2bx4ve84mczd3', {
+      subject: 'x',
+      to: ['dev@stainless.com'],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -101,12 +114,12 @@ describe('resource inboxes', () => {
 
   test('send: required and optional params', async () => {
     const response = await client.inboxes.send('ibx_01kabn43yqyxn2bx4ve84mczd3', {
-    subject: 'x',
-    to: ['dev@stainless.com'],
-    bcc: ['dev@stainless.com'],
-    cc: ['dev@stainless.com'],
-    html: 'html',
-    text: 'text',
-  });
+      subject: 'x',
+      to: ['dev@stainless.com'],
+      bcc: ['dev@stainless.com'],
+      cc: ['dev@stainless.com'],
+      html: 'html',
+      text: 'text',
+    });
   });
 });

@@ -2,7 +2,10 @@
 
 import Nuntly from '@nuntly/sdk';
 
-const client = new Nuntly({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
+const client = new Nuntly({
+  apiKey: 'My API Key',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
 
 describe('resource threads', () => {
   test('retrieve', async () => {
@@ -18,9 +21,13 @@ describe('resource threads', () => {
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.threads.retrieve('thr_01kabn43yqyxn2bx4ve84mczd3', { markRead: 'markRead' }, { path: '/_stainless_unknown_path' }))
-      .rejects
-      .toThrow(Nuntly.NotFoundError);
+    await expect(
+      client.threads.retrieve(
+        'thr_01kabn43yqyxn2bx4ve84mczd3',
+        { markRead: 'markRead' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 
   test('update', async () => {
@@ -36,12 +43,16 @@ describe('resource threads', () => {
 
   test('update: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3', {
-    addLabels: ['x'],
-    agentId: 'agentId',
-    removeLabels: ['x'],
-  }, { path: '/_stainless_unknown_path' }))
-      .rejects
-      .toThrow(Nuntly.NotFoundError);
+    await expect(
+      client.threads.update(
+        'thr_01kabn43yqyxn2bx4ve84mczd3',
+        {
+          addLabels: ['x'],
+          agentId: 'agentId',
+          removeLabels: ['x'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Nuntly.NotFoundError);
   });
 });

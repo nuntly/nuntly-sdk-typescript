@@ -21,39 +21,68 @@ export class Messages extends APIResource {
    * Retrieve a single message with inbox enrichment.
    */
   retrieve(messageID: string, options?: RequestOptions): APIPromise<MessageDetail> {
-    return (this._client.get(path`/messages/${messageID}`, options) as APIPromise<{ data: MessageDetail }>)._thenUnwrap((obj) => obj.data);
+    return (
+      this._client.get(path`/messages/${messageID}`, options) as APIPromise<{ data: MessageDetail }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Update message labels. Only available for messages in user-created inboxes.
    */
-  update(messageID: string, body: MessageUpdateParams | null | undefined = {}, options?: RequestOptions): APIPromise<MessageUpdateResponse> {
-    return (this._client.patch(path`/messages/${messageID}`, { body, ...options }) as APIPromise<{ data: MessageUpdateResponse }>)._thenUnwrap((obj) => obj.data);
+  update(
+    messageID: string,
+    body: MessageUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<MessageUpdateResponse> {
+    return (
+      this._client.patch(path`/messages/${messageID}`, { body, ...options }) as APIPromise<{
+        data: MessageUpdateResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * List all received messages across inboxes.
    */
-  list(query: MessageListParams | null | undefined = {}, options?: RequestOptions): PagePromise<MessagesCursorPage, Message> {
+  list(
+    query: MessageListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<MessagesCursorPage, Message> {
     return this._client.getAPIList('/messages', CursorPage<Message>, { query, ...options });
   }
 
   /**
    * Forward a message to new recipients.
    */
-  forward(messageID: string, body: MessageForwardParams, options?: RequestOptions): APIPromise<MessageForwardResponse> {
-    return (this._client.post(path`/messages/${messageID}/forward`, { body, ...options }) as APIPromise<{ data: MessageForwardResponse }>)._thenUnwrap((obj) => obj.data);
+  forward(
+    messageID: string,
+    body: MessageForwardParams,
+    options?: RequestOptions,
+  ): APIPromise<MessageForwardResponse> {
+    return (
+      this._client.post(path`/messages/${messageID}/forward`, { body, ...options }) as APIPromise<{
+        data: MessageForwardResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 
   /**
    * Reply to a message. Set replyAll to true to reply to all recipients.
    */
-  reply(messageID: string, body: MessageReplyParams | null | undefined = {}, options?: RequestOptions): APIPromise<MessageReplyResponse> {
-    return (this._client.post(path`/messages/${messageID}/reply`, { body, ...options }) as APIPromise<{ data: MessageReplyResponse }>)._thenUnwrap((obj) => obj.data);
+  reply(
+    messageID: string,
+    body: MessageReplyParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<MessageReplyResponse> {
+    return (
+      this._client.post(path`/messages/${messageID}/reply`, { body, ...options }) as APIPromise<{
+        data: MessageReplyResponse;
+      }>
+    )._thenUnwrap((obj) => obj.data);
   }
 }
 
-export type MessagesCursorPage = CursorPage<Message>
+export type MessagesCursorPage = CursorPage<Message>;
 
 export interface Message {
   /**
@@ -409,17 +438,14 @@ export declare namespace Messages {
     type MessageUpdateParams as MessageUpdateParams,
     type MessageListParams as MessageListParams,
     type MessageForwardParams as MessageForwardParams,
-    type MessageReplyParams as MessageReplyParams
+    type MessageReplyParams as MessageReplyParams,
   };
 
-  export {
-    Content as Content,
-    type ContentRetrieveParams as ContentRetrieveParams
-  };
+  export { Content as Content, type ContentRetrieveParams as ContentRetrieveParams };
 
   export {
     Attachments as Attachments,
     type AttachmentListResponse as AttachmentListResponse,
-    type AttachmentRetrieveParams as AttachmentRetrieveParams
+    type AttachmentRetrieveParams as AttachmentRetrieveParams,
   };
 }
