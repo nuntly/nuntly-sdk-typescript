@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.18.0 (2026-04-30)
+
+Full Changelog: [v0.17.0...v0.18.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.17.0...v0.18.0)
+
+### Features
+
+* support setting headers via env ([257d58f](https://github.com/nuntly/nuntly-sdk-typescript/commit/257d58f9b4b1a1d35f85d6444874adfe3facbd3c))
+
+
+### Chores
+
+* avoid formatting file that gets changed during releases ([2ae9339](https://github.com/nuntly/nuntly-sdk-typescript/commit/2ae9339a3db3b11bdafdd69d77fa4731d762cfaf))
+* **format:** run eslint and prettier separately ([1547c93](https://github.com/nuntly/nuntly-sdk-typescript/commit/1547c93f5f448005d6c1482f3db19b0a2df70f9c))
+* **formatter:** run prettier and eslint separately ([65cc7b3](https://github.com/nuntly/nuntly-sdk-typescript/commit/65cc7b301ede7d268c6b83aacf920553b8cbca51))
+* **internal:** codegen related update ([74d9103](https://github.com/nuntly/nuntly-sdk-typescript/commit/74d9103e1dc34e5ab6ad8ab9b90f8bb4755c52ee))
+* **internal:** more robust bootstrap script ([c8331b8](https://github.com/nuntly/nuntly-sdk-typescript/commit/c8331b8df2a42c67db3ee38fcf41aa873f23ac35))
+* **internal:** update docs ordering ([8ed500e](https://github.com/nuntly/nuntly-sdk-typescript/commit/8ed500e3a47b0790b7163ef1e7ce352298c011eb))
+* restructure docs search code ([df225da](https://github.com/nuntly/nuntly-sdk-typescript/commit/df225da7ecd5c8bb4f57704921b1139d4de05387))
+* **tests:** bump steady to v0.22.1 ([aa45fab](https://github.com/nuntly/nuntly-sdk-typescript/commit/aa45fab8c53a59d73888f9a081cda8eb6e584ade))
+
 ## 0.17.0 (2026-04-14)
 
 Full Changelog: [v0.16.0...v0.17.0](https://github.com/nuntly/nuntly-sdk-typescript/compare/v0.16.0...v0.17.0)
