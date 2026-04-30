@@ -14,12 +14,7 @@ export class APIError<
   /** HTTP headers for the response that caused the error */
   readonly headers: THeaders;
   /** JSON body of the response that caused the error */
-  readonly error: TError;
-
-  readonly code: string | undefined;
-  readonly title: string | undefined;
-  readonly details?: string | undefined;
-
+  readonly error: TError;readonly code: string | undefined;readonly title: string | undefined;readonly details?: string | undefined;;
   constructor(status: TStatus, error: TError, message: string | undefined, headers: THeaders) {
     super(`${APIError.makeMessage(status, error, message)}`);
     this.status = status;
