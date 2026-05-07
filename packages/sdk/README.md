@@ -21,7 +21,6 @@ The official TypeScript SDK for [Nuntly](https://nuntly.com), the developer-firs
 - [Retry configuration](#retry-configuration)
 - [Raw response access](#raw-response-access)
 - [Advanced](#advanced)
-- [Resources](#resources)
 - [MCP Server](#mcp-server)
 - [FAQ](#faq)
 - [Semantic versioning](#semantic-versioning)
@@ -377,34 +376,6 @@ await nuntly.emails.send(payload, { timeout: 5_000 });
 ```
 
 A request that exceeds its timeout aborts with a `ConnectionError`.
-
-## Resources
-
-- `nuntly.emails` - `.retrieve('id_value')` - `.list()` - `.send({ /* ... */ })` - `.cancel('id_value')`
-  - `nuntly.emails.stats` - `.retrieve()`
-  - `nuntly.emails.events` - `.list('id_value')`
-  - `nuntly.emails.content` - `.retrieve('id_value')`
-  - `nuntly.emails.bulk` - `.send({ /* ... */ })` - `.list('bulkId_value')`
-- `nuntly.domains` - `.list()` - `.retrieve('id_value')` - `.delete('id_value')` - `.create({ /* ... */ })` - `.update('id_value', { /* ... */ })`
-- `nuntly.webhooks` - `.retrieve('id_value')` - `.update('id_value', { /* ... */ })` - `.delete('id_value')` - `.create({ /* ... */ })` - `.list()`
-  - `nuntly.webhooks.events` - `.list()` - `.replay('id_value', 'eventId_value')` - `.deliveries('id_value', 'eventId_value')`
-- `nuntly.organizations` - `.list()` - `.retrieve('id_value')`
-  - `nuntly.organizations.usage` - `.retrieve('id_value')`
-- `nuntly.inboxes` - `.create({ /* ... */ })` - `.list()` - `.retrieve('inboxId_value')` - `.update('inboxId_value', { /* ... */ })` - `.delete('inboxId_value')`
-  - `nuntly.inboxes.threads` - `.list('inboxId_value')`
-  - `nuntly.inboxes.messages` - `.send('inboxId_value', { /* ... */ })`
-- `nuntly.agents`
-  - `nuntly.agents.memory` - `.retrieve('agentId_value')` - `.upsert('agentId_value', { /* ... */ })`
-- `nuntly.threads` - `.retrieve('threadId_value')` - `.update('threadId_value', { /* ... */ })`
-  - `nuntly.threads.messages` - `.list('threadId_value')`
-- `nuntly.messages` - `.list()` - `.retrieve('messageId_value')` - `.update('messageId_value', { /* ... */ })` - `.reply('messageId_value', { /* ... */ })` - `.forward('messageId_value', { /* ... */ })`
-  - `nuntly.messages.content` - `.retrieve('messageId_value')`
-  - `nuntly.messages.attachments` - `.list('messageId_value')` - `.retrieve('messageId_value', 'attachmentId_value')`
-- `nuntly.namespaces` - `.create({ /* ... */ })` - `.list()` - `.retrieve('namespaceId_value')` - `.update('namespaceId_value', { /* ... */ })` - `.delete('namespaceId_value')`
-  - `nuntly.namespaces.inboxes` - `.list('namespaceId_value')`
-- `nuntly.apiKeys` - `.retrieve('id_value')` - `.update('id_value', { /* ... */ })` - `.delete('id_value')` - `.create({ /* ... */ })` - `.list()`
-
-See the full [API Reference](./api.md) for detailed documentation of every method, parameter, and response type.
 
 ## MCP Server
 

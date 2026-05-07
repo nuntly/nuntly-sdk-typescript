@@ -18,8 +18,8 @@ For SDK usage, see [`packages/sdk/README.md`](./packages/sdk/README.md).
 
 ```
 packages/
-├── sdk/         Public @nuntly/sdk package (auto-generated API surface)
-└── sdk-core/    Internal HTTP infrastructure (hand-maintained)
+├── sdk/         Public @nuntly/sdk package
+└── sdk-core/    Internal HTTP infrastructure
 ```
 
 ## Development
@@ -32,13 +32,3 @@ bun run test
 ```
 
 The `@nuntly/sdk` build bundles `@nuntly/sdk-core` inline. The published npm package has no runtime dependency on `@nuntly/sdk-core`.
-
-## Releases
-
-Tagging `v*` on `main` triggers `.github/workflows/release.yml`, which:
-
-1. Builds `@nuntly/sdk` (with `@nuntly/sdk-core` bundled)
-2. Verifies the tag matches `packages/sdk/package.json` version
-3. Publishes `@nuntly/sdk` to npm with OIDC provenance
-
-`@nuntly/sdk-core` is never published.
