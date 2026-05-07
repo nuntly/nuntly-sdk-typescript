@@ -5,7 +5,7 @@
 
 The official TypeScript SDK for [Nuntly](https://nuntly.com), the developer-first email platform. Send transactional emails, manage domains, handle webhooks, and receive inbound mail with full type safety and zero runtime dependencies.
 
-[Documentation](https://nuntly.com/docs) | [API Reference](./api.md) | [Website](https://nuntly.com) | [Get your API key](https://app.nuntly.com/signup)
+[Documentation](https://nuntly.com/docs) | [API Reference](./api.md) | [Website](https://nuntly.com) | [Get your API key](https://nuntly.com/auth/sign-up)
 
 ## Table of contents
 
@@ -44,7 +44,7 @@ The SDK has zero runtime dependencies.
 
 - Node.js 20 or later, Bun, Deno, or any modern edge runtime (Cloudflare Workers, Vercel Edge)
 - TypeScript 5.0 or later for full type inference (the SDK ships `.d.ts` and works in plain JavaScript too)
-- A Nuntly API key, available at [https://app.nuntly.com/signup](https://app.nuntly.com/signup)
+- A Nuntly API key, available at [https://nuntly.com/auth/sign-up](https://nuntly.com/auth/sign-up)
 
 ## Quick start
 
