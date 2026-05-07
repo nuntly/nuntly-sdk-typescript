@@ -7,23 +7,6 @@ The official TypeScript SDK for [Nuntly](https://nuntly.com), the developer-firs
 
 [Documentation](https://nuntly.com/docs) | [API Reference](./api.md) | [Website](https://nuntly.com) | [Get your API key](https://nuntly.com/auth/sign-up)
 
-This repository hosts two packages:
-
-| Package | Published to npm | Description |
-|---------|------------------|-------------|
-| [`@nuntly/sdk`](./packages/sdk) | yes | Public SDK consumed by applications |
-| `@nuntly/sdk-core` | no (private) | Internal HTTP infrastructure, bundled into `@nuntly/sdk` at build time |
-
-For SDK usage, see [`packages/sdk/README.md`](./packages/sdk/README.md).
-
-## Repository structure
-
-```
-packages/
-├── sdk/         Public @nuntly/sdk package
-└── sdk-core/    Internal HTTP infrastructure
-```
-
 ## Table of contents
 
 - [Installation](#installation)

@@ -1,16 +1,55 @@
 {
-  "name": "nuntly-sdk-typescript",
-  "private": true,
+  "name": "@nuntly/sdk",
+  "version": "1.0.0-alpha.4",
   "type": "module",
-  "workspaces": ["packages/*"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "browser": "./dist/index.js",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuntly/nuntly-sdk-typescript.git"
+  },
+  "homepage": "https://nuntly.com",
+  "bugs": {
+    "url": "https://github.com/nuntly/nuntly-sdk-typescript/issues"
+  },
   "packageManager": "bun@1.3.11",
   "engines": {
     "bun": ">=1.3.0"
   },
   "scripts": {
-    "build": "cd packages/sdk && bun run build",
-    "typecheck": "cd packages/sdk && bun run typecheck",
-    "test": "cd packages/sdk && bun run test",
-    "clean": "cd packages/sdk && bun run clean"
+    "clean": "rimraf dist .tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "test": "bun test",
+    "test:watch": "bun test --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "~24.10.9",
+    "rimraf": "~6.1.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.8.0",
+    "up-fetch": "^2.6.0"
   }
 }
