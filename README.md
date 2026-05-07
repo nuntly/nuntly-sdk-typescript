@@ -412,11 +412,11 @@ Identifiers prefixed with `_` are internal and not subject to semver.
 
 ## Previous versions
 
-Versions `0.x` are preserved on the [`legacy/stainless-v0.x`](https://github.com/nuntly/nuntly-sdk-typescript/tree/legacy/stainless-v0.x) branch. Those releases remain installable from npm via `npm install @nuntly/sdk@0`.
+Versions `0.x` remain installable from npm via `npm install @nuntly/sdk@0` for backwards compatibility.
 
 ## Contributing
 
-Issues, bug reports, and feature requests are welcome at [github.com/nuntly/nuntly-sdk-typescript/issues](https://github.com/nuntly/nuntly-sdk-typescript/issues). The public API surface is generated from the Nuntly OpenAPI spec, so direct PRs that modify it will likely be redirected to upstream feedback. Documentation, examples, and developer-experience improvements are the highest-impact contribution areas.
+Issues, bug reports, and feature requests are welcome at [github.com/nuntly/nuntly-sdk-typescript/issues](https://github.com/nuntly/nuntly-sdk-typescript/issues).
 
 ## License
 
