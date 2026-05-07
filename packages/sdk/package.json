@@ -1,0 +1,51 @@
+{
+  "name": "@nuntly/sdk",
+  "version": "1.0.0-alpha.1",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "browser": "./dist/index.js",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuntly/nuntly-sdk-typescript.git"
+  },
+  "homepage": "https://nuntly.com",
+  "bugs": {
+    "url": "https://github.com/nuntly/nuntly-sdk-typescript/issues"
+  },
+  "scripts": {
+    "clean": "rimraf dist .tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "test": "bun test",
+    "test:watch": "bun test --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@nuntly/sdk-core": "workspace:*",
+    "@types/node": "~24.10.9",
+    "rimraf": "~6.1.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.8.0"
+  }
+}
