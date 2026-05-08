@@ -1,6 +1,7 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
 import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import { generateIdempotencyKey } from '../../lib/idempotency.js';
 import type { CreateEmailRequest, CreateEmailResponse, DeleteEmailResponse, EmailResponse, EmailsResponseItem } from '../types.js';
 
 import { EmailsStats } from './stats/index.js';
@@ -59,6 +60,8 @@ export class Emails extends Resource {
    * @returns Promise<CreateEmailResponse>
    */
   async send(body: CreateEmailRequest, options?: RequestOptions): Promise<CreateEmailResponse> {
+    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     const response = await this._http.post<{ data: CreateEmailResponse }>('/emails', body, options);
     return response.data;
   }

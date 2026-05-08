@@ -1,5 +1,6 @@
 import { Resource } from '../../../core/index.js';
 import type { RequestOptions } from '../../../core/index.js';
+import { generateIdempotencyKey } from '../../../lib/idempotency.js';
 import type { BulkEmailsResponse, CreateBulkEmailsRequest, CreateBulkEmailsResponse } from '../../types.js';
 
 
@@ -17,6 +18,8 @@ export class EmailsBulk extends Resource {
    * @returns Promise<CreateBulkEmailsResponse>
    */
   async send(body: CreateBulkEmailsRequest, options?: RequestOptions): Promise<CreateBulkEmailsResponse> {
+    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     const response = await this._http.post<{ data: CreateBulkEmailsResponse }>('/emails/bulk', body, options);
     return response.data;
   }
