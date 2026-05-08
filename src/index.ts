@@ -2,16 +2,16 @@ import { NuntlyClient } from './core/index.js';
 import type { ClientOptions } from './core/index.js';
 import { safe } from './core/index.js';
 import type { SafeResult } from './core/index.js';
-import { Emails } from './resources/emails.js';
-import { Domains } from './resources/domains.js';
-import { Webhooks } from './resources/webhooks.js';
-import { Organizations } from './resources/organizations.js';
-import { Inboxes } from './resources/inboxes.js';
-import { Agents } from './resources/agents.js';
-import { Threads } from './resources/threads.js';
-import { Messages } from './resources/messages.js';
-import { Namespaces } from './resources/namespaces.js';
-import { ApiKeys } from './resources/api-keys.js';
+import { Emails } from './resources/emails/index.js';
+import { Domains } from './resources/domains/index.js';
+import { Webhooks } from './resources/webhooks/index.js';
+import { Organizations } from './resources/organizations/index.js';
+import { Inboxes } from './resources/inboxes/index.js';
+import { Agents } from './resources/agents/index.js';
+import { Threads } from './resources/threads/index.js';
+import { Messages } from './resources/messages/index.js';
+import { Namespaces } from './resources/namespaces/index.js';
+import { ApiKeys } from './resources/api-keys/index.js';
 
 export class Nuntly {
   private readonly client: NuntlyClient;
@@ -73,5 +73,5 @@ export type {
   EmailBouncedEvent, EmailComplainedEvent, EmailRejectedEvent, EmailDeliveryDelayedEvent, EmailFailedEvent,
   MessageReceivedEvent, MessageSecurityFlaggedEvent, MessageAgentTriggeredEvent, MessageSentEvent, MessageRejectedEvent,
 } from './lib/webhook.js';
-export * from './types/index.js';
+export * from './resources/types.js';
 export default Nuntly;
