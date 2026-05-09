@@ -31,11 +31,6 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
 
-      # npm 11.5.1+ auto-triggers the Trusted Publisher OIDC flow.
-      # Node 22 LTS ships with npm 10.x which does not, so the publish
-      # would fall back to no-auth and 404.
-      - run: npm install -g npm@latest
-
       - name: Verify tag matches package version
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
@@ -62,4 +57,10 @@ jobs:
             *-rc*)    TAG=rc ;;
             *)        TAG=latest ;;
           esac
-          npm publish --provenance --access public --tag "$TAG"
+          # Use npx to invoke npm 11.5.1+ which auto-triggers the
+          # Trusted Publisher OIDC flow. The runner's bundled npm 10.x
+          # ignores OIDC and gets a 404 from the registry. Self-upgrade
+          # via 'npm install -g npm@latest' breaks with MODULE_NOT_FOUND
+          # because of how npm rewrites itself in place; npx isolates
+          # the install in its own cache.
+          npx -y npm@latest publish --provenance --access public --tag "$TAG"
