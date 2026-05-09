@@ -17,7 +17,6 @@ jobs:
   inspect:
     name: Inspect OIDC claims for npm registry
     runs-on: ubuntu-24.04
-    environment: release
     steps:
       - name: Fetch OIDC token and decode claims
         run: |
