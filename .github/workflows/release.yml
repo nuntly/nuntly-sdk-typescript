@@ -29,6 +29,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      # npm 11.5.1+ auto-triggers the Trusted Publisher OIDC flow.
+      # Node 22 LTS ships with npm 10.x which does not, so the publish
+      # would fall back to no-auth and 404.
+      - run: npm install -g npm@latest
 
       - name: Verify tag matches package version
         run: |
