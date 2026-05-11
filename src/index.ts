@@ -2,43 +2,43 @@ import { NuntlyClient } from './core/index.js';
 import type { ClientOptions } from './core/index.js';
 import { safe } from './core/index.js';
 import type { SafeResult } from './core/index.js';
-import { Emails } from './resources/emails/index.js';
-import { Domains } from './resources/domains/index.js';
-import { Webhooks } from './resources/webhooks/index.js';
-import { Organizations } from './resources/organizations/index.js';
-import { Inboxes } from './resources/inboxes/index.js';
 import { Agents } from './resources/agents/index.js';
-import { Threads } from './resources/threads/index.js';
+import { ApiKeys } from './resources/api-keys/index.js';
+import { Domains } from './resources/domains/index.js';
+import { Emails } from './resources/emails/index.js';
+import { Inboxes } from './resources/inboxes/index.js';
 import { Messages } from './resources/messages/index.js';
 import { Namespaces } from './resources/namespaces/index.js';
-import { ApiKeys } from './resources/api-keys/index.js';
+import { Organizations } from './resources/organizations/index.js';
+import { Threads } from './resources/threads/index.js';
+import { Webhooks } from './resources/webhooks/index.js';
 
 export class Nuntly {
   private readonly client: NuntlyClient;
 
-  readonly emails: Emails;
-  readonly domains: Domains;
-  readonly webhooks: Webhooks;
-  readonly organizations: Organizations;
-  readonly inboxes: Inboxes;
   readonly agents: Agents;
-  readonly threads: Threads;
+  readonly apiKeys: ApiKeys;
+  readonly domains: Domains;
+  readonly emails: Emails;
+  readonly inboxes: Inboxes;
   readonly messages: Messages;
   readonly namespaces: Namespaces;
-  readonly apiKeys: ApiKeys;
+  readonly organizations: Organizations;
+  readonly threads: Threads;
+  readonly webhooks: Webhooks;
 
   constructor(options: ClientOptions) {
     this.client = new NuntlyClient(options);
-    this.emails = new Emails(this.client);
-    this.domains = new Domains(this.client);
-    this.webhooks = new Webhooks(this.client);
-    this.organizations = new Organizations(this.client);
-    this.inboxes = new Inboxes(this.client);
     this.agents = new Agents(this.client);
-    this.threads = new Threads(this.client);
+    this.apiKeys = new ApiKeys(this.client);
+    this.domains = new Domains(this.client);
+    this.emails = new Emails(this.client);
+    this.inboxes = new Inboxes(this.client);
     this.messages = new Messages(this.client);
     this.namespaces = new Namespaces(this.client);
-    this.apiKeys = new ApiKeys(this.client);
+    this.organizations = new Organizations(this.client);
+    this.threads = new Threads(this.client);
+    this.webhooks = new Webhooks(this.client);
   }
 }
 

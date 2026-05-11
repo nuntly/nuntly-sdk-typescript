@@ -1,4 +1,13 @@
-import type { EmailStatus } from '../shared/types.js';
+import type { EmailStatus, Tag } from '../shared/types.js';
+
+export interface Attachment {
+  /** The base64-encoded content of the attachment */
+  content: string;
+  /** The name of the attached file to be displayed to the recipient */
+  filename?: string;
+  /** Content type of the attachment (the MIME type) */
+  contentType?: string;
+}
 
 /**
  * @example
@@ -28,9 +37,9 @@ export interface CreateEmailRequest {
   /** The headers to add to the email */
   headers?: Record<string, string>;
   /** The tags to add to the email */
-  tags?: Array<{ name: string; value: string }>;
+  tags?: Array<Tag>;
   /** The attachements to add to the email */
-  attachments?: Array<{ content: string; filename?: string; contentType?: string }>;
+  attachments?: Array<Attachment>;
   /** The variables for the template */
   variables?: Record<string, string | number | boolean | null>;
   /** The date at which the email is scheduled to be sent */
@@ -79,7 +88,7 @@ export interface EmailResponse {
   /** The headers to add to the email */
   headers?: Record<string, string>;
   /** The tags to add to the email */
-  tags?: Array<{ name: string; value: string }>;
+  tags?: Array<Tag>;
   /** The attachements */
   attachments?: Array<{ filename?: string; contentType?: string; size?: number }>;
   /** The variables for the template */

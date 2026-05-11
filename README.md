@@ -144,10 +144,9 @@ Verify incoming webhook signatures and get typed events:
 import { verifyWebhook } from '@nuntly/sdk';
 
 const event = await verifyWebhook(
-  requestBody,                    // raw body string
-  headers['x-nuntly-signature'],  // HMAC-SHA256 signature
-  headers['x-nuntly-timestamp'],  // unix timestamp
-  process.env.WEBHOOK_SECRET!,
+  requestBody,                     // raw body (string or Uint8Array)
+  headers['webhook-signature'],    // signature header in the form t=<seconds>,v0=<hex>
+  process.env.WEBHOOK_SECRET!,     // signing secret (with or without the whsec_ prefix)
 );
 
 switch (event.type) {
