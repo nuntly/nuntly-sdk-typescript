@@ -3,20 +3,20 @@ import type { NuntlyClient } from '../../core/index.js';
 import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import type { CreateInboxRequest, IdResponse, InboxDetailResponse, InboxResponse, InboxesQuery, InboxesResponseItem, UpdateInboxRequest } from '../types.js';
 
-import { InboxesThreads } from './threads/index.js';
 import { InboxesMessages } from './messages/index.js';
+import { InboxesThreads } from './threads/index.js';
 
 /**
  * Inboxes resource.
  */
 export class Inboxes extends Resource {
-  threads: InboxesThreads;
   messages: InboxesMessages;
+  threads: InboxesThreads;
 
   constructor(client: NuntlyClient) {
     super(client);
-    this.threads = new InboxesThreads(client);
     this.messages = new InboxesMessages(client);
+    this.threads = new InboxesThreads(client);
   }
 
   /**
@@ -29,6 +29,19 @@ export class Inboxes extends Resource {
    */
   async create(body: CreateInboxRequest, options?: RequestOptions): Promise<InboxResponse> {
     const response = await this._http.post<{ data: InboxResponse }>('/inboxes', body, options);
+    return response.data;
+  }
+
+  /**
+   * Soft-delete an inbox.
+   *
+   * DELETE /inboxes/{inboxId}
+   * @param inboxId - string
+   * @param options - RequestOptions
+   * @returns Promise<IdResponse>
+   */
+  async delete(inboxId: string, options?: RequestOptions): Promise<IdResponse> {
+    const response = await this._http.delete<{ data: IdResponse }>(`/inboxes/${inboxId}`, options);
     return response.data;
   }
 
@@ -68,19 +81,6 @@ export class Inboxes extends Resource {
    */
   async update(inboxId: string, body: UpdateInboxRequest, options?: RequestOptions): Promise<IdResponse> {
     const response = await this._http.patch<{ data: IdResponse }>(`/inboxes/${inboxId}`, body, options);
-    return response.data;
-  }
-
-  /**
-   * Soft-delete an inbox.
-   *
-   * DELETE /inboxes/{inboxId}
-   * @param inboxId - string
-   * @param options - RequestOptions
-   * @returns Promise<IdResponse>
-   */
-  async delete(inboxId: string, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.delete<{ data: IdResponse }>(`/inboxes/${inboxId}`, options);
     return response.data;
   }
 

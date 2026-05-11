@@ -9,6 +9,20 @@ import type { WebhookEventDeliveriesResponse, WebhookEventsResponseItem } from '
 export class WebhooksEvents extends Resource {
 
   /**
+   * Returns all delivery attempts for a webhook event, including HTTP status codes and response times.
+   *
+   * GET /webhooks/{id}/events/{eventId}/deliveries
+   * @param id - string
+   * @param eventId - string
+   * @param options - RequestOptions
+   * @returns Promise<WebhookEventDeliveriesResponse>
+   */
+  async deliveries(id: string, eventId: string, options?: RequestOptions): Promise<WebhookEventDeliveriesResponse> {
+    const response = await this._http.get<{ data: WebhookEventDeliveriesResponse }>(`/webhooks/${id}/events/${eventId}/deliveries`, undefined, options);
+    return response.data;
+  }
+
+  /**
    * Returns recent webhook events across all registered endpoints.
    *
    * GET /webhooks/events
@@ -31,20 +45,6 @@ export class WebhooksEvents extends Resource {
    */
   async replay(id: string, eventId: string, options?: RequestOptions): Promise<void> {
     await this._http.post(`/webhooks/${id}/events/${eventId}/replay`, undefined, options);
-  }
-
-  /**
-   * Returns all delivery attempts for a webhook event, including HTTP status codes and response times.
-   *
-   * GET /webhooks/{id}/events/{eventId}/deliveries
-   * @param id - string
-   * @param eventId - string
-   * @param options - RequestOptions
-   * @returns Promise<WebhookEventDeliveriesResponse>
-   */
-  async deliveries(id: string, eventId: string, options?: RequestOptions): Promise<WebhookEventDeliveriesResponse> {
-    const response = await this._http.get<{ data: WebhookEventDeliveriesResponse }>(`/webhooks/${id}/events/${eventId}/deliveries`, undefined, options);
-    return response.data;
   }
 
 }

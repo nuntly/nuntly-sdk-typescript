@@ -30,6 +30,19 @@ export class Namespaces extends Resource {
   }
 
   /**
+   * Soft-delete a namespace. Rejects if it has active inboxes.
+   *
+   * DELETE /namespaces/{namespaceId}
+   * @param namespaceId - string
+   * @param options - RequestOptions
+   * @returns Promise<IdResponse>
+   */
+  async delete(namespaceId: string, options?: RequestOptions): Promise<IdResponse> {
+    const response = await this._http.delete<{ data: IdResponse }>(`/namespaces/${namespaceId}`, options);
+    return response.data;
+  }
+
+  /**
    * List all namespaces.
    *
    * GET /namespaces
@@ -65,19 +78,6 @@ export class Namespaces extends Resource {
    */
   async update(namespaceId: string, body: UpdateNamespaceRequest, options?: RequestOptions): Promise<IdResponse> {
     const response = await this._http.patch<{ data: IdResponse }>(`/namespaces/${namespaceId}`, body, options);
-    return response.data;
-  }
-
-  /**
-   * Soft-delete a namespace. Rejects if it has active inboxes.
-   *
-   * DELETE /namespaces/{namespaceId}
-   * @param namespaceId - string
-   * @param options - RequestOptions
-   * @returns Promise<IdResponse>
-   */
-  async delete(namespaceId: string, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.delete<{ data: IdResponse }>(`/namespaces/${namespaceId}`, options);
     return response.data;
   }
 

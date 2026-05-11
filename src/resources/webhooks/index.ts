@@ -17,6 +17,44 @@ export class Webhooks extends Resource {
   }
 
   /**
+   * Register an endpoint to start receiving webhook events for your organization.
+   *
+   * POST /webhooks
+   * @param body - CreateWebhookRequest
+   * @param options - RequestOptions
+   * @returns Promise<CreateWebhookResponse>
+   */
+  async create(body: CreateWebhookRequest, options?: RequestOptions): Promise<CreateWebhookResponse> {
+    const response = await this._http.post<{ data: CreateWebhookResponse }>('/webhooks', body, options);
+    return response.data;
+  }
+
+  /**
+   * Remove a webhook endpoint. No further events will be delivered to this URL.
+   *
+   * DELETE /webhooks/{id}
+   * @param id - string
+   * @param options - RequestOptions
+   * @returns Promise<DeleteWebhookResponse>
+   */
+  async delete(id: string, options?: RequestOptions): Promise<DeleteWebhookResponse> {
+    const response = await this._http.delete<{ data: DeleteWebhookResponse }>(`/webhooks/${id}`, options);
+    return response.data;
+  }
+
+  /**
+   * Returns all registered webhook endpoints for the organization.
+   *
+   * GET /webhooks
+   * @param query - CursorPageParams
+   * @param options - RequestOptions
+   * @returns Promise<CursorPage<WebhooksResponseItem>>
+   */
+  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<WebhooksResponseItem>> {
+    return this._http.list<WebhooksResponseItem>('/webhooks', query as unknown as Record<string, unknown>, options);
+  }
+
+  /**
    * Returns a webhook endpoint with its URL, subscribed events, and configuration.
    *
    * GET /webhooks/{id}
@@ -41,44 +79,6 @@ export class Webhooks extends Resource {
   async update(id: string, body: UpdateWebhookRequest, options?: RequestOptions): Promise<UpdateWebhookResponse> {
     const response = await this._http.put<{ data: UpdateWebhookResponse }>(`/webhooks/${id}`, body, options);
     return response.data;
-  }
-
-  /**
-   * Remove a webhook endpoint. No further events will be delivered to this URL.
-   *
-   * DELETE /webhooks/{id}
-   * @param id - string
-   * @param options - RequestOptions
-   * @returns Promise<DeleteWebhookResponse>
-   */
-  async delete(id: string, options?: RequestOptions): Promise<DeleteWebhookResponse> {
-    const response = await this._http.delete<{ data: DeleteWebhookResponse }>(`/webhooks/${id}`, options);
-    return response.data;
-  }
-
-  /**
-   * Register an endpoint to start receiving webhook events for your organization.
-   *
-   * POST /webhooks
-   * @param body - CreateWebhookRequest
-   * @param options - RequestOptions
-   * @returns Promise<CreateWebhookResponse>
-   */
-  async create(body: CreateWebhookRequest, options?: RequestOptions): Promise<CreateWebhookResponse> {
-    const response = await this._http.post<{ data: CreateWebhookResponse }>('/webhooks', body, options);
-    return response.data;
-  }
-
-  /**
-   * Returns all registered webhook endpoints for the organization.
-   *
-   * GET /webhooks
-   * @param query - CursorPageParams
-   * @param options - RequestOptions
-   * @returns Promise<CursorPage<WebhooksResponseItem>>
-   */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<WebhooksResponseItem>> {
-    return this._http.list<WebhooksResponseItem>('/webhooks', query as unknown as Record<string, unknown>, options);
   }
 
 }

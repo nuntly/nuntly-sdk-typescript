@@ -13,7 +13,7 @@ export interface CreateWebhookRequest {
   /** The endpoint URL of the webhook */
   endpointUrl: string;
   /** The status of the webhook. */
-  status?: 'enabled' | 'disabled' | 'revoked';
+  status?: 'enabled' | 'disabled';
   /** The event types to subscribe to */
   events: Array<EventType>;
 }
@@ -48,7 +48,7 @@ export interface UpdateWebhookRequest {
   /** The event types to subscribe to */
   events?: Array<EventType>;
   /** The status of the webhook. */
-  status?: 'enabled' | 'disabled' | 'revoked';
+  status?: 'enabled' | 'disabled';
   /** If true, a new signing secret will be generated */
   rotateSecret?: boolean;
 }

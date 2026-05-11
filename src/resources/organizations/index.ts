@@ -17,18 +17,6 @@ export class Organizations extends Resource {
   }
 
   /**
-   * Returns all organizations the authenticated user belongs to.
-   *
-   * GET /organizations
-   * @param query - CursorPageParams
-   * @param options - RequestOptions
-   * @returns Promise<CursorPage<OrganizationsResponseItem>>
-   */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<OrganizationsResponseItem>> {
-    return this._http.list<OrganizationsResponseItem>('/organizations', query as unknown as Record<string, unknown>, options);
-  }
-
-  /**
    * Returns the organization's profile, plan, region, and account status.
    *
    * GET /organizations/{id}
@@ -39,6 +27,18 @@ export class Organizations extends Resource {
   async retrieve(id: string, options?: RequestOptions): Promise<OrganizationResponse> {
     const response = await this._http.get<{ data: OrganizationResponse }>(`/organizations/${id}`, undefined, options);
     return response.data;
+  }
+
+  /**
+   * Returns all organizations the authenticated user belongs to.
+   *
+   * GET /organizations
+   * @param query - CursorPageParams
+   * @param options - RequestOptions
+   * @returns Promise<CursorPage<OrganizationsResponseItem>>
+   */
+  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<OrganizationsResponseItem>> {
+    return this._http.list<OrganizationsResponseItem>('/organizations', query as unknown as Record<string, unknown>, options);
   }
 
 }

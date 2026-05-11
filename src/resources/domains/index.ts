@@ -9,6 +9,32 @@ import type { CreateDomainRequest, CreateDomainResponse, DeleteDomainResponse, D
 export class Domains extends Resource {
 
   /**
+   * Add a domain to start configuring DNS records for sending or receiving emails.
+   *
+   * POST /domains
+   * @param body - CreateDomainRequest
+   * @param options - RequestOptions
+   * @returns Promise<CreateDomainResponse>
+   */
+  async create(body: CreateDomainRequest, options?: RequestOptions): Promise<CreateDomainResponse> {
+    const response = await this._http.post<{ data: CreateDomainResponse }>('/domains', body, options);
+    return response.data;
+  }
+
+  /**
+   * Permanently deletes a domain along with its inboxes, received messages, attachments, and sending configuration. This action is irreversible.
+   *
+   * DELETE /domains/{id}
+   * @param id - string
+   * @param options - RequestOptions
+   * @returns Promise<DeleteDomainResponse>
+   */
+  async delete(id: string, options?: RequestOptions): Promise<DeleteDomainResponse> {
+    const response = await this._http.delete<{ data: DeleteDomainResponse }>(`/domains/${id}`, options);
+    return response.data;
+  }
+
+  /**
    * Returns all domains with their verification and capability status.
    *
    * GET /domains
@@ -30,32 +56,6 @@ export class Domains extends Resource {
    */
   async retrieve(id: string, options?: RequestOptions): Promise<DomainRecordsResponse> {
     const response = await this._http.get<{ data: DomainRecordsResponse }>(`/domains/${id}`, undefined, options);
-    return response.data;
-  }
-
-  /**
-   * Permanently deletes a domain along with its inboxes, received messages, attachments, and sending configuration. This action is irreversible.
-   *
-   * DELETE /domains/{id}
-   * @param id - string
-   * @param options - RequestOptions
-   * @returns Promise<DeleteDomainResponse>
-   */
-  async delete(id: string, options?: RequestOptions): Promise<DeleteDomainResponse> {
-    const response = await this._http.delete<{ data: DeleteDomainResponse }>(`/domains/${id}`, options);
-    return response.data;
-  }
-
-  /**
-   * Add a domain to start configuring DNS records for sending or receiving emails.
-   *
-   * POST /domains
-   * @param body - CreateDomainRequest
-   * @param options - RequestOptions
-   * @returns Promise<CreateDomainResponse>
-   */
-  async create(body: CreateDomainRequest, options?: RequestOptions): Promise<CreateDomainResponse> {
-    const response = await this._http.post<{ data: CreateDomainResponse }>('/domains', body, options);
     return response.data;
   }
 

@@ -1,14 +1,23 @@
+export interface EmailContentItem {
+  /** Presigned download URL. */
+  downloadUrl: string;
+  /** Uncompressed size in bytes. */
+  size: number | null;
+  /** When the URL expires. */
+  expiresAt: string;
+}
+
 export interface EmailContentResponse {
   /** HTML content, or `null` if unavailable. */
-  html: { downloadUrl: string; size: number | null; expiresAt: string } | null;
+  html: EmailContentItem | null;
   /** Plain text content, or `null` if unavailable. */
-  text: { downloadUrl: string; size: number | null; expiresAt: string } | null;
+  text: EmailContentItem | null;
   /** Raw MIME (.eml) content, or `null` if unavailable. */
-  mime: { downloadUrl: string; size: number | null; expiresAt: string } | null;
+  mime: EmailContentItem | null;
   /** Subject template content, or `null` if unavailable. Returned for failed emails only. */
-  subjectTemplate: { downloadUrl: string; size: number | null; expiresAt: string } | null;
+  subjectTemplate: EmailContentItem | null;
   /** HTML template content, or `null` if unavailable. Returned for failed emails only. */
-  htmlTemplate: { downloadUrl: string; size: number | null; expiresAt: string } | null;
+  htmlTemplate: EmailContentItem | null;
   /** Text template content, or `null` if unavailable. Returned for failed emails only. */
-  textTemplate: { downloadUrl: string; size: number | null; expiresAt: string } | null;
+  textTemplate: EmailContentItem | null;
 }

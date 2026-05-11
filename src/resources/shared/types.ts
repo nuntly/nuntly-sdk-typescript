@@ -41,3 +41,10 @@ export interface SendMessageResponse {
   /** The subject of the message. */
   subject: string;
 }
+
+export interface Tag {
+  /** The name of the tag */
+  name: string;
+  /** The tag to add to the email */
+  value: string;
+}

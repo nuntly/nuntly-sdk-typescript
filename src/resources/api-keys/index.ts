@@ -9,6 +9,44 @@ import type { ApiKeyResponse, ApiKeysResponseItem, CreateApiKeyRequest, CreateAp
 export class ApiKeys extends Resource {
 
   /**
+   * Generate a new API key. The key value is only returned once — store it securely.
+   *
+   * POST /api-keys
+   * @param body - CreateApiKeyRequest
+   * @param options - RequestOptions
+   * @returns Promise<CreateApiKeyResponse>
+   */
+  async create(body: CreateApiKeyRequest, options?: RequestOptions): Promise<CreateApiKeyResponse> {
+    const response = await this._http.post<{ data: CreateApiKeyResponse }>('/api-keys', body, options);
+    return response.data;
+  }
+
+  /**
+   * Revoke an API key. Requests authenticating with this key will be rejected immediately.
+   *
+   * DELETE /api-keys/{id}
+   * @param id - string
+   * @param options - RequestOptions
+   * @returns Promise<DeleteApiKeyResponse>
+   */
+  async delete(id: string, options?: RequestOptions): Promise<DeleteApiKeyResponse> {
+    const response = await this._http.delete<{ data: DeleteApiKeyResponse }>(`/api-keys/${id}`, options);
+    return response.data;
+  }
+
+  /**
+   * Returns all API keys for the organization. Key values are never included in list responses.
+   *
+   * GET /api-keys
+   * @param query - CursorPageParams
+   * @param options - RequestOptions
+   * @returns Promise<CursorPage<ApiKeysResponseItem>>
+   */
+  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<ApiKeysResponseItem>> {
+    return this._http.list<ApiKeysResponseItem>('/api-keys', query as unknown as Record<string, unknown>, options);
+  }
+
+  /**
    * Returns API key metadata. The key value is never returned after creation.
    *
    * GET /api-keys/{id}
@@ -33,44 +71,6 @@ export class ApiKeys extends Resource {
   async update(id: string, body: UpdateApiKeyRequest, options?: RequestOptions): Promise<UpdateApiKeyResponse> {
     const response = await this._http.put<{ data: UpdateApiKeyResponse }>(`/api-keys/${id}`, body, options);
     return response.data;
-  }
-
-  /**
-   * Revoke an API key. Requests authenticating with this key will be rejected immediately.
-   *
-   * DELETE /api-keys/{id}
-   * @param id - string
-   * @param options - RequestOptions
-   * @returns Promise<DeleteApiKeyResponse>
-   */
-  async delete(id: string, options?: RequestOptions): Promise<DeleteApiKeyResponse> {
-    const response = await this._http.delete<{ data: DeleteApiKeyResponse }>(`/api-keys/${id}`, options);
-    return response.data;
-  }
-
-  /**
-   * Generate a new API key. The key value is only returned once — store it securely.
-   *
-   * POST /api-keys
-   * @param body - CreateApiKeyRequest
-   * @param options - RequestOptions
-   * @returns Promise<CreateApiKeyResponse>
-   */
-  async create(body: CreateApiKeyRequest, options?: RequestOptions): Promise<CreateApiKeyResponse> {
-    const response = await this._http.post<{ data: CreateApiKeyResponse }>('/api-keys', body, options);
-    return response.data;
-  }
-
-  /**
-   * Returns all API keys for the organization. Key values are never included in list responses.
-   *
-   * GET /api-keys
-   * @param query - CursorPageParams
-   * @param options - RequestOptions
-   * @returns Promise<CursorPage<ApiKeysResponseItem>>
-   */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<ApiKeysResponseItem>> {
-    return this._http.list<ApiKeysResponseItem>('/api-keys', query as unknown as Record<string, unknown>, options);
   }
 
 }
