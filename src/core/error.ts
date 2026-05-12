@@ -1,7 +1,13 @@
+/**
+ * Canonical error payload returned by the Nuntly API. Matches the runtime
+ * shape `{ error: { status, code, title, details? } }` defined by
+ * `ErrorResponseSchema` in @repo/application-error.
+ */
 export interface APIErrorBody {
-  message: string;
-  code?: string;
-  errors?: Array<{ field: string; message: string }>;
+  status: number;
+  code: string;
+  title: string;
+  details?: unknown;
 }
 
 export class NuntlyError extends Error {
@@ -19,8 +25,8 @@ export class APIError extends NuntlyError {
   readonly rawResponse: Response | undefined;
 
   constructor(status: number, body: unknown, headers: Headers, rawResponse?: Response) {
-    const parsed = APIError.parseBody(body);
-    super(`${status}: ${parsed.message}`);
+    const parsed = APIError.parseBody(status, body);
+    super(`${status}: ${parsed.title}`);
     this.name = 'APIError';
     this.status = status;
     this.headers = headers;
@@ -29,16 +35,24 @@ export class APIError extends NuntlyError {
     this.rawResponse = rawResponse;
   }
 
-  private static parseBody(body: unknown): APIErrorBody {
-    if (body && typeof body === 'object' && 'message' in body) {
-      const b = body as Record<string, unknown>;
-      return {
-        message: String(b.message),
-        code: typeof b.code === 'string' ? b.code : undefined,
-        errors: Array.isArray(b.errors) ? b.errors : undefined,
-      };
+  private static parseBody(status: number, body: unknown): APIErrorBody {
+    if (body && typeof body === 'object' && 'error' in body) {
+      const err = (body as Record<string, unknown>).error;
+      if (err && typeof err === 'object') {
+        const e = err as Record<string, unknown>;
+        return {
+          status: typeof e.status === 'number' ? e.status : status,
+          code: typeof e.code === 'string' ? e.code : 'unknown',
+          title: typeof e.title === 'string' ? e.title : 'Request failed',
+          details: e.details,
+        };
+      }
     }
-    return { message: typeof body === 'string' ? body : 'Request failed' };
+    return {
+      status,
+      code: 'unknown',
+      title: typeof body === 'string' && body.length > 0 ? body : 'Request failed',
+    };
   }
 
   static from(status: number, body: unknown, headers: Headers, rawResponse?: Response): APIError {

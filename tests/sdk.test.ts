@@ -189,8 +189,12 @@ describe("Error hierarchy", () => {
 		const nuntly = createClient(() =>
 			jsonResponse(
 				{
-					message: "Validation failed",
-					errors: [{ field: "to", message: "required" }],
+					error: {
+						status: 400,
+						code: "invalid_body",
+						title: "The body is invalid",
+						details: "The field 'to' is invalid or missing.",
+					},
 				},
 				400,
 			),
@@ -201,9 +205,10 @@ describe("Error hierarchy", () => {
 		} catch (e) {
 			expect(e).toBeInstanceOf(BadRequestError);
 			const err = e as BadRequestError;
-			expect(err.body.message).toBe("Validation failed");
-			expect(err.body.errors).toHaveLength(1);
-			expect(err.body.errors![0].field).toBe("to");
+			expect(err.body.title).toBe("The body is invalid");
+			expect(err.body.code).toBe("invalid_body");
+			expect(err.body.status).toBe(400);
+			expect(err.body.details).toBe("The field 'to' is invalid or missing.");
 		}
 	});
 
@@ -213,9 +218,11 @@ describe("Error hierarchy", () => {
 			baseUrl: "https://api.test.com",
 			maxRetries: 0,
 			fetch: mockFetch(() =>
-				jsonResponse({ message: "Too many requests" }, 429, {
-					"retry-after": "30",
-				}),
+				jsonResponse(
+					{ error: { status: 429, code: "rate_limit", title: "Too many requests" } },
+					429,
+					{ "retry-after": "30" },
+				),
 			) as typeof fetch,
 		});
 
@@ -263,7 +270,7 @@ describe("Safe mode", () => {
 			apiKey: "test_key",
 			baseUrl: "https://api.test.com",
 			fetch: mockFetch(() =>
-				jsonResponse({ message: "Not found" }, 404),
+				jsonResponse({ error: { status: 404, code: "not_found", title: "Not found" } }, 404),
 			) as typeof fetch,
 		});
 
@@ -611,7 +618,7 @@ describe("Hooks", () => {
 			baseUrl: "https://api.test.com",
 			retry: "none",
 			fetch: mockFetch(() =>
-				jsonResponse({ message: "Not found" }, 404),
+				jsonResponse({ error: { status: 404, code: "not_found", title: "Not found" } }, 404),
 			) as typeof fetch,
 			hooks: {
 				onError: (err) => {
