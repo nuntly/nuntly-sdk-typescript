@@ -122,8 +122,9 @@ try {
   }
 
   // Structured error body and request ID on every API error
-  console.log(error.body.message);
-  console.log(error.body.errors);  // field-level validation errors (422)
+  console.log(error.body.title);   // human-readable summary
+  console.log(error.body.code);    // machine-readable error code (e.g. invalid_body)
+  console.log(error.body.details); // optional details (e.g. which field is invalid)
   console.log(error.requestId);    // x-request-id for support
 
   // Access the raw Response for advanced inspection

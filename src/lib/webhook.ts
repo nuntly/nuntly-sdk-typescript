@@ -1,190 +1,13 @@
-interface BaseEvent {
-  id: string;
-  createdAt: string;
-}
+import type { Event } from '../resources/shared/types.js';
 
-interface EmailEventData {
-  id: string;
-  orgId: string;
-  bulkId?: string;
-  messageId: string;
-  sentAt: string;
-  enqueuedAt: string;
-  domainName: string;
-  domainId: string;
-  from: string;
-  to: string | string[];
-  cc?: string[];
-  bcc?: string[];
-  replyTo?: string[];
-  subject: string;
-  headers?: Record<string, string>;
-  tags?: Array<{ name: string; value: string }>;
-}
+/**
+ * Canonical webhook payload union. Identical to `Event` in
+ * `resources/shared/types`; kept as an alias for backward compatibility
+ * with consumers that import `WebhookEvent` directly. New code can use
+ * `Event` (or any of the per-variant types) from `@nuntly/sdk`.
+ */
+export type WebhookEvent = Event;
 
-export interface EmailQueuedEvent extends BaseEvent {
-  type: 'email.queued';
-  data: { queue: Record<string, unknown> };
-}
-
-export interface EmailScheduledEvent extends BaseEvent {
-  type: 'email.scheduled';
-  data: { schedule: { scheduledAt: string } };
-}
-
-export interface EmailProcessedEvent extends BaseEvent {
-  type: 'email.processed';
-  data: { processed: Record<string, unknown> };
-}
-
-export interface EmailSendingEvent extends BaseEvent {
-  type: 'email.sending';
-  data: EmailEventData & { sending: Record<string, unknown> };
-}
-
-export interface EmailSentEvent extends BaseEvent {
-  type: 'email.sent';
-  data: EmailEventData & { send: Record<string, unknown> };
-}
-
-export interface EmailDeliveredEvent extends BaseEvent {
-  type: 'email.delivered';
-  data: EmailEventData & {
-    delivery: {
-      deliveredAt: string;
-      recipients: string[];
-      smtpResponse: string;
-      remoteMtaIp: string;
-      reportingMta: string;
-      processingTime?: number;
-    };
-  };
-}
-
-export interface EmailOpenedEvent extends BaseEvent {
-  type: 'email.opened';
-  data: EmailEventData & {
-    open: { openedAt: string; userAgent: string };
-  };
-}
-
-export interface EmailClickedEvent extends BaseEvent {
-  type: 'email.clicked';
-  data: EmailEventData & {
-    click: { clickedAt: string; userAgent: string; link: string };
-  };
-}
-
-export interface EmailBouncedEvent extends BaseEvent {
-  type: 'email.bounced';
-  data: EmailEventData & {
-    bounce: {
-      bounceType: string;
-      bounceSubType: string;
-      bouncedRecipients: string[];
-      bouncedAt: string;
-      feedbackId: string;
-      reportingMta?: string;
-    };
-  };
-}
-
-export interface EmailComplainedEvent extends BaseEvent {
-  type: 'email.complained';
-  data: EmailEventData & {
-    complaint: {
-      complainedAt: string;
-      complainedRecipients?: string[];
-      complaintSubType?: string;
-      complaintFeedbackType?: string;
-      feedbackId: string;
-    };
-  };
-}
-
-export interface EmailRejectedEvent extends BaseEvent {
-  type: 'email.rejected';
-  data: { reject: { reason: string } };
-}
-
-export interface EmailDeliveryDelayedEvent extends BaseEvent {
-  type: 'email.deliveryDelayed';
-  data: EmailEventData & {
-    deliveryDelay: {
-      delayedAt: string;
-      delayType: string;
-      delayedRecipients: string[];
-    };
-  };
-}
-
-export interface EmailFailedEvent extends BaseEvent {
-  type: 'email.failed';
-  data: EmailEventData & { failure: { error: unknown } };
-}
-
-export interface MessageReceivedEvent extends BaseEvent {
-  type: 'message.received';
-  data: {
-    orgId: string;
-    domainId: string;
-    domainName: string;
-    inboxId: string;
-    threadId: string;
-    messageId: string;
-    from: string;
-    subject: string;
-    agentId?: string;
-  };
-}
-
-export interface MessageSecurityFlaggedEvent extends BaseEvent {
-  type: 'message.security.flagged';
-  data: MessageReceivedEvent['data'];
-}
-
-export interface MessageAgentTriggeredEvent extends BaseEvent {
-  type: 'message.agent.triggered';
-  data: MessageReceivedEvent['data'];
-}
-
-export interface MessageSentEvent extends BaseEvent {
-  type: 'message.sent';
-  data: MessageReceivedEvent['data'];
-}
-
-export interface MessageRejectedEvent extends BaseEvent {
-  type: 'message.rejected';
-  data: {
-    orgId: string;
-    domainId: string;
-    domainName: string;
-    inboxId: string;
-    from: string;
-    subject: string;
-    reason: string;
-  };
-}
-
-export type WebhookEvent =
-  | EmailQueuedEvent
-  | EmailScheduledEvent
-  | EmailProcessedEvent
-  | EmailSendingEvent
-  | EmailSentEvent
-  | EmailDeliveredEvent
-  | EmailOpenedEvent
-  | EmailClickedEvent
-  | EmailBouncedEvent
-  | EmailComplainedEvent
-  | EmailRejectedEvent
-  | EmailDeliveryDelayedEvent
-  | EmailFailedEvent
-  | MessageReceivedEvent
-  | MessageSecurityFlaggedEvent
-  | MessageAgentTriggeredEvent
-  | MessageSentEvent
-  | MessageRejectedEvent;
 
 export class WebhookVerificationError extends Error {
   constructor(message: string) {
@@ -217,7 +40,7 @@ export async function verifyWebhook(
   signatureHeader: string,
   secret: string,
   options: VerifyWebhookOptions = {},
-): Promise<WebhookEvent> {
+): Promise<Event> {
   if (!signatureHeader) {
     throw new WebhookVerificationError('Missing webhook signature header');
   }
@@ -273,7 +96,7 @@ export async function verifyWebhook(
     throw new WebhookVerificationError('Webhook signature verification failed');
   }
 
-  return JSON.parse(payloadStr) as WebhookEvent;
+  return JSON.parse(payloadStr) as Event;
 }
 
 function bytesToHex(bytes: Uint8Array): string {

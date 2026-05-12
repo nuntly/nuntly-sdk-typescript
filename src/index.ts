@@ -65,13 +65,10 @@ export {
 } from './core/index.js';
 export { CursorPage } from './core/index.js';
 export { verifyWebhook, WebhookVerificationError } from './lib/webhook.js';
-export type { VerifyWebhookOptions } from './lib/webhook.js';
-export type {
-  WebhookEvent,
-  EmailQueuedEvent, EmailScheduledEvent, EmailProcessedEvent, EmailSendingEvent,
-  EmailSentEvent, EmailDeliveredEvent, EmailOpenedEvent, EmailClickedEvent,
-  EmailBouncedEvent, EmailComplainedEvent, EmailRejectedEvent, EmailDeliveryDelayedEvent, EmailFailedEvent,
-  MessageReceivedEvent, MessageSecurityFlaggedEvent, MessageAgentTriggeredEvent, MessageSentEvent, MessageRejectedEvent,
-} from './lib/webhook.js';
+export type { VerifyWebhookOptions, WebhookEvent } from './lib/webhook.js';
+// Per-event types (EmailBouncedEvent, MessageReceivedEvent, ...) and the
+// `Event` union flow through the resources barrel - no explicit re-export
+// here, otherwise the named exports would shadow the canonical generated
+// shapes with stale hand-written ones.
 export * from './resources/types.js';
 export default Nuntly;

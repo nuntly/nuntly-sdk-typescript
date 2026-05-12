@@ -77,15 +77,18 @@ beforeAll(() => {
 				);
 			}
 
-			// Route: 404
+			// Route: 404 - canonical Nuntly error shape (see @repo/application-error)
 			if (url.pathname.includes("not-found")) {
 				return Response.json(
-					{ message: "Not found", code: "RESOURCE_NOT_FOUND" },
+					{ error: { status: 404, code: "not_found", title: "Not found" } },
 					{ status: 404 },
 				);
 			}
 
-			return Response.json({ message: "Not found" }, { status: 404 });
+			return Response.json(
+				{ error: { status: 404, code: "not_found", title: "Not found" } },
+				{ status: 404 },
+			);
 		},
 	});
 	baseUrl = `http://localhost:${server.port}`;
@@ -228,7 +231,9 @@ describe("Wire: Error responses", () => {
 			expect.unreachable("should have thrown");
 		} catch (e: any) {
 			expect(e.status).toBe(404);
-			expect(e.body.message).toBe("Not found");
+			expect(e.body.title).toBe("Not found");
+			expect(e.body.code).toBe("not_found");
+			expect(e.body.status).toBe(404);
 		}
 	});
 
