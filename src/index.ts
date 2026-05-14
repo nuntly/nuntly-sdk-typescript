@@ -48,7 +48,7 @@ export function createSafeNuntly(options: ClientOptions) {
 
 export { NuntlyClient, safe } from './core/index.js';
 export type { SafeResult } from './core/index.js';
-export type { APIErrorBody, AppInfo, Logger, Hooks, RetryContext, BackoffStrategy, RetryStrategy, ClientOptions, RequestOptions, ResponseWithData, CursorPageResponse, CursorPageParams } from './core/index.js';
+export type { AppInfo, Logger, Hooks, RetryContext, BackoffStrategy, RetryStrategy, ClientOptions, RequestOptions, ResponseWithData, CursorPageResponse, CursorPageParams } from './core/index.js';
 export {
   NuntlyError,
   APIError,

@@ -1,7 +1,7 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
-import type { CreateInboxRequest, IdResponse, InboxDetailResponse, InboxResponse, InboxesQuery, InboxesResponseItem, UpdateInboxRequest } from '../types.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { CreateInboxRequest, IdResponse, InboxResponse, InboxesQuery, InboxesResponseItem, UpdateInboxRequest } from '../types.js';
 
 import { InboxesMessages } from './messages/index.js';
 import { InboxesThreads } from './threads/index.js';
@@ -25,11 +25,14 @@ export class Inboxes extends Resource {
    * POST /inboxes
    * @param body - CreateInboxRequest
    * @param options - RequestOptions
-   * @returns Promise<InboxResponse>
+   * @returns APIPromise<InboxResponse>
    */
-  async create(body: CreateInboxRequest, options?: RequestOptions): Promise<InboxResponse> {
-    const response = await this._http.post<{ data: InboxResponse }>('/inboxes', body, options);
-    return response.data;
+  create(body: CreateInboxRequest, options?: RequestOptions): APIPromise<InboxResponse> {
+    return this._http.post<{ data: InboxResponse }>({
+      path: '/inboxes',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -38,11 +41,14 @@ export class Inboxes extends Resource {
    * DELETE /inboxes/{inboxId}
    * @param inboxId - string
    * @param options - RequestOptions
-   * @returns Promise<IdResponse>
+   * @returns APIPromise<IdResponse>
    */
-  async delete(inboxId: string, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.delete<{ data: IdResponse }>(`/inboxes/${inboxId}`, options);
-    return response.data;
+  delete(inboxId: string, options?: RequestOptions): APIPromise<IdResponse> {
+    return this._http.delete<{ data: IdResponse }>({
+      path: '/inboxes/{inboxId}',
+      pathParams: { inboxId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -54,20 +60,27 @@ export class Inboxes extends Resource {
    * @returns Promise<CursorPage<InboxesResponseItem>>
    */
   async list(query?: InboxesQuery, options?: RequestOptions): Promise<CursorPage<InboxesResponseItem>> {
-    return this._http.list<InboxesResponseItem>('/inboxes', query as unknown as Record<string, unknown>, options);
+    return this._http.list<InboxesResponseItem>({
+      path: '/inboxes',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
-   * Retrieve an inbox with thread stats.
+   * Retrieve an inbox.
    *
    * GET /inboxes/{inboxId}
    * @param inboxId - string
    * @param options - RequestOptions
-   * @returns Promise<InboxDetailResponse>
+   * @returns APIPromise<InboxResponse>
    */
-  async retrieve(inboxId: string, options?: RequestOptions): Promise<InboxDetailResponse> {
-    const response = await this._http.get<{ data: InboxDetailResponse }>(`/inboxes/${inboxId}`, undefined, options);
-    return response.data;
+  retrieve(inboxId: string, options?: RequestOptions): APIPromise<InboxResponse> {
+    return this._http.get<{ data: InboxResponse }>({
+      path: '/inboxes/{inboxId}',
+      pathParams: { inboxId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -77,11 +90,15 @@ export class Inboxes extends Resource {
    * @param inboxId - string
    * @param body - UpdateInboxRequest
    * @param options - RequestOptions
-   * @returns Promise<IdResponse>
+   * @returns APIPromise<IdResponse>
    */
-  async update(inboxId: string, body: UpdateInboxRequest, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.patch<{ data: IdResponse }>(`/inboxes/${inboxId}`, body, options);
-    return response.data;
+  update(inboxId: string, body: UpdateInboxRequest, options?: RequestOptions): APIPromise<IdResponse> {
+    return this._http.patch<{ data: IdResponse }>({
+      path: '/inboxes/{inboxId}',
+      pathParams: { inboxId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

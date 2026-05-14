@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import { generateIdempotencyKey } from '../../lib/idempotency.js';
 import type { CreateEmailRequest, CreateEmailResponse, DeleteEmailResponse, EmailResponse, EmailsResponseItem } from '../types.js';
 
@@ -32,11 +32,14 @@ export class Emails extends Resource {
    * DELETE /emails/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<DeleteEmailResponse>
+   * @returns APIPromise<DeleteEmailResponse>
    */
-  async cancel(id: string, options?: RequestOptions): Promise<DeleteEmailResponse> {
-    const response = await this._http.delete<{ data: DeleteEmailResponse }>(`/emails/${id}`, options);
-    return response.data;
+  cancel(id: string, options?: RequestOptions): APIPromise<DeleteEmailResponse> {
+    return this._http.delete<{ data: DeleteEmailResponse }>({
+      path: '/emails/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -48,7 +51,11 @@ export class Emails extends Resource {
    * @returns Promise<CursorPage<EmailsResponseItem>>
    */
   async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<EmailsResponseItem>> {
-    return this._http.list<EmailsResponseItem>('/emails', query as unknown as Record<string, unknown>, options);
+    return this._http.list<EmailsResponseItem>({
+      path: '/emails',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -57,11 +64,14 @@ export class Emails extends Resource {
    * GET /emails/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<EmailResponse>
+   * @returns APIPromise<EmailResponse>
    */
-  async retrieve(id: string, options?: RequestOptions): Promise<EmailResponse> {
-    const response = await this._http.get<{ data: EmailResponse }>(`/emails/${id}`, undefined, options);
-    return response.data;
+  retrieve(id: string, options?: RequestOptions): APIPromise<EmailResponse> {
+    return this._http.get<{ data: EmailResponse }>({
+      path: '/emails/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -70,13 +80,16 @@ export class Emails extends Resource {
    * POST /emails
    * @param body - CreateEmailRequest
    * @param options - RequestOptions
-   * @returns Promise<CreateEmailResponse>
+   * @returns APIPromise<CreateEmailResponse>
    */
-  async send(body: CreateEmailRequest, options?: RequestOptions): Promise<CreateEmailResponse> {
+  send(body: CreateEmailRequest, options?: RequestOptions): APIPromise<CreateEmailResponse> {
     const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
     options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
-    const response = await this._http.post<{ data: CreateEmailResponse }>('/emails', body, options);
-    return response.data;
+    return this._http.post<{ data: CreateEmailResponse }>({
+      path: '/emails',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

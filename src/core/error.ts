@@ -1,15 +1,3 @@
-/**
- * Canonical error payload returned by the Nuntly API. Matches the runtime
- * shape `{ error: { status, code, title, details? } }` defined by
- * `ErrorResponseSchema` in @repo/application-error.
- */
-export interface APIErrorBody {
-  status: number;
-  code: string;
-  title: string;
-  details?: unknown;
-}
-
 export class NuntlyError extends Error {
   constructor(message: string) {
     super(message);
@@ -18,9 +6,15 @@ export class NuntlyError extends Error {
 }
 
 export class APIError extends NuntlyError {
+  /** HTTP wire status. Equals `error.status` in the body by API contract; sourced from `Response.status`. */
   readonly status: number;
   readonly headers: Headers;
-  readonly body: APIErrorBody;
+  /** API-specific error code, e.g. `'not_found'`. */
+  readonly code: string;
+  /** Short, human-readable summary of the error. */
+  readonly title: string;
+  /** Optional additional details about this occurrence (best effort). */
+  readonly details?: unknown;
   readonly requestId: string | null;
   readonly rawResponse: Response | undefined;
 
@@ -30,18 +24,19 @@ export class APIError extends NuntlyError {
     this.name = 'APIError';
     this.status = status;
     this.headers = headers;
-    this.body = parsed;
+    this.code = parsed.code;
+    this.title = parsed.title;
+    this.details = parsed.details;
     this.requestId = headers.get('x-request-id');
     this.rawResponse = rawResponse;
   }
 
-  private static parseBody(status: number, body: unknown): APIErrorBody {
+  private static parseBody(status: number, body: unknown): { code: string; title: string; details?: unknown } {
     if (body && typeof body === 'object' && 'error' in body) {
       const err = (body as Record<string, unknown>).error;
       if (err && typeof err === 'object') {
         const e = err as Record<string, unknown>;
         return {
-          status: typeof e.status === 'number' ? e.status : status,
           code: typeof e.code === 'string' ? e.code : 'unknown',
           title: typeof e.title === 'string' ? e.title : 'Request failed',
           details: e.details,
@@ -49,7 +44,6 @@ export class APIError extends NuntlyError {
       }
     }
     return {
-      status,
       code: 'unknown',
       title: typeof body === 'string' && body.length > 0 ? body : 'Request failed',
     };

@@ -1,3 +1,5 @@
+import type { InboundEventData } from '../shared/types.js';
+
 /**
  * @example
  *     await nuntly.messages.forward({
@@ -15,21 +17,31 @@ export interface MessageAgentTriggeredEvent {
   id: string;
   createdAt: string;
   type: 'message.agent.triggered';
-  data: { orgId: string; domainId: string; domainName: string; inboxId: string; threadId: string; messageId: string; from: string; subject: string; agentId?: string };
+  data: InboundEventData;
 }
 
 export interface MessageReceivedEvent {
   id: string;
   createdAt: string;
   type: 'message.received';
-  data: { orgId: string; domainId: string; domainName: string; inboxId: string; threadId: string; messageId: string; from: string; subject: string; agentId?: string };
+  data: InboundEventData;
 }
 
 export interface MessageRejectedEvent {
   id: string;
   createdAt: string;
   type: 'message.rejected';
-  data: { orgId: string; domainId: string; domainName: string; inboxId: string; from: string; subject: string; reason: 'inbox_storage_limit_exceeded' | 'message_too_large' };
+  data: MessageRejectedEventData;
+}
+
+export interface MessageRejectedEventData {
+  orgId: string;
+  domainId: string;
+  domainName: string;
+  inboxId: string;
+  from: string;
+  subject: string;
+  reason: 'inbox_storage_limit_exceeded' | 'message_too_large';
 }
 
 export interface MessageResponse {
@@ -71,14 +83,14 @@ export interface MessageSecurityFlaggedEvent {
   id: string;
   createdAt: string;
   type: 'message.security.flagged';
-  data: { orgId: string; domainId: string; domainName: string; inboxId: string; threadId: string; messageId: string; from: string; subject: string; agentId?: string };
+  data: InboundEventData;
 }
 
 export interface MessageSentEvent {
   id: string;
   createdAt: string;
   type: 'message.sent';
-  data: { orgId: string; domainId: string; domainName: string; inboxId: string; threadId: string; messageId: string; from: string; subject: string; agentId?: string };
+  data: InboundEventData;
 }
 
 export interface MessagesQuery {

@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
 import type { InboxesResponseItem, NamespaceInboxesQuery } from '../../types.js';
 
 
@@ -18,7 +18,12 @@ export class NamespacesInboxes extends Resource {
    * @returns Promise<CursorPage<InboxesResponseItem>>
    */
   async list(namespaceId: string, query?: NamespaceInboxesQuery, options?: RequestOptions): Promise<CursorPage<InboxesResponseItem>> {
-    return this._http.list<InboxesResponseItem>(`/namespaces/${namespaceId}/inboxes`, query as unknown as Record<string, unknown>, options);
+    return this._http.list<InboxesResponseItem>({
+      path: '/namespaces/{namespaceId}/inboxes',
+      pathParams: { namespaceId },
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
 }

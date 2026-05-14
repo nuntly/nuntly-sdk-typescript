@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import type { EmailsStatsResponse } from '../../types.js';
 
 
@@ -13,11 +13,13 @@ export class EmailsStats extends Resource {
    *
    * GET /emails/stats
    * @param options - RequestOptions
-   * @returns Promise<EmailsStatsResponse>
+   * @returns APIPromise<EmailsStatsResponse>
    */
-  async retrieve(options?: RequestOptions): Promise<EmailsStatsResponse> {
-    const response = await this._http.get<{ data: EmailsStatsResponse }>('/emails/stats', undefined, options);
-    return response.data;
+  retrieve(options?: RequestOptions): APIPromise<EmailsStatsResponse> {
+    return this._http.get<{ data: EmailsStatsResponse }>({
+      path: '/emails/stats',
+      options,
+    }).map((r) => r.data);
   }
 
 }

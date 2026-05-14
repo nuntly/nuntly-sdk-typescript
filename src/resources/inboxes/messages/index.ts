@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import type { SendMessageRequest, SendMessageResponse } from '../../types.js';
 
 
@@ -15,11 +15,15 @@ export class InboxesMessages extends Resource {
    * @param inboxId - string
    * @param body - SendMessageRequest
    * @param options - RequestOptions
-   * @returns Promise<SendMessageResponse>
+   * @returns APIPromise<SendMessageResponse>
    */
-  async send(inboxId: string, body: SendMessageRequest, options?: RequestOptions): Promise<SendMessageResponse> {
-    const response = await this._http.post<{ data: SendMessageResponse }>(`/inboxes/${inboxId}/messages`, body, options);
-    return response.data;
+  send(inboxId: string, body: SendMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+    return this._http.post<{ data: SendMessageResponse }>({
+      path: '/inboxes/{inboxId}/messages',
+      pathParams: { inboxId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

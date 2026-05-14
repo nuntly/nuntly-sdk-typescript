@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
 import type { ThreadMessagesResponseItem } from '../../types.js';
 
 
@@ -18,7 +18,12 @@ export class ThreadsMessages extends Resource {
    * @returns Promise<CursorPage<ThreadMessagesResponseItem>>
    */
   async list(threadId: string, query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<ThreadMessagesResponseItem>> {
-    return this._http.list<ThreadMessagesResponseItem>(`/threads/${threadId}/messages`, query as unknown as Record<string, unknown>, options);
+    return this._http.list<ThreadMessagesResponseItem>({
+      path: '/threads/{threadId}/messages',
+      pathParams: { threadId },
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
 }

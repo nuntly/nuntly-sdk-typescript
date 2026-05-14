@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import type { OrganizationResponse, OrganizationsResponseItem } from '../types.js';
 
 import { OrganizationsUsage } from './usage/index.js';
@@ -22,11 +22,14 @@ export class Organizations extends Resource {
    * GET /organizations/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<OrganizationResponse>
+   * @returns APIPromise<OrganizationResponse>
    */
-  async retrieve(id: string, options?: RequestOptions): Promise<OrganizationResponse> {
-    const response = await this._http.get<{ data: OrganizationResponse }>(`/organizations/${id}`, undefined, options);
-    return response.data;
+  retrieve(id: string, options?: RequestOptions): APIPromise<OrganizationResponse> {
+    return this._http.get<{ data: OrganizationResponse }>({
+      path: '/organizations/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -38,7 +41,11 @@ export class Organizations extends Resource {
    * @returns Promise<CursorPage<OrganizationsResponseItem>>
    */
   async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<OrganizationsResponseItem>> {
-    return this._http.list<OrganizationsResponseItem>('/organizations', query as unknown as Record<string, unknown>, options);
+    return this._http.list<OrganizationsResponseItem>({
+      path: '/organizations',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
 }

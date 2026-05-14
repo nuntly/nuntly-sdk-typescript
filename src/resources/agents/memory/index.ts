@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import type { AgentMemory, AgentMemoryRequest } from '../../types.js';
 
 
@@ -14,11 +14,14 @@ export class AgentsMemory extends Resource {
    * GET /agents/{agentId}/memory
    * @param agentId - string
    * @param options - RequestOptions
-   * @returns Promise<AgentMemory>
+   * @returns APIPromise<AgentMemory>
    */
-  async retrieve(agentId: string, options?: RequestOptions): Promise<AgentMemory> {
-    const response = await this._http.get<{ data: AgentMemory }>(`/agents/${agentId}/memory`, undefined, options);
-    return response.data;
+  retrieve(agentId: string, options?: RequestOptions): APIPromise<AgentMemory> {
+    return this._http.get<{ data: AgentMemory }>({
+      path: '/agents/{agentId}/memory',
+      pathParams: { agentId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -28,11 +31,15 @@ export class AgentsMemory extends Resource {
    * @param agentId - string
    * @param body - AgentMemoryRequest
    * @param options - RequestOptions
-   * @returns Promise<AgentMemory>
+   * @returns APIPromise<AgentMemory>
    */
-  async upsert(agentId: string, body: AgentMemoryRequest, options?: RequestOptions): Promise<AgentMemory> {
-    const response = await this._http.put<{ data: AgentMemory }>(`/agents/${agentId}/memory`, body, options);
-    return response.data;
+  upsert(agentId: string, body: AgentMemoryRequest, options?: RequestOptions): APIPromise<AgentMemory> {
+    return this._http.put<{ data: AgentMemory }>({
+      path: '/agents/{agentId}/memory',
+      pathParams: { agentId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

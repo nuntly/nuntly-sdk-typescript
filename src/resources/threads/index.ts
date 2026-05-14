@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions } from '../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../core/index.js';
 import type { IdResponse, ThreadResponse, UpdateThreadRequest } from '../types.js';
 
 import { ThreadsMessages } from './messages/index.js';
@@ -22,11 +22,14 @@ export class Threads extends Resource {
    * GET /threads/{threadId}
    * @param threadId - string
    * @param options - RequestOptions
-   * @returns Promise<ThreadResponse>
+   * @returns APIPromise<ThreadResponse>
    */
-  async retrieve(threadId: string, options?: RequestOptions): Promise<ThreadResponse> {
-    const response = await this._http.get<{ data: ThreadResponse }>(`/threads/${threadId}`, undefined, options);
-    return response.data;
+  retrieve(threadId: string, options?: RequestOptions): APIPromise<ThreadResponse> {
+    return this._http.get<{ data: ThreadResponse }>({
+      path: '/threads/{threadId}',
+      pathParams: { threadId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -36,11 +39,15 @@ export class Threads extends Resource {
    * @param threadId - string
    * @param body - UpdateThreadRequest
    * @param options - RequestOptions
-   * @returns Promise<IdResponse>
+   * @returns APIPromise<IdResponse>
    */
-  async update(threadId: string, body: UpdateThreadRequest, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.patch<{ data: IdResponse }>(`/threads/${threadId}`, body, options);
-    return response.data;
+  update(threadId: string, body: UpdateThreadRequest, options?: RequestOptions): APIPromise<IdResponse> {
+    return this._http.patch<{ data: IdResponse }>({
+      path: '/threads/{threadId}',
+      pathParams: { threadId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

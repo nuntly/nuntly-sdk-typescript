@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import type { CreateNamespaceRequest, IdResponse, NamespaceDetail, NamespaceResponse, NamespacesQuery, NamespacesResponseItem, UpdateNamespaceRequest } from '../types.js';
 
 import { NamespacesInboxes } from './inboxes/index.js';
@@ -22,11 +22,14 @@ export class Namespaces extends Resource {
    * POST /namespaces
    * @param body - CreateNamespaceRequest
    * @param options - RequestOptions
-   * @returns Promise<NamespaceResponse>
+   * @returns APIPromise<NamespaceResponse>
    */
-  async create(body: CreateNamespaceRequest, options?: RequestOptions): Promise<NamespaceResponse> {
-    const response = await this._http.post<{ data: NamespaceResponse }>('/namespaces', body, options);
-    return response.data;
+  create(body: CreateNamespaceRequest, options?: RequestOptions): APIPromise<NamespaceResponse> {
+    return this._http.post<{ data: NamespaceResponse }>({
+      path: '/namespaces',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -35,11 +38,14 @@ export class Namespaces extends Resource {
    * DELETE /namespaces/{namespaceId}
    * @param namespaceId - string
    * @param options - RequestOptions
-   * @returns Promise<IdResponse>
+   * @returns APIPromise<IdResponse>
    */
-  async delete(namespaceId: string, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.delete<{ data: IdResponse }>(`/namespaces/${namespaceId}`, options);
-    return response.data;
+  delete(namespaceId: string, options?: RequestOptions): APIPromise<IdResponse> {
+    return this._http.delete<{ data: IdResponse }>({
+      path: '/namespaces/{namespaceId}',
+      pathParams: { namespaceId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -51,7 +57,11 @@ export class Namespaces extends Resource {
    * @returns Promise<CursorPage<NamespacesResponseItem>>
    */
   async list(query?: NamespacesQuery, options?: RequestOptions): Promise<CursorPage<NamespacesResponseItem>> {
-    return this._http.list<NamespacesResponseItem>('/namespaces', query as unknown as Record<string, unknown>, options);
+    return this._http.list<NamespacesResponseItem>({
+      path: '/namespaces',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -60,11 +70,14 @@ export class Namespaces extends Resource {
    * GET /namespaces/{namespaceId}
    * @param namespaceId - string
    * @param options - RequestOptions
-   * @returns Promise<NamespaceDetail>
+   * @returns APIPromise<NamespaceDetail>
    */
-  async retrieve(namespaceId: string, options?: RequestOptions): Promise<NamespaceDetail> {
-    const response = await this._http.get<{ data: NamespaceDetail }>(`/namespaces/${namespaceId}`, undefined, options);
-    return response.data;
+  retrieve(namespaceId: string, options?: RequestOptions): APIPromise<NamespaceDetail> {
+    return this._http.get<{ data: NamespaceDetail }>({
+      path: '/namespaces/{namespaceId}',
+      pathParams: { namespaceId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -74,11 +87,15 @@ export class Namespaces extends Resource {
    * @param namespaceId - string
    * @param body - UpdateNamespaceRequest
    * @param options - RequestOptions
-   * @returns Promise<IdResponse>
+   * @returns APIPromise<IdResponse>
    */
-  async update(namespaceId: string, body: UpdateNamespaceRequest, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.patch<{ data: IdResponse }>(`/namespaces/${namespaceId}`, body, options);
-    return response.data;
+  update(namespaceId: string, body: UpdateNamespaceRequest, options?: RequestOptions): APIPromise<IdResponse> {
+    return this._http.patch<{ data: IdResponse }>({
+      path: '/namespaces/{namespaceId}',
+      pathParams: { namespaceId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

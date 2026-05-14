@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
 import type { WebhookEventDeliveriesResponse, WebhookEventsResponseItem } from '../../types.js';
 
 
@@ -15,11 +15,14 @@ export class WebhooksEvents extends Resource {
    * @param id - string
    * @param eventId - string
    * @param options - RequestOptions
-   * @returns Promise<WebhookEventDeliveriesResponse>
+   * @returns APIPromise<WebhookEventDeliveriesResponse>
    */
-  async deliveries(id: string, eventId: string, options?: RequestOptions): Promise<WebhookEventDeliveriesResponse> {
-    const response = await this._http.get<{ data: WebhookEventDeliveriesResponse }>(`/webhooks/${id}/events/${eventId}/deliveries`, undefined, options);
-    return response.data;
+  deliveries(id: string, eventId: string, options?: RequestOptions): APIPromise<WebhookEventDeliveriesResponse> {
+    return this._http.get<{ data: WebhookEventDeliveriesResponse }>({
+      path: '/webhooks/{id}/events/{eventId}/deliveries',
+      pathParams: { id, eventId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -31,7 +34,11 @@ export class WebhooksEvents extends Resource {
    * @returns Promise<CursorPage<WebhookEventsResponseItem>>
    */
   async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<WebhookEventsResponseItem>> {
-    return this._http.list<WebhookEventsResponseItem>('/webhooks/events', query as unknown as Record<string, unknown>, options);
+    return this._http.list<WebhookEventsResponseItem>({
+      path: '/webhooks/events',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -41,10 +48,14 @@ export class WebhooksEvents extends Resource {
    * @param id - string
    * @param eventId - string
    * @param options - RequestOptions
-   * @returns Promise<void>
+   * @returns APIPromise<void>
    */
-  async replay(id: string, eventId: string, options?: RequestOptions): Promise<void> {
-    await this._http.post(`/webhooks/${id}/events/${eventId}/replay`, undefined, options);
+  replay(id: string, eventId: string, options?: RequestOptions): APIPromise<void> {
+    return this._http.post<unknown>({
+      path: '/webhooks/{id}/events/{eventId}/replay',
+      pathParams: { id, eventId },
+      options,
+    }).map(() => undefined);
   }
 
 }

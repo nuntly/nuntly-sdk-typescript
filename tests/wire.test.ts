@@ -37,16 +37,24 @@ beforeAll(() => {
 				url.pathname.match(/^\/emails\/[^/]+$/) &&
 				!url.pathname.includes("em_not_found")
 			) {
-				return Response.json({
-					data: {
-						id: "em_123",
-						status: "delivered",
-						from: "a@b.com",
-						to: "c@d.com",
-						subject: "Test",
-						createdAt: "2026-01-01T00:00:00Z",
+				const id = url.pathname.split("/").pop() ?? "unknown";
+				// Vary the delay to interleave concurrent retrieves and exercise
+				// the per-call Response capture in `withResponse()`.
+				const delay = id === "em_slow" ? 50 : 5;
+				await new Promise((resolve) => setTimeout(resolve, delay));
+				return Response.json(
+					{
+						data: {
+							id,
+							status: "delivered",
+							from: "a@b.com",
+							to: "c@d.com",
+							subject: "Test",
+							createdAt: "2026-01-01T00:00:00Z",
+						},
 					},
-				});
+					{ headers: { "x-mock-id": id } },
+				);
 			}
 
 			// Route: POST /emails
@@ -187,7 +195,7 @@ describe("Wire: Response handling", () => {
 	it("unwraps { data: T } envelope", async () => {
 		const nuntly = createClient();
 		const email = await nuntly.emails.retrieve("em_1");
-		expect(email.id).toBe("em_123");
+		expect(email.id).toBe("em_1");
 		expect(email.status).toBe("delivered");
 	});
 
@@ -203,16 +211,48 @@ describe("Wire: Response handling", () => {
 	});
 });
 
-describe("Wire: withResponse()", () => {
-	it("returns data and raw Response together", async () => {
+describe("Wire: APIPromise", () => {
+	it("withResponse() returns data and raw Response together", async () => {
 		const nuntly = createClient();
-		const { data, response } = await nuntly.emails.withResponse(
-			nuntly.emails.retrieve("em_1"),
-		);
-		expect(data.id).toBe("em_123");
+		const { data, response } = await nuntly.emails
+			.retrieve("em_1")
+			.withResponse();
+		expect(data.id).toBe("em_1");
 		expect(response).toBeInstanceOf(Response);
 		expect(response.status).toBe(200);
 		expect(response.headers.get("content-type")).toContain("application/json");
+	});
+
+	it("asResponse() returns the raw Response", async () => {
+		const nuntly = createClient();
+		const response = await nuntly.emails.retrieve("em_1").asResponse();
+		expect(response).toBeInstanceOf(Response);
+		expect(response.status).toBe(200);
+		expect(response.headers.get("x-mock-id")).toBe("em_1");
+	});
+
+	it("is a thenable Promise<T>", async () => {
+		const nuntly = createClient();
+		const email = await nuntly.emails.retrieve("em_1");
+		expect(email.id).toBe("em_1");
+	});
+
+	it("withResponse() captures the correct Response under concurrent requests", async () => {
+		const nuntly = createClient();
+		// `em_slow` resolves last but is started first; a shared per-client
+		// last-response slot would hand both calls the faster response.
+		const slowP = nuntly.emails.retrieve("em_slow");
+		const fastP = nuntly.emails.retrieve("em_fast");
+
+		const [slow, fast] = await Promise.all([
+			slowP.withResponse(),
+			fastP.withResponse(),
+		]);
+
+		expect(slow.data.id).toBe("em_slow");
+		expect(slow.response.headers.get("x-mock-id")).toBe("em_slow");
+		expect(fast.data.id).toBe("em_fast");
+		expect(fast.response.headers.get("x-mock-id")).toBe("em_fast");
 	});
 });
 
@@ -231,9 +271,8 @@ describe("Wire: Error responses", () => {
 			expect.unreachable("should have thrown");
 		} catch (e: any) {
 			expect(e.status).toBe(404);
-			expect(e.body.title).toBe("Not found");
-			expect(e.body.code).toBe("not_found");
-			expect(e.body.status).toBe(404);
+			expect(e.title).toBe("Not found");
+			expect(e.code).toBe("not_found");
 		}
 	});
 

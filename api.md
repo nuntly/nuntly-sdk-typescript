@@ -161,7 +161,7 @@ Returns API key metadata. The key value is never returned after creation.
 
 Update the key name, permissions, or restrict it to specific sending domains.
 
-- **HTTP**: `PUT /api-keys/{id}`
+- **HTTP**: `PATCH /api-keys/{id}`
 - **Returns**: `UpdateApiKeyResponse`
 
 **UpdateApiKeyRequest**
@@ -170,7 +170,7 @@ Update the key name, permissions, or restrict it to specific sending domains.
 | ----- | ---- | ----------- |
 | `name?` | `string` | The name of the api key |
 | `status?` | `'enabled' | 'disabled'` |  |
-| `permission` | `'fullAccess' | 'sendingAccess'` | The permission type for the api key |
+| `permission?` | `'fullAccess' | 'sendingAccess'` | The permission type for the api key |
 | `domainIds?` | `Array<string>` | The domain ids to restrict the api key to (only for sendingAccess) |
 
 **UpdateApiKeyResponse**
@@ -186,7 +186,7 @@ Update the key name, permissions, or restrict it to specific sending domains.
 Add a domain to start configuring DNS records for sending or receiving emails.
 
 - **HTTP**: `POST /domains`
-- **Returns**: `CreateDomainResponse`
+- **Returns**: `DomainRecordsResponse`
 
 **CreateDomainRequest**
 
@@ -196,7 +196,7 @@ Add a domain to start configuring DNS records for sending or receiving emails.
 | `sending?` | `boolean` | Enable sending |
 | `receiving?` | `boolean` | Enable receiving |
 
-**CreateDomainResponse**
+**DomainRecordsResponse**
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -553,12 +553,12 @@ List all inboxes.
 
 ### `inboxes.retrieve(inboxId: string, options?: RequestOptions)`
 
-Retrieve an inbox with thread stats.
+Retrieve an inbox.
 
 - **HTTP**: `GET /inboxes/{inboxId}`
-- **Returns**: `InboxDetailResponse`
+- **Returns**: `InboxResponse`
 
-**InboxDetailResponse**
+**InboxResponse**
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -1145,7 +1145,7 @@ Returns a webhook endpoint with its URL, subscribed events, and configuration.
 
 Update the endpoint URL, subscribed event types, or rotate the signing secret.
 
-- **HTTP**: `PUT /webhooks/{id}`
+- **HTTP**: `PATCH /webhooks/{id}`
 - **Returns**: `UpdateWebhookResponse`
 
 **UpdateWebhookRequest**

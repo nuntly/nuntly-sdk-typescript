@@ -60,18 +60,12 @@ export interface DeleteApiKeyResponse {
   id: string;
 }
 
-/**
- * @example
- *     await nuntly.apiKeys.update({
- *       permission: 'fullAccess',
- *     });
- */
 export interface UpdateApiKeyRequest {
   /** The name of the api key */
   name?: string;
   status?: 'enabled' | 'disabled';
   /** The permission type for the api key */
-  permission: 'fullAccess' | 'sendingAccess';
+  permission?: 'fullAccess' | 'sendingAccess';
   /** The domain ids to restrict the api key to (only for sendingAccess) */
   domainIds?: Array<string>;
 }
