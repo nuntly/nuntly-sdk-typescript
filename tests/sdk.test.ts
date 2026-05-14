@@ -205,10 +205,10 @@ describe("Error hierarchy", () => {
 		} catch (e) {
 			expect(e).toBeInstanceOf(BadRequestError);
 			const err = e as BadRequestError;
-			expect(err.body.title).toBe("The body is invalid");
-			expect(err.body.code).toBe("invalid_body");
-			expect(err.body.status).toBe(400);
-			expect(err.body.details).toBe("The field 'to' is invalid or missing.");
+			expect(err.status).toBe(400);
+			expect(err.title).toBe("The body is invalid");
+			expect(err.code).toBe("invalid_body");
+			expect(err.details).toBe("The field 'to' is invalid or missing.");
 		}
 	});
 
@@ -575,44 +575,61 @@ describe("Retry behavior", () => {
 });
 
 describe("Hooks", () => {
-	it("onRequest hook is called before each request", async () => {
-		const requests: string[] = [];
+	it("onRequest receives a structured RequestContext", async () => {
+		const calls: Array<{ method: string; path: string }> = [];
 		const nuntly = new Nuntly({
 			apiKey: "test_key",
 			baseUrl: "https://api.test.com",
-			fetch: mockFetch(() =>
-				jsonResponse({ data: { id: "em_1" } }),
-			) as typeof fetch,
+			fetch: mockFetch(() => jsonResponse({ data: { id: "em_1" } })) as typeof fetch,
 			hooks: {
-				onRequest: (req) => {
-					requests.push(`${req.method} ${new URL(req.url).pathname}`);
+				onRequest: (ctx) => {
+					calls.push({ method: ctx.method, path: ctx.path });
 				},
 			},
 		});
 
 		await nuntly.emails.retrieve("em_1");
-		expect(requests).toEqual(["GET /emails/em_1"]);
+		expect(calls).toEqual([{ method: "GET", path: "/emails/em_1" }]);
 	});
 
-	it("onResponse hook receives response and request", async () => {
+	it("path params are URL-encoded at runtime", async () => {
+		let capturedUrl: string | undefined;
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			fetch: mockFetch((req) => {
+				capturedUrl = req.url;
+				return jsonResponse({ data: { id: "em_1" } });
+			}) as typeof fetch,
+		});
+
+		await nuntly.emails.retrieve("em with space");
+		expect(capturedUrl).toContain("/emails/em%20with%20space");
+	});
+
+	it("onResponse fires on success with both request and response", async () => {
+		let capturedReqPath: string | undefined;
 		let capturedStatus: number | undefined;
 		const nuntly = new Nuntly({
 			apiKey: "test_key",
 			baseUrl: "https://api.test.com",
 			fetch: mockFetch(() => jsonResponse({ data: {} }, 200)) as typeof fetch,
 			hooks: {
-				onResponse: (res) => {
-					capturedStatus = res.status;
+				onResponse: (ctx) => {
+					capturedReqPath = ctx.request.path;
+					capturedStatus = ctx.response.status;
 				},
 			},
 		});
 
 		await nuntly.emails.retrieve("em_1");
+		expect(capturedReqPath).toBe("/emails/em_1");
 		expect(capturedStatus).toBe(200);
 	});
 
-	it("onError hook is called on API errors", async () => {
-		let capturedError: unknown;
+	it("onResponse also fires on 4xx (alongside onError)", async () => {
+		let responseFired = false;
+		let errorFired = false;
 		const nuntly = new Nuntly({
 			apiKey: "test_key",
 			baseUrl: "https://api.test.com",
@@ -621,17 +638,80 @@ describe("Hooks", () => {
 				jsonResponse({ error: { status: 404, code: "not_found", title: "Not found" } }, 404),
 			) as typeof fetch,
 			hooks: {
-				onError: (err) => {
-					capturedError = err;
-				},
+				onResponse: () => { responseFired = true; },
+				onError: () => { errorFired = true; },
 			},
 		});
 
 		await expect(nuntly.emails.retrieve("em_1")).rejects.toThrow();
-		expect(capturedError).toBeDefined();
+		expect(responseFired).toBe(true);
+		expect(errorFired).toBe(true);
 	});
 
-	it("onRetry hook is called on each retry", async () => {
+	it("onSuccess fires only on 2xx and receives parsed data", async () => {
+		let successCalls = 0;
+		let capturedData: unknown;
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			retry: "none",
+			fetch: mockFetch(() =>
+				jsonResponse({ data: { id: "em_1", status: "delivered" } }),
+			) as typeof fetch,
+			hooks: {
+				onSuccess: (ctx) => {
+					successCalls++;
+					capturedData = ctx.data;
+				},
+			},
+		});
+
+		await nuntly.emails.retrieve("em_1");
+		expect(successCalls).toBe(1);
+		expect(capturedData).toEqual({ data: { id: "em_1", status: "delivered" } });
+	});
+
+	it("onSuccess does NOT fire on 4xx", async () => {
+		let successCalls = 0;
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			retry: "none",
+			fetch: mockFetch(() =>
+				jsonResponse({ error: { status: 404, code: "not_found", title: "Not found" } }, 404),
+			) as typeof fetch,
+			hooks: {
+				onSuccess: () => { successCalls++; },
+			},
+		});
+
+		await expect(nuntly.emails.retrieve("em_1")).rejects.toThrow();
+		expect(successCalls).toBe(0);
+	});
+
+	it("onError receives APIError for HTTP errors with response set", async () => {
+		let capturedCtx: { request?: unknown; response?: Response; error?: unknown } = {};
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			retry: "none",
+			fetch: mockFetch(() =>
+				jsonResponse({ error: { status: 404, code: "not_found", title: "Not found" } }, 404),
+			) as typeof fetch,
+			hooks: {
+				onError: (ctx) => {
+					capturedCtx = ctx;
+				},
+			},
+		});
+
+		await expect(nuntly.emails.retrieve("em_1")).rejects.toThrow(NotFoundError);
+		expect(capturedCtx.error).toBeInstanceOf(NotFoundError);
+		expect(capturedCtx.response).toBeInstanceOf(Response);
+		expect((capturedCtx.error as NotFoundError).status).toBe(404);
+	});
+
+	it("onRetry receives a RetryContext with attempt number", async () => {
 		const retries: number[] = [];
 		let attempt = 0;
 		const nuntly = new Nuntly({
@@ -646,30 +726,12 @@ describe("Hooks", () => {
 			hooks: {
 				onRetry: (ctx) => {
 					retries.push(ctx.attempt);
+					expect(ctx.request.path).toBe("/emails/em_1");
 				},
 			},
 		});
 
 		await nuntly.emails.retrieve("em_1");
 		expect(retries).toEqual([1]);
-	});
-
-	it("onSuccess hook receives parsed data", async () => {
-		let capturedData: unknown;
-		const nuntly = new Nuntly({
-			apiKey: "test_key",
-			baseUrl: "https://api.test.com",
-			fetch: mockFetch(() =>
-				jsonResponse({ data: { id: "em_1", status: "delivered" } }),
-			) as typeof fetch,
-			hooks: {
-				onSuccess: (data) => {
-					capturedData = data;
-				},
-			},
-		});
-
-		await nuntly.emails.retrieve("em_1");
-		expect(capturedData).toEqual({ data: { id: "em_1", status: "delivered" } });
 	});
 });

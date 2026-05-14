@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
-import type { CreateDomainRequest, CreateDomainResponse, DeleteDomainResponse, DomainRecordsResponse, DomainsResponseItem, UpdateDomainRequest, UpdateDomainResponse } from '../types.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { CreateDomainRequest, DeleteDomainResponse, DomainRecordsResponse, DomainsResponseItem, UpdateDomainRequest, UpdateDomainResponse } from '../types.js';
 
 
 /**
@@ -14,11 +14,14 @@ export class Domains extends Resource {
    * POST /domains
    * @param body - CreateDomainRequest
    * @param options - RequestOptions
-   * @returns Promise<CreateDomainResponse>
+   * @returns APIPromise<DomainRecordsResponse>
    */
-  async create(body: CreateDomainRequest, options?: RequestOptions): Promise<CreateDomainResponse> {
-    const response = await this._http.post<{ data: CreateDomainResponse }>('/domains', body, options);
-    return response.data;
+  create(body: CreateDomainRequest, options?: RequestOptions): APIPromise<DomainRecordsResponse> {
+    return this._http.post<{ data: DomainRecordsResponse }>({
+      path: '/domains',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -27,11 +30,14 @@ export class Domains extends Resource {
    * DELETE /domains/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<DeleteDomainResponse>
+   * @returns APIPromise<DeleteDomainResponse>
    */
-  async delete(id: string, options?: RequestOptions): Promise<DeleteDomainResponse> {
-    const response = await this._http.delete<{ data: DeleteDomainResponse }>(`/domains/${id}`, options);
-    return response.data;
+  delete(id: string, options?: RequestOptions): APIPromise<DeleteDomainResponse> {
+    return this._http.delete<{ data: DeleteDomainResponse }>({
+      path: '/domains/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -43,7 +49,11 @@ export class Domains extends Resource {
    * @returns Promise<CursorPage<DomainsResponseItem>>
    */
   async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<DomainsResponseItem>> {
-    return this._http.list<DomainsResponseItem>('/domains', query as unknown as Record<string, unknown>, options);
+    return this._http.list<DomainsResponseItem>({
+      path: '/domains',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -52,11 +62,14 @@ export class Domains extends Resource {
    * GET /domains/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<DomainRecordsResponse>
+   * @returns APIPromise<DomainRecordsResponse>
    */
-  async retrieve(id: string, options?: RequestOptions): Promise<DomainRecordsResponse> {
-    const response = await this._http.get<{ data: DomainRecordsResponse }>(`/domains/${id}`, undefined, options);
-    return response.data;
+  retrieve(id: string, options?: RequestOptions): APIPromise<DomainRecordsResponse> {
+    return this._http.get<{ data: DomainRecordsResponse }>({
+      path: '/domains/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -66,11 +79,15 @@ export class Domains extends Resource {
    * @param id - string
    * @param body - UpdateDomainRequest
    * @param options - RequestOptions
-   * @returns Promise<UpdateDomainResponse>
+   * @returns APIPromise<UpdateDomainResponse>
    */
-  async update(id: string, body: UpdateDomainRequest, options?: RequestOptions): Promise<UpdateDomainResponse> {
-    const response = await this._http.patch<{ data: UpdateDomainResponse }>(`/domains/${id}`, body, options);
-    return response.data;
+  update(id: string, body: UpdateDomainRequest, options?: RequestOptions): APIPromise<UpdateDomainResponse> {
+    return this._http.patch<{ data: UpdateDomainResponse }>({
+      path: '/domains/{id}',
+      pathParams: { id },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

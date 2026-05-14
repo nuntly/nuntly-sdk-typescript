@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import type { OrganizationUsageResponse } from '../../types.js';
 
 
@@ -14,11 +14,14 @@ export class OrganizationsUsage extends Resource {
    * GET /organizations/{id}/usage
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<OrganizationUsageResponse>
+   * @returns APIPromise<OrganizationUsageResponse>
    */
-  async retrieve(id: string, options?: RequestOptions): Promise<OrganizationUsageResponse> {
-    const response = await this._http.get<{ data: OrganizationUsageResponse }>(`/organizations/${id}/usage`, undefined, options);
-    return response.data;
+  retrieve(id: string, options?: RequestOptions): APIPromise<OrganizationUsageResponse> {
+    return this._http.get<{ data: OrganizationUsageResponse }>({
+      path: '/organizations/{id}/usage',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
 }

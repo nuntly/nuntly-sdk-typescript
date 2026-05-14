@@ -1,7 +1,19 @@
 import { up } from 'up-fetch';
+import { APIPromise } from './api-promise.js';
 import { APIError, APIConnectionError, APIConnectionTimeoutError } from './error.js';
 import { CursorPage } from './pagination.js';
-import type { Logger, Hooks, BackoffStrategy, RetryStrategy, ClientOptions, RequestOptions, ResponseWithData, CursorPageResponse, CursorPageParams } from './types.js';
+import type {
+  Logger,
+  Hooks,
+  HttpMethod,
+  RequestContext,
+  BackoffStrategy,
+  RetryStrategy,
+  ClientOptions,
+  RequestOptions,
+  CursorPageResponse,
+  CursorPageParams,
+} from './types.js';
 import { SDK_VERSION } from './version.js';
 
 const DEFAULT_BASE_URL = 'https://api.nuntly.com';
@@ -56,12 +68,57 @@ function buildRetryConfig(retry: RetryStrategy | undefined, maxRetries: number) 
   };
 }
 
+function normalizeError(error: unknown): APIError | APIConnectionError {
+  if (error instanceof APIError) return error;
+  if (error instanceof APIConnectionError) return error;
+  if (error instanceof DOMException && error.name === 'AbortError') {
+    return new APIConnectionTimeoutError(error);
+  }
+  if (error instanceof Error && error.name === 'TimeoutError') {
+    return new APIConnectionTimeoutError(error);
+  }
+  if (error instanceof TypeError) {
+    return new APIConnectionError(error.message, error);
+  }
+  return new APIConnectionError(
+    error instanceof Error ? error.message : 'Request failed',
+    error instanceof Error ? error : undefined,
+  );
+}
+
+function headersToRecord(h: Headers): Record<string, string> {
+  const out: Record<string, string> = {};
+  h.forEach((v, k) => { out[k] = v; });
+  return out;
+}
+
+function resolvePath(template: string, pathParams?: Record<string, unknown>): string {
+  if (!pathParams) return template;
+  return template.replace(/\{(\w+)\}/g, (_, key) => {
+    const value = pathParams[key];
+    if (value === undefined || value === null) {
+      throw new Error(`Missing path param '${key}' for path '${template}'.`);
+    }
+    return encodeURIComponent(String(value));
+  });
+}
+
 const NOOP_LOGGER: Logger = {
   debug: () => {},
   info: () => {},
   warn: () => {},
   error: () => {},
 };
+
+interface InternalRequestArgs {
+  method: HttpMethod;
+  /** Path template with `{name}` placeholders, e.g. `/emails/{id}`. */
+  path: string;
+  pathParams?: Record<string, unknown>;
+  body?: unknown;
+  query?: Record<string, unknown>;
+  options?: RequestOptions;
+}
 
 export class NuntlyClient {
   private readonly baseUrl: string;
@@ -71,7 +128,6 @@ export class NuntlyClient {
   private readonly log: Logger;
   private readonly hooks: Hooks;
   private readonly http: ReturnType<typeof up>;
-  private _lastResponse: Response | undefined;
 
   constructor(options: ClientOptions) {
     const apiKey = options.apiKey ?? (typeof process !== 'undefined' ? process.env?.['NUNTLY_API_KEY'] : undefined);
@@ -90,7 +146,6 @@ export class NuntlyClient {
 
     const self = this;
     const fetchFn = (options.fetch ?? globalThis.fetch) as typeof fetch;
-    const requestTimings = new WeakMap<Request, number>();
 
     const headers: Record<string, string> = {
       Authorization: `Bearer ${self.apiKey}`,
@@ -105,114 +160,138 @@ export class NuntlyClient {
       headers['User-Agent'] = `@nuntly/sdk/${SDK_VERSION}${appInfoSuffix} ${detectPlatform()}`;
     }
 
-    const retryConfig = buildRetryConfig(options.retry, self.maxRetries);
-
     this.http = up(fetchFn, () => ({
       baseUrl: self.baseUrl,
       timeout: self.timeout,
       headers,
-      retry: retryConfig,
+      retry: buildRetryConfig(options.retry, self.maxRetries),
       parseRejected: async (response: Response) => {
         let body: unknown;
         try { body = await response.json(); } catch { body = await response.text(); }
         return APIError.from(response.status, body, response.headers, response);
       },
-      onRequest: async (request: Request) => {
-        requestTimings.set(request, performance.now());
-        self.log.debug(`-> ${request.method} ${request.url}`);
-        await self.hooks.onRequest?.(request);
-      },
-      onResponse: async (response: Response, request: Request) => {
-        self._lastResponse = response;
-        const start = requestTimings.get(request);
-        const duration = start ? Math.round(performance.now() - start) : 0;
-        const requestId = response.headers.get('x-request-id') ?? '';
-        self.log.info(`<- ${response.status} ${request.method} ${request.url} (${duration}ms)${requestId ? ` [${requestId}]` : ''}`);
-        await self.hooks.onResponse?.(response, request);
-      },
-      onSuccess: async (data: unknown, request: Request) => {
-        await self.hooks.onSuccess?.(data, request);
-      },
-      onRetry: async (ctx: { attempt: number; response: Response | undefined; error: unknown; request: Request }) => {
-        self.log.warn(`~> Retry #${ctx.attempt} ${ctx.request.method} ${ctx.request.url}`);
-        await self.hooks.onRetry?.(ctx);
-      },
-      onError: async (error: unknown, request: Request) => {
-        self.log.error(`!! ${request.method} ${request.url} failed: ${error instanceof Error ? error.message : String(error)}`);
-        await self.hooks.onError?.(error, request);
-      },
     }));
   }
 
-  private buildOptions(base: Record<string, unknown>, requestOptions?: RequestOptions): Record<string, unknown> {
+  private request<T>(args: InternalRequestArgs): APIPromise<T> {
+    let resolveResponse!: (response: Response) => void;
+    let rejectResponse!: (reason: unknown) => void;
+    const responsePromise = new Promise<Response>((res, rej) => {
+      resolveResponse = res;
+      rejectResponse = rej;
+    });
+
+    const resolvedPath = resolvePath(args.path, args.pathParams);
+    let reqCtx: RequestContext | undefined;
+    let capturedResponse: Response | undefined;
+    const self = this;
+
     const opts: Record<string, unknown> = {
-      ...base,
-      timeout: requestOptions?.timeout,
-      headers: requestOptions?.headers as Record<string, string> | undefined,
-      signal: requestOptions?.signal,
+      method: args.method,
+      body: args.body as never,
+      params: args.query,
+      timeout: args.options?.timeout,
+      headers: args.options?.headers,
+      signal: args.options?.signal,
+      onRequest: async (request: Request) => {
+        reqCtx = {
+          method: args.method,
+          path: resolvedPath,
+          url: request.url,
+          headers: headersToRecord(request.headers),
+          body: args.body,
+        };
+        self.log.debug(`-> ${reqCtx.method} ${reqCtx.url}`);
+        await self.hooks.onRequest?.(reqCtx);
+      },
+      onResponse: async (response: Response) => {
+        capturedResponse = response;
+        const requestId = response.headers.get('x-request-id') ?? '';
+        self.log.info(`<- ${response.status} ${args.method} ${resolvedPath}${requestId ? ` [${requestId}]` : ''}`);
+        if (reqCtx) {
+          await self.hooks.onResponse?.({ request: reqCtx, response });
+        }
+        resolveResponse(response);
+      },
+      onSuccess: async (data: unknown) => {
+        if (reqCtx && capturedResponse) {
+          await self.hooks.onSuccess?.({ request: reqCtx, response: capturedResponse, data });
+        }
+      },
+      onError: async (error: unknown) => {
+        const normalized = normalizeError(error);
+        self.log.error(`!! ${args.method} ${resolvedPath} failed: ${normalized.message}`);
+        if (reqCtx) {
+          await self.hooks.onError?.({
+            request: reqCtx,
+            response: capturedResponse,
+            error: normalized,
+          });
+        }
+      },
+      onRetry: async (ctx: { attempt: number; response: Response | undefined; error: unknown; request: Request }) => {
+        if (!reqCtx) return;
+        self.log.warn(`~> Retry #${ctx.attempt} ${reqCtx.method} ${reqCtx.url}`);
+        await self.hooks.onRetry?.({
+          request: reqCtx,
+          attempt: ctx.attempt,
+          response: ctx.response,
+          error: ctx.error !== undefined ? normalizeError(ctx.error) : undefined,
+        });
+      },
     };
-    if (requestOptions?.maxRetries !== undefined) {
-      opts.retry = { attempts: requestOptions.maxRetries };
+
+    if (args.options?.maxRetries !== undefined) {
+      opts.retry = { attempts: args.options.maxRetries };
     }
-    return opts;
-  }
 
-  private async request<T>(path: string, options: Record<string, unknown>): Promise<T> {
-    try {
-      return await this.http(path as unknown as Request, options as never);
-    } catch (error) {
-      if (error instanceof APIError) throw error;
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        throw new APIConnectionTimeoutError(error);
+    const dataPromise = (async (): Promise<T> => {
+      try {
+        return (await this.http(resolvedPath as unknown as Request, opts as never)) as T;
+      } catch (error) {
+        // Surface the failure on `responsePromise` so consumers of
+        // `.asResponse()` observe it instead of hanging when no response
+        // was ever received.
+        rejectResponse(error);
+        throw normalizeError(error);
       }
-      if (error instanceof Error && error.name === 'TimeoutError') {
-        throw new APIConnectionTimeoutError(error);
-      }
-      if (error instanceof TypeError) {
-        throw new APIConnectionError(error.message, error);
-      }
-      throw new APIConnectionError(
-        error instanceof Error ? error.message : 'Request failed',
-        error instanceof Error ? error : undefined,
-      );
-    }
+    })();
+
+    return APIPromise.fromPromises(dataPromise, responsePromise);
   }
 
-  async get<T>(path: string, query?: Record<string, unknown>, requestOptions?: RequestOptions): Promise<T> {
-    return this.request(path, this.buildOptions({ method: 'GET', params: query }, requestOptions));
+  get<T>(args: { path: string; pathParams?: Record<string, unknown>; query?: Record<string, unknown>; options?: RequestOptions }): APIPromise<T> {
+    return this.request<T>({ method: 'GET', ...args });
   }
 
-  async post<T>(path: string, body?: unknown, requestOptions?: RequestOptions): Promise<T> {
-    return this.request(path, this.buildOptions({ method: 'POST', body: body as Record<string, unknown> }, requestOptions));
+  post<T>(args: { path: string; pathParams?: Record<string, unknown>; body?: unknown; options?: RequestOptions }): APIPromise<T> {
+    return this.request<T>({ method: 'POST', ...args });
   }
 
-  async put<T>(path: string, body?: unknown, requestOptions?: RequestOptions): Promise<T> {
-    return this.request(path, this.buildOptions({ method: 'PUT', body: body as Record<string, unknown> }, requestOptions));
+  put<T>(args: { path: string; pathParams?: Record<string, unknown>; body?: unknown; options?: RequestOptions }): APIPromise<T> {
+    return this.request<T>({ method: 'PUT', ...args });
   }
 
-  async patch<T>(path: string, body?: unknown, requestOptions?: RequestOptions): Promise<T> {
-    return this.request(path, this.buildOptions({ method: 'PATCH', body: body as Record<string, unknown> }, requestOptions));
+  patch<T>(args: { path: string; pathParams?: Record<string, unknown>; body?: unknown; options?: RequestOptions }): APIPromise<T> {
+    return this.request<T>({ method: 'PATCH', ...args });
   }
 
-  async delete<T>(path: string, requestOptions?: RequestOptions): Promise<T> {
-    return this.request(path, this.buildOptions({ method: 'DELETE' }, requestOptions));
+  delete<T>(args: { path: string; pathParams?: Record<string, unknown>; options?: RequestOptions }): APIPromise<T> {
+    return this.request<T>({ method: 'DELETE', ...args });
   }
 
-  async list<T>(
-    path: string,
-    query?: Record<string, unknown>,
-    requestOptions?: RequestOptions,
-  ): Promise<CursorPage<T>> {
-    const params: CursorPageParams = (query as CursorPageParams) ?? {};
-    const response = await this.get<CursorPageResponse<T>>(path, query, requestOptions);
+  async list<T>(args: {
+    path: string;
+    pathParams?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    options?: RequestOptions;
+  }): Promise<CursorPage<T>> {
+    const params: CursorPageParams = (args.query as CursorPageParams) ?? {};
+    const response = await this.get<CursorPageResponse<T>>(args);
     return new CursorPage<T>(
       response,
       params,
-      (nextParams) => this.get<CursorPageResponse<T>>(path, nextParams as Record<string, unknown>, requestOptions),
+      (nextParams) => this.get<CursorPageResponse<T>>({ ...args, query: nextParams as Record<string, unknown> }),
     );
-  }
-
-  get lastResponse(): Response | undefined {
-    return this._lastResponse;
   }
 }

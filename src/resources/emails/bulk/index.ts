@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import { generateIdempotencyKey } from '../../../lib/idempotency.js';
 import type { BulkEmailsResponse, CreateBulkEmailsRequest, CreateBulkEmailsResponse } from '../../types.js';
 
@@ -15,11 +15,14 @@ export class EmailsBulk extends Resource {
    * GET /emails/bulk/{bulkId}
    * @param bulkId - string
    * @param options - RequestOptions
-   * @returns Promise<BulkEmailsResponse>
+   * @returns APIPromise<BulkEmailsResponse>
    */
-  async list(bulkId: string, options?: RequestOptions): Promise<BulkEmailsResponse> {
-    const response = await this._http.get<{ data: BulkEmailsResponse }>(`/emails/bulk/${bulkId}`, undefined, options);
-    return response.data;
+  list(bulkId: string, options?: RequestOptions): APIPromise<BulkEmailsResponse> {
+    return this._http.get<{ data: BulkEmailsResponse }>({
+      path: '/emails/bulk/{bulkId}',
+      pathParams: { bulkId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -28,13 +31,16 @@ export class EmailsBulk extends Resource {
    * POST /emails/bulk
    * @param body - CreateBulkEmailsRequest
    * @param options - RequestOptions
-   * @returns Promise<CreateBulkEmailsResponse>
+   * @returns APIPromise<CreateBulkEmailsResponse>
    */
-  async send(body: CreateBulkEmailsRequest, options?: RequestOptions): Promise<CreateBulkEmailsResponse> {
+  send(body: CreateBulkEmailsRequest, options?: RequestOptions): APIPromise<CreateBulkEmailsResponse> {
     const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
     options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
-    const response = await this._http.post<{ data: CreateBulkEmailsResponse }>('/emails/bulk', body, options);
-    return response.data;
+    return this._http.post<{ data: CreateBulkEmailsResponse }>({
+      path: '/emails/bulk',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

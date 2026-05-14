@@ -1,4 +1,4 @@
-import type { EmailStatus, Tag } from '../shared/types.js';
+import type { BounceDetail, ClickDetail, ComplaintDetail, DeliveryDelayDetail, DeliveryDetail, EmailStatus, FailureDetail, OpenDetail, RejectDetail, Tag } from '../shared/types.js';
 
 export interface Attachment {
   /** The base64-encoded content of the attachment */
@@ -64,49 +64,68 @@ export interface EmailBouncedEvent {
   id: string;
   createdAt: string;
   type: 'email.bounced';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; bounce: { bounceType: 'Permanent' | 'Undetermined' | 'Transient'; bounceSubType: 'Undetermined' | 'General' | 'NoEmail' | 'Suppressed' | 'OnAccountSuppressionList' | 'MailboxFull' | 'MessageTooLarge' | 'CustomTimeoutExceeded' | 'ContentRejected' | 'AttachmentRejected'; bouncedRecipients: Array<{ email: string; action?: string; status?: string; diagnosticCode?: string }>; bouncedAt: string; feedbackId: string; reportingMta?: string } };
+  data: EmailEvent & { bounce: BounceDetail };
 }
 
 export interface EmailClickedEvent {
   id: string;
   createdAt: string;
   type: 'email.clicked';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; click: { clickedAt: string; userAgent: string; link: string } };
+  data: EmailEvent & { click: ClickDetail };
 }
 
 export interface EmailComplainedEvent {
   id: string;
   createdAt: string;
   type: 'email.complained';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; complaint: { complainedAt: string; complainedRecipients?: Array<{ email: string }>; complaintSubType?: 'OnAccountSuppressionList'; complaintFeedbackType?: 'abuse' | 'auth-failure' | 'fraud' | 'not-spam' | 'other' | 'virus'; feedbackId: string; userAgent?: string; receivedAt?: string } };
+  data: EmailEvent & { complaint: ComplaintDetail };
 }
 
 export interface EmailDeliveredEvent {
   id: string;
   createdAt: string;
   type: 'email.delivered';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; delivery: { deliveredAt: string; recipients: Array<string>; smtpResponse: string; remoteMtaIp: string; reportingMta: string; processingTime?: number } };
+  data: EmailEvent & { delivery: DeliveryDetail };
 }
 
 export interface EmailDeliveryDelayedEvent {
   id: string;
   createdAt: string;
   type: 'email.deliveryDelayed';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; deliveryDelay: { delayedAt: string; delayType: 'InternalFailure' | 'General' | 'MailboxFull' | 'SpamDetected' | 'RecipientServerError' | 'IPFailure' | 'TransientCommunicationFailure' | 'BYOIPHostNameLookupUnavailable' | 'Undetermined' | 'SendingDeferral'; delayedRecipients: Array<{ email: string; status?: string; diagnosticCode?: string }>; deliveryStoppedAt: string; reportingMta: string } };
+  data: EmailEvent & { deliveryDelay: DeliveryDelayDetail };
+}
+
+export interface EmailEvent {
+  id: string;
+  orgId: string;
+  bulkId?: string;
+  messageId: string;
+  sentAt: string;
+  enqueuedAt: string;
+  domainName: string;
+  domainId: string;
+  from: string;
+  to: string | Array<string>;
+  cc?: string | Array<string>;
+  bcc?: string | Array<string>;
+  replyTo?: string | Array<string>;
+  subject: string;
+  headers?: Array<{ name: string; value: string }>;
+  tags?: Record<string, Array<string>>;
 }
 
 export interface EmailFailedEvent {
   id: string;
   createdAt: string;
   type: 'email.failed';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; failure: { error: Record<string, unknown> } };
+  data: EmailEvent & { failure: FailureDetail };
 }
 
 export interface EmailOpenedEvent {
   id: string;
   createdAt: string;
   type: 'email.opened';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; open: { openedAt: string; userAgent: string } };
+  data: EmailEvent & { open: OpenDetail };
 }
 
 export interface EmailProcessedEvent {
@@ -127,7 +146,7 @@ export interface EmailRejectedEvent {
   id: string;
   createdAt: string;
   type: 'email.rejected';
-  data: { id?: string; orgId?: string; bulkId?: string; messageId?: string; sentAt?: string; enqueuedAt?: string; domainName?: string; domainId?: string; from?: string; to?: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject?: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; reject: { reason: string } };
+  data: { id?: string; orgId?: string; bulkId?: string; messageId?: string; sentAt?: string; enqueuedAt?: string; domainName?: string; domainId?: string; from?: string; to?: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject?: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; reject: RejectDetail };
 }
 
 export interface EmailResponse {
@@ -180,14 +199,14 @@ export interface EmailSendingEvent {
   id: string;
   createdAt: string;
   type: 'email.sending';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; sending: Record<string, unknown> };
+  data: EmailEvent & { sending: Record<string, unknown> };
 }
 
 export interface EmailSentEvent {
   id: string;
   createdAt: string;
   type: 'email.sent';
-  data: { id: string; orgId: string; bulkId?: string; messageId: string; sentAt: string; enqueuedAt: string; domainName: string; domainId: string; from: string; to: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; send: Record<string, unknown> };
+  data: EmailEvent & { send: Record<string, unknown> };
 }
 
 /** A single item from EmailsResponse. */

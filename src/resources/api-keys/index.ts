@@ -1,5 +1,5 @@
 import { Resource } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import type { ApiKeyResponse, ApiKeysResponseItem, CreateApiKeyRequest, CreateApiKeyResponse, DeleteApiKeyResponse, UpdateApiKeyRequest, UpdateApiKeyResponse } from '../types.js';
 
 
@@ -14,11 +14,14 @@ export class ApiKeys extends Resource {
    * POST /api-keys
    * @param body - CreateApiKeyRequest
    * @param options - RequestOptions
-   * @returns Promise<CreateApiKeyResponse>
+   * @returns APIPromise<CreateApiKeyResponse>
    */
-  async create(body: CreateApiKeyRequest, options?: RequestOptions): Promise<CreateApiKeyResponse> {
-    const response = await this._http.post<{ data: CreateApiKeyResponse }>('/api-keys', body, options);
-    return response.data;
+  create(body: CreateApiKeyRequest, options?: RequestOptions): APIPromise<CreateApiKeyResponse> {
+    return this._http.post<{ data: CreateApiKeyResponse }>({
+      path: '/api-keys',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -27,11 +30,14 @@ export class ApiKeys extends Resource {
    * DELETE /api-keys/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<DeleteApiKeyResponse>
+   * @returns APIPromise<DeleteApiKeyResponse>
    */
-  async delete(id: string, options?: RequestOptions): Promise<DeleteApiKeyResponse> {
-    const response = await this._http.delete<{ data: DeleteApiKeyResponse }>(`/api-keys/${id}`, options);
-    return response.data;
+  delete(id: string, options?: RequestOptions): APIPromise<DeleteApiKeyResponse> {
+    return this._http.delete<{ data: DeleteApiKeyResponse }>({
+      path: '/api-keys/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -43,7 +49,11 @@ export class ApiKeys extends Resource {
    * @returns Promise<CursorPage<ApiKeysResponseItem>>
    */
   async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<ApiKeysResponseItem>> {
-    return this._http.list<ApiKeysResponseItem>('/api-keys', query as unknown as Record<string, unknown>, options);
+    return this._http.list<ApiKeysResponseItem>({
+      path: '/api-keys',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -52,25 +62,32 @@ export class ApiKeys extends Resource {
    * GET /api-keys/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<ApiKeyResponse>
+   * @returns APIPromise<ApiKeyResponse>
    */
-  async retrieve(id: string, options?: RequestOptions): Promise<ApiKeyResponse> {
-    const response = await this._http.get<{ data: ApiKeyResponse }>(`/api-keys/${id}`, undefined, options);
-    return response.data;
+  retrieve(id: string, options?: RequestOptions): APIPromise<ApiKeyResponse> {
+    return this._http.get<{ data: ApiKeyResponse }>({
+      path: '/api-keys/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
    * Update the key name, permissions, or restrict it to specific sending domains.
    *
-   * PUT /api-keys/{id}
+   * PATCH /api-keys/{id}
    * @param id - string
    * @param body - UpdateApiKeyRequest
    * @param options - RequestOptions
-   * @returns Promise<UpdateApiKeyResponse>
+   * @returns APIPromise<UpdateApiKeyResponse>
    */
-  async update(id: string, body: UpdateApiKeyRequest, options?: RequestOptions): Promise<UpdateApiKeyResponse> {
-    const response = await this._http.put<{ data: UpdateApiKeyResponse }>(`/api-keys/${id}`, body, options);
-    return response.data;
+  update(id: string, body: UpdateApiKeyRequest, options?: RequestOptions): APIPromise<UpdateApiKeyResponse> {
+    return this._http.patch<{ data: UpdateApiKeyResponse }>({
+      path: '/api-keys/{id}',
+      pathParams: { id },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

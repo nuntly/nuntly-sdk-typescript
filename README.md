@@ -121,11 +121,12 @@ try {
     console.log('Invalid API key');
   }
 
-  // Structured error body and request ID on every API error
-  console.log(error.body.title);   // human-readable summary
-  console.log(error.body.code);    // machine-readable error code (e.g. invalid_body)
-  console.log(error.body.details); // optional details (e.g. which field is invalid)
-  console.log(error.requestId);    // x-request-id for support
+  // Structured error fields on every API error
+  console.log(error.status);    // HTTP status code (e.g. 400)
+  console.log(error.title);     // human-readable summary
+  console.log(error.code);      // machine-readable error code (e.g. invalid_body)
+  console.log(error.details);   // optional details (e.g. which field is invalid)
+  console.log(error.requestId); // x-request-id for support
 
   // Access the raw Response for advanced inspection
   console.log(error.rawResponse.status);
@@ -269,16 +270,27 @@ The SDK automatically respects `Retry-After` headers on 429 responses.
 
 ## Raw response access
 
-Access the raw `Response` object (headers, status) via `withResponse()`:
+Every resource method returns an `APIPromise<T>` — a `Promise<T>` you can
+`await` as usual, with two extra methods for accessing the raw `Response`.
+
+Use `.withResponse()` when you need both the parsed data and the
+underlying `Response`:
 
 ```typescript
-const { data, response } = await nuntly.emails.withResponse(
-  nuntly.emails.retrieve('em_123'),
-);
+const { data, response } = await nuntly.emails.retrieve('em_123').withResponse();
 
 console.log(data.status);                          // 'delivered'
 console.log(response.headers.get('x-request-id')); // request ID
 console.log(response.headers.get('x-ratelimit-remaining'));
+```
+
+Use `.asResponse()` to get the raw `Response` as soon as headers are
+received, without consuming the body. Useful for streaming or for
+header-only inspection:
+
+```typescript
+const response = await nuntly.emails.retrieve('em_123').asResponse();
+console.log(response.status, response.headers.get('x-request-id'));
 ```
 
 ## Advanced
@@ -413,6 +425,8 @@ Identifiers prefixed with `_` are internal and not subject to semver.
 ## Previous versions
 
 Versions `0.x` remain installable from npm via `npm install @nuntly/sdk@0` for backwards compatibility.
+
+Upgrading from `0.x` to `1.0.0`? See [MIGRATION.md](./MIGRATION.md) for the breaking-change cheat-sheet.
 
 ## Contributing
 

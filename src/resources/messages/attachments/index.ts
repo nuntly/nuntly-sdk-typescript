@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import type { AttachmentResponse, AttachmentsResponse } from '../../types.js';
 
 
@@ -14,11 +14,14 @@ export class MessagesAttachments extends Resource {
    * GET /messages/{messageId}/attachments
    * @param messageId - string
    * @param options - RequestOptions
-   * @returns Promise<AttachmentsResponse>
+   * @returns APIPromise<AttachmentsResponse>
    */
-  async list(messageId: string, options?: RequestOptions): Promise<AttachmentsResponse> {
-    const response = await this._http.get<{ data: AttachmentsResponse }>(`/messages/${messageId}/attachments`, undefined, options);
-    return response.data;
+  list(messageId: string, options?: RequestOptions): APIPromise<AttachmentsResponse> {
+    return this._http.get<{ data: AttachmentsResponse }>({
+      path: '/messages/{messageId}/attachments',
+      pathParams: { messageId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -28,11 +31,14 @@ export class MessagesAttachments extends Resource {
    * @param messageId - string
    * @param attachmentId - string
    * @param options - RequestOptions
-   * @returns Promise<AttachmentResponse>
+   * @returns APIPromise<AttachmentResponse>
    */
-  async retrieve(messageId: string, attachmentId: string, options?: RequestOptions): Promise<AttachmentResponse> {
-    const response = await this._http.get<{ data: AttachmentResponse }>(`/messages/${messageId}/attachments/${attachmentId}`, undefined, options);
-    return response.data;
+  retrieve(messageId: string, attachmentId: string, options?: RequestOptions): APIPromise<AttachmentResponse> {
+    return this._http.get<{ data: AttachmentResponse }>({
+      path: '/messages/{messageId}/attachments/{attachmentId}',
+      pathParams: { messageId, attachmentId },
+      options,
+    }).map((r) => r.data);
   }
 
 }

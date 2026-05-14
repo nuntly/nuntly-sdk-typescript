@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import type { CreateWebhookRequest, CreateWebhookResponse, DeleteWebhookResponse, UpdateWebhookRequest, UpdateWebhookResponse, WebhookResponse, WebhooksResponseItem } from '../types.js';
 
 import { WebhooksEvents } from './events/index.js';
@@ -22,11 +22,14 @@ export class Webhooks extends Resource {
    * POST /webhooks
    * @param body - CreateWebhookRequest
    * @param options - RequestOptions
-   * @returns Promise<CreateWebhookResponse>
+   * @returns APIPromise<CreateWebhookResponse>
    */
-  async create(body: CreateWebhookRequest, options?: RequestOptions): Promise<CreateWebhookResponse> {
-    const response = await this._http.post<{ data: CreateWebhookResponse }>('/webhooks', body, options);
-    return response.data;
+  create(body: CreateWebhookRequest, options?: RequestOptions): APIPromise<CreateWebhookResponse> {
+    return this._http.post<{ data: CreateWebhookResponse }>({
+      path: '/webhooks',
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -35,11 +38,14 @@ export class Webhooks extends Resource {
    * DELETE /webhooks/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<DeleteWebhookResponse>
+   * @returns APIPromise<DeleteWebhookResponse>
    */
-  async delete(id: string, options?: RequestOptions): Promise<DeleteWebhookResponse> {
-    const response = await this._http.delete<{ data: DeleteWebhookResponse }>(`/webhooks/${id}`, options);
-    return response.data;
+  delete(id: string, options?: RequestOptions): APIPromise<DeleteWebhookResponse> {
+    return this._http.delete<{ data: DeleteWebhookResponse }>({
+      path: '/webhooks/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -51,7 +57,11 @@ export class Webhooks extends Resource {
    * @returns Promise<CursorPage<WebhooksResponseItem>>
    */
   async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<WebhooksResponseItem>> {
-    return this._http.list<WebhooksResponseItem>('/webhooks', query as unknown as Record<string, unknown>, options);
+    return this._http.list<WebhooksResponseItem>({
+      path: '/webhooks',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -60,25 +70,32 @@ export class Webhooks extends Resource {
    * GET /webhooks/{id}
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<WebhookResponse>
+   * @returns APIPromise<WebhookResponse>
    */
-  async retrieve(id: string, options?: RequestOptions): Promise<WebhookResponse> {
-    const response = await this._http.get<{ data: WebhookResponse }>(`/webhooks/${id}`, undefined, options);
-    return response.data;
+  retrieve(id: string, options?: RequestOptions): APIPromise<WebhookResponse> {
+    return this._http.get<{ data: WebhookResponse }>({
+      path: '/webhooks/{id}',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
    * Update the endpoint URL, subscribed event types, or rotate the signing secret.
    *
-   * PUT /webhooks/{id}
+   * PATCH /webhooks/{id}
    * @param id - string
    * @param body - UpdateWebhookRequest
    * @param options - RequestOptions
-   * @returns Promise<UpdateWebhookResponse>
+   * @returns APIPromise<UpdateWebhookResponse>
    */
-  async update(id: string, body: UpdateWebhookRequest, options?: RequestOptions): Promise<UpdateWebhookResponse> {
-    const response = await this._http.put<{ data: UpdateWebhookResponse }>(`/webhooks/${id}`, body, options);
-    return response.data;
+  update(id: string, body: UpdateWebhookRequest, options?: RequestOptions): APIPromise<UpdateWebhookResponse> {
+    return this._http.patch<{ data: UpdateWebhookResponse }>({
+      path: '/webhooks/{id}',
+      pathParams: { id },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

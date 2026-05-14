@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
 import type { ForwardMessageRequest, IdResponse, MessageResponse, MessagesQuery, MessagesResponseItem, ReplyMessageRequest, SendMessageResponse, UpdateMessageRequest } from '../types.js';
 
 import { MessagesAttachments } from './attachments/index.js';
@@ -26,11 +26,15 @@ export class Messages extends Resource {
    * @param messageId - string
    * @param body - ForwardMessageRequest
    * @param options - RequestOptions
-   * @returns Promise<SendMessageResponse>
+   * @returns APIPromise<SendMessageResponse>
    */
-  async forward(messageId: string, body: ForwardMessageRequest, options?: RequestOptions): Promise<SendMessageResponse> {
-    const response = await this._http.post<{ data: SendMessageResponse }>(`/messages/${messageId}/forward`, body, options);
-    return response.data;
+  forward(messageId: string, body: ForwardMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+    return this._http.post<{ data: SendMessageResponse }>({
+      path: '/messages/{messageId}/forward',
+      pathParams: { messageId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -42,7 +46,11 @@ export class Messages extends Resource {
    * @returns Promise<CursorPage<MessagesResponseItem>>
    */
   async list(query?: MessagesQuery, options?: RequestOptions): Promise<CursorPage<MessagesResponseItem>> {
-    return this._http.list<MessagesResponseItem>('/messages', query as unknown as Record<string, unknown>, options);
+    return this._http.list<MessagesResponseItem>({
+      path: '/messages',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
   }
 
   /**
@@ -52,11 +60,15 @@ export class Messages extends Resource {
    * @param messageId - string
    * @param body - ReplyMessageRequest
    * @param options - RequestOptions
-   * @returns Promise<SendMessageResponse>
+   * @returns APIPromise<SendMessageResponse>
    */
-  async reply(messageId: string, body: ReplyMessageRequest, options?: RequestOptions): Promise<SendMessageResponse> {
-    const response = await this._http.post<{ data: SendMessageResponse }>(`/messages/${messageId}/reply`, body, options);
-    return response.data;
+  reply(messageId: string, body: ReplyMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+    return this._http.post<{ data: SendMessageResponse }>({
+      path: '/messages/{messageId}/reply',
+      pathParams: { messageId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -65,11 +77,14 @@ export class Messages extends Resource {
    * GET /messages/{messageId}
    * @param messageId - string
    * @param options - RequestOptions
-   * @returns Promise<MessageResponse>
+   * @returns APIPromise<MessageResponse>
    */
-  async retrieve(messageId: string, options?: RequestOptions): Promise<MessageResponse> {
-    const response = await this._http.get<{ data: MessageResponse }>(`/messages/${messageId}`, undefined, options);
-    return response.data;
+  retrieve(messageId: string, options?: RequestOptions): APIPromise<MessageResponse> {
+    return this._http.get<{ data: MessageResponse }>({
+      path: '/messages/{messageId}',
+      pathParams: { messageId },
+      options,
+    }).map((r) => r.data);
   }
 
   /**
@@ -79,11 +94,15 @@ export class Messages extends Resource {
    * @param messageId - string
    * @param body - UpdateMessageRequest
    * @param options - RequestOptions
-   * @returns Promise<IdResponse>
+   * @returns APIPromise<IdResponse>
    */
-  async update(messageId: string, body: UpdateMessageRequest, options?: RequestOptions): Promise<IdResponse> {
-    const response = await this._http.patch<{ data: IdResponse }>(`/messages/${messageId}`, body, options);
-    return response.data;
+  update(messageId: string, body: UpdateMessageRequest, options?: RequestOptions): APIPromise<IdResponse> {
+    return this._http.patch<{ data: IdResponse }>({
+      path: '/messages/{messageId}',
+      pathParams: { messageId },
+      body,
+      options,
+    }).map((r) => r.data);
   }
 
 }

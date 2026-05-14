@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { RequestOptions } from '../../../core/index.js';
+import type { APIPromise, RequestOptions } from '../../../core/index.js';
 import type { EmailEventsResponse } from '../../types.js';
 
 
@@ -14,11 +14,14 @@ export class EmailsEvents extends Resource {
    * GET /emails/{id}/events
    * @param id - string
    * @param options - RequestOptions
-   * @returns Promise<EmailEventsResponse>
+   * @returns APIPromise<EmailEventsResponse>
    */
-  async list(id: string, options?: RequestOptions): Promise<EmailEventsResponse> {
-    const response = await this._http.get<{ data: EmailEventsResponse }>(`/emails/${id}/events`, undefined, options);
-    return response.data;
+  list(id: string, options?: RequestOptions): APIPromise<EmailEventsResponse> {
+    return this._http.get<{ data: EmailEventsResponse }>({
+      path: '/emails/{id}/events',
+      pathParams: { id },
+      options,
+    }).map((r) => r.data);
   }
 
 }
