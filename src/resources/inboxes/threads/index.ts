@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../../core/index.js';
 import type { ThreadsQuery, ThreadsResponseItem } from '../../types.js';
 
 
@@ -15,9 +15,9 @@ export class InboxesThreads extends Resource {
    * @param inboxId - string
    * @param query - ThreadsQuery
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<ThreadsResponseItem>>
+   * @returns PagePromise<CursorPage<ThreadsResponseItem>, ThreadsResponseItem>
    */
-  async list(inboxId: string, query?: ThreadsQuery, options?: RequestOptions): Promise<CursorPage<ThreadsResponseItem>> {
+  list(inboxId: string, query?: ThreadsQuery, options?: RequestOptions): PagePromise<CursorPage<ThreadsResponseItem>, ThreadsResponseItem> {
     return this._http.list<ThreadsResponseItem>({
       path: '/inboxes/{inboxId}/threads',
       pathParams: { inboxId },

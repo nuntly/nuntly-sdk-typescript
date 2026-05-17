@@ -15,6 +15,7 @@ import { Webhooks } from './resources/webhooks/index.js';
 
 export class Nuntly {
   private readonly client: NuntlyClient;
+  private readonly options: ClientOptions;
 
   readonly agents: Agents;
   readonly apiKeys: ApiKeys;
@@ -28,6 +29,7 @@ export class Nuntly {
   readonly webhooks: Webhooks;
 
   constructor(options: ClientOptions) {
+    this.options = options;
     this.client = new NuntlyClient(options);
     this.agents = new Agents(this.client);
     this.apiKeys = new ApiKeys(this.client);
@@ -40,6 +42,22 @@ export class Nuntly {
     this.threads = new Threads(this.client);
     this.webhooks = new Webhooks(this.client);
   }
+
+  /**
+   * Returns a new Nuntly client with the supplied options merged on top of the
+   * original. `defaultHeaders` is merged deeply (later headers win on conflict).
+   *
+   * @example
+   * const tenantClient = nuntly.withOptions({ apiKey: tenantApiKey });
+   * await tenantClient.emails.send({ ... });
+   */
+  withOptions(partial: Partial<ClientOptions>): Nuntly {
+    return new Nuntly({
+      ...this.options,
+      ...partial,
+      defaultHeaders: { ...this.options.defaultHeaders, ...partial.defaultHeaders },
+    });
+  }
 }
 
 export function createSafeNuntly(options: ClientOptions) {
@@ -47,8 +65,9 @@ export function createSafeNuntly(options: ClientOptions) {
 }
 
 export { NuntlyClient, safe } from './core/index.js';
+export { APIPromise, PagePromise } from './core/index.js';
 export type { SafeResult } from './core/index.js';
-export type { AppInfo, Logger, Hooks, RetryContext, BackoffStrategy, RetryStrategy, ClientOptions, RequestOptions, ResponseWithData, CursorPageResponse, CursorPageParams } from './core/index.js';
+export type { AppInfo, Logger, Hooks, RequestContext, ResponseContext, SuccessContext, ErrorContext, RetryContext, BackoffStrategy, RetryStrategy, ClientOptions, RequestOptions, ResponseWithData, CursorPageResponse, CursorPageParams } from './core/index.js';
 export {
   NuntlyError,
   APIError,

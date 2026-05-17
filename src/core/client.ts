@@ -1,5 +1,5 @@
 import { up } from 'up-fetch';
-import { APIPromise } from './api-promise.js';
+import { APIPromise, PagePromise } from './api-promise.js';
 import { APIError, APIConnectionError, APIConnectionTimeoutError } from './error.js';
 import { CursorPage } from './pagination.js';
 import type {
@@ -148,6 +148,10 @@ export class NuntlyClient {
     const fetchFn = (options.fetch ?? globalThis.fetch) as typeof fetch;
 
     const headers: Record<string, string> = {
+      // User-supplied `defaultHeaders` come first so Authorization / User-Agent
+      // (set below) always override them. Per-request `RequestOptions.headers`
+      // is applied later by up-fetch and wins over everything here.
+      ...options.defaultHeaders,
       Authorization: `Bearer ${self.apiKey}`,
     };
     if (!isBrowserLike()) {
@@ -280,18 +284,22 @@ export class NuntlyClient {
     return this.request<T>({ method: 'DELETE', ...args });
   }
 
-  async list<T>(args: {
+  list<T>(args: {
     path: string;
     pathParams?: Record<string, unknown>;
     query?: Record<string, unknown>;
     options?: RequestOptions;
-  }): Promise<CursorPage<T>> {
+  }): PagePromise<CursorPage<T>, T> {
     const params: CursorPageParams = (args.query as CursorPageParams) ?? {};
-    const response = await this.get<CursorPageResponse<T>>(args);
-    return new CursorPage<T>(
-      response,
-      params,
-      (nextParams) => this.get<CursorPageResponse<T>>({ ...args, query: nextParams as Record<string, unknown> }),
-    );
+    const firstResponse = this.get<CursorPageResponse<T>>(args);
+    const pagePromise = (async () => {
+      const response = await firstResponse;
+      return new CursorPage<T>(
+        response,
+        params,
+        (nextParams) => this.get<CursorPageResponse<T>>({ ...args, query: nextParams as Record<string, unknown> }),
+      );
+    })();
+    return PagePromise.fromPagePromises<CursorPage<T>, T>(pagePromise, firstResponse.asResponse());
   }
 }

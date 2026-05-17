@@ -1,5 +1,5 @@
 import { Resource } from '../../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../../core/index.js';
 import type { WebhookEventDeliveriesResponse, WebhookEventsResponseItem } from '../../types.js';
 
 
@@ -31,9 +31,9 @@ export class WebhooksEvents extends Resource {
    * GET /webhooks/events
    * @param query - CursorPageParams
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<WebhookEventsResponseItem>>
+   * @returns PagePromise<CursorPage<WebhookEventsResponseItem>, WebhookEventsResponseItem>
    */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<WebhookEventsResponseItem>> {
+  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<WebhookEventsResponseItem>, WebhookEventsResponseItem> {
     return this._http.list<WebhookEventsResponseItem>({
       path: '/webhooks/events',
       query: query as unknown as Record<string, unknown>,

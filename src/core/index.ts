@@ -1,7 +1,7 @@
 export { NuntlyClient } from './client.js';
 export { Resource } from './resource.js';
 export { CursorPage } from './pagination.js';
-export { APIPromise } from './api-promise.js';
+export { APIPromise, PagePromise } from './api-promise.js';
 export { safe } from './safe.js';
 export type { SafeResult } from './safe.js';
 

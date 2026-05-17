@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import type { CreateWebhookRequest, CreateWebhookResponse, DeleteWebhookResponse, UpdateWebhookRequest, UpdateWebhookResponse, WebhookResponse, WebhooksResponseItem } from '../types.js';
 
 import { WebhooksEvents } from './events/index.js';
@@ -54,9 +54,9 @@ export class Webhooks extends Resource {
    * GET /webhooks
    * @param query - CursorPageParams
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<WebhooksResponseItem>>
+   * @returns PagePromise<CursorPage<WebhooksResponseItem>, WebhooksResponseItem>
    */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<WebhooksResponseItem>> {
+  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<WebhooksResponseItem>, WebhooksResponseItem> {
     return this._http.list<WebhooksResponseItem>({
       path: '/webhooks',
       query: query as unknown as Record<string, unknown>,

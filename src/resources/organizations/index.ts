@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import type { OrganizationResponse, OrganizationsResponseItem } from '../types.js';
 
 import { OrganizationsUsage } from './usage/index.js';
@@ -17,6 +17,22 @@ export class Organizations extends Resource {
   }
 
   /**
+   * Returns all organizations the authenticated user belongs to.
+   *
+   * GET /organizations
+   * @param query - CursorPageParams
+   * @param options - RequestOptions
+   * @returns PagePromise<CursorPage<OrganizationsResponseItem>, OrganizationsResponseItem>
+   */
+  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<OrganizationsResponseItem>, OrganizationsResponseItem> {
+    return this._http.list<OrganizationsResponseItem>({
+      path: '/organizations',
+      query: query as unknown as Record<string, unknown>,
+      options,
+    });
+  }
+
+  /**
    * Returns the organization's profile, plan, region, and account status.
    *
    * GET /organizations/{id}
@@ -30,22 +46,6 @@ export class Organizations extends Resource {
       pathParams: { id },
       options,
     }).map((r) => r.data);
-  }
-
-  /**
-   * Returns all organizations the authenticated user belongs to.
-   *
-   * GET /organizations
-   * @param query - CursorPageParams
-   * @param options - RequestOptions
-   * @returns Promise<CursorPage<OrganizationsResponseItem>>
-   */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<OrganizationsResponseItem>> {
-    return this._http.list<OrganizationsResponseItem>({
-      path: '/organizations',
-      query: query as unknown as Record<string, unknown>,
-      options,
-    });
   }
 
 }

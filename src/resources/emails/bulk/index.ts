@@ -10,7 +10,7 @@ import type { BulkEmailsResponse, CreateBulkEmailsRequest, CreateBulkEmailsRespo
 export class EmailsBulk extends Resource {
 
   /**
-   * Returns the delivery status of all emails submitted in a bulk request.
+   * Returns the emails submitted in a bulk request.
    *
    * GET /emails/bulk/{bulkId}
    * @param bulkId - string
