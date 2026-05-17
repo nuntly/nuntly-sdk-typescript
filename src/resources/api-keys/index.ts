@@ -1,5 +1,5 @@
 import { Resource } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import type { ApiKeyResponse, ApiKeysResponseItem, CreateApiKeyRequest, CreateApiKeyResponse, DeleteApiKeyResponse, UpdateApiKeyRequest, UpdateApiKeyResponse } from '../types.js';
 
 
@@ -9,7 +9,7 @@ import type { ApiKeyResponse, ApiKeysResponseItem, CreateApiKeyRequest, CreateAp
 export class ApiKeys extends Resource {
 
   /**
-   * Generate a new API key. The key value is only returned once — store it securely.
+   * Generate a new API key. The key value is only returned once. Store it securely.
    *
    * POST /api-keys
    * @param body - CreateApiKeyRequest
@@ -46,9 +46,9 @@ export class ApiKeys extends Resource {
    * GET /api-keys
    * @param query - CursorPageParams
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<ApiKeysResponseItem>>
+   * @returns PagePromise<CursorPage<ApiKeysResponseItem>, ApiKeysResponseItem>
    */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<ApiKeysResponseItem>> {
+  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<ApiKeysResponseItem>, ApiKeysResponseItem> {
     return this._http.list<ApiKeysResponseItem>({
       path: '/api-keys',
       query: query as unknown as Record<string, unknown>,

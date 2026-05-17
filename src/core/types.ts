@@ -24,7 +24,7 @@ export interface ResponseContext {
   response: Response;
 }
 
-export interface SuccessContext<T = any> {
+export interface SuccessContext<T = unknown> {
   request: RequestContext;
   response: Response;
   data: T;
@@ -104,6 +104,12 @@ export interface ClientOptions {
    * or replace it, only append to it.
    */
   appInfo?: AppInfo;
+  /**
+   * Headers sent on every request. Merged with per-request `RequestOptions.headers`
+   * (per-request wins on conflict). Useful for tenant-id forwarding, telemetry
+   * (e.g. `X-Trace-Id`), or corporate proxy auth.
+   */
+  defaultHeaders?: Record<string, string>;
 }
 
 export interface RequestOptions {

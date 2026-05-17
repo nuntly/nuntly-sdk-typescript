@@ -49,7 +49,7 @@ The SDK has zero runtime dependencies.
 ## Quick start
 
 ```typescript
-import Nuntly from '@nuntly/sdk';
+import { Nuntly } from '@nuntly/sdk';
 
 const nuntly = new Nuntly({ apiKey: process.env.NUNTLY_API_KEY });
 
@@ -84,14 +84,64 @@ const nuntly = new Nuntly({
 | `logger` | `Logger` | - | Custom logger (compatible with console, pino, winston) |
 | `hooks` | `Hooks` | - | Lifecycle hooks (see [Lifecycle hooks](#lifecycle-hooks)) |
 | `fetch` | `typeof fetch` | `globalThis.fetch` | Custom fetch implementation |
+| `defaultHeaders` | `Record<string, string>` | - | Headers sent on every request (tenant id, telemetry, proxy auth). Overridden by per-request `headers`. |
+
+### Multi-tenant and client cloning
+
+Real-world problems `defaultHeaders` and `withOptions(partial)` solve:
+
+**Problem: each customer in your SaaS has their own Nuntly API key.**
+Building a new `Nuntly` per request loses hooks, retry config, and the warm fetch pool.
+
+```typescript
+const root = new Nuntly({ apiKey: process.env.NUNTLY_API_KEY });
+
+// Per-tenant client, reuses the root config except apiKey
+const tenant = root.withOptions({ apiKey: tenantApiKey });
+await tenant.emails.send({ from, to, subject, html });
+```
+
+**Problem: an inbound request in your app fans out to several services (DB, Stripe, Nuntly...). You want one trace ID across all of them.**
+Forward your trace ID on every Nuntly call so your APM correlates the outbound email send with the inbound request that triggered it.
+
+```typescript
+const traced = root.withOptions({
+  defaultHeaders: { 'X-Trace-Id': req.traceId },
+});
+await traced.emails.send({ from, to, subject, html });
+```
+
+**Problem: audit/compliance team needs to know "which user in our app sent this email".**
+Stamp `X-Initiated-By` on every request. Your gateway / proxy / log pipeline records it; Nuntly itself ignores it.
+
+```typescript
+const audited = root.withOptions({
+  defaultHeaders: { 'X-Initiated-By': `user:${userId}` },
+});
+```
+
+**Problem: your CI/staging environment runs behind a corporate egress proxy that requires auth.**
+
+```typescript
+const corpClient = new Nuntly({
+  apiKey: process.env.NUNTLY_API_KEY,
+  defaultHeaders: { 'Proxy-Authorization': `Basic ${process.env.PROXY_TOKEN}` },
+});
+```
+
+#### Mental model
+
+- `withOptions(partial)` returns a **new** client. The original instance is untouched, hooks and retry config are reused. `defaultHeaders` is deep-merged; the rest of the options is shallow-replaced.
+- `defaultHeaders` is **passthrough**: the SDK sets them on every HTTP request, but Nuntly does not parse or route on them. The value lives in your own observability, proxy, and audit chain.
 
 ## Pagination
 
-List methods return a `CursorPage` with auto-pagination:
+List methods return a `PagePromise` that you can either `await` for a
+single `CursorPage` or iterate with `for await` to auto-paginate:
 
 ```typescript
 // Auto-paginate all items
-for await (const email of await nuntly.emails.list({ limit: 10 })) {
+for await (const email of nuntly.emails.list({ limit: 10 })) {
   console.log(email.id);
 }
 
@@ -136,7 +186,7 @@ try {
 
 Error classes: `BadRequestError` (400), `AuthenticationError` (401), `PermissionDeniedError` (403), `NotFoundError` (404), `ConflictError` (409), `UnprocessableEntityError` (422), `RateLimitError` (429), `InternalServerError` (5xx).
 
-Every error exposes `status`, `body`, `headers`, `requestId`, and `rawResponse`.
+Every error exposes `status`, `code`, `title`, `details`, `headers`, `requestId`, and `rawResponse`.
 
 ## Webhook verification
 
@@ -200,28 +250,34 @@ const { data, error } = await safe(nuntly).emails.retrieve('em_123');
 
 ## Lifecycle hooks
 
-Hook into the HTTP lifecycle for logging, telemetry, or auth refresh:
+Hook into the HTTP lifecycle for logging, telemetry, or auth refresh. Every
+hook receives a single structured `ctx` argument:
 
 ```typescript
 import type { Hooks } from '@nuntly/sdk';
+import { APIError } from '@nuntly/sdk';
 
 const nuntly = new Nuntly({
   apiKey: process.env.NUNTLY_API_KEY,
   hooks: {
-    onRequest: (request) => {
-      console.log(`-> ${request.method} ${request.url}`);
+    onRequest: (ctx) => {
+      console.log(`-> ${ctx.method} ${ctx.url}`);
     },
-    onResponse: (response, request) => {
-      console.log(`<- ${response.status} (${response.headers.get('x-request-id')})`);
+    onResponse: (ctx) => {
+      console.log(`<- ${ctx.response.status} ${ctx.request.path}`);
     },
-    onSuccess: (data, request) => {
+    onSuccess: (ctx) => {
       metrics.increment('api.success');
     },
-    onRetry: ({ attempt, response }) => {
-      console.warn(`Retry #${attempt}, status: ${response?.status}`);
+    onRetry: (ctx) => {
+      console.warn(`Retry #${ctx.attempt} ${ctx.request.path}`);
     },
-    onError: (error, request) => {
-      sentry.captureException(error);
+    onError: (ctx) => {
+      if (ctx.error instanceof APIError) {
+        sentry.captureException(ctx.error, { tags: { code: ctx.error.code } });
+      } else {
+        sentry.captureException(ctx.error);
+      }
     },
   },
 });
@@ -229,13 +285,16 @@ const nuntly = new Nuntly({
 
 | Hook | Signature | When |
 |------|-----------|------|
-| `onRequest` | `(request: Request) => void` | Before each HTTP request |
-| `onResponse` | `(response: Response, request: Request) => void` | After final response (post-retry) |
-| `onSuccess` | `(data: unknown, request: Request) => void` | After successful response parsing |
-| `onRetry` | `(context: RetryContext) => void` | Before each retry attempt |
-| `onError` | `(error: unknown, request: Request) => void` | On any error |
+| `onRequest` | `(ctx: RequestContext) => void \| Promise<void>` | Before each HTTP request |
+| `onResponse` | `(ctx: ResponseContext) => void \| Promise<void>` | After each HTTP response (2xx, 4xx, 5xx); not called on network errors |
+| `onSuccess` | `(ctx: SuccessContext) => void \| Promise<void>` | After each 2xx response, with the parsed payload |
+| `onRetry` | `(ctx: RetryContext) => void \| Promise<void>` | Before each retry attempt |
+| `onError` | `(ctx: ErrorContext) => void \| Promise<void>` | On 4xx/5xx (`APIError`) or network/timeout (`APIConnectionError`) |
 
-All hooks support async (return `Promise<void>`).
+Per-request invocation order on the happy path:
+`onRequest -> [onRetry x N] -> onResponse -> (onSuccess | onError)`.
+
+All hooks may return a `Promise<void>` and are awaited by the client.
 
 ## Retry configuration
 
@@ -270,7 +329,7 @@ The SDK automatically respects `Retry-After` headers on 429 responses.
 
 ## Raw response access
 
-Every resource method returns an `APIPromise<T>` — a `Promise<T>` you can
+Every resource method returns an `APIPromise<T>`. It is a `Promise<T>` you can
 `await` as usual, with two extra methods for accessing the raw `Response`.
 
 Use `.withResponse()` when you need both the parsed data and the
@@ -301,9 +360,16 @@ console.log(response.status, response.headers.get('x-request-id'));
 await nuntly.emails.send(payload, {
   timeout: 30000,
   maxRetries: 0,
-  headers: { 'X-Idempotency-Key': 'unique-key-123' },
+  idempotencyKey: 'unique-key-123',
 });
 ```
+
+The wire header is `Idempotency-Key` (no `X-` prefix). The SDK auto-generates
+a UUID v4 for `emails.send`, `emails.bulk.send`, `messages.reply`,
+`messages.forward`, and `inboxes.messages.send` when `idempotencyKey` is not
+provided. Pass an explicit value to wire up your own retry key (e.g. for
+cross-process deduplication). You can also set the header manually via
+`headers: { 'Idempotency-Key': '...' }` if you prefer.
 
 ### Abort a request
 

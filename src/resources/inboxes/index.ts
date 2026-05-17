@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import type { CreateInboxRequest, IdResponse, InboxResponse, InboxesQuery, InboxesResponseItem, UpdateInboxRequest } from '../types.js';
 
 import { InboxesMessages } from './messages/index.js';
@@ -57,9 +57,9 @@ export class Inboxes extends Resource {
    * GET /inboxes
    * @param query - InboxesQuery
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<InboxesResponseItem>>
+   * @returns PagePromise<CursorPage<InboxesResponseItem>, InboxesResponseItem>
    */
-  async list(query?: InboxesQuery, options?: RequestOptions): Promise<CursorPage<InboxesResponseItem>> {
+  list(query?: InboxesQuery, options?: RequestOptions): PagePromise<CursorPage<InboxesResponseItem>, InboxesResponseItem> {
     return this._http.list<InboxesResponseItem>({
       path: '/inboxes',
       query: query as unknown as Record<string, unknown>,

@@ -1,5 +1,6 @@
 import { Resource } from '../../../core/index.js';
 import type { APIPromise, RequestOptions } from '../../../core/index.js';
+import { generateIdempotencyKey } from '../../../lib/idempotency.js';
 import type { SendMessageRequest, SendMessageResponse } from '../../types.js';
 
 
@@ -18,6 +19,8 @@ export class InboxesMessages extends Resource {
    * @returns APIPromise<SendMessageResponse>
    */
   send(inboxId: string, body: SendMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http.post<{ data: SendMessageResponse }>({
       path: '/inboxes/{inboxId}/messages',
       pathParams: { inboxId },

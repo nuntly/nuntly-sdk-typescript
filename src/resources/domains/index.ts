@@ -1,5 +1,5 @@
 import { Resource } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import type { CreateDomainRequest, DeleteDomainResponse, DomainRecordsResponse, DomainsResponseItem, UpdateDomainRequest, UpdateDomainResponse } from '../types.js';
 
 
@@ -9,7 +9,7 @@ import type { CreateDomainRequest, DeleteDomainResponse, DomainRecordsResponse, 
 export class Domains extends Resource {
 
   /**
-   * Add a domain to start configuring DNS records for sending or receiving emails.
+   * Add a domain for sending or receiving emails.
    *
    * POST /domains
    * @param body - CreateDomainRequest
@@ -46,9 +46,9 @@ export class Domains extends Resource {
    * GET /domains
    * @param query - CursorPageParams
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<DomainsResponseItem>>
+   * @returns PagePromise<CursorPage<DomainsResponseItem>, DomainsResponseItem>
    */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<DomainsResponseItem>> {
+  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<DomainsResponseItem>, DomainsResponseItem> {
     return this._http.list<DomainsResponseItem>({
       path: '/domains',
       query: query as unknown as Record<string, unknown>,

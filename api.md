@@ -85,7 +85,7 @@ Create or update the memory for an AI agent.
 
 ### `apiKeys.create(body: CreateApiKeyRequest, options?: RequestOptions)`
 
-Generate a new API key. The key value is only returned once — store it securely.
+Generate a new API key. The key value is only returned once. Store it securely.
 
 - **HTTP**: `POST /api-keys`
 - **Returns**: `CreateApiKeyResponse`
@@ -183,7 +183,7 @@ Update the key name, permissions, or restrict it to specific sending domains.
 
 ### `domains.create(body: CreateDomainRequest, options?: RequestOptions)`
 
-Add a domain to start configuring DNS records for sending or receiving emails.
+Add a domain for sending or receiving emails.
 
 - **HTTP**: `POST /domains`
 - **Returns**: `DomainRecordsResponse`
@@ -402,7 +402,7 @@ Send transactional emails through Nuntly platform. It supports HTML and plain-te
 
 ### `emails.bulk.list(bulkId: string, options?: RequestOptions)`
 
-Returns the delivery status of all emails submitted in a bulk request.
+Returns the emails submitted in a bulk request.
 
 - **HTTP**: `GET /emails/bulk/{bulkId}`
 - **Returns**: `BulkEmailsResponse`
@@ -459,7 +459,7 @@ Returns presigned URLs to download the HTML, plain-text, and raw MIME source of 
 
 ### `emails.events.list(id: string, options?: RequestOptions)`
 
-Returns the full delivery event history for an email (sent, delivered, opened, bounced, etc.).
+Returns the delivery event history for an email (sent, delivered, opened, bounced, etc.).
 
 - **HTTP**: `GET /emails/{id}/events`
 - **Returns**: `EmailEventsResponse`
@@ -940,21 +940,6 @@ List inboxes in a namespace.
 
 ## organizations
 
-### `organizations.retrieve(id: string, options?: RequestOptions)`
-
-Returns the organization's profile, plan, region, and account status.
-
-- **HTTP**: `GET /organizations/{id}`
-- **Returns**: `OrganizationResponse`
-
-**OrganizationResponse**
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `id` | `string` | The id of the organization |
-| `name` | `string` | The name of the organization |
-| `status` | `'enabled' | 'disabled'` | The status of the organization |
-
 ### `organizations.list(query?: CursorPageParams, options?: RequestOptions)`
 
 Returns all organizations the authenticated user belongs to.
@@ -964,6 +949,21 @@ Returns all organizations the authenticated user belongs to.
 - **Paginated**: yes
 
 **OrganizationsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the organization |
+| `name` | `string` | The name of the organization |
+| `status` | `'enabled' | 'disabled'` | The status of the organization |
+
+### `organizations.retrieve(id: string, options?: RequestOptions)`
+
+Returns the organization's profile, plan, region, and account status.
+
+- **HTTP**: `GET /organizations/{id}`
+- **Returns**: `OrganizationResponse`
+
+**OrganizationResponse**
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |

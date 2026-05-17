@@ -1,6 +1,7 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
+import { generateIdempotencyKey } from '../../lib/idempotency.js';
 import type { ForwardMessageRequest, IdResponse, MessageResponse, MessagesQuery, MessagesResponseItem, ReplyMessageRequest, SendMessageResponse, UpdateMessageRequest } from '../types.js';
 
 import { MessagesAttachments } from './attachments/index.js';
@@ -29,6 +30,8 @@ export class Messages extends Resource {
    * @returns APIPromise<SendMessageResponse>
    */
   forward(messageId: string, body: ForwardMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http.post<{ data: SendMessageResponse }>({
       path: '/messages/{messageId}/forward',
       pathParams: { messageId },
@@ -43,9 +46,9 @@ export class Messages extends Resource {
    * GET /messages
    * @param query - MessagesQuery
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<MessagesResponseItem>>
+   * @returns PagePromise<CursorPage<MessagesResponseItem>, MessagesResponseItem>
    */
-  async list(query?: MessagesQuery, options?: RequestOptions): Promise<CursorPage<MessagesResponseItem>> {
+  list(query?: MessagesQuery, options?: RequestOptions): PagePromise<CursorPage<MessagesResponseItem>, MessagesResponseItem> {
     return this._http.list<MessagesResponseItem>({
       path: '/messages',
       query: query as unknown as Record<string, unknown>,
@@ -63,6 +66,8 @@ export class Messages extends Resource {
    * @returns APIPromise<SendMessageResponse>
    */
   reply(messageId: string, body: ReplyMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http.post<{ data: SendMessageResponse }>({
       path: '/messages/{messageId}/reply',
       pathParams: { messageId },

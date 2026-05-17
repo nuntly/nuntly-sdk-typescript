@@ -65,8 +65,8 @@ export async function verifyWebhook(
     throw new WebhookVerificationError('Invalid timestamp');
   }
   const age = Math.floor(Date.now() / 1000) - ts;
-  if (age > tolerance) {
-    throw new WebhookVerificationError('Webhook timestamp is too old');
+  if (Math.abs(age) > tolerance) {
+    throw new WebhookVerificationError('Webhook timestamp outside tolerance window');
   }
 
   const candidates = parts

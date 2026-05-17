@@ -325,6 +325,42 @@ describe("Pagination", () => {
 		expect(items).toHaveLength(2);
 		expect(callCount).toBe(2);
 	});
+
+	it("for await directly on list() result auto-paginates", async () => {
+		// Regression: previously `client.emails.list()` was `async` and returned
+		// a bare `Promise<CursorPage>`, which made `for await (const x of list())`
+		// silently yield nothing. `PagePromise` makes the call site work without
+		// an extra `await`.
+		let callCount = 0;
+		const nuntly = createClient((req) => {
+			callCount++;
+			const url = new URL(req.url);
+			const cursor = url.searchParams.get("cursor");
+			if (!cursor) {
+				return jsonResponse({ data: [{ id: "em_1" }], nextCursor: "page2" });
+			}
+			return jsonResponse({ data: [{ id: "em_2" }], nextCursor: null });
+		});
+
+		const items: unknown[] = [];
+		for await (const item of nuntly.emails.list({ limit: 1 })) {
+			items.push(item);
+		}
+		expect(items).toHaveLength(2);
+		expect(callCount).toBe(2);
+	});
+
+	it("list() result supports .withResponse() like APIPromise", async () => {
+		const nuntly = createClient(() =>
+			jsonResponse({ data: [{ id: "em_1" }], nextCursor: null }),
+		);
+
+		const { data: page, response } = await nuntly.emails
+			.list()
+			.withResponse();
+		expect(page.data).toHaveLength(1);
+		expect(response.status).toBe(200);
+	});
 });
 
 describe("Auth and headers", () => {
@@ -448,7 +484,15 @@ describe("Webhook verification", () => {
 		const old = Math.floor(Date.now() / 1000) - 10 * 60;
 		const header = await buildHeader(eventPayload, secret, old);
 		await expect(verifyWebhook(eventPayload, header, secret)).rejects.toThrow(
-			"too old",
+			"outside tolerance window",
+		);
+	});
+
+	it("rejects a future timestamp (replay attack guard)", async () => {
+		const future = Math.floor(Date.now() / 1000) + 10 * 60;
+		const header = await buildHeader(eventPayload, secret, future);
+		await expect(verifyWebhook(eventPayload, header, secret)).rejects.toThrow(
+			"outside tolerance window",
 		);
 	});
 
@@ -471,7 +515,7 @@ describe("Webhook verification", () => {
 		// 30s tolerance: 60s old should fail
 		await expect(
 			verifyWebhook(eventPayload, header, secret, { tolerance: 30 }),
-		).rejects.toThrow("too old");
+		).rejects.toThrow("outside tolerance window");
 		// 120s tolerance: 60s old should pass
 		const event = await verifyWebhook(eventPayload, header, secret, { tolerance: 120 });
 		expect(event.type).toBe("email.delivered");
@@ -733,5 +777,94 @@ describe("Hooks", () => {
 
 		await nuntly.emails.retrieve("em_1");
 		expect(retries).toEqual([1]);
+	});
+});
+
+describe("defaultHeaders and withOptions", () => {
+	it("sends defaultHeaders on every request", async () => {
+		const captured: Headers[] = [];
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			defaultHeaders: { "X-Tenant-Id": "tenant_42", "X-Trace-Id": "trace_1" },
+			fetch: mockFetch((req) => {
+				captured.push(req.headers);
+				return jsonResponse({ data: { id: "em_1" } });
+			}) as typeof fetch,
+		});
+
+		await nuntly.emails.retrieve("em_1");
+		await nuntly.emails.send(emailPayload);
+
+		expect(captured.length).toBe(2);
+		expect(captured[0]!.get("x-tenant-id")).toBe("tenant_42");
+		expect(captured[0]!.get("x-trace-id")).toBe("trace_1");
+		expect(captured[1]!.get("x-tenant-id")).toBe("tenant_42");
+		expect(captured[1]!.get("x-trace-id")).toBe("trace_1");
+	});
+
+	it("per-request headers override defaultHeaders", async () => {
+		let captured: Headers | null = null;
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			defaultHeaders: { "X-Tenant-Id": "tenant_default" },
+			fetch: mockFetch((req) => {
+				captured = req.headers;
+				return jsonResponse({ data: { id: "em_1" } });
+			}) as typeof fetch,
+		});
+
+		await nuntly.emails.retrieve("em_1", {
+			headers: { "X-Tenant-Id": "tenant_override" },
+		});
+		expect(captured!.get("x-tenant-id")).toBe("tenant_override");
+	});
+
+	it("withOptions returns a new Nuntly with merged options", async () => {
+		let capturedKey: string | null = null;
+		const fetchImpl = mockFetch((req) => {
+			capturedKey = req.headers.get("authorization");
+			return jsonResponse({ data: { id: "em_1" } });
+		}) as typeof fetch;
+
+		const root = new Nuntly({
+			apiKey: "root_key",
+			baseUrl: "https://api.test.com",
+			fetch: fetchImpl,
+		});
+		const tenant = root.withOptions({ apiKey: "tenant_key" });
+
+		// The original is not mutated.
+		expect(root).not.toBe(tenant);
+
+		await tenant.emails.retrieve("em_1");
+		expect(capturedKey).toBe("Bearer tenant_key");
+
+		await root.emails.retrieve("em_1");
+		expect(capturedKey).toBe("Bearer root_key");
+	});
+
+	it("withOptions deep-merges defaultHeaders", async () => {
+		let captured: Headers | null = null;
+		const fetchImpl = mockFetch((req) => {
+			captured = req.headers;
+			return jsonResponse({ data: { id: "em_1" } });
+		}) as typeof fetch;
+
+		const root = new Nuntly({
+			apiKey: "root_key",
+			baseUrl: "https://api.test.com",
+			defaultHeaders: { "X-Service": "billing", "X-Region": "eu1" },
+			fetch: fetchImpl,
+		});
+		const tenant = root.withOptions({
+			defaultHeaders: { "X-Tenant-Id": "tenant_42", "X-Region": "us1" },
+		});
+
+		await tenant.emails.retrieve("em_1");
+		expect(captured!.get("x-service")).toBe("billing"); // inherited
+		expect(captured!.get("x-tenant-id")).toBe("tenant_42"); // added
+		expect(captured!.get("x-region")).toBe("us1"); // overridden
 	});
 });

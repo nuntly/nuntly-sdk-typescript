@@ -1,3 +1,4 @@
+import type { CursorPage } from './pagination.js';
 import type { ResponseWithData } from './types.js';
 
 /**
@@ -11,9 +12,9 @@ export class APIPromise<T> extends Promise<T> {
     return Promise;
   }
 
-  private readonly responsePromise: Promise<Response>;
+  protected readonly responsePromise: Promise<Response>;
 
-  private constructor(
+  protected constructor(
     executor: (
       resolve: (value: T | PromiseLike<T>) => void,
       reject: (reason: unknown) => void,
@@ -44,5 +45,26 @@ export class APIPromise<T> extends Promise<T> {
 
   map<U>(fn: (value: T) => U): APIPromise<U> {
     return APIPromise.fromPromises((this as Promise<T>).then(fn), this.responsePromise);
+  }
+}
+
+export class PagePromise<TPage extends CursorPage<TItem>, TItem>
+  extends APIPromise<TPage>
+  implements AsyncIterable<TItem>
+{
+  static fromPagePromises<TPage extends CursorPage<TItem>, TItem>(
+    dataPromise: Promise<TPage>,
+    responsePromise: Promise<Response>,
+  ): PagePromise<TPage, TItem> {
+    return new PagePromise<TPage, TItem>((resolve, reject) => {
+      dataPromise.then(resolve, reject);
+    }, responsePromise);
+  }
+
+  async *[Symbol.asyncIterator](): AsyncIterator<TItem> {
+    const firstPage = await (this as Promise<TPage>);
+    for await (const item of firstPage) {
+      yield item;
+    }
   }
 }

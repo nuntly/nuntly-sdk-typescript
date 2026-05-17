@@ -9,7 +9,7 @@ import type { EmailEventsResponse } from '../../types.js';
 export class EmailsEvents extends Resource {
 
   /**
-   * Returns the full delivery event history for an email (sent, delivered, opened, bounced, etc.).
+   * Returns the delivery event history for an email (sent, delivered, opened, bounced, etc.).
    *
    * GET /emails/{id}/events
    * @param id - string

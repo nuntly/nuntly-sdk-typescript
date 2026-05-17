@@ -1,6 +1,8 @@
-import type { APIError } from './error.js';
+import type { APIError, APIConnectionError } from './error.js';
 
-export type SafeResult<T> = { data: T; error: null } | { data: null; error: APIError };
+export type SafeResult<T> =
+  | { data: T; error: null }
+  | { data: null; error: APIError | APIConnectionError };
 
 type Safeify<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => Promise<infer R>

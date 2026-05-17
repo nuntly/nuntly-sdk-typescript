@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import { generateIdempotencyKey } from '../../lib/idempotency.js';
 import type { CreateEmailRequest, CreateEmailResponse, DeleteEmailResponse, EmailResponse, EmailsResponseItem } from '../types.js';
 
@@ -48,9 +48,9 @@ export class Emails extends Resource {
    * GET /emails
    * @param query - CursorPageParams
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<EmailsResponseItem>>
+   * @returns PagePromise<CursorPage<EmailsResponseItem>, EmailsResponseItem>
    */
-  async list(query?: CursorPageParams, options?: RequestOptions): Promise<CursorPage<EmailsResponseItem>> {
+  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<EmailsResponseItem>, EmailsResponseItem> {
     return this._http.list<EmailsResponseItem>({
       path: '/emails',
       query: query as unknown as Record<string, unknown>,

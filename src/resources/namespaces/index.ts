@@ -1,6 +1,6 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams } from '../../core/index.js';
+import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import type { CreateNamespaceRequest, IdResponse, NamespaceDetail, NamespaceResponse, NamespacesQuery, NamespacesResponseItem, UpdateNamespaceRequest } from '../types.js';
 
 import { NamespacesInboxes } from './inboxes/index.js';
@@ -54,9 +54,9 @@ export class Namespaces extends Resource {
    * GET /namespaces
    * @param query - NamespacesQuery
    * @param options - RequestOptions
-   * @returns Promise<CursorPage<NamespacesResponseItem>>
+   * @returns PagePromise<CursorPage<NamespacesResponseItem>, NamespacesResponseItem>
    */
-  async list(query?: NamespacesQuery, options?: RequestOptions): Promise<CursorPage<NamespacesResponseItem>> {
+  list(query?: NamespacesQuery, options?: RequestOptions): PagePromise<CursorPage<NamespacesResponseItem>, NamespacesResponseItem> {
     return this._http.list<NamespacesResponseItem>({
       path: '/namespaces',
       query: query as unknown as Record<string, unknown>,
