@@ -425,8 +425,8 @@ Send up to 20 emails in a single request. Use `fallback` to set default values s
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `fallback?` | `{ from?: string; to?: Array<string> | string; cc?: Array<string> | string; bcc?: Array<string> | string; replyTo?: Array<string> | string; subject?: string; text?: string; html?: string; headers?: Record<string, string>; tags?: Array<Tag>; variables?: Record<string, string | number | boolean | null>; scheduledAt?: string }` | Used as a fallback field email value if no value is present in emails |
-| `emails` | `Array<{ from?: string; to?: Array<string> | string; cc?: Array<string> | string; bcc?: Array<string> | string; replyTo?: Array<string> | string; subject?: string; text?: string; html?: string; headers?: Record<string, string>; tags?: Array<Tag>; variables?: Record<string, string | number | boolean | null>; scheduledAt?: string }>` | The bulk emails to send |
+| `fallback?` | `CreateBulkFallback` | Used as a fallback field email value if no value is present in emails. |
+| `emails` | `Array<CreateBulkEmail>` | The bulk emails to send. |
 
 **CreateBulkEmailsResponse**
 

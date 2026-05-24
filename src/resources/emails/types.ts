@@ -1,3 +1,4 @@
+import type { CreateBulkEmail } from '../emails/bulk/types.js';
 import type { BounceDetail, ClickDetail, ComplaintDetail, DeliveryDelayDetail, DeliveryDetail, EmailStatus, FailureDetail, OpenDetail, RejectDetail, Tag } from '../shared/types.js';
 
 export interface Attachment {
@@ -8,6 +9,8 @@ export interface Attachment {
   /** Content type of the attachment (the MIME type) */
   contentType?: string;
 }
+
+export type CreateBulkEmails = Array<CreateBulkEmail>;
 
 /**
  * @example

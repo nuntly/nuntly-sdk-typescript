@@ -43,6 +43,8 @@ export interface DeliveryDetail {
   processingTime?: number;
 }
 
+export type DomainStatus = 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
+
 export type EmailStatus = 'queued' | 'scheduled' | 'processed' | 'failed' | 'sending' | 'sent' | 'delivered' | 'bounced' | 'complained' | 'canceled' | 'rejected';
 
 export type Event = EmailQueuedEvent | EmailScheduledEvent | EmailProcessedEvent | EmailSendingEvent | EmailSentEvent | EmailDeliveredEvent | EmailOpenedEvent | EmailClickedEvent | EmailBouncedEvent | EmailComplainedEvent | EmailRejectedEvent | EmailDeliveryDelayedEvent | EmailFailedEvent | MessageReceivedEvent | MessageSecurityFlaggedEvent | MessageAgentTriggeredEvent | MessageSentEvent | MessageRejectedEvent;
