@@ -158,29 +158,31 @@ const page2 = await page1.nextPage();
 Every API error throws a typed exception:
 
 ```typescript
-import { NotFoundError, RateLimitError, AuthenticationError } from '@nuntly/sdk';
+import { APIError, NotFoundError, RateLimitError, AuthenticationError } from '@nuntly/sdk';
 
 try {
   await nuntly.emails.retrieve('em_nonexistent');
 } catch (error) {
-  if (error instanceof NotFoundError) {
-    console.log('Email not found:', error.message);
-  } else if (error instanceof RateLimitError) {
-    console.log('Rate limited, retry in:', error.retryAfter, 'ms');
-  } else if (error instanceof AuthenticationError) {
-    console.log('Invalid API key');
+  if (error instanceof APIError) {
+    if (error instanceof NotFoundError) {
+      console.log('Email not found:', error.message);
+    } else if (error instanceof RateLimitError) {
+      console.log('Rate limited, retry in:', error.retryAfter, 'ms');
+    } else if (error instanceof AuthenticationError) {
+      console.log('Invalid API key');
+    }
+
+    // Structured error fields on every API error
+    console.log(error.status);    // HTTP status code (e.g. 400)
+    console.log(error.title);     // human-readable summary
+    console.log(error.code);      // machine-readable error code (e.g. invalid_body)
+    console.log(error.details);   // optional details (e.g. which field is invalid)
+    console.log(error.requestId); // x-request-id for support
+
+    // Access the raw Response for advanced inspection
+    console.log(error.rawResponse.status);
+    console.log(error.rawResponse.headers.get('x-ratelimit-remaining'));
   }
-
-  // Structured error fields on every API error
-  console.log(error.status);    // HTTP status code (e.g. 400)
-  console.log(error.title);     // human-readable summary
-  console.log(error.code);      // machine-readable error code (e.g. invalid_body)
-  console.log(error.details);   // optional details (e.g. which field is invalid)
-  console.log(error.requestId); // x-request-id for support
-
-  // Access the raw Response for advanced inspection
-  console.log(error.rawResponse.status);
-  console.log(error.rawResponse.headers.get('x-ratelimit-remaining'));
 }
 ```
 
@@ -233,7 +235,7 @@ const { data, error } = await nuntly.emails.send({
 });
 
 if (error) {
-  console.log(error.status, error.message);
+  console.error(error.message);
 } else {
   console.log(data.id);
 }
@@ -453,7 +455,7 @@ Or per-request:
 await nuntly.emails.send(payload, { timeout: 5_000 });
 ```
 
-A request that exceeds its timeout aborts with a `ConnectionError`.
+A request that exceeds its timeout aborts with an `APIConnectionTimeoutError`.
 
 ## MCP Server
 
