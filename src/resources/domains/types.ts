@@ -1,3 +1,5 @@
+import type { DomainStatus } from '../shared/types.js';
+
 /**
  * @example
  *     await nuntly.domains.create({
@@ -50,8 +52,6 @@ export interface DomainRecordsResponse {
   /** The DNS records for your domain. */
   records: Array<{ name: string; fullname: string; recordType: 'TXT' | 'MX' | 'CNAME'; ttl: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; selector?: string; priority?: string; value: string; status: DomainStatus; statusAt: string }>;
 }
-
-export type DomainStatus = 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
 
 /** A single item from DomainsResponse. */
 export interface DomainsResponseItem {
