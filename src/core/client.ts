@@ -44,6 +44,17 @@ function detectPlatform(): string {
   return 'Unknown';
 }
 
+// `Retry-After` may be a number of seconds or an HTTP-date (RFC 9110). Returns
+// the delay in milliseconds, or undefined when the header is absent/unparseable.
+function parseRetryAfter(value: string | null): number | undefined {
+  if (!value) return undefined;
+  const seconds = Number(value);
+  if (!Number.isNaN(seconds)) return Math.max(0, seconds * 1000);
+  const date = Date.parse(value);
+  if (!Number.isNaN(date)) return Math.max(0, date - Date.now());
+  return undefined;
+}
+
 function buildRetryConfig(retry: RetryStrategy | undefined, maxRetries: number) {
   if (retry === 'none') return { attempts: 0 };
 
@@ -52,19 +63,24 @@ function buildRetryConfig(retry: RetryStrategy | undefined, maxRetries: number) 
   return {
     attempts: maxRetries,
     delay: ({ response, attempt }: { response: Response | undefined; attempt: number }) => {
-      if (response?.status === 429) {
-        const retryAfter = response.headers.get('retry-after');
-        if (retryAfter) {
-          const seconds = Number(retryAfter);
-          if (!Number.isNaN(seconds)) return seconds * 1000;
-        }
-      }
+      // Honor a server-sent Retry-After (seconds or HTTP-date) on any response,
+      // not just 429 (e.g. 503 during maintenance).
+      const retryAfterMs = parseRetryAfter(response?.headers.get('retry-after') ?? null);
+      if (retryAfterMs !== undefined) return retryAfterMs;
       return Math.min(backoff.initialInterval * backoff.exponent ** attempt, backoff.maxInterval)
         * (0.75 + 0.25 * Math.random());
     },
-    when: ({ response, error }: { response: Response | undefined; error: unknown }) =>
-      (error as Error | null)?.name === 'TimeoutError' ||
-      (response != null && RETRYABLE_STATUS_CODES.has(response.status)),
+    when: ({ response, error }: { response: Response | undefined; error: unknown }) => {
+      // A server may force or suppress a retry via x-should-retry; obey it
+      // before falling back to the status-code policy.
+      const shouldRetry = response?.headers.get('x-should-retry');
+      if (shouldRetry === 'true') return true;
+      if (shouldRetry === 'false') return false;
+      return (
+        (error as Error | null)?.name === 'TimeoutError' ||
+        (response != null && RETRYABLE_STATUS_CODES.has(response.status))
+      );
+    },
   };
 }
 

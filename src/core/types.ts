@@ -120,9 +120,10 @@ export interface RequestOptions {
   /**
    * Idempotency key to deduplicate the request server-side. The SDK
    * auto-generates a UUID v4 for endpoints that support idempotency
-   * (currently `emails.send` and `emails.bulk.send`) when this option
-   * is not provided. Pass an explicit value to wire up your own retry
-   * key (e.g. for cross-process deduplication).
+   * (`emails.send`, `emails.bulk.send`, `messages.reply`, `messages.forward`,
+   * `inboxes.messages.send`) when this option is not provided. Pass an
+   * explicit value to wire up your own retry key (e.g. for cross-process
+   * deduplication).
    */
   idempotencyKey?: string;
 }
