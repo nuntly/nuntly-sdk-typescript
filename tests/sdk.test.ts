@@ -5,6 +5,8 @@ import type {
 	ReplyMessageRequest,
 } from "../src/index";
 import {
+	APIConnectionError,
+	APIConnectionTimeoutError,
 	BadRequestError,
 	createSafeNuntly,
 	NotFoundError,
@@ -49,6 +51,25 @@ function createClient(handler: (req: Request) => Response | Promise<Response>) {
 		baseUrl: "https://api.test.com",
 		fetch: mockFetch(handler) as typeof fetch,
 	});
+}
+
+// A fetch that resolves only after `delayMs`, but rejects immediately when the
+// request signal aborts. Lets us assert what timeout actually fires without
+// waiting on the real default.
+function delayedFetch(delayMs: number, makeResponse: () => Response) {
+	return ((_input: unknown, init?: RequestInit) =>
+		new Promise<Response>((resolve, reject) => {
+			const signal = init?.signal;
+			const timer = setTimeout(() => resolve(makeResponse()), delayMs);
+			const onAbort = () => {
+				clearTimeout(timer);
+				reject(new DOMException("This operation was aborted", "AbortError"));
+			};
+			if (signal) {
+				if (signal.aborted) return onAbort();
+				signal.addEventListener("abort", onAbort, { once: true });
+			}
+		})) as typeof fetch;
 }
 
 const emailPayload: CreateEmailRequest = {
@@ -556,6 +577,103 @@ describe("Abort signal", () => {
 
 		controller.abort();
 		expect(capturedSignal?.aborted).toBe(true);
+	});
+});
+
+// Guards the defaults a customer hit on an older release: a hardcoded 150ms
+// per-request timeout on send() and a non-overridable maxRetries of 0.
+describe("Default timeout and retries", () => {
+	it("send() does not impose a short per-request timeout", async () => {
+		// No client-level timeout -> default (60s). A ~200ms response must not
+		// abort, which it would under the old 150ms send() default.
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			fetch: delayedFetch(200, () =>
+				jsonResponse({ data: { id: "em_1", status: "queued" } }),
+			),
+		});
+
+		const email = await nuntly.emails.send(emailPayload);
+		expect(email.id).toBe("em_1");
+	});
+
+	it("honors a client-level timeout and exposes the abort cause", async () => {
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			timeout: 25,
+			retry: "none",
+			fetch: delayedFetch(200, () => jsonResponse({ data: {} })),
+		});
+
+		try {
+			await nuntly.emails.send(emailPayload);
+			throw new Error("expected a timeout");
+		} catch (e) {
+			expect(e).toBeInstanceOf(APIConnectionTimeoutError);
+			expect((e as APIConnectionTimeoutError).cause).toBeDefined();
+		}
+	});
+
+	it("retries send() at the client-configured maxRetries", async () => {
+		let attempt = 0;
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			maxRetries: 2,
+			retry: {
+				strategy: "backoff",
+				backoff: { initialInterval: 1, maxInterval: 1, exponent: 1 },
+			},
+			fetch: mockFetch(() => {
+				attempt++;
+				if (attempt < 3)
+					return jsonResponse({ message: "Internal error" }, 500);
+				return jsonResponse({ data: { id: "em_1", status: "queued" } });
+			}) as typeof fetch,
+		});
+
+		const email = await nuntly.emails.send(emailPayload);
+		expect(email.id).toBe("em_1");
+		expect(attempt).toBe(3);
+	});
+
+	it("surfaces a connection failure without masking its cause", async () => {
+		// A failed request (no response) must not be swallowed by an internal
+		// TypeError in the response handler; the original cause must survive.
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			retry: "none",
+			fetch: (() =>
+				Promise.reject(new TypeError("network down"))) as typeof fetch,
+		});
+
+		try {
+			await nuntly.emails.send(emailPayload);
+			throw new Error("expected a connection error");
+		} catch (e) {
+			expect(e).toBeInstanceOf(APIConnectionError);
+			expect((e as Error).message).not.toContain("response.headers");
+			expect((e as APIConnectionError).cause).toBeDefined();
+		}
+	});
+
+	it("does not retry send() when maxRetries is 0", async () => {
+		let attempt = 0;
+		const nuntly = new Nuntly({
+			apiKey: "test_key",
+			baseUrl: "https://api.test.com",
+			maxRetries: 0,
+			fetch: mockFetch(() => {
+				attempt++;
+				return jsonResponse({ message: "Internal error" }, 500);
+			}) as typeof fetch,
+		});
+
+		await expect(nuntly.emails.send(emailPayload)).rejects.toThrow();
+		expect(attempt).toBe(1);
 	});
 });
 
