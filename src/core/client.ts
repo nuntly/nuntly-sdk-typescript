@@ -210,7 +210,6 @@ export class NuntlyClient {
       method: args.method,
       body: args.body as never,
       params: args.query,
-      timeout: args.options?.timeout,
       headers: args.options?.headers,
       signal: args.options?.signal,
       onRequest: async (request: Request) => {
@@ -224,7 +223,11 @@ export class NuntlyClient {
         self.log.debug(`-> ${reqCtx.method} ${reqCtx.url}`);
         await self.hooks.onRequest?.(reqCtx);
       },
-      onResponse: async (response: Response) => {
+      onResponse: async (response: Response | undefined) => {
+        // up-fetch invokes onResponse even when the request failed before a
+        // response arrived (timeout, abort, connection error). Bail out so the
+        // real error surfaces through onError instead of a TypeError here.
+        if (!response) return;
         capturedResponse = response;
         const requestId = response.headers.get('x-request-id') ?? '';
         self.log.info(`<- ${response.status} ${args.method} ${resolvedPath}${requestId ? ` [${requestId}]` : ''}`);
@@ -260,6 +263,13 @@ export class NuntlyClient {
         });
       },
     };
+
+    // Only forward a per-request timeout when the caller set one. Passing
+    // `timeout: undefined` would override up-fetch's configured default and
+    // leave the request with no timeout at all.
+    if (args.options?.timeout !== undefined) {
+      opts.timeout = args.options.timeout;
+    }
 
     if (args.options?.maxRetries !== undefined) {
       opts.retry = { attempts: args.options.maxRetries };
