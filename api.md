@@ -479,7 +479,7 @@ Returns aggregated daily sending statistics for the current period.
 | ----- | ---- | ----------- |
 | `start` | `string` | The start date of the stats range |
 | `end` | `string` | The end date of the stats range |
-| `stats` | `Array<{ occurredOn: string; queued: number; scheduled: number; processed: number; sending: number; sent: number; delivered: number; deliveredDelayed: number; bounced: number; failed: number; rejected: number; canceled: number; complaintReceived: number; renderingFailed: number; opened: number; uniqueOpened: number; clicked: number; uniqueClicked: number }>` |  |
+| `stats` | `Array<{ occurredOn: string; queued: number; scheduled: number; processed: number; sending: number; sent: number; delivered: number; deliveryDelayed: number; bounced: number; failed: number; rejected: number; canceled: number; complaintReceived: number; renderingFailed: number; opened: number; uniqueOpened: number; clicked: number; uniqueClicked: number }>` |  |
 
 ## inboxes
 
