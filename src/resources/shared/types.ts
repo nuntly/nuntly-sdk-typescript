@@ -8,12 +8,15 @@ export interface BounceDetail {
   bouncedAt: string;
   feedbackId: string;
   reportingMta?: string;
+  remoteMtaIp?: string;
 }
 
 export interface ClickDetail {
   clickedAt: string;
   userAgent: string;
   link: string;
+  linkTags?: Record<string, Array<string>>;
+  isBotEvent?: 'Likely' | 'Unlikely';
 }
 
 export interface ComplaintDetail {
@@ -99,6 +102,7 @@ export interface InboxesResponseItem {
 export interface OpenDetail {
   openedAt: string;
   userAgent: string;
+  isBotEvent?: 'Likely' | 'Unlikely';
 }
 
 export interface RejectDetail {

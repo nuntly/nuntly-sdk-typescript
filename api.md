@@ -1087,6 +1087,8 @@ Register an endpoint to start receiving webhook events for your organization.
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
 | `status` | `'enabled' | 'disabled' | 'revoked'` | The status of the webhook. |
+| `disabledReason` | `'manual' | 'auto_consecutive_failures' | null` | The reason the webhook was disabled, or `null` if it is not disabled. |
+| `disabledAt` | `string | null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
 | `events` | `Array<EventType>` | The event types to subscribe to |
 | `signingSecret` | `string` | The signing secret of the webhook. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -1120,6 +1122,8 @@ Returns all registered webhook endpoints for the organization.
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
 | `status` | `'enabled' | 'disabled' | 'revoked'` | The status of the webhook. |
+| `disabledReason` | `'manual' | 'auto_consecutive_failures' | null` | The reason the webhook was disabled, or `null` if it is not disabled. |
+| `disabledAt` | `string | null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
 | `events` | `Array<EventType>` | The event types to subscribe to |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
@@ -1139,6 +1143,8 @@ Returns a webhook endpoint with its URL, subscribed events, and configuration.
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
 | `events` | `Array<EventType>` | The event types to subscribe to |
 | `status` | `'enabled' | 'disabled' | 'revoked'` | The status of the webhook. |
+| `disabledReason` | `'manual' | 'auto_consecutive_failures' | null` | The reason the webhook was disabled, or `null` if it is not disabled. |
+| `disabledAt` | `string | null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
 ### `webhooks.update(id: string, body: UpdateWebhookRequest, options?: RequestOptions)`
