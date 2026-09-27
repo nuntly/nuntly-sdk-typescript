@@ -27,6 +27,10 @@ export interface CreateWebhookResponse {
   endpointUrl: string;
   /** The status of the webhook. */
   status: 'enabled' | 'disabled' | 'revoked';
+  /** The reason the webhook was disabled, or `null` if it is not disabled. */
+  disabledReason: 'manual' | 'auto_consecutive_failures' | null;
+  /** The timestamp when the webhook was disabled, or `null` if it is not disabled. */
+  disabledAt: string | null;
   /** The event types to subscribe to */
   events: Array<EventType>;
   /** The signing secret of the webhook. */
@@ -71,6 +75,10 @@ export interface WebhookResponse {
   events: Array<EventType>;
   /** The status of the webhook. */
   status: 'enabled' | 'disabled' | 'revoked';
+  /** The reason the webhook was disabled, or `null` if it is not disabled. */
+  disabledReason: 'manual' | 'auto_consecutive_failures' | null;
+  /** The timestamp when the webhook was disabled, or `null` if it is not disabled. */
+  disabledAt: string | null;
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
 }
@@ -85,6 +93,10 @@ export interface WebhooksResponseItem {
   endpointUrl: string;
   /** The status of the webhook. */
   status: 'enabled' | 'disabled' | 'revoked';
+  /** The reason the webhook was disabled, or `null` if it is not disabled. */
+  disabledReason: 'manual' | 'auto_consecutive_failures' | null;
+  /** The timestamp when the webhook was disabled, or `null` if it is not disabled. */
+  disabledAt: string | null;
   /** The event types to subscribe to */
   events: Array<EventType>;
   /** Date at which the object was created (ISO 8601 format) */
