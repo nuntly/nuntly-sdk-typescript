@@ -108,6 +108,16 @@ function headersToRecord(h: Headers): Record<string, string> {
   return out;
 }
 
+// Repeat the key for array values (`format=html&format=text`): the API rejects a lone `format=html`.
+function serializeParams(params: Record<string, unknown>): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null) continue;
+    for (const item of Array.isArray(value) ? value : [value]) search.append(key, String(item));
+  }
+  return search.toString();
+}
+
 function resolvePath(template: string, pathParams?: Record<string, unknown>): string {
   if (!pathParams) return template;
   return template.replace(/\{(\w+)\}/g, (_, key) => {
@@ -184,6 +194,7 @@ export class NuntlyClient {
       baseUrl: self.baseUrl,
       timeout: self.timeout,
       headers,
+      serializeParams,
       retry: buildRetryConfig(options.retry, self.maxRetries),
       parseRejected: async (response: Response) => {
         let body: unknown;

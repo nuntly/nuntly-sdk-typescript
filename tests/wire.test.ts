@@ -189,6 +189,29 @@ describe("Wire: URL construction", () => {
 		await nuntly.emails.list({ limit: 5 });
 		expect(lastRequest!.url).toContain("limit=5");
 	});
+
+	it("repeats the key for array query params, including a single value", async () => {
+		const nuntly = createClient();
+		await nuntly.messages.content
+			.retrieve("msg_abc123", { format: ["html"] })
+			.catch(() => undefined);
+		expect(lastRequest!.url).toBe("/messages/msg_abc123/content?format=html");
+
+		await nuntly.messages.content
+			.retrieve("msg_abc123", { format: ["html", "text"] })
+			.catch(() => undefined);
+		expect(lastRequest!.url).toBe(
+			"/messages/msg_abc123/content?format=html&format=text",
+		);
+	});
+
+	it("omits undefined query params", async () => {
+		const nuntly = createClient();
+		await nuntly.threads
+			.retrieve("thr_abc123", { markRead: undefined })
+			.catch(() => undefined);
+		expect(lastRequest!.url).toBe("/threads/thr_abc123");
+	});
 });
 
 describe("Wire: Response handling", () => {

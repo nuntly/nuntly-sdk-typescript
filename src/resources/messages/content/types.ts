@@ -15,3 +15,8 @@ export interface MessageContentItem {
   /** When the URL expires. */
   expiresAt: string;
 }
+
+export interface MessageContentQuery {
+  /** Content formats to retrieve. Defaults to `html` only. */
+  format?: Array<'html' | 'text' | 'mime'>;
+}
