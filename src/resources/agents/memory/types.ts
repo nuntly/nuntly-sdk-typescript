@@ -17,6 +17,13 @@ export interface AgentMemory {
   summary: string | null;
 }
 
+export interface AgentMemoryQuery {
+  /** Scope memory to a specific inbox. */
+  inboxId?: string;
+  /** Scope memory to a specific thread. */
+  threadId?: string;
+}
+
 export interface AgentMemoryRequest {
   /** The inbox id to scope the memory to. */
   inboxId?: string;

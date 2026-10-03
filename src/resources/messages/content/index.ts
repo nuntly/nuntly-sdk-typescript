@@ -1,6 +1,6 @@
 import { Resource } from '../../../core/index.js';
 import type { APIPromise, RequestOptions } from '../../../core/index.js';
-import type { MessageContent } from '../../types.js';
+import type { MessageContent, MessageContentQuery } from '../../types.js';
 
 
 /**
@@ -13,13 +13,15 @@ export class MessagesContent extends Resource {
    *
    * GET /messages/{messageId}/content
    * @param messageId - string
+   * @param query - MessageContentQuery
    * @param options - RequestOptions
    * @returns APIPromise<MessageContent>
    */
-  retrieve(messageId: string, options?: RequestOptions): APIPromise<MessageContent> {
+  retrieve(messageId: string, query?: MessageContentQuery, options?: RequestOptions): APIPromise<MessageContent> {
     return this._http.get<{ data: MessageContent }>({
       path: '/messages/{messageId}/content',
       pathParams: { messageId },
+      query: query as unknown as Record<string, unknown>,
       options,
     }).map((r) => r.data);
   }

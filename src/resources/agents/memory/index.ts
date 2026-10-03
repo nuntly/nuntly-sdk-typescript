@@ -1,6 +1,6 @@
 import { Resource } from '../../../core/index.js';
 import type { APIPromise, RequestOptions } from '../../../core/index.js';
-import type { AgentMemory, AgentMemoryRequest } from '../../types.js';
+import type { AgentMemory, AgentMemoryQuery, AgentMemoryRequest } from '../../types.js';
 
 
 /**
@@ -13,13 +13,15 @@ export class AgentsMemory extends Resource {
    *
    * GET /agents/{agentId}/memory
    * @param agentId - string
+   * @param query - AgentMemoryQuery
    * @param options - RequestOptions
    * @returns APIPromise<AgentMemory>
    */
-  retrieve(agentId: string, options?: RequestOptions): APIPromise<AgentMemory> {
+  retrieve(agentId: string, query?: AgentMemoryQuery, options?: RequestOptions): APIPromise<AgentMemory> {
     return this._http.get<{ data: AgentMemory }>({
       path: '/agents/{agentId}/memory',
       pathParams: { agentId },
+      query: query as unknown as Record<string, unknown>,
       options,
     }).map((r) => r.data);
   }

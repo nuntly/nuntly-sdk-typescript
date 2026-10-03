@@ -1,7 +1,7 @@
 import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
 import type { APIPromise, RequestOptions } from '../../core/index.js';
-import type { IdResponse, ThreadResponse, UpdateThreadRequest } from '../types.js';
+import type { IdResponse, RetrieveThreadQuery, ThreadResponse, UpdateThreadRequest } from '../types.js';
 
 import { ThreadsMessages } from './messages/index.js';
 
@@ -21,13 +21,15 @@ export class Threads extends Resource {
    *
    * GET /threads/{threadId}
    * @param threadId - string
+   * @param query - RetrieveThreadQuery
    * @param options - RequestOptions
    * @returns APIPromise<ThreadResponse>
    */
-  retrieve(threadId: string, options?: RequestOptions): APIPromise<ThreadResponse> {
+  retrieve(threadId: string, query?: RetrieveThreadQuery, options?: RequestOptions): APIPromise<ThreadResponse> {
     return this._http.get<{ data: ThreadResponse }>({
       path: '/threads/{threadId}',
       pathParams: { threadId },
+      query: query as unknown as Record<string, unknown>,
       options,
     }).map((r) => r.data);
   }

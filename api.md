@@ -32,7 +32,7 @@ Complete reference for `@nuntly/sdk`.
 
 ## agents.memory
 
-### `agents.memory.retrieve(agentId: string, options?: RequestOptions)`
+### `agents.memory.retrieve(agentId: string, query?: AgentMemoryQuery, options?: RequestOptions)`
 
 Retrieve the memory for an AI agent.
 
@@ -802,7 +802,7 @@ Retrieve an attachment with a presigned download URL.
 
 ## messages.content
 
-### `messages.content.retrieve(messageId: string, options?: RequestOptions)`
+### `messages.content.retrieve(messageId: string, query?: MessageContentQuery, options?: RequestOptions)`
 
 Returns presigned URLs to download the HTML, plain-text, and raw MIME source of a received message.
 
@@ -988,7 +988,7 @@ Returns current period usage metrics (daily and monthly) for sending and receivi
 
 ## threads
 
-### `threads.retrieve(threadId: string, options?: RequestOptions)`
+### `threads.retrieve(threadId: string, query?: RetrieveThreadQuery, options?: RequestOptions)`
 
 Retrieve a thread. Pass ?markRead=true to automatically remove the unread label from all messages.
 
