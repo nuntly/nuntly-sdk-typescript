@@ -210,7 +210,7 @@ Add a domain for sending or receiving emails.
 | `receiving` | `boolean` | Whether receiving is enabled for the domain |
 | `sendingStatus` | `'enabled' | 'disabled' | 'paused'` | The sending status for the domain |
 | `sendingStatusAt` | `string` | The date of the latest sending status change |
-| `receivingStatus` | `DomainStatus` | The receiving status for the domain |
+| `receivingStatus` | `DomainReceivingStatus` | The receiving status for the domain |
 | `receivingStatusAt` | `string` | The date of the latest receiving status change |
 | `openTracking` | `boolean` | Emit an event for each recipient opens an email their email client |
 | `clickTracking` | `boolean` | Emit an event for each time the recipient clicks a link in the email |
@@ -245,7 +245,7 @@ Returns all domains with their verification and capability status.
 | `name` | `string` | The name of the domain to send e-mails' |
 | `status` | `DomainStatus` | The status for the domain |
 | `sendingStatus` | `'enabled' | 'disabled' | 'paused'` | The sending status for the domain |
-| `receivingStatus` | `DomainStatus` | The receiving status for the domain |
+| `receivingStatus` | `DomainReceivingStatus` | The receiving status for the domain |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `region` | `'eu-west-1'` | The region of the domain data |
 
@@ -270,7 +270,7 @@ Returns a domain with its DNS record configuration and current verification stat
 | `receiving` | `boolean` | Whether receiving is enabled for the domain |
 | `sendingStatus` | `'enabled' | 'disabled' | 'paused'` | The sending status for the domain |
 | `sendingStatusAt` | `string` | The date of the latest sending status change |
-| `receivingStatus` | `DomainStatus` | The receiving status for the domain |
+| `receivingStatus` | `DomainReceivingStatus` | The receiving status for the domain |
 | `receivingStatusAt` | `string` | The date of the latest receiving status change |
 | `openTracking` | `boolean` | Emit an event for each recipient opens an email their email client |
 | `clickTracking` | `boolean` | Emit an event for each time the recipient clicks a link in the email |

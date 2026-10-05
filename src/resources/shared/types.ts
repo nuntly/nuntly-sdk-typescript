@@ -46,6 +46,8 @@ export interface DeliveryDetail {
   processingTime?: number;
 }
 
+export type DomainReceivingStatus = 'disabled' | 'bootstrapping' | 'pending' | 'active' | 'failed';
+
 export type DomainStatus = 'bootstrapping' | 'pending' | 'success' | 'failed' | 'temporary_failure';
 
 export type EmailStatus = 'queued' | 'scheduled' | 'processed' | 'failed' | 'sending' | 'sent' | 'delivered' | 'bounced' | 'complained' | 'canceled' | 'rejected';
