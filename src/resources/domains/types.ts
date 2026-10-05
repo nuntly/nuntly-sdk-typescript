@@ -1,4 +1,4 @@
-import type { DomainStatus } from '../shared/types.js';
+import type { DomainReceivingStatus, DomainStatus } from '../shared/types.js';
 
 /**
  * @example
@@ -42,7 +42,7 @@ export interface DomainRecordsResponse {
   /** The date of the latest sending status change */
   sendingStatusAt: string;
   /** The receiving status for the domain */
-  receivingStatus: DomainStatus;
+  receivingStatus: DomainReceivingStatus;
   /** The date of the latest receiving status change */
   receivingStatusAt: string;
   /** Emit an event for each recipient opens an email their email client */
@@ -64,7 +64,7 @@ export interface DomainsResponseItem {
   /** The sending status for the domain */
   sendingStatus: 'enabled' | 'disabled' | 'paused';
   /** The receiving status for the domain */
-  receivingStatus: DomainStatus;
+  receivingStatus: DomainReceivingStatus;
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
   /** The region of the domain data */
