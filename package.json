@@ -1,6 +1,6 @@
 {
   "name": "@nuntly/sdk",
-  "version": "1.2.2",
+  "version": "2.0.0-beta.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -29,7 +29,7 @@
     "type": "git",
     "url": "git+https://github.com/nuntly/nuntly-sdk-typescript.git"
   },
-  "homepage": "https://nuntly.com",
+  "homepage": "https://github.com/nuntly/nuntly-sdk-typescript#readme",
   "bugs": {
     "url": "https://github.com/nuntly/nuntly-sdk-typescript/issues"
   },

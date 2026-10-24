@@ -41,7 +41,7 @@ export interface MessageRejectedEventData {
   inboxId: string;
   from: string;
   subject: string;
-  reason: 'inbox_storage_limit_exceeded' | 'message_too_large';
+  reason: 'inbox_storage_limit_exceeded' | 'message_too_large' | (string & {});
 }
 
 export interface MessageResponse {
@@ -70,7 +70,7 @@ export interface MessageResponse {
   /** The original date of the message. */
   receivedAt: string;
   /** The status of the message */
-  status: 'received' | 'sent' | 'discarded' | 'failed';
+  status: 'received' | 'sent' | 'discarded' | 'failed' | (string & {});
   /** The message labels. */
   labels: Array<string>;
   /** The number of attachments. */
@@ -131,7 +131,7 @@ export interface MessagesResponseItem {
   /** The original date of the message. */
   receivedAt: string;
   /** The status of the message */
-  status: 'received' | 'sent' | 'discarded' | 'failed';
+  status: 'received' | 'sent' | 'discarded' | 'failed' | (string & {});
   /** The message labels. */
   labels: Array<string>;
   /** The number of attachments. */

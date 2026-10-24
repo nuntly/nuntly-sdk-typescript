@@ -7,6 +7,12 @@ Complete reference for `@nuntly/sdk`.
 - [agents](#agents)
   - [agents.memory](#agentsmemory)
 - [apiKeys](#apikeys)
+- [broadcasts](#broadcasts)
+  - [broadcasts.recipients](#broadcastsrecipients)
+- [contactProperties](#contactproperties)
+- [contacts](#contacts)
+  - [contacts.segments](#contactssegments)
+  - [contacts.topics](#contactstopics)
 - [domains](#domains)
 - [emails](#emails)
   - [emails.bulk](#emailsbulk)
@@ -23,10 +29,18 @@ Complete reference for `@nuntly/sdk`.
   - [namespaces.inboxes](#namespacesinboxes)
 - [organizations](#organizations)
   - [organizations.usage](#organizationsusage)
+- [segments](#segments)
+  - [segments.members](#segmentsmembers)
+- [templates](#templates)
+  - [templates.versions](#templatesversions)
+  - [templates.versions.content](#templatesversionscontent)
 - [threads](#threads)
   - [threads.messages](#threadsmessages)
+- [topics](#topics)
+  - [topics.memberships](#topicsmemberships)
 - [webhooks](#webhooks)
   - [webhooks.events](#webhooksevents)
+  - [webhooks.events.deliveries](#webhookseventsdeliveries)
 
 ## agents
 
@@ -34,7 +48,7 @@ Complete reference for `@nuntly/sdk`.
 
 ### `agents.memory.retrieve(agentId: string, query?: AgentMemoryQuery, options?: RequestOptions)`
 
-Retrieve the memory for an AI agent.
+Retrieves the key-value memory and summary saved for an AI agent, at organization level or scoped to one inbox or thread via query parameters.
 
 - **HTTP**: `GET /agents/{agentId}/memory`
 - **Returns**: `AgentMemory`
@@ -43,18 +57,18 @@ Retrieve the memory for an AI agent.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `id` | `string` | The agent memory record id. |
-| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
-| `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `id` | `string | null` | The agent memory record id. |
+| `createdAt` | `string | null` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string | null` | Date at which the object was updated (ISO 8601 format) |
 | `agentId` | `string` | The agent identifier. |
 | `inboxId` | `string | null` | The inbox id. |
 | `threadId` | `string | null` | The thread id. |
-| `memory` | `Record<string, Record<string, unknown>>` | The agent memory data. |
+| `memory` | `Record<string, string | number | boolean | null | Array<string | number | boolean | null>>` | The agent memory data. |
 | `summary` | `string | null` | The conversation summary. |
 
 ### `agents.memory.upsert(agentId: string, body: AgentMemoryRequest, options?: RequestOptions)`
 
-Create or update the memory for an AI agent.
+Saves the key-value memory and optional summary of an AI agent, at organization level or scoped to a specific inbox or thread. Returns the saved memory.
 
 - **HTTP**: `PUT /agents/{agentId}/memory`
 - **Returns**: `AgentMemory`
@@ -63,8 +77,8 @@ Create or update the memory for an AI agent.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `inboxId?` | `string` | The inbox id to scope the memory to. |
-| `threadId?` | `string` | The thread id to scope the memory to. |
+| `inboxId?` | `string` | The id of an inbox in your organization. Scopes memory to that inbox. |
+| `threadId?` | `string` | The id of a thread in your organization. Scopes memory to that thread. |
 | `memory` | `Record<string, string | number | boolean | null | Array<string | number | boolean | null>>` | The agent memory key-value data. |
 | `summary?` | `string | null` | A human-readable conversation summary. |
 
@@ -72,20 +86,20 @@ Create or update the memory for an AI agent.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `id` | `string` | The agent memory record id. |
-| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
-| `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `id` | `string | null` | The agent memory record id. |
+| `createdAt` | `string | null` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string | null` | Date at which the object was updated (ISO 8601 format) |
 | `agentId` | `string` | The agent identifier. |
 | `inboxId` | `string | null` | The inbox id. |
 | `threadId` | `string | null` | The thread id. |
-| `memory` | `Record<string, Record<string, unknown>>` | The agent memory data. |
+| `memory` | `Record<string, string | number | boolean | null | Array<string | number | boolean | null>>` | The agent memory data. |
 | `summary` | `string | null` | The conversation summary. |
 
 ## apiKeys
 
 ### `apiKeys.create(body: CreateApiKeyRequest, options?: RequestOptions)`
 
-Generate a new API key. The key value is only returned once. Store it securely.
+Creates an API key with full access or send-only access, optionally limited to chosen domains. The secret key value is returned only in this response.
 
 - **HTTP**: `POST /api-keys`
 - **Returns**: `CreateApiKeyResponse`
@@ -111,7 +125,7 @@ Generate a new API key. The key value is only returned once. Store it securely.
 
 ### `apiKeys.delete(id: string, options?: RequestOptions)`
 
-Revoke an API key. Requests authenticating with this key will be rejected immediately.
+Permanently deletes an API key. Any request that authenticates with this key is rejected from then on. This cannot be undone.
 
 - **HTTP**: `DELETE /api-keys/{id}`
 - **Returns**: `DeleteApiKeyResponse`
@@ -124,7 +138,7 @@ Revoke an API key. Requests authenticating with this key will be rejected immedi
 
 ### `apiKeys.list(query?: CursorPageParams, options?: RequestOptions)`
 
-Returns all API keys for the organization. Key values are never included in list responses.
+Lists the API keys of your organization, newest first, with cursor pagination. Each key shows its name, status, creation date, and a short token hint.
 
 - **HTTP**: `GET /api-keys`
 - **Returns**: `CursorPage<ApiKeysResponseItem>`
@@ -142,7 +156,7 @@ Returns all API keys for the organization. Key values are never included in list
 
 ### `apiKeys.retrieve(id: string, options?: RequestOptions)`
 
-Returns API key metadata. The key value is never returned after creation.
+Retrieves an API key by id with its name, status, creation date, and a short token hint. The full secret key value is never returned after creation.
 
 - **HTTP**: `GET /api-keys/{id}`
 - **Returns**: `ApiKeyResponse`
@@ -159,7 +173,7 @@ Returns API key metadata. The key value is never returned after creation.
 
 ### `apiKeys.update(id: string, body: UpdateApiKeyRequest, options?: RequestOptions)`
 
-Update the key name, permissions, or restrict it to specific sending domains.
+Updates the name of an API key, enables or disables it, or changes its access level and domain restrictions. Returns the id of the updated key.
 
 - **HTTP**: `PATCH /api-keys/{id}`
 - **Returns**: `UpdateApiKeyResponse`
@@ -179,11 +193,470 @@ Update the key name, permissions, or restrict it to specific sending domains.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the api key |
 
+## broadcasts
+
+### `broadcasts.create(body: CreateBroadcastRequest, options?: RequestOptions)`
+
+Create a broadcast for your contacts.
+
+- **HTTP**: `POST /broadcasts`
+- **Returns**: `BroadcastResponse`
+
+**CreateBroadcastRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `templateId?` | `string` | The template to send. |
+| `from` | `string` | The sender address, on a verified domain. |
+| `name?` | `string` | An internal label, shown only to your team. |
+| `subject?` | `string` | The subject. Defaults to the template version’s subject. |
+| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `topicId?` | `string` | The topic to send to. |
+| `segmentId?` | `string` | The segment to send to. |
+| `variables?` | `Record<string, string | number | boolean>` | Variable values keyed by declared name. |
+
+**BroadcastResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the broadcast. |
+| `name?` | `string` | An internal label, shown only to your team. |
+| `templateId?` | `string` | The id of the template. |
+| `templateVersionId?` | `string` | The content version this broadcast sends. Frozen once queued. |
+| `domainId?` | `string` | The id of the sending domain. |
+| `topicId?` | `string` | The topic this broadcast targets. |
+| `segmentId?` | `string` | The segment this broadcast targets. |
+| `from` | `string` |  |
+| `subject?` | `string` | The subject, falling back to the template version’s subject. |
+| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
+| `statusAt` | `string` | Date at which the broadcast reached its current state. |
+| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more information about the status. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
+
+### `broadcasts.delete(broadcastId: string, options?: RequestOptions)`
+
+Delete a draft, scheduled, or failed broadcast.
+
+- **HTTP**: `DELETE /broadcasts/{broadcastId}`
+- **Returns**: `IdResponse`
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+### `broadcasts.list(query?: CursorPageParams, options?: RequestOptions)`
+
+List the organization broadcasts.
+
+- **HTTP**: `GET /broadcasts`
+- **Returns**: `CursorPage<BroadcastsResponseItem>`
+- **Paginated**: yes
+
+**BroadcastsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the broadcast. |
+| `name?` | `string` | An internal label, shown only to your team. |
+| `templateId?` | `string` | The id of the template. |
+| `templateVersionId?` | `string` | The content version this broadcast sends. Frozen once queued. |
+| `domainId?` | `string` | The id of the sending domain. |
+| `topicId?` | `string` | The topic this broadcast targets. |
+| `segmentId?` | `string` | The segment this broadcast targets. |
+| `from` | `string` |  |
+| `subject?` | `string` | The subject, falling back to the template version’s subject. |
+| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
+| `statusAt` | `string` | Date at which the broadcast reached its current state. |
+| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more information about the status. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
+
+### `broadcasts.retrieve(broadcastId: string, options?: RequestOptions)`
+
+Retrieve a broadcast and its status.
+
+- **HTTP**: `GET /broadcasts/{broadcastId}`
+- **Returns**: `BroadcastResponse`
+
+**BroadcastResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the broadcast. |
+| `name?` | `string` | An internal label, shown only to your team. |
+| `templateId?` | `string` | The id of the template. |
+| `templateVersionId?` | `string` | The content version this broadcast sends. Frozen once queued. |
+| `domainId?` | `string` | The id of the sending domain. |
+| `topicId?` | `string` | The topic this broadcast targets. |
+| `segmentId?` | `string` | The segment this broadcast targets. |
+| `from` | `string` |  |
+| `subject?` | `string` | The subject, falling back to the template version’s subject. |
+| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
+| `statusAt` | `string` | Date at which the broadcast reached its current state. |
+| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more information about the status. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
+
+### `broadcasts.send(broadcastId: string, body: SendBroadcastRequest, options?: RequestOptions)`
+
+Send a broadcast now or schedule it.
+
+- **HTTP**: `POST /broadcasts/{broadcastId}/send`
+- **Returns**: `SendBroadcastResponse`
+
+**SendBroadcastRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `scheduledAt?` | `string` | When to send. Omit to send immediately. |
+
+**SendBroadcastResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the broadcast. |
+| `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
+
+### `broadcasts.update(broadcastId: string, body: UpdateBroadcastRequest, options?: RequestOptions)`
+
+Edit a draft or scheduled broadcast.
+
+- **HTTP**: `PATCH /broadcasts/{broadcastId}`
+- **Returns**: `IdResponse`
+
+**UpdateBroadcastRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `templateId?` | `string | null` | Set to null to detach the template. |
+| `from?` | `string` | The sender address, on a verified domain. |
+| `name?` | `string | null` | Set to null to remove the name. |
+| `subject?` | `string | null` | Set to null to fall back to the template version’s subject. |
+| `replyTo?` | `Array<string> | string | null` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `topicId?` | `string | null` | Set to null to remove the topic. |
+| `segmentId?` | `string | null` | Set to null to remove the segment. |
+| `variables?` | `Record<string, string | number | boolean>` | Replaces the stored values. Send {} to clear them. |
+| `status?` | `BroadcastStatus` | Only draft is accepted. |
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+## broadcasts.recipients
+
+### `broadcasts.recipients.list(broadcastId: string, query?: CursorPageParams, options?: RequestOptions)`
+
+List the recipients of a broadcast.
+
+- **HTTP**: `GET /broadcasts/{broadcastId}/recipients`
+- **Returns**: `CursorPage<BroadcastRecipientsResponseItem>`
+- **Paginated**: yes
+
+**BroadcastRecipientsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the recipient record. |
+| `contactId` | `string | null` | The source contact, absent once deleted. |
+| `email` | `string` | The recipient address, kept until your retention window ends. |
+| `outcome` | `EmailStatus` | The current status of the recipient’s email. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+
+## contactProperties
+
+### `contactProperties.create(body: CreateContactPropertyRequest, options?: RequestOptions)`
+
+Create a contact property.
+
+- **HTTP**: `POST /contact-properties`
+- **Returns**: `ContactPropertyResponse`
+
+**CreateContactPropertyRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
+| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string | null` | An optional description of the property. |
+| `defaultValue?` | `string | number | null` | Applied to new contacts that omit this property. |
+
+**ContactPropertyResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact property. |
+| `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
+| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string | null` | An optional description of the property. |
+| `defaultValue?` | `string | number` |  |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `contactProperties.delete(contactPropertyId: string, options?: RequestOptions)`
+
+Delete a contact property.
+
+- **HTTP**: `DELETE /contact-properties/{contactPropertyId}`
+- **Returns**: `IdResponse`
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+### `contactProperties.list(query?: CursorPageParams, options?: RequestOptions)`
+
+List the organization contact properties.
+
+- **HTTP**: `GET /contact-properties`
+- **Returns**: `CursorPage<ContactPropertiesResponseItem>`
+- **Paginated**: yes
+
+**ContactPropertiesResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact property. |
+| `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
+| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string | null` | An optional description of the property. |
+| `defaultValue?` | `string | number` |  |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `contactProperties.retrieve(contactPropertyId: string, options?: RequestOptions)`
+
+Retrieve one contact property.
+
+- **HTTP**: `GET /contact-properties/{contactPropertyId}`
+- **Returns**: `ContactPropertyResponse`
+
+**ContactPropertyResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact property. |
+| `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
+| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string | null` | An optional description of the property. |
+| `defaultValue?` | `string | number` |  |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `contactProperties.update(contactPropertyId: string, body: UpdateContactPropertyRequest, options?: RequestOptions)`
+
+Update a contact property.
+
+- **HTTP**: `PATCH /contact-properties/{contactPropertyId}`
+- **Returns**: `IdResponse`
+
+**UpdateContactPropertyRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `description?` | `string | null` | An optional description of the property. |
+| `defaultValue?` | `string | number | null` |  |
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+## contacts
+
+### `contacts.create(body: CreateContactRequest, options?: RequestOptions)`
+
+Create a contact.
+
+- **HTTP**: `POST /contacts`
+- **Returns**: `ContactResponse`
+
+**CreateContactRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `email` | `string` | The contact email address. Stored lowercased and trimmed. |
+| `properties?` | `Record<string, string | number | null>` | Contact properties keyed by name. A null value means not supplied. |
+
+**ContactResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact. |
+| `email` | `string` | The contact email address. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `properties?` | `Record<string, string | number | null>` | The contact's properties, keyed by property name. |
+
+### `contacts.delete(contactId: string, options?: RequestOptions)`
+
+Delete a contact.
+
+- **HTTP**: `DELETE /contacts/{contactId}`
+- **Returns**: `IdResponse`
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+### `contacts.list(query?: CursorPageParams, options?: RequestOptions)`
+
+List the organization contacts.
+
+- **HTTP**: `GET /contacts`
+- **Returns**: `CursorPage<ContactsResponseItem>`
+- **Paginated**: yes
+
+**ContactsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact. |
+| `email` | `string` | The contact email address. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `contacts.retrieve(contactId: string, options?: RequestOptions)`
+
+Retrieve one contact.
+
+- **HTTP**: `GET /contacts/{contactId}`
+- **Returns**: `ContactResponse`
+
+**ContactResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact. |
+| `email` | `string` | The contact email address. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `properties?` | `Record<string, string | number | null>` | The contact's properties, keyed by property name. |
+
+### `contacts.update(contactId: string, body: UpdateContactRequest, options?: RequestOptions)`
+
+Update a contact's properties.
+
+- **HTTP**: `PATCH /contacts/{contactId}`
+- **Returns**: `IdResponse`
+
+**UpdateContactRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `email?` | `string` | The address cannot be changed. |
+| `properties?` | `Record<string, string | number | null>` | Contact properties keyed by name, matched exactly. A null value removes the property. |
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+## contacts.segments
+
+### `contacts.segments.add(contactId: string, segmentId: string, options?: RequestOptions)`
+
+Add a contact to a segment. Idempotent.
+
+- **HTTP**: `POST /contacts/{contactId}/segments/{segmentId}`
+- **Returns**: `ContactSegmentMembershipResponse`
+
+**ContactSegmentMembershipResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `contactId` | `string` | The id of the contact. |
+| `segmentId` | `string` | The id of the segment. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+
+### `contacts.segments.list(contactId: string, options?: RequestOptions)`
+
+List a contact's segments.
+
+- **HTTP**: `GET /contacts/{contactId}/segments`
+- **Returns**: `ContactSegmentsResponse`
+
+### `contacts.segments.remove(contactId: string, segmentId: string, options?: RequestOptions)`
+
+Remove a contact from a segment.
+
+- **HTTP**: `DELETE /contacts/{contactId}/segments/{segmentId}`
+- **Returns**: `ContactSegmentMembershipIdResponse`
+
+**ContactSegmentMembershipIdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the contact removed from the segment. |
+| `segmentId` | `string` | The id of the segment the contact was removed from. The segment itself is not deleted. |
+
+### `contacts.segments.retrieve(contactId: string, segmentId: string, options?: RequestOptions)`
+
+Check if a contact is in a segment.
+
+- **HTTP**: `GET /contacts/{contactId}/segments/{segmentId}`
+- **Returns**: `ContactSegmentMembershipResponse`
+
+**ContactSegmentMembershipResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `contactId` | `string` | The id of the contact. |
+| `segmentId` | `string` | The id of the segment. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+
+## contacts.topics
+
+### `contacts.topics.list(contactId: string, options?: RequestOptions)`
+
+List a contact's subscription state per topic.
+
+- **HTTP**: `GET /contacts/{contactId}/topics`
+- **Returns**: `ContactTopicMembershipsResponse`
+
+### `contacts.topics.update(contactId: string, topicId: string, body: SetContactTopicMembershipRequest, options?: RequestOptions)`
+
+Subscribe or unsubscribe a contact from a topic.
+
+- **HTTP**: `PUT /contacts/{contactId}/topics/{topicId}`
+- **Returns**: `SetContactTopicMembershipResponse`
+
+**SetContactTopicMembershipRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `state` | `'subscribed' | 'unsubscribed'` | The subscribe/unsubscribe state. |
+
+**SetContactTopicMembershipResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `contactId` | `string` | The id of the contact. |
+| `topicId` | `string` | The id of the topic. |
+| `state` | `'subscribed' | 'unsubscribed'` | The subscribe/unsubscribe state. |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
 ## domains
 
 ### `domains.create(body: CreateDomainRequest, options?: RequestOptions)`
 
-Add a domain for sending or receiving emails.
+Adds a domain for sending, receiving, or both, and returns the DNS records to publish. Verification starts automatically and the plan domain limit applies.
 
 - **HTTP**: `POST /domains`
 - **Returns**: `DomainRecordsResponse`
@@ -208,7 +681,7 @@ Add a domain for sending or receiving emails.
 | `statusAt` | `string` | The date of the lastest verification of this record |
 | `sending` | `boolean` | Whether sending is enabled for the domain |
 | `receiving` | `boolean` | Whether receiving is enabled for the domain |
-| `sendingStatus` | `'enabled' | 'disabled' | 'paused'` | The sending status for the domain |
+| `sendingStatus` | `DomainSendingStatus` | The sending status for the domain |
 | `sendingStatusAt` | `string` | The date of the latest sending status change |
 | `receivingStatus` | `DomainReceivingStatus` | The receiving status for the domain |
 | `receivingStatusAt` | `string` | The date of the latest receiving status change |
@@ -231,7 +704,7 @@ Permanently deletes a domain along with its inboxes, received messages, attachme
 
 ### `domains.list(query?: CursorPageParams, options?: RequestOptions)`
 
-Returns all domains with their verification and capability status.
+Lists the domains of your organization, newest first, with cursor pagination. Each domain shows its verification status and sending and receiving status.
 
 - **HTTP**: `GET /domains`
 - **Returns**: `CursorPage<DomainsResponseItem>`
@@ -244,14 +717,14 @@ Returns all domains with their verification and capability status.
 | `id` | `string` | The id of the domain |
 | `name` | `string` | The name of the domain to send e-mails' |
 | `status` | `DomainStatus` | The status for the domain |
-| `sendingStatus` | `'enabled' | 'disabled' | 'paused'` | The sending status for the domain |
+| `sendingStatus` | `DomainSendingStatus` | The sending status for the domain |
 | `receivingStatus` | `DomainReceivingStatus` | The receiving status for the domain |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `region` | `'eu-west-1'` | The region of the domain data |
 
 ### `domains.retrieve(id: string, options?: RequestOptions)`
 
-Returns a domain with its DNS record configuration and current verification status for each record.
+Retrieves a domain with its capabilities, tracking settings, statuses, and the DNS records to publish, each with its own verification status.
 
 - **HTTP**: `GET /domains/{id}`
 - **Returns**: `DomainRecordsResponse`
@@ -268,7 +741,7 @@ Returns a domain with its DNS record configuration and current verification stat
 | `statusAt` | `string` | The date of the lastest verification of this record |
 | `sending` | `boolean` | Whether sending is enabled for the domain |
 | `receiving` | `boolean` | Whether receiving is enabled for the domain |
-| `sendingStatus` | `'enabled' | 'disabled' | 'paused'` | The sending status for the domain |
+| `sendingStatus` | `DomainSendingStatus` | The sending status for the domain |
 | `sendingStatusAt` | `string` | The date of the latest sending status change |
 | `receivingStatus` | `DomainReceivingStatus` | The receiving status for the domain |
 | `receivingStatusAt` | `string` | The date of the latest receiving status change |
@@ -278,7 +751,7 @@ Returns a domain with its DNS record configuration and current verification stat
 
 ### `domains.update(id: string, body: UpdateDomainRequest, options?: RequestOptions)`
 
-Toggle sending, receiving, open tracking, or click tracking capabilities for a domain.
+Turns sending, receiving, open tracking, or click tracking on or off for a domain. Enabling a capability adds its DNS records and restarts verification.
 
 - **HTTP**: `PATCH /domains/{id}`
 - **Returns**: `UpdateDomainResponse`
@@ -304,7 +777,7 @@ Toggle sending, receiving, open tracking, or click tracking capabilities for a d
 
 ### `emails.cancel(id: string, options?: RequestOptions)`
 
-Cancel a scheduled email before delivery. Only emails with `scheduled` status can be cancelled.
+Cancels a scheduled email before it is sent and returns its id with status canceled. Only scheduled emails sent outside a bulk request qualify.
 
 - **HTTP**: `DELETE /emails/{id}`
 - **Returns**: `DeleteEmailResponse`
@@ -318,7 +791,7 @@ Cancel a scheduled email before delivery. Only emails with `scheduled` status ca
 
 ### `emails.list(query?: CursorPageParams, options?: RequestOptions)`
 
-Returns sent emails ordered by submission date, newest first.
+Lists your emails newest first with cursor pagination, up to 30 per page. Each item has its sender, recipients, subject, status and submission date.
 
 - **HTTP**: `GET /emails`
 - **Returns**: `CursorPage<EmailsResponseItem>`
@@ -338,7 +811,7 @@ Returns sent emails ordered by submission date, newest first.
 
 ### `emails.retrieve(id: string, options?: RequestOptions)`
 
-Returns an email with its current delivery status and metadata.
+Returns a single email by id with its delivery status, status reason, recipients, subject, headers, tags, attachment metadata and schedule.
 
 - **HTTP**: `GET /emails/{id}`
 - **Returns**: `EmailResponse`
@@ -400,9 +873,9 @@ Send transactional emails through Nuntly platform. It supports HTML and plain-te
 
 ## emails.bulk
 
-### `emails.bulk.list(bulkId: string, options?: RequestOptions)`
+### `emails.bulk.retrieve(bulkId: string, options?: RequestOptions)`
 
-Returns the emails submitted in a bulk request.
+Returns the emails created by a bulk request, with the id and current status of each one, looked up by the bulk id returned when it was sent.
 
 - **HTTP**: `GET /emails/bulk/{bulkId}`
 - **Returns**: `BulkEmailsResponse`
@@ -416,7 +889,7 @@ Returns the emails submitted in a bulk request.
 
 ### `emails.bulk.send(body: CreateBulkEmailsRequest, options?: RequestOptions)`
 
-Send up to 20 emails in a single request. Use `fallback` to set default values shared across all messages.
+Queues 1 to 20 emails in one request with optional shared fallback values, and returns a bulk id plus the id and status of each email. No scheduling.
 
 - **HTTP**: `POST /emails/bulk`
 - **Returns**: `CreateBulkEmailsResponse`
@@ -439,7 +912,7 @@ Send up to 20 emails in a single request. Use `fallback` to set default values s
 
 ### `emails.content.retrieve(id: string, options?: RequestOptions)`
 
-Returns presigned URLs to download the HTML, plain-text, and raw MIME source of a sent email.
+Returns download links, valid for 2 minutes, for the HTML, plain-text and raw MIME versions of an email, plus its stored subject and body templates.
 
 - **HTTP**: `GET /emails/{id}/content`
 - **Returns**: `EmailContentResponse`
@@ -459,7 +932,7 @@ Returns presigned URLs to download the HTML, plain-text, and raw MIME source of 
 
 ### `emails.events.list(id: string, options?: RequestOptions)`
 
-Returns the delivery event history for an email (sent, delivered, opened, bounced, etc.).
+Returns the full event history of an email, newest first, such as queued, sent, delivered, opened, clicked or bounced. The list is not paginated.
 
 - **HTTP**: `GET /emails/{id}/events`
 - **Returns**: `EmailEventsResponse`
@@ -468,7 +941,7 @@ Returns the delivery event history for an email (sent, delivered, opened, bounce
 
 ### `emails.stats.retrieve(options?: RequestOptions)`
 
-Returns aggregated daily sending statistics for the current period.
+Returns daily email counts for the last 30 days and today, per status and engagement type (sent, delivered, bounced, opened, clicked and more).
 
 - **HTTP**: `GET /emails/stats`
 - **Returns**: `EmailsStatsResponse`
@@ -485,7 +958,7 @@ Returns aggregated daily sending statistics for the current period.
 
 ### `inboxes.create(body: CreateInboxRequest, options?: RequestOptions)`
 
-Create a new inbox on a verified domain.
+Creates an inbox address on a verified domain with receiving active, or on your provided domain if none is given. Can assign a namespace and agent id.
 
 - **HTTP**: `POST /inboxes`
 - **Returns**: `InboxResponse`
@@ -517,7 +990,7 @@ Create a new inbox on a verified domain.
 
 ### `inboxes.delete(inboxId: string, options?: RequestOptions)`
 
-Soft-delete an inbox.
+Deletes an inbox so it no longer appears in lists and stops matching incoming mail. The default catch-all inbox of a domain cannot be deleted.
 
 - **HTTP**: `DELETE /inboxes/{inboxId}`
 - **Returns**: `IdResponse`
@@ -530,7 +1003,7 @@ Soft-delete an inbox.
 
 ### `inboxes.list(query?: InboxesQuery, options?: RequestOptions)`
 
-List all inboxes.
+Lists the active inboxes of your organization, newest first, with cursor pagination. Optionally filter the results to a single namespace.
 
 - **HTTP**: `GET /inboxes`
 - **Returns**: `CursorPage<InboxesResponseItem>`
@@ -553,7 +1026,7 @@ List all inboxes.
 
 ### `inboxes.retrieve(inboxId: string, options?: RequestOptions)`
 
-Retrieve an inbox.
+Retrieves an inbox by id, including its address, domain, display name, namespace, and assigned agent id. Deleted inboxes return a not found error.
 
 - **HTTP**: `GET /inboxes/{inboxId}`
 - **Returns**: `InboxResponse`
@@ -575,7 +1048,7 @@ Retrieve an inbox.
 
 ### `inboxes.update(inboxId: string, body: UpdateInboxRequest, options?: RequestOptions)`
 
-Update an inbox.
+Updates the display name of an inbox, used as the sender name on messages it sends. Set the name to null to clear it. Returns the inbox id.
 
 - **HTTP**: `PATCH /inboxes/{inboxId}`
 - **Returns**: `IdResponse`
@@ -596,7 +1069,7 @@ Update an inbox.
 
 ### `inboxes.messages.send(inboxId: string, body: SendMessageRequest, options?: RequestOptions)`
 
-Send a new message from an inbox.
+Sends a new email from an inbox to one or more recipients. The message is queued for delivery and the response returns its id, thread id, and Message-ID.
 
 - **HTTP**: `POST /inboxes/{inboxId}/messages`
 - **Returns**: `SendMessageResponse`
@@ -625,7 +1098,7 @@ Send a new message from an inbox.
 
 ### `inboxes.threads.list(inboxId: string, query?: ThreadsQuery, options?: RequestOptions)`
 
-List threads in an inbox.
+Lists the threads in an inbox, most recently active first, with cursor pagination. Filter by labels; spam and trash threads are excluded by default.
 
 - **HTTP**: `GET /inboxes/{inboxId}/threads`
 - **Returns**: `CursorPage<ThreadsResponseItem>`
@@ -651,7 +1124,7 @@ List threads in an inbox.
 
 ### `messages.forward(messageId: string, body: ForwardMessageRequest, options?: RequestOptions)`
 
-Forward a message to new recipients.
+Sends a message with a Fwd: subject from the inbox of the original message to one or more new recipients, in a new thread, with an optional text note.
 
 - **HTTP**: `POST /messages/{messageId}/forward`
 - **Returns**: `SendMessageResponse`
@@ -674,7 +1147,7 @@ Forward a message to new recipients.
 
 ### `messages.list(query?: MessagesQuery, options?: RequestOptions)`
 
-List all received messages across inboxes.
+Lists messages newest first, with cursor pagination and optional filters by domain and sender. Each item includes its labels, status and attachment count.
 
 - **HTTP**: `GET /messages`
 - **Returns**: `CursorPage<MessagesResponseItem>`
@@ -702,7 +1175,7 @@ List all received messages across inboxes.
 
 ### `messages.reply(messageId: string, body: ReplyMessageRequest, options?: RequestOptions)`
 
-Reply to a message. Set replyAll to true to reply to all recipients.
+Replies from the inbox that holds the message, in the same thread. Set replyAll to true to also copy the other recipients. The send is queued.
 
 - **HTTP**: `POST /messages/{messageId}/reply`
 - **Returns**: `SendMessageResponse`
@@ -726,7 +1199,7 @@ Reply to a message. Set replyAll to true to reply to all recipients.
 
 ### `messages.retrieve(messageId: string, options?: RequestOptions)`
 
-Retrieve a single message with inbox enrichment.
+Retrieves a received or sent message by id, including its sender, recipients, subject, labels, status, attachment count and raw headers.
 
 - **HTTP**: `GET /messages/{messageId}`
 - **Returns**: `MessageResponse`
@@ -754,7 +1227,7 @@ Retrieve a single message with inbox enrichment.
 
 ### `messages.update(messageId: string, body: UpdateMessageRequest, options?: RequestOptions)`
 
-Update message labels. Only available for messages in user-created inboxes.
+Adds or removes labels on a message. Only messages in user-created inboxes accept labels, and a message can hold at most 10 labels.
 
 - **HTTP**: `PATCH /messages/{messageId}`
 - **Returns**: `IdResponse`
@@ -776,14 +1249,14 @@ Update message labels. Only available for messages in user-created inboxes.
 
 ### `messages.attachments.list(messageId: string, options?: RequestOptions)`
 
-List all attachments for a message.
+Lists the attachments of a message with their filename, content type, size, disposition and content id. Download links are not included.
 
 - **HTTP**: `GET /messages/{messageId}/attachments`
 - **Returns**: `AttachmentsResponse`
 
 ### `messages.attachments.retrieve(messageId: string, attachmentId: string, options?: RequestOptions)`
 
-Retrieve an attachment with a presigned download URL.
+Retrieves the metadata of an attachment and a temporary download URL that expires after 15 minutes. Use it to fetch the attachment file itself.
 
 - **HTTP**: `GET /messages/{messageId}/attachments/{attachmentId}`
 - **Returns**: `AttachmentResponse`
@@ -804,7 +1277,7 @@ Retrieve an attachment with a presigned download URL.
 
 ### `messages.content.retrieve(messageId: string, query?: MessageContentQuery, options?: RequestOptions)`
 
-Returns presigned URLs to download the HTML, plain-text, and raw MIME source of a received message.
+Returns temporary download URLs, valid for 2 minutes, for the HTML, plain-text or raw MIME content of a message. Only HTML is returned by default.
 
 - **HTTP**: `GET /messages/{messageId}/content`
 - **Returns**: `MessageContent`
@@ -821,7 +1294,7 @@ Returns presigned URLs to download the HTML, plain-text, and raw MIME source of 
 
 ### `namespaces.create(body: CreateNamespaceRequest, options?: RequestOptions)`
 
-Create a new namespace.
+Creates a namespace to group inboxes, with a display name and an optional external id that maps it to a customer or tenant in your own system.
 
 - **HTTP**: `POST /namespaces`
 - **Returns**: `NamespaceResponse`
@@ -845,7 +1318,7 @@ Create a new namespace.
 
 ### `namespaces.delete(namespaceId: string, options?: RequestOptions)`
 
-Soft-delete a namespace. Rejects if it has active inboxes.
+Deletes a namespace by id. The request is rejected with a validation error while the namespace still has active inboxes, so delete them first.
 
 - **HTTP**: `DELETE /namespaces/{namespaceId}`
 - **Returns**: `IdResponse`
@@ -858,7 +1331,7 @@ Soft-delete a namespace. Rejects if it has active inboxes.
 
 ### `namespaces.list(query?: NamespacesQuery, options?: RequestOptions)`
 
-List all namespaces.
+Lists the namespaces of your organization, newest first, with cursor pagination. Each item includes the name and the optional external id.
 
 - **HTTP**: `GET /namespaces`
 - **Returns**: `CursorPage<NamespacesResponseItem>`
@@ -876,7 +1349,7 @@ List all namespaces.
 
 ### `namespaces.retrieve(namespaceId: string, options?: RequestOptions)`
 
-Retrieve a namespace with inbox stats.
+Retrieves a namespace by id with its name, its optional external id, and inbox counts, including how many of its inboxes are currently active.
 
 - **HTTP**: `GET /namespaces/{namespaceId}`
 - **Returns**: `NamespaceDetail`
@@ -895,7 +1368,7 @@ Retrieve a namespace with inbox stats.
 
 ### `namespaces.update(namespaceId: string, body: UpdateNamespaceRequest, options?: RequestOptions)`
 
-Update a namespace.
+Updates the display name or external id of a namespace. Set the external id to null to clear it. Returns the id of the updated namespace.
 
 - **HTTP**: `PATCH /namespaces/{namespaceId}`
 - **Returns**: `IdResponse`
@@ -917,7 +1390,7 @@ Update a namespace.
 
 ### `namespaces.inboxes.list(namespaceId: string, query?: NamespaceInboxesQuery, options?: RequestOptions)`
 
-List inboxes in a namespace.
+Lists the active inboxes assigned to a namespace, newest first, with cursor pagination. Returns the same inbox objects as the inbox list.
 
 - **HTTP**: `GET /namespaces/{namespaceId}/inboxes`
 - **Returns**: `CursorPage<InboxesResponseItem>`
@@ -942,7 +1415,7 @@ List inboxes in a namespace.
 
 ### `organizations.list(query?: CursorPageParams, options?: RequestOptions)`
 
-Returns all organizations the authenticated user belongs to.
+Lists the organization that the API key belongs to, with its id, name, and status. The result is paginated with a cursor like other list endpoints.
 
 - **HTTP**: `GET /organizations`
 - **Returns**: `CursorPage<OrganizationsResponseItem>`
@@ -958,7 +1431,7 @@ Returns all organizations the authenticated user belongs to.
 
 ### `organizations.retrieve(id: string, options?: RequestOptions)`
 
-Returns the organization's profile, plan, region, and account status.
+Retrieves the organization that the API key belongs to by id, returning its name and its status (enabled or disabled).
 
 - **HTTP**: `GET /organizations/{id}`
 - **Returns**: `OrganizationResponse`
@@ -975,7 +1448,7 @@ Returns the organization's profile, plan, region, and account status.
 
 ### `organizations.usage.retrieve(id: string, options?: RequestOptions)`
 
-Returns current period usage metrics (daily and monthly) for sending and receiving, against your plan limits.
+Returns the daily and monthly email usage of the organization, with each limit, its reset time, and a breakdown by channel.
 
 - **HTTP**: `GET /organizations/{id}/usage`
 - **Returns**: `OrganizationUsageResponse`
@@ -984,13 +1457,313 @@ Returns current period usage metrics (daily and monthly) for sending and receivi
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `transactional` | `{ limits: { daily: number; monthly: number }; usage: { daily: number; monthly: number }; sending: { daily: number; monthly: number }; receiving: { daily: number; monthly: number } }` |  |
+| `email` | `{ daily: { used: number; limit: number | null; breakdown: { transactional: { sent: number; received: number }; broadcast: { sent: number } }; resetsAt: string }; monthly: { used: number; limit: number | null; breakdown: { transactional: { sent: number; received: number }; broadcast: { sent: number } }; resetsAt: string | null } }` |  |
+
+## segments
+
+### `segments.create(body: CreateSegmentRequest, options?: RequestOptions)`
+
+Create an organization-level static segment.
+
+- **HTTP**: `POST /segments`
+- **Returns**: `SegmentResponse`
+
+**CreateSegmentRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name` | `string` | A name for the segment, shown to your team. Stored lowercased and trimmed. |
+
+**SegmentResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the segment. |
+| `name` | `string` | A name for the segment, shown to your team. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `segments.delete(segmentId: string, options?: RequestOptions)`
+
+Delete a segment.
+
+- **HTTP**: `DELETE /segments/{segmentId}`
+- **Returns**: `IdResponse`
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+### `segments.list(query?: CursorPageParams, options?: RequestOptions)`
+
+List the organization segments.
+
+- **HTTP**: `GET /segments`
+- **Returns**: `CursorPage<SegmentsResponseItem>`
+- **Paginated**: yes
+
+**SegmentsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the segment. |
+| `name` | `string` | A name for the segment, shown to your team. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `segments.retrieve(segmentId: string, options?: RequestOptions)`
+
+Retrieve one segment.
+
+- **HTTP**: `GET /segments/{segmentId}`
+- **Returns**: `SegmentResponse`
+
+**SegmentResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the segment. |
+| `name` | `string` | A name for the segment, shown to your team. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `segments.update(segmentId: string, body: UpdateSegmentRequest, options?: RequestOptions)`
+
+Rename a segment.
+
+- **HTTP**: `PATCH /segments/{segmentId}`
+- **Returns**: `IdResponse`
+
+**UpdateSegmentRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name` | `string` | A name for the segment, shown to your team. Stored lowercased and trimmed. |
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+## segments.members
+
+### `segments.members.list(segmentId: string, query?: CursorPageParams, options?: RequestOptions)`
+
+List the members of a segment.
+
+- **HTTP**: `GET /segments/{segmentId}/members`
+- **Returns**: `CursorPage<SegmentMembersResponseItem>`
+- **Paginated**: yes
+
+**SegmentMembersResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `contactId` | `string` | The id of the contact. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+
+## templates
+
+### `templates.create(body: CreateTemplateRequest, options?: RequestOptions)`
+
+Create a template.
+
+- **HTTP**: `POST /templates`
+- **Returns**: `TemplateResponse`
+
+**CreateTemplateRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name` | `string` | A name for the template, shown only to your team. |
+
+**TemplateResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the template. |
+| `name` | `string` | A name for the template, shown only to your team. |
+| `status` | `'draft' | 'published'` | The lifecycle state of the template. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `templates.delete(templateId: string, options?: RequestOptions)`
+
+Delete a template and its versions.
+
+- **HTTP**: `DELETE /templates/{templateId}`
+- **Returns**: `IdResponse`
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+### `templates.list(query?: CursorPageParams, options?: RequestOptions)`
+
+List the organization templates.
+
+- **HTTP**: `GET /templates`
+- **Returns**: `CursorPage<TemplatesResponseItem>`
+- **Paginated**: yes
+
+**TemplatesResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the template. |
+| `name` | `string` | A name for the template, shown only to your team. |
+| `status` | `'draft' | 'published'` | The lifecycle state of the template. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `templates.retrieve(templateId: string, options?: RequestOptions)`
+
+Retrieve one template.
+
+- **HTTP**: `GET /templates/{templateId}`
+- **Returns**: `TemplateResponse`
+
+**TemplateResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the template. |
+| `name` | `string` | A name for the template, shown only to your team. |
+| `status` | `'draft' | 'published'` | The lifecycle state of the template. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `templates.update(templateId: string, body: UpdateTemplateRequest, options?: RequestOptions)`
+
+Rename a template.
+
+- **HTTP**: `PATCH /templates/{templateId}`
+- **Returns**: `IdResponse`
+
+**UpdateTemplateRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name?` | `string` | A name for the template, shown only to your team. |
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+## templates.versions
+
+### `templates.versions.create(templateId: string, body: CreateTemplateVersionRequest, options?: RequestOptions)`
+
+Create a draft version of a template.
+
+- **HTTP**: `POST /templates/{templateId}/versions`
+- **Returns**: `TemplateVersionResponse`
+
+**CreateTemplateVersionRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `subject` | `string` |  |
+| `html` | `string` |  |
+| `text?` | `string` | The plain-text body. |
+| `variables?` | `Array<VariableDeclaration>` | Variables the content may reference, at most 20. Immutable once created. |
+
+**TemplateVersionResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the content version. |
+| `templateId` | `string` | The id of the template. |
+| `status` | `'draft' | 'active'` | The lifecycle state of the content version. |
+| `subject` | `string` |  |
+| `publishedAt?` | `string` | Date at which this version was published. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `variables?` | `Array<VariableDeclaration>` | The declared variables. |
+
+### `templates.versions.list(templateId: string, query?: CursorPageParams, options?: RequestOptions)`
+
+List the versions of a template.
+
+- **HTTP**: `GET /templates/{templateId}/versions`
+- **Returns**: `CursorPage<TemplateVersionsResponseItem>`
+- **Paginated**: yes
+
+**TemplateVersionsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the content version. |
+| `templateId` | `string` | The id of the template. |
+| `status` | `'draft' | 'active'` | The lifecycle state of the content version. |
+| `subject` | `string` |  |
+| `publishedAt?` | `string` | Date at which this version was published. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `variables?` | `Array<VariableDeclaration>` | The declared variables. |
+
+### `templates.versions.publish(templateId: string, versionId: string, options?: RequestOptions)`
+
+Publish a draft template version.
+
+- **HTTP**: `PATCH /templates/{templateId}/versions/{versionId}/publish`
+- **Returns**: `TemplateVersionIdResponse`
+
+**TemplateVersionIdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the template. |
+| `templateVersionId` | `string` | The id of the version that was published. |
+
+### `templates.versions.retrieve(templateId: string, versionId: string, options?: RequestOptions)`
+
+Retrieve one content version.
+
+- **HTTP**: `GET /templates/{templateId}/versions/{versionId}`
+- **Returns**: `TemplateVersionResponse`
+
+**TemplateVersionResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the content version. |
+| `templateId` | `string` | The id of the template. |
+| `status` | `'draft' | 'active'` | The lifecycle state of the content version. |
+| `subject` | `string` |  |
+| `publishedAt?` | `string` | Date at which this version was published. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+| `variables?` | `Array<VariableDeclaration>` | The declared variables. |
+
+## templates.versions.content
+
+### `templates.versions.content.retrieve(templateId: string, versionId: string, options?: RequestOptions)`
+
+Get download links for a version's HTML and text.
+
+- **HTTP**: `GET /templates/{templateId}/versions/{versionId}/content`
+- **Returns**: `TemplateVersionContentResponse`
+
+**TemplateVersionContentResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `html` | `{ status: 'available'; downloadUrl: string; expiresAt: string } | { status: 'absent' } | { status: 'unavailable' }` |  |
+| `text` | `{ status: 'available'; downloadUrl: string; expiresAt: string } | { status: 'absent' } | { status: 'unavailable' }` |  |
 
 ## threads
 
 ### `threads.retrieve(threadId: string, query?: RetrieveThreadQuery, options?: RequestOptions)`
 
-Retrieve a thread. Pass ?markRead=true to automatically remove the unread label from all messages.
+Retrieves a thread with its subject, message count, last activity and labels from all its messages. Pass markRead=true to clear unread labels.
 
 - **HTTP**: `GET /threads/{threadId}`
 - **Returns**: `ThreadResponse`
@@ -1013,7 +1786,7 @@ Retrieve a thread. Pass ?markRead=true to automatically remove the unread label 
 
 ### `threads.update(threadId: string, body: UpdateThreadRequest, options?: RequestOptions)`
 
-Update thread labels and agent assignment. Label operations apply to all messages in the thread.
+Adds or removes labels on every message in a thread, or sets its agent. Label operations only work on threads in user-created inboxes.
 
 - **HTTP**: `PATCH /threads/{threadId}`
 - **Returns**: `IdResponse`
@@ -1036,7 +1809,7 @@ Update thread labels and agent assignment. Label operations apply to all message
 
 ### `threads.messages.list(threadId: string, query?: CursorPageParams, options?: RequestOptions)`
 
-List messages in a thread (chronological order).
+Lists the messages in a thread in chronological order, oldest first, with cursor pagination. Returns up to 30 messages per page.
 
 - **HTTP**: `GET /threads/{threadId}/messages`
 - **Returns**: `CursorPage<ThreadMessagesResponseItem>`
@@ -1061,11 +1834,119 @@ List messages in a thread (chronological order).
 | `labels` | `Array<string>` | The message labels. |
 | `attachmentCount` | `number` | The number of attachments. |
 
+## topics
+
+### `topics.create(body: CreateTopicRequest, options?: RequestOptions)`
+
+Create a topic.
+
+- **HTTP**: `POST /topics`
+- **Returns**: `TopicResponse`
+
+**CreateTopicRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name` | `string` | A name for the topic, shown to your team. Stored lowercased and trimmed. |
+
+**TopicResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the topic. |
+| `name` | `string` | A name for the topic, shown to your team. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `topics.delete(topicId: string, options?: RequestOptions)`
+
+Delete a topic.
+
+- **HTTP**: `DELETE /topics/{topicId}`
+- **Returns**: `IdResponse`
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+### `topics.list(query?: CursorPageParams, options?: RequestOptions)`
+
+List the organization topics.
+
+- **HTTP**: `GET /topics`
+- **Returns**: `CursorPage<TopicsResponseItem>`
+- **Paginated**: yes
+
+**TopicsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the topic. |
+| `name` | `string` | A name for the topic, shown to your team. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `topics.retrieve(topicId: string, options?: RequestOptions)`
+
+Retrieve one topic.
+
+- **HTTP**: `GET /topics/{topicId}`
+- **Returns**: `TopicResponse`
+
+**TopicResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the topic. |
+| `name` | `string` | A name for the topic, shown to your team. Stored lowercased and trimmed. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
+### `topics.update(topicId: string, body: UpdateTopicRequest, options?: RequestOptions)`
+
+Rename a topic.
+
+- **HTTP**: `PATCH /topics/{topicId}`
+- **Returns**: `IdResponse`
+
+**UpdateTopicRequest**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `name` | `string` | A name for the topic, shown to your team. Stored lowercased and trimmed. |
+
+**IdResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the resource. |
+
+## topics.memberships
+
+### `topics.memberships.list(topicId: string, query?: CursorPageParams, options?: RequestOptions)`
+
+List a topic's explicit membership records only. A contact without one is subscribed by default.
+
+- **HTTP**: `GET /topics/{topicId}/memberships`
+- **Returns**: `CursorPage<TopicMembershipsResponseItem>`
+- **Paginated**: yes
+
+**TopicMembershipsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `contactId` | `string` | The id of the contact. |
+| `state` | `'subscribed' | 'unsubscribed'` | The subscribe/unsubscribe state. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
+
 ## webhooks
 
 ### `webhooks.create(body: CreateWebhookRequest, options?: RequestOptions)`
 
-Register an endpoint to start receiving webhook events for your organization.
+Registers an HTTPS endpoint to receive the event types you subscribe to. The response includes the signing secret used to verify webhook payloads.
 
 - **HTTP**: `POST /webhooks`
 - **Returns**: `CreateWebhookResponse`
@@ -1077,7 +1958,7 @@ Register an endpoint to start receiving webhook events for your organization.
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
 | `status?` | `'enabled' | 'disabled'` | The status of the webhook. |
-| `events` | `Array<EventType>` | The event types to subscribe to |
+| `events` | `Array<WebhookEventType>` | The event types to subscribe to |
 
 **CreateWebhookResponse**
 
@@ -1095,7 +1976,7 @@ Register an endpoint to start receiving webhook events for your organization.
 
 ### `webhooks.delete(id: string, options?: RequestOptions)`
 
-Remove a webhook endpoint. No further events will be delivered to this URL.
+Permanently deletes a webhook endpoint. Events are no longer delivered to its URL after deletion. This cannot be undone.
 
 - **HTTP**: `DELETE /webhooks/{id}`
 - **Returns**: `DeleteWebhookResponse`
@@ -1108,7 +1989,7 @@ Remove a webhook endpoint. No further events will be delivered to this URL.
 
 ### `webhooks.list(query?: CursorPageParams, options?: RequestOptions)`
 
-Returns all registered webhook endpoints for the organization.
+Lists the webhook endpoints of your organization, newest first, with cursor pagination. Each entry shows its URL, event types, and status.
 
 - **HTTP**: `GET /webhooks`
 - **Returns**: `CursorPage<WebhooksResponseItem>`
@@ -1129,7 +2010,7 @@ Returns all registered webhook endpoints for the organization.
 
 ### `webhooks.retrieve(id: string, options?: RequestOptions)`
 
-Returns a webhook endpoint with its URL, subscribed events, and configuration.
+Retrieves a webhook endpoint with its URL, subscribed event types, status, and the reason and time it was disabled, if it is disabled.
 
 - **HTTP**: `GET /webhooks/{id}`
 - **Returns**: `WebhookResponse`
@@ -1149,7 +2030,7 @@ Returns a webhook endpoint with its URL, subscribed events, and configuration.
 
 ### `webhooks.update(id: string, body: UpdateWebhookRequest, options?: RequestOptions)`
 
-Update the endpoint URL, subscribed event types, or rotate the signing secret.
+Updates the name, URL, event types, or status of a webhook, or rotates its signing secret. The new secret is returned only when you rotate it.
 
 - **HTTP**: `PATCH /webhooks/{id}`
 - **Returns**: `UpdateWebhookResponse`
@@ -1160,7 +2041,7 @@ Update the endpoint URL, subscribed event types, or rotate the signing secret.
 | ----- | ---- | ----------- |
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl?` | `string` | The endpoint URL of the webhook |
-| `events?` | `Array<EventType>` | The event types to subscribe to |
+| `events?` | `Array<WebhookEventType>` | The event types to subscribe to |
 | `status?` | `'enabled' | 'disabled'` | The status of the webhook. |
 | `rotateSecret?` | `boolean` | If true, a new signing secret will be generated |
 
@@ -1173,16 +2054,9 @@ Update the endpoint URL, subscribed event types, or rotate the signing secret.
 
 ## webhooks.events
 
-### `webhooks.events.deliveries(id: string, eventId: string, options?: RequestOptions)`
-
-Returns all delivery attempts for a webhook event, including HTTP status codes and response times.
-
-- **HTTP**: `GET /webhooks/{id}/events/{eventId}/deliveries`
-- **Returns**: `WebhookEventDeliveriesResponse`
-
 ### `webhooks.events.list(query?: CursorPageParams, options?: RequestOptions)`
 
-Returns recent webhook events across all registered endpoints.
+Lists the webhook events of the last 48 hours across all your endpoints, with their delivery status and payload. Results use cursor pagination.
 
 - **HTTP**: `GET /webhooks/events`
 - **Returns**: `CursorPage<WebhookEventsResponseItem>`
@@ -1202,7 +2076,16 @@ Returns recent webhook events across all registered endpoints.
 
 ### `webhooks.events.replay(id: string, eventId: string, options?: RequestOptions)`
 
-Re-deliver a webhook event to its endpoint. Useful for retrying failed deliveries.
+Queues a new delivery of a past webhook event to the endpoint. The request is accepted asynchronously and returns 202 before the delivery runs.
 
 - **HTTP**: `POST /webhooks/{id}/events/{eventId}/replay`
 - **Returns**: `void`
+
+## webhooks.events.deliveries
+
+### `webhooks.events.deliveries.list(id: string, eventId: string, options?: RequestOptions)`
+
+Lists the delivery attempts of a webhook event to an endpoint, with the status, HTTP response code, response data, and delivery time of each attempt.
+
+- **HTTP**: `GET /webhooks/{id}/events/{eventId}/deliveries`
+- **Returns**: `WebhookEventDeliveriesResponse`

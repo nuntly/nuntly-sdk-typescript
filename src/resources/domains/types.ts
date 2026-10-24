@@ -1,4 +1,4 @@
-import type { DomainReceivingStatus, DomainStatus } from '../shared/types.js';
+import type { DomainReceivingStatus, DomainSendingStatus, DomainStatus } from '../shared/types.js';
 
 /**
  * @example
@@ -28,7 +28,7 @@ export interface DomainRecordsResponse {
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
   /** The status for the domain */
-  status: DomainStatus;
+  status: DomainStatus | (string & {});
   /** The region of the domain data */
   region: 'eu-west-1';
   /** The date of the lastest verification of this record */
@@ -38,11 +38,11 @@ export interface DomainRecordsResponse {
   /** Whether receiving is enabled for the domain */
   receiving: boolean;
   /** The sending status for the domain */
-  sendingStatus: 'enabled' | 'disabled' | 'paused';
+  sendingStatus: DomainSendingStatus | (string & {});
   /** The date of the latest sending status change */
   sendingStatusAt: string;
   /** The receiving status for the domain */
-  receivingStatus: DomainReceivingStatus;
+  receivingStatus: DomainReceivingStatus | (string & {});
   /** The date of the latest receiving status change */
   receivingStatusAt: string;
   /** Emit an event for each recipient opens an email their email client */
@@ -50,7 +50,28 @@ export interface DomainRecordsResponse {
   /** Emit an event for each time the recipient clicks a link in the email */
   clickTracking: boolean;
   /** The DNS records for your domain. */
-  records: Array<{ name: string; fullname: string; recordType: 'TXT' | 'MX' | 'CNAME'; ttl: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; selector?: string; priority?: string; value: string; status: DomainStatus; statusAt: string }>;
+  records: Array<{
+    /** The name of the record. */
+    name: string;
+    /** The FQDN of the domain record */
+    fullname: string;
+    /** The type of the record: "TXT", "MX" or "CNAME" */
+    recordType: 'TXT' | 'MX' | 'CNAME' | (string & {});
+    /** TTL (Time To Live) for this DNS record specifies the duration (in seconds) */
+    ttl: string;
+    /** The group of group: "DKIM", "SPF", "MX" or "DMARC". It is useful to group the records */
+    group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING' | (string & {});
+    /** A unique identifier in DKIM record to create CNAME records for verifying domain ownership and enabling email authentication */
+    selector?: string;
+    /** Priority in a DNS record, typically used in MX (Mail Exchange) records, specifies the order in which mail servers should be used, with lower values indicating higher priority for email delivery */
+    priority?: string;
+    /** The value of a DNS record is the data that the record points to */
+    value: string;
+    /** The status of the record */
+    status: DomainStatus | (string & {});
+    /** The date of the lastest verification of this record */
+    statusAt: string;
+  }>;
 }
 
 /** A single item from DomainsResponse. */
@@ -60,11 +81,11 @@ export interface DomainsResponseItem {
   /** The name of the domain to send e-mails' */
   name: string;
   /** The status for the domain */
-  status: DomainStatus;
+  status: DomainStatus | (string & {});
   /** The sending status for the domain */
-  sendingStatus: 'enabled' | 'disabled' | 'paused';
+  sendingStatus: DomainSendingStatus | (string & {});
   /** The receiving status for the domain */
-  receivingStatus: DomainReceivingStatus;
+  receivingStatus: DomainReceivingStatus | (string & {});
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
   /** The region of the domain data */

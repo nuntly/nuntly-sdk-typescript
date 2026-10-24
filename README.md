@@ -1,11 +1,11 @@
 # @nuntly/sdk
 
 [![npm version](https://img.shields.io/npm/v/@nuntly/sdk.svg)](https://www.npmjs.com/package/@nuntly/sdk)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/nuntly/nuntly-sdk-typescript/blob/main/LICENSE)
 
 The official TypeScript SDK for [Nuntly](https://nuntly.com), the developer-first email platform. Send transactional emails, manage domains, handle webhooks, and receive inbound mail with full type safety and zero runtime dependencies.
 
-[Documentation](https://nuntly.com/docs) | [API Reference](./api.md) | [Website](https://nuntly.com) | [Get your API key](https://nuntly.com/auth/sign-up)
+[Documentation](https://nuntly.com/docs) | [API Reference](https://github.com/nuntly/nuntly-sdk-typescript/blob/main/api.md) | [Website](https://nuntly.com) | [Get your API key](https://nuntly.com/auth/sign-up)
 
 ## Table of contents
 
@@ -20,7 +20,8 @@ The official TypeScript SDK for [Nuntly](https://nuntly.com), the developer-firs
 - [Lifecycle hooks](#lifecycle-hooks)
 - [Retry configuration](#retry-configuration)
 - [Raw response access](#raw-response-access)
-- [Advanced](#advanced)
+- [Per-request options and timeouts](#per-request-options-and-timeouts)
+- [More](#more)
 - [MCP Server](#mcp-server)
 - [FAQ](#faq)
 - [Semantic versioning](#semantic-versioning)
@@ -84,55 +85,9 @@ const nuntly = new Nuntly({
 | `logger` | `Logger` | - | Custom logger (compatible with console, pino, winston) |
 | `hooks` | `Hooks` | - | Lifecycle hooks (see [Lifecycle hooks](#lifecycle-hooks)) |
 | `fetch` | `typeof fetch` | `globalThis.fetch` | Custom fetch implementation |
-| `defaultHeaders` | `Record<string, string>` | - | Headers sent on every request (tenant id, telemetry, proxy auth). Overridden by per-request `headers`. |
+| `defaultHeaders` | `Record<string, string>` | - | Headers sent on every request (tenant id, telemetry). Overridden by per-request `headers`. |
 
-### Multi-tenant and client cloning
-
-Real-world problems `defaultHeaders` and `withOptions(partial)` solve:
-
-**Problem: each customer in your SaaS has their own Nuntly API key.**
-Building a new `Nuntly` per request loses hooks, retry config, and the warm fetch pool.
-
-```typescript
-const root = new Nuntly({ apiKey: process.env.NUNTLY_API_KEY });
-
-// Per-tenant client, reuses the root config except apiKey
-const tenant = root.withOptions({ apiKey: tenantApiKey });
-await tenant.emails.send({ from, to, subject, html });
-```
-
-**Problem: an inbound request in your app fans out to several services (DB, Stripe, Nuntly...). You want one trace ID across all of them.**
-Forward your trace ID on every Nuntly call so your APM correlates the outbound email send with the inbound request that triggered it.
-
-```typescript
-const traced = root.withOptions({
-  defaultHeaders: { 'X-Trace-Id': req.traceId },
-});
-await traced.emails.send({ from, to, subject, html });
-```
-
-**Problem: audit/compliance team needs to know "which user in our app sent this email".**
-Stamp `X-Initiated-By` on every request. Your gateway / proxy / log pipeline records it; Nuntly itself ignores it.
-
-```typescript
-const audited = root.withOptions({
-  defaultHeaders: { 'X-Initiated-By': `user:${userId}` },
-});
-```
-
-**Problem: your CI/staging environment runs behind a corporate egress proxy that requires auth.**
-
-```typescript
-const corpClient = new Nuntly({
-  apiKey: process.env.NUNTLY_API_KEY,
-  defaultHeaders: { 'Proxy-Authorization': `Basic ${process.env.PROXY_TOKEN}` },
-});
-```
-
-#### Mental model
-
-- `withOptions(partial)` returns a **new** client. The original instance is untouched, hooks and retry config are reused. `defaultHeaders` is deep-merged; the rest of the options is shallow-replaced.
-- `defaultHeaders` is **passthrough**: the SDK sets them on every HTTP request, but Nuntly does not parse or route on them. The value lives in your own observability, proxy, and audit chain.
+`nuntly.withOptions(partial)` returns a new client with some options changed, such as one API key per customer. See [client cloning](https://nuntly.com/docs/api-reference/typescript-sdk#client-cloning).
 
 ## Pagination
 
@@ -180,8 +135,8 @@ try {
     console.log(error.requestId); // x-request-id for support
 
     // Access the raw Response for advanced inspection
-    console.log(error.rawResponse.status);
-    console.log(error.rawResponse.headers.get('x-ratelimit-remaining'));
+    console.log(error.rawResponse?.status);
+    console.log(error.headers.get('x-ratelimit-remaining'));
   }
 }
 ```
@@ -213,8 +168,12 @@ switch (event.type) {
   case 'message.received':
     console.log(event.data.from, event.data.subject);
     break;
+  default:
+    console.log(`Unhandled event ${event.type}`);
 }
 ```
+
+`event` is a `WebhookEvent`, one of the event types a webhook delivers. Keep a `default` branch: a webhook only receives the types it subscribes to, so a type added in a later release reaches your handler only once you subscribe to it.
 
 The function throws `WebhookVerificationError` on invalid signatures or expired timestamps (default: 5 minutes).
 
@@ -241,122 +200,55 @@ if (error) {
 }
 ```
 
-Or wrap per-call with `safe()`:
-
-```typescript
-import { Nuntly, safe } from '@nuntly/sdk';
-
-const nuntly = new Nuntly({ apiKey: process.env.NUNTLY_API_KEY });
-const { data, error } = await safe(nuntly).emails.retrieve('em_123');
-```
+`error` is an `APIError` for an error response, an `APIConnectionError` when no response arrived, or a plain `NuntlyError` when the SDK refuses the call before sending it (an empty, `.` or `..` id). To use this shape for some calls only, see [safe mode for one call](https://nuntly.com/docs/api-reference/typescript-sdk#safe-mode-for-one-call).
 
 ## Lifecycle hooks
 
-Hook into the HTTP lifecycle for logging, telemetry, or auth refresh. Every
-hook receives a single structured `ctx` argument:
+Hooks run around each HTTP request, for logging or telemetry:
 
 ```typescript
-import type { Hooks } from '@nuntly/sdk';
-import { APIError } from '@nuntly/sdk';
+import { Nuntly } from '@nuntly/sdk';
 
 const nuntly = new Nuntly({
   apiKey: process.env.NUNTLY_API_KEY,
   hooks: {
-    onRequest: (ctx) => {
-      console.log(`-> ${ctx.method} ${ctx.url}`);
-    },
-    onResponse: (ctx) => {
-      console.log(`<- ${ctx.response.status} ${ctx.request.path}`);
-    },
-    onSuccess: (ctx) => {
-      metrics.increment('api.success');
-    },
-    onRetry: (ctx) => {
-      console.warn(`Retry #${ctx.attempt} ${ctx.request.path}`);
-    },
-    onError: (ctx) => {
-      if (ctx.error instanceof APIError) {
-        sentry.captureException(ctx.error, { tags: { code: ctx.error.code } });
-      } else {
-        sentry.captureException(ctx.error);
-      }
-    },
+    onRetry: (ctx) => console.warn(`Retry #${ctx.attempt} ${ctx.request.path}`),
+    onError: (ctx) => console.error(ctx.error),
   },
 });
 ```
 
-| Hook | Signature | When |
-|------|-----------|------|
-| `onRequest` | `(ctx: RequestContext) => void \| Promise<void>` | Before each HTTP request |
-| `onResponse` | `(ctx: ResponseContext) => void \| Promise<void>` | After each HTTP response (2xx, 4xx, 5xx); not called on network errors |
-| `onSuccess` | `(ctx: SuccessContext) => void \| Promise<void>` | After each 2xx response, with the parsed payload |
-| `onRetry` | `(ctx: RetryContext) => void \| Promise<void>` | Before each retry attempt |
-| `onError` | `(ctx: ErrorContext) => void \| Promise<void>` | On 4xx/5xx (`APIError`) or network/timeout (`APIConnectionError`) |
-
-Per-request invocation order on the happy path:
-`onRequest -> [onRetry x N] -> onResponse -> (onSuccess | onError)`.
-
-All hooks may return a `Promise<void>` and are awaited by the client.
+The other hooks are `onRequest`, `onResponse` and `onSuccess`. See [lifecycle hooks](https://nuntly.com/docs/api-reference/typescript-sdk#lifecycle-hooks) for their signatures and order.
 
 ## Retry configuration
 
-Default: exponential backoff (500ms initial, 8s max, exponent 2) with jitter.
+The SDK retries transient failures with exponential backoff, up to `maxRetries` times:
 
 ```typescript
-// Disable retries
-const nuntly = new Nuntly({
-  apiKey: process.env.NUNTLY_API_KEY,
-  retry: 'none',
-});
-
-// Custom backoff
 const nuntly = new Nuntly({
   apiKey: process.env.NUNTLY_API_KEY,
   maxRetries: 5,
-  retry: {
-    strategy: 'backoff',
-    backoff: {
-      initialInterval: 200,  // ms
-      maxInterval: 30000,    // ms
-      exponent: 1.5,
-    },
-  },
+  retry: { strategy: 'backoff', backoff: { initialInterval: 200, maxInterval: 30000, exponent: 1.5 } },
 });
-
-// Per-request override
-await nuntly.emails.send(payload, { maxRetries: 0 });
 ```
 
-The SDK automatically respects `Retry-After` headers on 429 responses.
+Pass `retry: 'none'` to turn retries off. Which responses are retried, and how `Retry-After` and `Idempotency-Key` change it: see [retries](https://nuntly.com/docs/api-reference/typescript-sdk#retries), and [MIGRATION.md](https://github.com/nuntly/nuntly-sdk-typescript/blob/main/MIGRATION.md) for the changes since 1.x.
 
 ## Raw response access
 
-Every resource method returns an `APIPromise<T>`. It is a `Promise<T>` you can
-`await` as usual, with two extra methods for accessing the raw `Response`.
-
-Use `.withResponse()` when you need both the parsed data and the
-underlying `Response`:
+Every resource method returns an `APIPromise<T>`, a `Promise<T>` with `.withResponse()` to read the parsed data and the underlying `Response`:
 
 ```typescript
-const { data, response } = await nuntly.emails.retrieve('em_123').withResponse();
+const { data, response } = await nuntly.emails.retrieve('em_01ka8k8s80gvx9604cn9am5st4').withResponse();
 
 console.log(data.status);                          // 'delivered'
 console.log(response.headers.get('x-request-id')); // request ID
 console.log(response.headers.get('x-ratelimit-remaining'));
 ```
 
-Use `.asResponse()` to get the raw `Response` as soon as headers are
-received, without consuming the body. Useful for streaming or for
-header-only inspection:
+To read the headers without the body, see [`.asResponse()`](https://nuntly.com/docs/api-reference/typescript-sdk#response-headers-without-the-body).
 
-```typescript
-const response = await nuntly.emails.retrieve('em_123').asResponse();
-console.log(response.status, response.headers.get('x-request-id'));
-```
-
-## Advanced
-
-### Per-request options
+## Per-request options and timeouts
 
 ```typescript
 await nuntly.emails.send(payload, {
@@ -366,81 +258,15 @@ await nuntly.emails.send(payload, {
 });
 ```
 
-The wire header is `Idempotency-Key` (no `X-` prefix). The SDK auto-generates
-a UUID v4 for `emails.send`, `emails.bulk.send`, `messages.reply`,
-`messages.forward`, and `inboxes.messages.send` when `idempotencyKey` is not
-provided. Pass an explicit value to wire up your own retry key (e.g. for
-cross-process deduplication). You can also set the header manually via
-`headers: { 'Idempotency-Key': '...' }` if you prefer.
+The wire header is `Idempotency-Key` (no `X-` prefix). Only the eight methods
+whose endpoint deduplicates by key accept `idempotencyKey` (their options type is
+`IdempotentRequestOptions`): `emails.send`, `emails.bulk.send`, `messages.reply`,
+`messages.forward`, `inboxes.messages.send`, `inboxes.create`,
+`broadcasts.create` and `broadcasts.send`. They generate a UUID v4 per call when
+you pass none and reuse it across that call's retries. Pass your own value to
+deduplicate across processes.
 
-### Abort a request
-
-```typescript
-const controller = new AbortController();
-setTimeout(() => controller.abort(), 5000);
-
-await nuntly.emails.list(undefined, { signal: controller.signal });
-```
-
-### Debug logging
-
-```typescript
-const nuntly = new Nuntly({
-  apiKey: process.env.NUNTLY_API_KEY,
-  debug: true,
-});
-// -> POST https://api.nuntly.com/emails
-// <- 201 POST https://api.nuntly.com/emails (42ms) [req_abc123]
-```
-
-### Custom logger
-
-```typescript
-import pino from 'pino';
-
-const nuntly = new Nuntly({
-  apiKey: process.env.NUNTLY_API_KEY,
-  logger: pino({ level: 'debug' }),
-});
-```
-
-### Custom fetch implementation
-
-Replace the default `globalThis.fetch` with any compatible function. Useful for instrumentation, custom retry, or alternative HTTP clients:
-
-```typescript
-import { Nuntly } from '@nuntly/sdk';
-
-const nuntly = new Nuntly({
-  apiKey: process.env.NUNTLY_API_KEY,
-  fetch: async (url, init) => {
-    console.time(`fetch ${url}`);
-    const response = await globalThis.fetch(url, init);
-    console.timeEnd(`fetch ${url}`);
-    return response;
-  },
-});
-```
-
-### HTTP / HTTPS proxies
-
-Use `undici` to route requests through a corporate or debugging proxy:
-
-```typescript
-import { Nuntly } from '@nuntly/sdk';
-import { ProxyAgent, fetch as undiciFetch } from 'undici';
-
-const proxy = new ProxyAgent('http://corporate-proxy:8080');
-
-const nuntly = new Nuntly({
-  apiKey: process.env.NUNTLY_API_KEY,
-  fetch: (url, init) => undiciFetch(url, { ...init, dispatcher: proxy }) as unknown as Response,
-});
-```
-
-### Timeouts
-
-The default request timeout is 60 seconds. Override globally:
+The default request timeout is 60 seconds. Override it for every request in the client options, or per request as above:
 
 ```typescript
 const nuntly = new Nuntly({
@@ -449,13 +275,11 @@ const nuntly = new Nuntly({
 });
 ```
 
-Or per-request:
-
-```typescript
-await nuntly.emails.send(payload, { timeout: 5_000 });
-```
-
 A request that exceeds its timeout aborts with an `APIConnectionTimeoutError`.
+
+## More
+
+The [TypeScript SDK docs page](https://nuntly.com/docs/api-reference/typescript-sdk) covers client cloning, every lifecycle hook, the retry rules, aborting a request, debug logging, a custom logger, a custom `fetch`, and HTTP and HTTPS proxies.
 
 ## MCP Server
 
@@ -480,21 +304,13 @@ Open an issue at [github.com/nuntly/nuntly-sdk-typescript/issues](https://github
 
 ## Semantic versioning
 
-This SDK follows [Semantic Versioning 2.0](https://semver.org). Versions before `1.0.0` (alpha, beta) may include breaking changes between minor versions.
-
-After `1.0.0`:
-
-- **Major** version bumps signal breaking changes to the public API
-- **Minor** version bumps add backwards-compatible features
-- **Patch** version bumps include backwards-compatible fixes
-
-Identifiers prefixed with `_` are internal and not subject to semver.
+This SDK follows [Semantic Versioning 2.0](https://semver.org): only a major version breaks the public API, and identifiers prefixed with `_` are internal.
 
 ## Previous versions
 
 Versions `0.x` remain installable from npm via `npm install @nuntly/sdk@0` for backwards compatibility.
 
-Upgrading from `0.x` to `1.0.0`? See [MIGRATION.md](./MIGRATION.md) for the breaking-change cheat-sheet.
+Upgrading from `1.x` to `2.0.0`, or from `0.x` to `1.0.0`? See [MIGRATION.md](https://github.com/nuntly/nuntly-sdk-typescript/blob/main/MIGRATION.md) for the breaking changes, with before and after code.
 
 ## Contributing
 
@@ -502,4 +318,4 @@ Issues, bug reports, and feature requests are welcome at [github.com/nuntly/nunt
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+MIT. See [LICENSE](https://github.com/nuntly/nuntly-sdk-typescript/blob/main/LICENSE).

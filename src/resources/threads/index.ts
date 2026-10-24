@@ -1,6 +1,5 @@
+import type { APIPromise, NuntlyClient, RequestOptions } from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions } from '../../core/index.js';
 import type { IdResponse, RetrieveThreadQuery, ThreadResponse, UpdateThreadRequest } from '../types.js';
 
 import { ThreadsMessages } from './messages/index.js';
@@ -17,7 +16,7 @@ export class Threads extends Resource {
   }
 
   /**
-   * Retrieve a thread. Pass ?markRead=true to automatically remove the unread label from all messages.
+   * Retrieves a thread with its subject, message count, last activity and labels from all its messages. Pass markRead=true to clear unread labels.
    *
    * GET /threads/{threadId}
    * @param threadId - string
@@ -26,16 +25,18 @@ export class Threads extends Resource {
    * @returns APIPromise<ThreadResponse>
    */
   retrieve(threadId: string, query?: RetrieveThreadQuery, options?: RequestOptions): APIPromise<ThreadResponse> {
-    return this._http.get<{ data: ThreadResponse }>({
-      path: '/threads/{threadId}',
-      pathParams: { threadId },
-      query: query as unknown as Record<string, unknown>,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .get<{ data: ThreadResponse }>({
+        path: '/threads/{threadId}',
+        pathParams: { threadId },
+        query: query as unknown as Record<string, unknown>,
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Update thread labels and agent assignment. Label operations apply to all messages in the thread.
+   * Adds or removes labels on every message in a thread, or sets its agent. Label operations only work on threads in user-created inboxes.
    *
    * PATCH /threads/{threadId}
    * @param threadId - string
@@ -44,12 +45,13 @@ export class Threads extends Resource {
    * @returns APIPromise<IdResponse>
    */
   update(threadId: string, body: UpdateThreadRequest, options?: RequestOptions): APIPromise<IdResponse> {
-    return this._http.patch<{ data: IdResponse }>({
-      path: '/threads/{threadId}',
-      pathParams: { threadId },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .patch<{ data: IdResponse }>({
+        path: '/threads/{threadId}',
+        pathParams: { threadId },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
-
 }

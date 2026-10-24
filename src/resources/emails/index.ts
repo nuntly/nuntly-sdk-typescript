@@ -1,8 +1,21 @@
+import type {
+  APIPromise,
+  CursorPage,
+  CursorPageParams,
+  IdempotentRequestOptions,
+  NuntlyClient,
+  PagePromise,
+  RequestOptions,
+} from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import { generateIdempotencyKey } from '../../lib/idempotency.js';
-import type { CreateEmailRequest, CreateEmailResponse, DeleteEmailResponse, EmailResponse, EmailsResponseItem } from '../types.js';
+import type {
+  CreateEmailRequest,
+  CreateEmailResponse,
+  DeleteEmailResponse,
+  EmailResponse,
+  EmailsResponseItem,
+} from '../types.js';
 
 import { EmailsBulk } from './bulk/index.js';
 import { EmailsContent } from './content/index.js';
@@ -27,7 +40,7 @@ export class Emails extends Resource {
   }
 
   /**
-   * Cancel a scheduled email before delivery. Only emails with `scheduled` status can be cancelled.
+   * Cancels a scheduled email before it is sent and returns its id with status canceled. Only scheduled emails sent outside a bulk request qualify.
    *
    * DELETE /emails/{id}
    * @param id - string
@@ -35,22 +48,27 @@ export class Emails extends Resource {
    * @returns APIPromise<DeleteEmailResponse>
    */
   cancel(id: string, options?: RequestOptions): APIPromise<DeleteEmailResponse> {
-    return this._http.delete<{ data: DeleteEmailResponse }>({
-      path: '/emails/{id}',
-      pathParams: { id },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .delete<{ data: DeleteEmailResponse }>({
+        path: '/emails/{id}',
+        pathParams: { id },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Returns sent emails ordered by submission date, newest first.
+   * Lists your emails newest first with cursor pagination, up to 30 per page. Each item has its sender, recipients, subject, status and submission date.
    *
    * GET /emails
    * @param query - CursorPageParams
    * @param options - RequestOptions
    * @returns PagePromise<CursorPage<EmailsResponseItem>, EmailsResponseItem>
    */
-  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<EmailsResponseItem>, EmailsResponseItem> {
+  list(
+    query?: CursorPageParams,
+    options?: RequestOptions,
+  ): PagePromise<CursorPage<EmailsResponseItem>, EmailsResponseItem> {
     return this._http.list<EmailsResponseItem>({
       path: '/emails',
       query: query as unknown as Record<string, unknown>,
@@ -59,7 +77,7 @@ export class Emails extends Resource {
   }
 
   /**
-   * Returns an email with its current delivery status and metadata.
+   * Returns a single email by id with its delivery status, status reason, recipients, subject, headers, tags, attachment metadata and schedule.
    *
    * GET /emails/{id}
    * @param id - string
@@ -67,11 +85,13 @@ export class Emails extends Resource {
    * @returns APIPromise<EmailResponse>
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<EmailResponse> {
-    return this._http.get<{ data: EmailResponse }>({
-      path: '/emails/{id}',
-      pathParams: { id },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .get<{ data: EmailResponse }>({
+        path: '/emails/{id}',
+        pathParams: { id },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
@@ -79,17 +99,18 @@ export class Emails extends Resource {
    *
    * POST /emails
    * @param body - CreateEmailRequest
-   * @param options - RequestOptions
+   * @param options - IdempotentRequestOptions
    * @returns APIPromise<CreateEmailResponse>
    */
-  send(body: CreateEmailRequest, options?: RequestOptions): APIPromise<CreateEmailResponse> {
+  send(body: CreateEmailRequest, options?: IdempotentRequestOptions): APIPromise<CreateEmailResponse> {
     const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
     options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
-    return this._http.post<{ data: CreateEmailResponse }>({
-      path: '/emails',
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .post<{ data: CreateEmailResponse }>({
+        path: '/emails',
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
-
 }

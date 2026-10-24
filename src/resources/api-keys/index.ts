@@ -1,15 +1,21 @@
+import type { APIPromise, CursorPage, CursorPageParams, PagePromise, RequestOptions } from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
-import type { ApiKeyResponse, ApiKeysResponseItem, CreateApiKeyRequest, CreateApiKeyResponse, DeleteApiKeyResponse, UpdateApiKeyRequest, UpdateApiKeyResponse } from '../types.js';
-
+import type {
+  ApiKeyResponse,
+  ApiKeysResponseItem,
+  CreateApiKeyRequest,
+  CreateApiKeyResponse,
+  DeleteApiKeyResponse,
+  UpdateApiKeyRequest,
+  UpdateApiKeyResponse,
+} from '../types.js';
 
 /**
  * ApiKeys resource.
  */
 export class ApiKeys extends Resource {
-
   /**
-   * Generate a new API key. The key value is only returned once. Store it securely.
+   * Creates an API key with full access or send-only access, optionally limited to chosen domains. The secret key value is returned only in this response.
    *
    * POST /api-keys
    * @param body - CreateApiKeyRequest
@@ -17,15 +23,17 @@ export class ApiKeys extends Resource {
    * @returns APIPromise<CreateApiKeyResponse>
    */
   create(body: CreateApiKeyRequest, options?: RequestOptions): APIPromise<CreateApiKeyResponse> {
-    return this._http.post<{ data: CreateApiKeyResponse }>({
-      path: '/api-keys',
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .post<{ data: CreateApiKeyResponse }>({
+        path: '/api-keys',
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Revoke an API key. Requests authenticating with this key will be rejected immediately.
+   * Permanently deletes an API key. Any request that authenticates with this key is rejected from then on. This cannot be undone.
    *
    * DELETE /api-keys/{id}
    * @param id - string
@@ -33,22 +41,27 @@ export class ApiKeys extends Resource {
    * @returns APIPromise<DeleteApiKeyResponse>
    */
   delete(id: string, options?: RequestOptions): APIPromise<DeleteApiKeyResponse> {
-    return this._http.delete<{ data: DeleteApiKeyResponse }>({
-      path: '/api-keys/{id}',
-      pathParams: { id },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .delete<{ data: DeleteApiKeyResponse }>({
+        path: '/api-keys/{id}',
+        pathParams: { id },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Returns all API keys for the organization. Key values are never included in list responses.
+   * Lists the API keys of your organization, newest first, with cursor pagination. Each key shows its name, status, creation date, and a short token hint.
    *
    * GET /api-keys
    * @param query - CursorPageParams
    * @param options - RequestOptions
    * @returns PagePromise<CursorPage<ApiKeysResponseItem>, ApiKeysResponseItem>
    */
-  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<ApiKeysResponseItem>, ApiKeysResponseItem> {
+  list(
+    query?: CursorPageParams,
+    options?: RequestOptions,
+  ): PagePromise<CursorPage<ApiKeysResponseItem>, ApiKeysResponseItem> {
     return this._http.list<ApiKeysResponseItem>({
       path: '/api-keys',
       query: query as unknown as Record<string, unknown>,
@@ -57,7 +70,7 @@ export class ApiKeys extends Resource {
   }
 
   /**
-   * Returns API key metadata. The key value is never returned after creation.
+   * Retrieves an API key by id with its name, status, creation date, and a short token hint. The full secret key value is never returned after creation.
    *
    * GET /api-keys/{id}
    * @param id - string
@@ -65,15 +78,17 @@ export class ApiKeys extends Resource {
    * @returns APIPromise<ApiKeyResponse>
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<ApiKeyResponse> {
-    return this._http.get<{ data: ApiKeyResponse }>({
-      path: '/api-keys/{id}',
-      pathParams: { id },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .get<{ data: ApiKeyResponse }>({
+        path: '/api-keys/{id}',
+        pathParams: { id },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Update the key name, permissions, or restrict it to specific sending domains.
+   * Updates the name of an API key, enables or disables it, or changes its access level and domain restrictions. Returns the id of the updated key.
    *
    * PATCH /api-keys/{id}
    * @param id - string
@@ -82,12 +97,13 @@ export class ApiKeys extends Resource {
    * @returns APIPromise<UpdateApiKeyResponse>
    */
   update(id: string, body: UpdateApiKeyRequest, options?: RequestOptions): APIPromise<UpdateApiKeyResponse> {
-    return this._http.patch<{ data: UpdateApiKeyResponse }>({
-      path: '/api-keys/{id}',
-      pathParams: { id },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .patch<{ data: UpdateApiKeyResponse }>({
+        path: '/api-keys/{id}',
+        pathParams: { id },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
-
 }

@@ -2,7 +2,13 @@ import type { EmailStatus, Tag } from '../../shared/types.js';
 
 export interface BulkEmailsResponse {
   id: string;
-  emails: Array<{ id: string; status: EmailStatus; detail?: string }>;
+  emails: Array<{
+    /** The id of the email */
+    id: string;
+    /** The status of the email. */
+    status: EmailStatus | (string & {});
+    detail?: string;
+  }>;
 }
 
 export interface CreateBulkEmail {
@@ -40,7 +46,12 @@ export interface CreateBulkEmailsRequest {
 export interface CreateBulkEmailsResponse {
   /** The bulk id */
   id?: string;
-  emails: Array<{ id?: string; status: EmailStatus }>;
+  emails: Array<{
+    /** The id of the email */
+    id?: string;
+    /** The status of the email. */
+    status: EmailStatus | (string & {});
+  }>;
 }
 
 export interface CreateBulkFallback {

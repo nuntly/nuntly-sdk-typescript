@@ -1,5 +1,16 @@
 import type { CreateBulkEmail } from '../emails/bulk/types.js';
-import type { BounceDetail, ClickDetail, ComplaintDetail, DeliveryDelayDetail, DeliveryDetail, EmailStatus, FailureDetail, OpenDetail, RejectDetail, Tag } from '../shared/types.js';
+import type {
+  BounceDetail,
+  ClickDetail,
+  ComplaintDetail,
+  DeliveryDelayDetail,
+  DeliveryDetail,
+  EmailStatus,
+  FailureDetail,
+  OpenDetail,
+  RejectDetail,
+  Tag,
+} from '../shared/types.js';
 
 export interface Attachment {
   /** The base64-encoded content of the attachment */
@@ -53,14 +64,14 @@ export interface CreateEmailResponse {
   /** The id of the email */
   id: string;
   /** The status of the email. */
-  status: EmailStatus;
+  status: EmailStatus | (string & {});
 }
 
 export interface DeleteEmailResponse {
   /** The id of the email */
   id: string;
   /** The status of the email. */
-  status: EmailStatus;
+  status: EmailStatus | (string & {});
 }
 
 export interface EmailBouncedEvent {
@@ -102,6 +113,7 @@ export interface EmailEvent {
   id: string;
   orgId: string;
   bulkId?: string;
+  broadcastId?: string;
   messageId: string;
   sentAt: string;
   enqueuedAt: string;
@@ -131,25 +143,30 @@ export interface EmailOpenedEvent {
   data: EmailEvent & { open: OpenDetail };
 }
 
-export interface EmailProcessedEvent {
-  id: string;
-  createdAt: string;
-  type: 'email.processed';
-  data: { processed: Record<string, unknown> };
-}
-
-export interface EmailQueuedEvent {
-  id: string;
-  createdAt: string;
-  type: 'email.queued';
-  data: { queue: Record<string, unknown> };
-}
-
 export interface EmailRejectedEvent {
   id: string;
   createdAt: string;
   type: 'email.rejected';
-  data: { id?: string; orgId?: string; bulkId?: string; messageId?: string; sentAt?: string; enqueuedAt?: string; domainName?: string; domainId?: string; from?: string; to?: string | Array<string>; cc?: string | Array<string>; bcc?: string | Array<string>; replyTo?: string | Array<string>; subject?: string; headers?: Array<{ name: string; value: string }>; tags?: Record<string, Array<string>>; reject: RejectDetail };
+  data: {
+    id?: string;
+    orgId?: string;
+    bulkId?: string;
+    broadcastId?: string;
+    messageId?: string;
+    sentAt?: string;
+    enqueuedAt?: string;
+    domainName?: string;
+    domainId?: string;
+    from?: string;
+    to?: string | Array<string>;
+    cc?: string | Array<string>;
+    bcc?: string | Array<string>;
+    replyTo?: string | Array<string>;
+    subject?: string;
+    headers?: Array<{ name: string; value: string }>;
+    tags?: Record<string, Array<string>>;
+    reject: RejectDetail;
+  };
 }
 
 export interface EmailResponse {
@@ -170,7 +187,7 @@ export interface EmailResponse {
   /** The blind carbon copy recipient(s) of the email */
   bcc?: Array<string> | string;
   /** The status of the email. */
-  status: EmailStatus;
+  status: EmailStatus | (string & {});
   /** May provide more informations about the status */
   statusReason?: Record<string, Record<string, unknown>>;
   /** The subject of the e-mail */
@@ -182,27 +199,20 @@ export interface EmailResponse {
   /** The tags to add to the email */
   tags?: Array<Tag>;
   /** The attachements */
-  attachments?: Array<{ filename?: string; contentType?: string; size?: number }>;
+  attachments?: Array<{
+    /** The name of the attached file to be displayed to the recipient */
+    filename?: string;
+    /** Content type of the attachment (the MIME type) */
+    contentType?: string;
+    /** The size of the attachment in bytes */
+    size?: number;
+  }>;
   /** The variables for the template */
   variables?: Record<string, string | number | boolean | null>;
   /** The date at which the email is scheduled to be sent */
   scheduledAt?: string;
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
-}
-
-export interface EmailScheduledEvent {
-  id: string;
-  createdAt: string;
-  type: 'email.scheduled';
-  data: { schedule: { scheduledAt: string } };
-}
-
-export interface EmailSendingEvent {
-  id: string;
-  createdAt: string;
-  type: 'email.sending';
-  data: EmailEvent & { sending: Record<string, unknown> };
 }
 
 export interface EmailSentEvent {
@@ -223,7 +233,7 @@ export interface EmailsResponseItem {
   /** The subject of the e-mail */
   subject: string;
   /** The status of the email. */
-  status: EmailStatus;
+  status: EmailStatus | (string & {});
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
   /** The date at which the email is scheduled to be sent */

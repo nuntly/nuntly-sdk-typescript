@@ -4,7 +4,7 @@ export interface OrganizationResponse {
   /** The name of the organization */
   name: string;
   /** The status of the organization */
-  status: 'enabled' | 'disabled';
+  status: 'enabled' | 'disabled' | (string & {});
 }
 
 /** A single item from OrganizationsResponse. */
@@ -14,5 +14,5 @@ export interface OrganizationsResponseItem {
   /** The name of the organization */
   name: string;
   /** The status of the organization */
-  status: 'enabled' | 'disabled';
+  status: 'enabled' | 'disabled' | (string & {});
 }

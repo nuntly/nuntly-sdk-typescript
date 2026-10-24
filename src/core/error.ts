@@ -1,3 +1,5 @@
+import { parseRetryAfter } from './retry-after.js';
+
 export class NuntlyError extends Error {
   constructor(message: string) {
     super(message);
@@ -43,21 +45,29 @@ export class APIError extends NuntlyError {
         };
       }
     }
+    // A body that is not the API error JSON (a proxy's HTML page) keeps a short excerpt only.
     return {
       code: 'unknown',
-      title: typeof body === 'string' && body.length > 0 ? body : 'Request failed',
+      title: typeof body === 'string' && body.length > 0 ? body.slice(0, 200) : 'Request failed',
     };
   }
 
   static from(status: number, body: unknown, headers: Headers, rawResponse?: Response): APIError {
     switch (status) {
-      case 400: return new BadRequestError(body, headers, rawResponse);
-      case 401: return new AuthenticationError(body, headers, rawResponse);
-      case 403: return new PermissionDeniedError(body, headers, rawResponse);
-      case 404: return new NotFoundError(body, headers, rawResponse);
-      case 409: return new ConflictError(body, headers, rawResponse);
-      case 422: return new UnprocessableEntityError(body, headers, rawResponse);
-      case 429: return new RateLimitError(body, headers, rawResponse);
+      case 400:
+        return new BadRequestError(body, headers, rawResponse);
+      case 401:
+        return new AuthenticationError(body, headers, rawResponse);
+      case 403:
+        return new PermissionDeniedError(body, headers, rawResponse);
+      case 404:
+        return new NotFoundError(body, headers, rawResponse);
+      case 409:
+        return new ConflictError(body, headers, rawResponse);
+      case 422:
+        return new UnprocessableEntityError(body, headers, rawResponse);
+      case 429:
+        return new RateLimitError(body, headers, rawResponse);
       default:
         if (status >= 500) return new InternalServerError(status, body, headers, rawResponse);
         return new APIError(status, body, headers, rawResponse);
@@ -113,17 +123,7 @@ export class RateLimitError extends APIError {
   constructor(body: unknown, headers: Headers, rawResponse?: Response) {
     super(429, body, headers, rawResponse);
     this.name = 'RateLimitError';
-    this.retryAfter = RateLimitError.parseRetryAfter(headers);
-  }
-
-  private static parseRetryAfter(headers: Headers): number | null {
-    const value = headers.get('retry-after');
-    if (!value) return null;
-    const seconds = Number(value);
-    if (!Number.isNaN(seconds)) return seconds * 1000;
-    const date = Date.parse(value);
-    if (!Number.isNaN(date)) return Math.max(0, date - Date.now());
-    return null;
+    this.retryAfter = parseRetryAfter(headers.get('retry-after')) ?? null;
   }
 }
 
@@ -135,7 +135,10 @@ export class InternalServerError extends APIError {
 }
 
 export class APIConnectionError extends NuntlyError {
-  constructor(message: string, public readonly cause?: Error) {
+  constructor(
+    message: string,
+    public readonly cause?: Error,
+  ) {
     super(message);
     this.name = 'APIConnectionError';
   }

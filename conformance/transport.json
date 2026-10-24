@@ -1,0 +1,229 @@
+{
+  "description": "Transport. Each case sends request.method on request.path with the client options over the scripted responses served in order, as in retry.json. expected.url is the URL every call requested; error.kind names the error type and error.notKind a type it must not be (see README.md). A case with call instead of request calls one SDK method by its dotted operation name with the given path ids (null is a missing id), with retries disabled, against a server that answers 200 with {\"data\": {}}; a sent request has expected.method and expected.path. A call with safe: true goes through the safe client, which resolves to { data: null, error } instead of rejecting.",
+  "cases": [
+    {
+      "name": "a base URL with a trailing slash builds no double slash",
+      "client": {
+        "baseUrl": "https://api.test.com/"
+      },
+      "request": {
+        "method": "GET",
+        "path": "/emails/stats"
+      },
+      "responses": [
+        {
+          "status": 200
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "url": "https://api.test.com/emails/stats",
+        "result": {
+          "status": 200
+        }
+      }
+    },
+    {
+      "name": "a GET that times out on every attempt raises the timeout error",
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "timeout": true
+        },
+        {
+          "timeout": true
+        },
+        {
+          "timeout": true
+        }
+      ],
+      "expected": {
+        "calls": 3,
+        "error": {
+          "kind": "timeout"
+        }
+      }
+    },
+    {
+      "name": "a network error is a connection error, not a timeout",
+      "client": {
+        "retry": "none"
+      },
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "network": true
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "error": {
+          "kind": "connection",
+          "notKind": "timeout"
+        }
+      }
+    },
+    {
+      "name": "a normal id is sent unchanged",
+      "call": {
+        "operation": "emails.retrieve",
+        "args": [
+          "em_123"
+        ]
+      },
+      "expected": {
+        "calls": 1,
+        "method": "GET",
+        "path": "/emails/em_123"
+      }
+    },
+    {
+      "name": "an id of three dots is not a dot segment and is sent unchanged",
+      "call": {
+        "operation": "emails.retrieve",
+        "args": [
+          "..."
+        ]
+      },
+      "expected": {
+        "calls": 1,
+        "method": "GET",
+        "path": "/emails/..."
+      }
+    },
+    {
+      "name": "an empty id is rejected before sending",
+      "call": {
+        "operation": "emails.retrieve",
+        "args": [
+          ""
+        ]
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "a . id is rejected before sending",
+      "call": {
+        "operation": "emails.retrieve",
+        "args": [
+          "."
+        ]
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "a .. id is rejected before sending",
+      "call": {
+        "operation": "emails.retrieve",
+        "args": [
+          ".."
+        ]
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "a missing id is rejected before sending",
+      "call": {
+        "operation": "emails.retrieve",
+        "args": [
+          null
+        ]
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "a .. contact id is rejected before it removes the whole segment",
+      "call": {
+        "operation": "contacts.segments.remove",
+        "args": [
+          "..",
+          "seg_123"
+        ]
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "an empty second id is rejected before sending",
+      "call": {
+        "operation": "contacts.segments.remove",
+        "args": [
+          "ct_123",
+          ""
+        ]
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "normal ids on a nested route are sent unchanged",
+      "call": {
+        "operation": "contacts.segments.remove",
+        "args": [
+          "ct_123",
+          "seg_123"
+        ]
+      },
+      "expected": {
+        "calls": 1,
+        "method": "DELETE",
+        "path": "/contacts/ct_123/segments/seg_123"
+      }
+    },
+    {
+      "name": "a .. id in safe mode resolves to the SDK error instead of rejecting",
+      "runtimes": [
+        "typescript"
+      ],
+      "reason": "Java has no safe mode",
+      "call": {
+        "operation": "contacts.segments.remove",
+        "args": [
+          "..",
+          "seg_123"
+        ],
+        "safe": true
+      },
+      "expected": {
+        "calls": 0,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    }
+  ]
+}
