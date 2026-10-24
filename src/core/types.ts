@@ -1,4 +1,4 @@
-import type { APIError, APIConnectionError } from './error.js';
+import type { APIConnectionError, APIError } from './error.js';
 
 export interface Logger {
   debug: (message: string, ...args: unknown[]) => void;
@@ -75,10 +75,7 @@ export interface BackoffStrategy {
   exponent?: number;
 }
 
-export type RetryStrategy =
-  | 'none'
-  | 'backoff'
-  | { strategy: 'backoff'; backoff?: BackoffStrategy };
+export type RetryStrategy = 'none' | 'backoff' | { strategy: 'backoff'; backoff?: BackoffStrategy };
 
 export interface AppInfo {
   /** Identifier of the wrapping application, e.g. `@nuntly/cli` or `my-saas`. */
@@ -117,13 +114,14 @@ export interface RequestOptions {
   maxRetries?: number;
   headers?: Record<string, string>;
   signal?: AbortSignal;
+}
+
+/** Options of the methods whose endpoint deduplicates requests by `Idempotency-Key`. */
+export interface IdempotentRequestOptions extends RequestOptions {
   /**
-   * Idempotency key to deduplicate the request server-side. The SDK
-   * auto-generates a UUID v4 for endpoints that support idempotency
-   * (`emails.send`, `emails.bulk.send`, `messages.reply`, `messages.forward`,
-   * `inboxes.messages.send`) when this option is not provided. Pass an
-   * explicit value to wire up your own retry key (e.g. for cross-process
-   * deduplication).
+   * Idempotency key to deduplicate the request server-side. When omitted,
+   * the SDK generates a UUID v4 per call and reuses it across that call's
+   * retries. Pass your own value to deduplicate across processes.
    */
   idempotencyKey?: string;
 }
@@ -135,6 +133,7 @@ export interface CursorPageResponse<T> {
 
 export interface CursorPageParams {
   cursor?: string | null;
+  /** Items per page, from 1 to 30 (the default). */
   limit?: number;
 }
 

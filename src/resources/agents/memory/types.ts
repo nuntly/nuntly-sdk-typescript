@@ -1,10 +1,10 @@
 export interface AgentMemory {
   /** The agent memory record id. */
-  id: string;
+  id: string | null;
   /** Date at which the object was created (ISO 8601 format) */
-  createdAt: string;
+  createdAt: string | null;
   /** Date at which the object was updated (ISO 8601 format) */
-  updatedAt?: string;
+  updatedAt: string | null;
   /** The agent identifier. */
   agentId: string;
   /** The inbox id. */
@@ -12,22 +12,22 @@ export interface AgentMemory {
   /** The thread id. */
   threadId: string | null;
   /** The agent memory data. */
-  memory: Record<string, Record<string, unknown>>;
+  memory: Record<string, string | number | boolean | null | Array<string | number | boolean | null>>;
   /** The conversation summary. */
   summary: string | null;
 }
 
 export interface AgentMemoryQuery {
-  /** Scope memory to a specific inbox. */
+  /** The id of an inbox in your organization. Scopes memory to that inbox. */
   inboxId?: string;
-  /** Scope memory to a specific thread. */
+  /** The id of a thread in your organization. Scopes memory to that thread. */
   threadId?: string;
 }
 
 export interface AgentMemoryRequest {
-  /** The inbox id to scope the memory to. */
+  /** The id of an inbox in your organization. Scopes memory to that inbox. */
   inboxId?: string;
-  /** The thread id to scope the memory to. */
+  /** The id of a thread in your organization. Scopes memory to that thread. */
   threadId?: string;
   /** The agent memory key-value data. */
   memory: Record<string, string | number | boolean | null | Array<string | number | boolean | null>>;

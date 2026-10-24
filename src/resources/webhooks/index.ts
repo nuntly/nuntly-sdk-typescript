@@ -1,7 +1,21 @@
+import type {
+  APIPromise,
+  CursorPage,
+  CursorPageParams,
+  NuntlyClient,
+  PagePromise,
+  RequestOptions,
+} from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
-import type { CreateWebhookRequest, CreateWebhookResponse, DeleteWebhookResponse, UpdateWebhookRequest, UpdateWebhookResponse, WebhookResponse, WebhooksResponseItem } from '../types.js';
+import type {
+  CreateWebhookRequest,
+  CreateWebhookResponse,
+  DeleteWebhookResponse,
+  UpdateWebhookRequest,
+  UpdateWebhookResponse,
+  WebhookResponse,
+  WebhooksResponseItem,
+} from '../types.js';
 
 import { WebhooksEvents } from './events/index.js';
 
@@ -17,7 +31,7 @@ export class Webhooks extends Resource {
   }
 
   /**
-   * Register an endpoint to start receiving webhook events for your organization.
+   * Registers an HTTPS endpoint to receive the event types you subscribe to. The response includes the signing secret used to verify webhook payloads.
    *
    * POST /webhooks
    * @param body - CreateWebhookRequest
@@ -25,15 +39,17 @@ export class Webhooks extends Resource {
    * @returns APIPromise<CreateWebhookResponse>
    */
   create(body: CreateWebhookRequest, options?: RequestOptions): APIPromise<CreateWebhookResponse> {
-    return this._http.post<{ data: CreateWebhookResponse }>({
-      path: '/webhooks',
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .post<{ data: CreateWebhookResponse }>({
+        path: '/webhooks',
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Remove a webhook endpoint. No further events will be delivered to this URL.
+   * Permanently deletes a webhook endpoint. Events are no longer delivered to its URL after deletion. This cannot be undone.
    *
    * DELETE /webhooks/{id}
    * @param id - string
@@ -41,22 +57,27 @@ export class Webhooks extends Resource {
    * @returns APIPromise<DeleteWebhookResponse>
    */
   delete(id: string, options?: RequestOptions): APIPromise<DeleteWebhookResponse> {
-    return this._http.delete<{ data: DeleteWebhookResponse }>({
-      path: '/webhooks/{id}',
-      pathParams: { id },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .delete<{ data: DeleteWebhookResponse }>({
+        path: '/webhooks/{id}',
+        pathParams: { id },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Returns all registered webhook endpoints for the organization.
+   * Lists the webhook endpoints of your organization, newest first, with cursor pagination. Each entry shows its URL, event types, and status.
    *
    * GET /webhooks
    * @param query - CursorPageParams
    * @param options - RequestOptions
    * @returns PagePromise<CursorPage<WebhooksResponseItem>, WebhooksResponseItem>
    */
-  list(query?: CursorPageParams, options?: RequestOptions): PagePromise<CursorPage<WebhooksResponseItem>, WebhooksResponseItem> {
+  list(
+    query?: CursorPageParams,
+    options?: RequestOptions,
+  ): PagePromise<CursorPage<WebhooksResponseItem>, WebhooksResponseItem> {
     return this._http.list<WebhooksResponseItem>({
       path: '/webhooks',
       query: query as unknown as Record<string, unknown>,
@@ -65,7 +86,7 @@ export class Webhooks extends Resource {
   }
 
   /**
-   * Returns a webhook endpoint with its URL, subscribed events, and configuration.
+   * Retrieves a webhook endpoint with its URL, subscribed event types, status, and the reason and time it was disabled, if it is disabled.
    *
    * GET /webhooks/{id}
    * @param id - string
@@ -73,15 +94,17 @@ export class Webhooks extends Resource {
    * @returns APIPromise<WebhookResponse>
    */
   retrieve(id: string, options?: RequestOptions): APIPromise<WebhookResponse> {
-    return this._http.get<{ data: WebhookResponse }>({
-      path: '/webhooks/{id}',
-      pathParams: { id },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .get<{ data: WebhookResponse }>({
+        path: '/webhooks/{id}',
+        pathParams: { id },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Update the endpoint URL, subscribed event types, or rotate the signing secret.
+   * Updates the name, URL, event types, or status of a webhook, or rotates its signing secret. The new secret is returned only when you rotate it.
    *
    * PATCH /webhooks/{id}
    * @param id - string
@@ -90,12 +113,13 @@ export class Webhooks extends Resource {
    * @returns APIPromise<UpdateWebhookResponse>
    */
   update(id: string, body: UpdateWebhookRequest, options?: RequestOptions): APIPromise<UpdateWebhookResponse> {
-    return this._http.patch<{ data: UpdateWebhookResponse }>({
-      path: '/webhooks/{id}',
-      pathParams: { id },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .patch<{ data: UpdateWebhookResponse }>({
+        path: '/webhooks/{id}',
+        pathParams: { id },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
-
 }

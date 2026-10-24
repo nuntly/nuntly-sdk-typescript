@@ -1,8 +1,10 @@
-import type { APIError, APIConnectionError } from './error.js';
+import type { APIConnectionError, APIError, NuntlyError } from './error.js';
 
+// A plain `NuntlyError` is a call refused before sending (an empty, `.` or `..` path id).
+// An error thrown by your own hook is passed through as is.
 export type SafeResult<T> =
   | { data: T; error: null }
-  | { data: null; error: APIError | APIConnectionError };
+  | { data: null; error: APIError | APIConnectionError | NuntlyError };
 
 type Safeify<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => Promise<infer R>

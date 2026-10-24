@@ -3,5 +3,42 @@ export interface EmailsStatsResponse {
   start: string;
   /** The end date of the stats range */
   end: string;
-  stats: Array<{ occurredOn: string; queued: number; scheduled: number; processed: number; sending: number; sent: number; delivered: number; deliveryDelayed: number; bounced: number; failed: number; rejected: number; canceled: number; complaintReceived: number; renderingFailed: number; opened: number; uniqueOpened: number; clicked: number; uniqueClicked: number }>;
+  stats: Array<{
+    /** The date of the stats */
+    occurredOn: string;
+    /** Number of emails queued */
+    queued: number;
+    /** Number of emails scheduled */
+    scheduled: number;
+    /** Number of emails processed */
+    processed: number;
+    /** Number of emails sending */
+    sending: number;
+    /** Number of emails sent */
+    sent: number;
+    /** Number of emails delivered */
+    delivered: number;
+    /** Number of emails whose delivery was delayed */
+    deliveryDelayed: number;
+    /** Number of emails bounced */
+    bounced: number;
+    /** Number of emails failed */
+    failed: number;
+    /** Number of emails rejected */
+    rejected: number;
+    /** Number of emails canceled */
+    canceled: number;
+    /** Number of complaint received */
+    complaintReceived: number;
+    /** Number of emails with rendering failed */
+    renderingFailed: number;
+    /** Number of emails opened */
+    opened: number;
+    /** Number of unique emails opened */
+    uniqueOpened: number;
+    /** Number of emails clicked */
+    clicked: number;
+    /** Number of unique emails clicked */
+    uniqueClicked: number;
+  }>;
 }

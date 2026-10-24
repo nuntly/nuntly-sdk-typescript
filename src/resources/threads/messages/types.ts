@@ -23,7 +23,7 @@ export interface ThreadMessagesResponseItem {
   /** The original date of the message. */
   receivedAt: string;
   /** The status of the message */
-  status: 'received' | 'sent' | 'discarded' | 'failed';
+  status: 'received' | 'sent' | 'discarded' | 'failed' | (string & {});
   /** The message labels. */
   labels: Array<string>;
   /** The number of attachments. */

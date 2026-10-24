@@ -1,5 +1,5 @@
-import { Resource } from '../../core/index.js';
 import type { NuntlyClient } from '../../core/index.js';
+import { Resource } from '../../core/index.js';
 
 import { AgentsMemory } from './memory/index.js';
 
@@ -13,5 +13,4 @@ export class Agents extends Resource {
     super(client);
     this.memory = new AgentsMemory(client);
   }
-
 }

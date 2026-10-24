@@ -1,15 +1,13 @@
+import type { APIPromise, CursorPage, CursorPageParams, PagePromise, RequestOptions } from '../../../core/index.js';
 import { Resource } from '../../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../../core/index.js';
 import type { ThreadsQuery, ThreadsResponseItem } from '../../types.js';
-
 
 /**
  * InboxesThreads resource.
  */
 export class InboxesThreads extends Resource {
-
   /**
-   * List threads in an inbox.
+   * Lists the threads in an inbox, most recently active first, with cursor pagination. Filter by labels; spam and trash threads are excluded by default.
    *
    * GET /inboxes/{inboxId}/threads
    * @param inboxId - string
@@ -17,7 +15,11 @@ export class InboxesThreads extends Resource {
    * @param options - RequestOptions
    * @returns PagePromise<CursorPage<ThreadsResponseItem>, ThreadsResponseItem>
    */
-  list(inboxId: string, query?: ThreadsQuery, options?: RequestOptions): PagePromise<CursorPage<ThreadsResponseItem>, ThreadsResponseItem> {
+  list(
+    inboxId: string,
+    query?: ThreadsQuery,
+    options?: RequestOptions,
+  ): PagePromise<CursorPage<ThreadsResponseItem>, ThreadsResponseItem> {
     return this._http.list<ThreadsResponseItem>({
       path: '/inboxes/{inboxId}/threads',
       pathParams: { inboxId },
@@ -25,5 +27,4 @@ export class InboxesThreads extends Resource {
       options,
     });
   }
-
 }

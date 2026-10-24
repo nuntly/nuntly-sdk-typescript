@@ -1,7 +1,22 @@
+import type {
+  APIPromise,
+  CursorPage,
+  CursorPageParams,
+  IdempotentRequestOptions,
+  NuntlyClient,
+  PagePromise,
+  RequestOptions,
+} from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
-import type { CreateInboxRequest, IdResponse, InboxResponse, InboxesQuery, InboxesResponseItem, UpdateInboxRequest } from '../types.js';
+import { generateIdempotencyKey } from '../../lib/idempotency.js';
+import type {
+  CreateInboxRequest,
+  IdResponse,
+  InboxesQuery,
+  InboxesResponseItem,
+  InboxResponse,
+  UpdateInboxRequest,
+} from '../types.js';
 
 import { InboxesMessages } from './messages/index.js';
 import { InboxesThreads } from './threads/index.js';
@@ -20,23 +35,27 @@ export class Inboxes extends Resource {
   }
 
   /**
-   * Create a new inbox on a verified domain.
+   * Creates an inbox address on a verified domain with receiving active, or on your provided domain if none is given. Can assign a namespace and agent id.
    *
    * POST /inboxes
    * @param body - CreateInboxRequest
-   * @param options - RequestOptions
+   * @param options - IdempotentRequestOptions
    * @returns APIPromise<InboxResponse>
    */
-  create(body: CreateInboxRequest, options?: RequestOptions): APIPromise<InboxResponse> {
-    return this._http.post<{ data: InboxResponse }>({
-      path: '/inboxes',
-      body,
-      options,
-    }).map((r) => r.data);
+  create(body: CreateInboxRequest, options?: IdempotentRequestOptions): APIPromise<InboxResponse> {
+    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
+    return this._http
+      .post<{ data: InboxResponse }>({
+        path: '/inboxes',
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Soft-delete an inbox.
+   * Deletes an inbox so it no longer appears in lists and stops matching incoming mail. The default catch-all inbox of a domain cannot be deleted.
    *
    * DELETE /inboxes/{inboxId}
    * @param inboxId - string
@@ -44,22 +63,27 @@ export class Inboxes extends Resource {
    * @returns APIPromise<IdResponse>
    */
   delete(inboxId: string, options?: RequestOptions): APIPromise<IdResponse> {
-    return this._http.delete<{ data: IdResponse }>({
-      path: '/inboxes/{inboxId}',
-      pathParams: { inboxId },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .delete<{ data: IdResponse }>({
+        path: '/inboxes/{inboxId}',
+        pathParams: { inboxId },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * List all inboxes.
+   * Lists the active inboxes of your organization, newest first, with cursor pagination. Optionally filter the results to a single namespace.
    *
    * GET /inboxes
    * @param query - InboxesQuery
    * @param options - RequestOptions
    * @returns PagePromise<CursorPage<InboxesResponseItem>, InboxesResponseItem>
    */
-  list(query?: InboxesQuery, options?: RequestOptions): PagePromise<CursorPage<InboxesResponseItem>, InboxesResponseItem> {
+  list(
+    query?: InboxesQuery,
+    options?: RequestOptions,
+  ): PagePromise<CursorPage<InboxesResponseItem>, InboxesResponseItem> {
     return this._http.list<InboxesResponseItem>({
       path: '/inboxes',
       query: query as unknown as Record<string, unknown>,
@@ -68,7 +92,7 @@ export class Inboxes extends Resource {
   }
 
   /**
-   * Retrieve an inbox.
+   * Retrieves an inbox by id, including its address, domain, display name, namespace, and assigned agent id. Deleted inboxes return a not found error.
    *
    * GET /inboxes/{inboxId}
    * @param inboxId - string
@@ -76,15 +100,17 @@ export class Inboxes extends Resource {
    * @returns APIPromise<InboxResponse>
    */
   retrieve(inboxId: string, options?: RequestOptions): APIPromise<InboxResponse> {
-    return this._http.get<{ data: InboxResponse }>({
-      path: '/inboxes/{inboxId}',
-      pathParams: { inboxId },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .get<{ data: InboxResponse }>({
+        path: '/inboxes/{inboxId}',
+        pathParams: { inboxId },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Update an inbox.
+   * Updates the display name of an inbox, used as the sender name on messages it sends. Set the name to null to clear it. Returns the inbox id.
    *
    * PATCH /inboxes/{inboxId}
    * @param inboxId - string
@@ -93,12 +119,13 @@ export class Inboxes extends Resource {
    * @returns APIPromise<IdResponse>
    */
   update(inboxId: string, body: UpdateInboxRequest, options?: RequestOptions): APIPromise<IdResponse> {
-    return this._http.patch<{ data: IdResponse }>({
-      path: '/inboxes/{inboxId}',
-      pathParams: { inboxId },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .patch<{ data: IdResponse }>({
+        path: '/inboxes/{inboxId}',
+        pathParams: { inboxId },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
-
 }

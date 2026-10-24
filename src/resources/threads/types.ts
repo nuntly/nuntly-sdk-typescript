@@ -1,6 +1,6 @@
 export interface RetrieveThreadQuery {
-  /** Set to "true" to automatically remove the unread label from all messages in the thread. */
-  markRead?: string;
+  /** When true, removes the unread label from all messages in the thread. */
+  markRead?: 'true' | 'false';
 }
 
 export interface ThreadResponse {

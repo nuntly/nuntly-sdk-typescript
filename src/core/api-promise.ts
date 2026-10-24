@@ -15,10 +15,7 @@ export class APIPromise<T> extends Promise<T> {
   protected readonly responsePromise: Promise<Response>;
 
   protected constructor(
-    executor: (
-      resolve: (value: T | PromiseLike<T>) => void,
-      reject: (reason: unknown) => void,
-    ) => void,
+    executor: (resolve: (value: T | PromiseLike<T>) => void, reject: (reason: unknown) => void) => void,
     responsePromise: Promise<Response>,
   ) {
     super(executor);
@@ -40,6 +37,8 @@ export class APIPromise<T> extends Promise<T> {
   }
 
   async asResponse(): Promise<Response> {
+    // The caller chose the raw response, so the typed error on the data side is not theirs to handle.
+    (this as Promise<T>).catch(() => {});
     return this.responsePromise;
   }
 

@@ -13,6 +13,6 @@ export interface EmailEventsResponseItem {
   /** The date at which the event occurred */
   occurredAt?: string;
   /** An event */
-  eventType: EventType;
+  eventType: EventType | (string & {});
   payload: Record<string, unknown>;
 }

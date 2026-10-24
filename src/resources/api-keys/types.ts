@@ -6,7 +6,7 @@ export interface ApiKeyResponse {
   /** The last 6 characters of the api key token */
   shortToken: string;
   /** The status for the api key */
-  status: 'enabled' | 'disabled' | 'revoked';
+  status: 'enabled' | 'disabled' | 'revoked' | (string & {});
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
 }
@@ -20,7 +20,7 @@ export interface ApiKeysResponseItem {
   /** The last 6 characters of the api key token */
   shortToken: string;
   /** The status for the api key */
-  status: 'enabled' | 'disabled' | 'revoked';
+  status: 'enabled' | 'disabled' | 'revoked' | (string & {});
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
 }
@@ -52,7 +52,7 @@ export interface CreateApiKeyResponse {
   /** The last 6 characters of the api key token */
   shortToken: string;
   /** The status for the api key */
-  status: 'enabled' | 'disabled' | 'revoked';
+  status: 'enabled' | 'disabled' | 'revoked' | (string & {});
 }
 
 export interface DeleteApiKeyResponse {

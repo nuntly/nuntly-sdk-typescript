@@ -1,13 +1,4 @@
-import type { Event } from '../resources/shared/types.js';
-
-/**
- * Canonical webhook payload union. Identical to `Event` in
- * `resources/shared/types`; kept as an alias for backward compatibility
- * with consumers that import `WebhookEvent` directly. New code can use
- * `Event` (or any of the per-variant types) from `@nuntly/sdk`.
- */
-export type WebhookEvent = Event;
-
+import type { WebhookEvent } from '../resources/shared/types.js';
 
 export class WebhookVerificationError extends Error {
   constructor(message: string) {
@@ -28,7 +19,10 @@ const SECRET_PREFIX = /^whsec_/;
  * Verify the signature of an incoming Nuntly webhook and return the typed event.
  *
  * The signature header has the form:
- *   `t=<unix-seconds>,v0=<hex-signature>[,v0=<additional-hex-signatures>]`
+ *   `t=<unix-seconds>,v0=<sig1>[,<sig2>...]`
+ *
+ * During a signing secret rotation the header carries one signature per
+ * secret, so verification succeeds with either the old or the new secret.
  *
  * The signing secret may be passed with or without the `whsec_` prefix.
  *
@@ -40,7 +34,7 @@ export async function verifyWebhook(
   signatureHeader: string,
   secret: string,
   options: VerifyWebhookOptions = {},
-): Promise<Event> {
+): Promise<WebhookEvent> {
   if (!signatureHeader) {
     throw new WebhookVerificationError('Missing webhook signature header');
   }
@@ -69,10 +63,11 @@ export async function verifyWebhook(
     throw new WebhookVerificationError('Webhook timestamp outside tolerance window');
   }
 
+  // The server prefixes the signature list once (`v0=<sig1>,<sig2>`); other `key=` parts are ignored.
   const candidates = parts
     .slice(1)
-    .filter((s) => s.startsWith('v0='))
-    .map((s) => s.slice(3));
+    .map((s) => (s.startsWith('v0=') ? s.slice(3) : s))
+    .filter((s) => s !== '' && !s.includes('='));
   if (candidates.length === 0) {
     throw new WebhookVerificationError('No v0 signature found in header');
   }
@@ -81,13 +76,9 @@ export async function verifyWebhook(
   const signedContent = `${timestamp}.${payloadStr}`;
 
   const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(rawKey),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  );
+  const key = await crypto.subtle.importKey('raw', encoder.encode(rawKey), { name: 'HMAC', hash: 'SHA-256' }, false, [
+    'sign',
+  ]);
   const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(signedContent));
   const expected = bytesToHex(new Uint8Array(signature));
 
@@ -96,7 +87,7 @@ export async function verifyWebhook(
     throw new WebhookVerificationError('Webhook signature verification failed');
   }
 
-  return JSON.parse(payloadStr) as Event;
+  return JSON.parse(payloadStr) as WebhookEvent;
 }
 
 function bytesToHex(bytes: Uint8Array): string {

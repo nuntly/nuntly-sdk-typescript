@@ -1,8 +1,24 @@
+import type {
+  APIPromise,
+  CursorPage,
+  CursorPageParams,
+  IdempotentRequestOptions,
+  NuntlyClient,
+  PagePromise,
+  RequestOptions,
+} from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import type { NuntlyClient } from '../../core/index.js';
-import type { APIPromise, RequestOptions, CursorPage, CursorPageParams, PagePromise } from '../../core/index.js';
 import { generateIdempotencyKey } from '../../lib/idempotency.js';
-import type { ForwardMessageRequest, IdResponse, MessageResponse, MessagesQuery, MessagesResponseItem, ReplyMessageRequest, SendMessageResponse, UpdateMessageRequest } from '../types.js';
+import type {
+  ForwardMessageRequest,
+  IdResponse,
+  MessageResponse,
+  MessagesQuery,
+  MessagesResponseItem,
+  ReplyMessageRequest,
+  SendMessageResponse,
+  UpdateMessageRequest,
+} from '../types.js';
 
 import { MessagesAttachments } from './attachments/index.js';
 import { MessagesContent } from './content/index.js';
@@ -21,34 +37,43 @@ export class Messages extends Resource {
   }
 
   /**
-   * Forward a message to new recipients.
+   * Sends a message with a Fwd: subject from the inbox of the original message to one or more new recipients, in a new thread, with an optional text note.
    *
    * POST /messages/{messageId}/forward
    * @param messageId - string
    * @param body - ForwardMessageRequest
-   * @param options - RequestOptions
+   * @param options - IdempotentRequestOptions
    * @returns APIPromise<SendMessageResponse>
    */
-  forward(messageId: string, body: ForwardMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+  forward(
+    messageId: string,
+    body: ForwardMessageRequest,
+    options?: IdempotentRequestOptions,
+  ): APIPromise<SendMessageResponse> {
     const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
     options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
-    return this._http.post<{ data: SendMessageResponse }>({
-      path: '/messages/{messageId}/forward',
-      pathParams: { messageId },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .post<{ data: SendMessageResponse }>({
+        path: '/messages/{messageId}/forward',
+        pathParams: { messageId },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * List all received messages across inboxes.
+   * Lists messages newest first, with cursor pagination and optional filters by domain and sender. Each item includes its labels, status and attachment count.
    *
    * GET /messages
    * @param query - MessagesQuery
    * @param options - RequestOptions
    * @returns PagePromise<CursorPage<MessagesResponseItem>, MessagesResponseItem>
    */
-  list(query?: MessagesQuery, options?: RequestOptions): PagePromise<CursorPage<MessagesResponseItem>, MessagesResponseItem> {
+  list(
+    query?: MessagesQuery,
+    options?: RequestOptions,
+  ): PagePromise<CursorPage<MessagesResponseItem>, MessagesResponseItem> {
     return this._http.list<MessagesResponseItem>({
       path: '/messages',
       query: query as unknown as Record<string, unknown>,
@@ -57,27 +82,33 @@ export class Messages extends Resource {
   }
 
   /**
-   * Reply to a message. Set replyAll to true to reply to all recipients.
+   * Replies from the inbox that holds the message, in the same thread. Set replyAll to true to also copy the other recipients. The send is queued.
    *
    * POST /messages/{messageId}/reply
    * @param messageId - string
    * @param body - ReplyMessageRequest
-   * @param options - RequestOptions
+   * @param options - IdempotentRequestOptions
    * @returns APIPromise<SendMessageResponse>
    */
-  reply(messageId: string, body: ReplyMessageRequest, options?: RequestOptions): APIPromise<SendMessageResponse> {
+  reply(
+    messageId: string,
+    body: ReplyMessageRequest,
+    options?: IdempotentRequestOptions,
+  ): APIPromise<SendMessageResponse> {
     const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
     options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
-    return this._http.post<{ data: SendMessageResponse }>({
-      path: '/messages/{messageId}/reply',
-      pathParams: { messageId },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .post<{ data: SendMessageResponse }>({
+        path: '/messages/{messageId}/reply',
+        pathParams: { messageId },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Retrieve a single message with inbox enrichment.
+   * Retrieves a received or sent message by id, including its sender, recipients, subject, labels, status, attachment count and raw headers.
    *
    * GET /messages/{messageId}
    * @param messageId - string
@@ -85,15 +116,17 @@ export class Messages extends Resource {
    * @returns APIPromise<MessageResponse>
    */
   retrieve(messageId: string, options?: RequestOptions): APIPromise<MessageResponse> {
-    return this._http.get<{ data: MessageResponse }>({
-      path: '/messages/{messageId}',
-      pathParams: { messageId },
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .get<{ data: MessageResponse }>({
+        path: '/messages/{messageId}',
+        pathParams: { messageId },
+        options,
+      })
+      .map((r) => r.data);
   }
 
   /**
-   * Update message labels. Only available for messages in user-created inboxes.
+   * Adds or removes labels on a message. Only messages in user-created inboxes accept labels, and a message can hold at most 10 labels.
    *
    * PATCH /messages/{messageId}
    * @param messageId - string
@@ -102,12 +135,13 @@ export class Messages extends Resource {
    * @returns APIPromise<IdResponse>
    */
   update(messageId: string, body: UpdateMessageRequest, options?: RequestOptions): APIPromise<IdResponse> {
-    return this._http.patch<{ data: IdResponse }>({
-      path: '/messages/{messageId}',
-      pathParams: { messageId },
-      body,
-      options,
-    }).map((r) => r.data);
+    return this._http
+      .patch<{ data: IdResponse }>({
+        path: '/messages/{messageId}',
+        pathParams: { messageId },
+        body,
+        options,
+      })
+      .map((r) => r.data);
   }
-
 }
