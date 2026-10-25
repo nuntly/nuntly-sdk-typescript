@@ -1,5 +1,5 @@
 {
-  "description": "Webhook signature verification. input.now is the verifier clock in Unix seconds; toleranceSeconds defaults to the SDK default. The secrets are test values of no webhook.",
+  "description": "Webhook signature verification. input.now is the verifier clock in Unix seconds; toleranceSeconds defaults to the SDK default. The secrets are test values of no webhook. A reject outcome is the webhook verification error of the runtime (WebhookVerificationError in both).",
   "cases": [
     {
       "name": "single signature, secret with its whsec_ prefix",
@@ -230,6 +230,30 @@
       "input": {
         "payload": "{\"createdAt\":\"2025-10-24T10:00:00.000Z\",\"data\":{\"delivery\":{\"deliveredAt\":\"2025-10-24T09:59:59.000Z\",\"recipients\":[\"jane@example.org\"],\"remoteMtaIp\":\"192.0.2.10\",\"reportingMta\":\"a1-2.smtp-out.eu-west-1.amazonses.com\",\"smtpResponse\":\"250 2.0.0 OK\"},\"domainId\":\"dom_01k8a1conformance\",\"domainName\":\"example.com\",\"enqueuedAt\":\"2025-10-24T09:59:57.000Z\",\"from\":\"Acme \\u003chello@example.com\\u003e\",\"id\":\"em_01k8a1conformance\",\"messageId\":\"0102019a1b2c3d4e-conformance-000000\",\"orgId\":\"org_01k8a1conformance\",\"sentAt\":\"2025-10-24T09:59:58.000Z\",\"subject\":\"Café \\u0026 \\u003cb\\u003ebold\\u003c/b\\u003e receipts\",\"to\":[\"jane@example.org\"]},\"id\":\"evt_01k8a1conformance\",\"type\":\"email.delivered\"}",
         "header": "t=1761300000,v1=55d75680c14061575c3dfb5fb83f961a5752ea851d816a39bae6c1b560b84c05",
+        "secret": "whsec_cd35801e9442bfa289efd0b0f55fed6831a18720ea90ce1279a1c728f8edbb34",
+        "now": 1761300000
+      },
+      "expected": {
+        "outcome": "reject"
+      }
+    },
+    {
+      "name": "correctly signed payload that is not JSON",
+      "input": {
+        "payload": "not a json payload",
+        "header": "t=1761300000,v0=bd07ccf532285a228f54136d55dbaa3151b89d2c8f60631ea7ef3b376376da33",
+        "secret": "whsec_cd35801e9442bfa289efd0b0f55fed6831a18720ea90ce1279a1c728f8edbb34",
+        "now": 1761300000
+      },
+      "expected": {
+        "outcome": "reject"
+      }
+    },
+    {
+      "name": "correctly signed JSON payload that is not an object",
+      "input": {
+        "payload": "[\"email.delivered\"]",
+        "header": "t=1761300000,v0=25fb81e03aee46f94981584471ca98d6e6a437f75879cf2a291d0ba617988ca1",
         "secret": "whsec_cd35801e9442bfa289efd0b0f55fed6831a18720ea90ce1279a1c728f8edbb34",
         "now": 1761300000
       },

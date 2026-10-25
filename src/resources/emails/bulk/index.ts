@@ -39,6 +39,7 @@ export class EmailsBulk extends Resource {
         path: '/emails/bulk',
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }

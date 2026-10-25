@@ -56,6 +56,7 @@ export class Messages extends Resource {
         pathParams: { messageId },
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }
@@ -74,7 +75,7 @@ export class Messages extends Resource {
   ): PagePromise<CursorPage<MessagesResponseItem>, MessagesResponseItem> {
     return this._http.list<MessagesResponseItem>({
       path: '/messages',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }
@@ -99,6 +100,7 @@ export class Messages extends Resource {
         pathParams: { messageId },
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }

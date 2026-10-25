@@ -1,7 +1,7 @@
 /**
  * @example
  *     await nuntly.topics.create({
- *       name: 'example.com',
+ *       name: 'product updates',
  *     });
  */
 export interface CreateTopicRequest {
@@ -34,8 +34,8 @@ export interface TopicsResponseItem {
 
 /**
  * @example
- *     await nuntly.topics.update({
- *       name: 'example.com',
+ *     await nuntly.topics.update('tpc_01kabn43yqyxn2bx4ve84mczd3', {
+ *       name: 'product updates',
  *     });
  */
 export interface UpdateTopicRequest {

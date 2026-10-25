@@ -147,6 +147,163 @@
           }
         ]
       }
+    },
+    {
+      "name": "auto-pagination stops with an SDK error when the API returns the same next cursor again",
+      "request": {
+        "path": "/emails",
+        "query": {}
+      },
+      "action": "iterate",
+      "responses": [
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_1"
+              }
+            ],
+            "nextCursor": "cur_2"
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_2"
+              }
+            ],
+            "nextCursor": "cur_2"
+          }
+        }
+      ],
+      "expected": {
+        "calls": 2,
+        "ids": [
+          "em_1",
+          "em_2"
+        ],
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "auto-pagination stops with an SDK error on a longer cursor cycle",
+      "request": {
+        "path": "/emails",
+        "query": {}
+      },
+      "action": "iterate",
+      "responses": [
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_1"
+              }
+            ],
+            "nextCursor": "cur_2"
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_2"
+              }
+            ],
+            "nextCursor": "cur_3"
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_3"
+              }
+            ],
+            "nextCursor": "cur_2"
+          }
+        }
+      ],
+      "expected": {
+        "calls": 3,
+        "ids": [
+          "em_1",
+          "em_2",
+          "em_3"
+        ],
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "the page after one whose next cursor is its own request cursor fails without a request",
+      "request": {
+        "path": "/emails",
+        "query": {
+          "cursor": "cur_1"
+        }
+      },
+      "action": "nextPage",
+      "responses": [
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_1"
+              }
+            ],
+            "nextCursor": "cur_1"
+          }
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "error": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "name": "auto-pagination stops at once when the first next cursor is the starting cursor",
+      "request": {
+        "path": "/emails",
+        "query": {
+          "cursor": "cur_1"
+        }
+      },
+      "action": "iterate",
+      "responses": [
+        {
+          "status": 200,
+          "body": {
+            "data": [
+              {
+                "id": "em_1"
+              }
+            ],
+            "nextCursor": "cur_1"
+          }
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "ids": [
+          "em_1"
+        ],
+        "error": {
+          "kind": "sdk"
+        }
+      }
     }
   ]
 }

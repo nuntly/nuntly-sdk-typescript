@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, setSystemTime } from 'bun:test';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { inspect } from 'node:util';
 import type { ClientOptions, RequestOptions } from '../src/index';
 import {
   APIConnectionError,
@@ -19,15 +20,19 @@ import {
   safe,
   UnprocessableEntityError,
   verifyWebhook,
+  WebhookVerificationError,
 } from '../src/index';
 
 // The vectors are in conformance/ at the repository root, the nearest ancestor that has one.
-function vectors<T>(file: string): T {
+function conformanceDir(): string {
   for (let dir = import.meta.dir; dir !== dirname(dir); dir = dirname(dir)) {
-    const path = join(dir, 'conformance', file);
-    if (existsSync(path)) return JSON.parse(readFileSync(path, 'utf8')) as T;
+    if (existsSync(join(dir, 'conformance', 'retry.json'))) return join(dir, 'conformance');
   }
-  throw new Error(`conformance/${file} not found`);
+  throw new Error('conformance/ not found');
+}
+
+function vectors<T>(file: string): T {
+  return JSON.parse(readFileSync(join(conformanceDir(), file), 'utf8')) as T;
 }
 
 type Range = [number, number];
@@ -46,6 +51,7 @@ interface ScriptedResponse {
 interface ExpectedError {
   kind: string;
   notKind?: string;
+  messageIncludes?: string;
   status?: number;
   code?: string;
   title?: string;
@@ -60,6 +66,18 @@ interface Case {
 }
 
 const runsHere = (c: Case) => !c.runtimes || c.runtimes.includes('typescript');
+
+// Counts the cases each file ran, so the last test fails when a filter drops one.
+const ran = new Map<string, number>();
+function running(file: string, expected: object, asserted: readonly string[]) {
+  ran.set(file, (ran.get(file) ?? 0) + 1);
+  expectAsserted(expected, asserted);
+}
+
+// A vector field the runner does not assert would pass whatever the SDK does.
+function expectAsserted(expected: object, asserted: readonly string[]) {
+  expect(Object.keys(expected).filter((key) => !asserted.includes(key))).toEqual([]);
+}
 
 class HookFailure extends TypeError {}
 
@@ -87,10 +105,25 @@ function expectWithin(actual: number | null | undefined, expected: number | Rang
   expect(actual!).toBeLessThanOrEqual(max);
 }
 
+const ERROR_KEYS = [
+  'kind',
+  'notKind',
+  'messageIncludes',
+  'status',
+  'code',
+  'title',
+  'details',
+  'requestId',
+  'retryAfterMs',
+];
+
 function expectError(error: unknown, expected: ExpectedError) {
+  expectAsserted(expected, ERROR_KEYS);
   expect(KINDS[expected.kind]?.(error)).toBe(true);
   if (expected.notKind) expect(KINDS[expected.notKind]?.(error)).toBe(false);
-  if (!(error instanceof APIError)) return;
+  if (expected.messageIncludes) expect((error as Error).message).toContain(expected.messageIncludes);
+  // Only an API error has the accessors below.
+  if (!(error instanceof APIError)) return expectAsserted(expected, ['kind', 'notKind', 'messageIncludes']);
   if (expected.status !== undefined) expect(error.status).toBe(expected.status);
   if (expected.code !== undefined) expect(error.code).toBe(expected.code);
   if (expected.title !== undefined) expect(error.title).toBe(expected.title);
@@ -129,14 +162,14 @@ function scriptedFetch(
 }
 
 // Calls a dotted SDK operation such as `emails.retrieve` on the client.
-function callOperation(client: object, operation: string, args: (string | null)[]): Promise<unknown> {
+function callOperation(client: object, operation: string, args: unknown[]): Promise<unknown> {
   const segments = operation.split('.');
   const method = segments.pop()!;
   const resource = segments.reduce(
     (target, name) => target[name] as Record<string, unknown>,
     client as Record<string, unknown>,
   );
-  return (resource[method] as (...args: (string | null)[]) => Promise<unknown>).apply(resource, args);
+  return (resource[method] as (...args: unknown[]) => Promise<unknown>).apply(resource, args);
 }
 
 // Records every wait the SDK schedules and runs it at once, so delays are asserted without sleeping.
@@ -151,6 +184,7 @@ describe('conformance: retry.json', () => {
       path: string;
       body?: unknown;
       idempotencyKey?: string;
+      idempotent?: boolean;
       maxRetries?: number;
       onRequestThrows?: boolean;
       onResponseThrows?: boolean;
@@ -160,6 +194,7 @@ describe('conformance: retry.json', () => {
       calls: number;
       retries?: number;
       hookCalls?: number;
+      hookSequence?: string[];
       delaysMs?: Range[];
       sameIdempotencyKey?: boolean;
       result?: { status: number };
@@ -180,9 +215,20 @@ describe('conformance: retry.json', () => {
 
   for (const c of vectors<{ cases: RetryCase[] }>('retry.json').cases.filter(runsHere)) {
     it(c.name, async () => {
+      running('retry.json', c.expected, [
+        'calls',
+        'retries',
+        'hookCalls',
+        'hookSequence',
+        'delaysMs',
+        'sameIdempotencyKey',
+        'result',
+        'error',
+      ]);
       const keys: (string | null)[] = [];
       let retries = 0;
       let hookCalls = 0;
+      const hookSequence: string[] = [];
       const caller = new AbortController();
       const client = new NuntlyClient({
         apiKey: 'test_key',
@@ -192,14 +238,23 @@ describe('conformance: retry.json', () => {
         fetch: scriptedFetch(c.responses, (h) => keys.push(h.get('idempotency-key')), caller),
         hooks: {
           onRetry: () => {
+            hookSequence.push('onRetry');
             retries++;
           },
           onRequest: () => {
+            hookSequence.push('onRequest');
             hookCalls++;
             if (c.request.onRequestThrows) throw new HookFailure('hook failed');
           },
           onResponse: () => {
+            hookSequence.push('onResponse');
             if (c.request.onResponseThrows) throw new HookFailure('hook failed');
+          },
+          onSuccess: () => {
+            hookSequence.push('onSuccess');
+          },
+          onError: () => {
+            hookSequence.push('onError');
           },
         },
       } satisfies ClientOptions);
@@ -211,7 +266,7 @@ describe('conformance: retry.json', () => {
       const call =
         c.request.method === 'GET'
           ? client.get({ path: c.request.path, options })
-          : client.post({ path: c.request.path, body: c.request.body, options });
+          : client.post({ path: c.request.path, body: c.request.body, options, idempotent: c.request.idempotent });
 
       const error = await call.then(
         () => undefined,
@@ -221,11 +276,13 @@ describe('conformance: retry.json', () => {
       expect(keys).toHaveLength(c.expected.calls);
       if (c.expected.retries !== undefined) expect(retries).toBe(c.expected.retries);
       if (c.expected.hookCalls !== undefined) expect(hookCalls).toBe(c.expected.hookCalls);
+      if (c.expected.hookSequence) expect(hookSequence).toEqual(c.expected.hookSequence);
       if (c.expected.result) {
         expect(error).toBeUndefined();
         expect((await call.asResponse()).status).toBe(c.expected.result.status);
       }
       if (c.expected.error) expectError(error, c.expected.error);
+      if (c.expected.sameIdempotencyKey !== undefined) expect(c.expected.sameIdempotencyKey).toBe(true);
       if (c.expected.sameIdempotencyKey) expect(new Set(keys)).toEqual(new Set([c.request.idempotencyKey!]));
       if (c.expected.delaysMs) {
         expect(delays).toHaveLength(c.expected.delaysMs.length);
@@ -243,6 +300,7 @@ describe('conformance: errors.json', () => {
 
   for (const c of vectors<{ cases: ErrorCase[] }>('errors.json').cases.filter(runsHere)) {
     it(c.name, async () => {
+      running('errors.json', c.expected, ERROR_KEYS);
       const client = new NuntlyClient({
         apiKey: 'test_key',
         baseUrl: 'https://api.test.com',
@@ -269,6 +327,11 @@ describe('conformance: webhook.json', () => {
 
   for (const c of vectors<{ cases: WebhookCase[] }>('webhook.json').cases.filter(runsHere)) {
     it(c.name, async () => {
+      running(
+        'webhook.json',
+        c.expected,
+        c.expected.outcome === 'reject' ? ['outcome'] : ['outcome', 'eventType', 'eventId'],
+      );
       setSystemTime(new Date(c.input.now * 1000));
       const options = c.input.toleranceSeconds === undefined ? {} : { tolerance: c.input.toleranceSeconds };
 
@@ -278,7 +341,7 @@ describe('conformance: webhook.json', () => {
       );
 
       if (c.expected.outcome === 'reject') {
-        expect('error' in result).toBe(true);
+        expect('error' in result && result.error).toBeInstanceOf(WebhookVerificationError);
         return;
       }
       expect('event' in result && result.event).toMatchObject({ type: c.expected.eventType, id: c.expected.eventId });
@@ -296,6 +359,7 @@ describe('conformance: pagination.json', () => {
 
   for (const c of vectors<{ cases: PaginationCase[] }>('pagination.json').cases.filter(runsHere)) {
     it(c.name, async () => {
+      running('pagination.json', c.expected, ['calls', 'ids', 'queries', 'error']);
       const queries: Record<string, string>[] = [];
       const client = new NuntlyClient({
         apiKey: 'test_key',
@@ -335,35 +399,78 @@ describe('conformance: transport.json', () => {
   });
 
   interface TransportCase extends Case {
-    client?: { baseUrl?: string; retry?: 'none' };
-    request: { method: 'GET' | 'POST'; path: string };
+    client?: { baseUrl?: string; retry?: 'none'; apiKey?: string; debug?: true; timeoutMs?: number };
+    request: { method: 'GET' | 'POST'; path: string; timeoutMs?: number };
     responses: ScriptedResponse[];
-    expected: { calls: number; url?: string; result?: { status: number }; error?: ExpectedError };
+    expected: {
+      calls: number;
+      url?: string;
+      sentAuthorization?: string;
+      apiKeyHidden?: true;
+      result?: { status: number };
+      error?: ExpectedError;
+    };
   }
+
+  // Every string form a caller can get of a value: console.log, util.inspect, JSON and String.
+  const stringForms = (value: unknown): string[] => {
+    const forms = [inspect(value, { depth: null, showHidden: true }), Bun.inspect(value, { depth: 50 })];
+    try {
+      forms.push(String(value), JSON.stringify(value) ?? '');
+    } catch {}
+    return forms;
+  };
 
   const cases = vectors<{ cases: TransportCase[] }>('transport.json').cases.filter((c) => 'request' in c);
   for (const c of cases.filter(runsHere)) {
     it(c.name, async () => {
+      running('transport.json', c.expected, ['calls', 'url', 'sentAuthorization', 'apiKeyHidden', 'result', 'error']);
       const urls: string[] = [];
-      const client = new NuntlyClient({
-        apiKey: 'test_key',
+      const authorizations: (string | null)[] = [];
+      const seen: unknown[] = [];
+      const record = (...args: unknown[]) => {
+        seen.push(...args);
+      };
+      const options: ClientOptions = {
+        apiKey: c.client?.apiKey ?? 'test_key',
         baseUrl: c.client?.baseUrl ?? 'https://api.test.com',
         ...(c.client?.retry ? { retry: c.client.retry } : {}),
-        fetch: scriptedFetch(c.responses, (_, url) => urls.push(url.href)),
-      });
-      const call =
-        c.request.method === 'GET' ? client.get({ path: c.request.path }) : client.post({ path: c.request.path });
-
-      const error = await call.then(
-        () => undefined,
-        (e: unknown) => e,
-      );
+        ...(c.client?.timeoutMs !== undefined ? { timeout: c.client.timeoutMs } : {}),
+        ...(c.client?.debug ? { logger: { debug: record, info: record, warn: record, error: record } } : {}),
+        hooks: { onRequest: record, onRetry: record, onResponse: record, onSuccess: record, onError: record },
+        fetch: scriptedFetch(c.responses, (headers, url) => {
+          urls.push(url.href);
+          authorizations.push(headers.get('authorization'));
+        }),
+      };
+      const request = {
+        path: c.request.path,
+        options: c.request.timeoutMs !== undefined ? { timeout: c.request.timeoutMs } : {},
+      };
+      let client: NuntlyClient | undefined;
+      let call: ReturnType<NuntlyClient['get']> | undefined;
+      let error: unknown;
+      try {
+        client = new NuntlyClient(options);
+        call = c.request.method === 'GET' ? client.get(request) : client.post(request);
+        await call;
+      } catch (e) {
+        error = e;
+      }
 
       expect(urls).toHaveLength(c.expected.calls);
       for (const url of urls) if (c.expected.url) expect(url).toBe(c.expected.url);
+      if (c.expected.sentAuthorization) {
+        expect(authorizations).toEqual(urls.map(() => c.expected.sentAuthorization!));
+      }
+      if (c.expected.apiKeyHidden) {
+        const values = [client, new Nuntly(options), ...seen, error];
+        const leaks = values.flatMap(stringForms).filter((form) => form.includes(options.apiKey!));
+        expect(leaks).toEqual([]);
+      }
       if (c.expected.result) {
         expect(error).toBeUndefined();
-        expect((await call.asResponse()).status).toBe(c.expected.result.status);
+        expect((await call!.asResponse()).status).toBe(c.expected.result.status);
       }
       if (c.expected.error) expectError(error, c.expected.error);
     });
@@ -372,24 +479,27 @@ describe('conformance: transport.json', () => {
 
 describe('conformance: transport.json path ids', () => {
   interface TransportCase extends Case {
-    call: { operation: string; args: (string | null)[]; safe?: true };
-    expected: { calls: number; method?: string; path?: string; error?: ExpectedError };
+    call: { operation: string; args: (string | null)[]; query?: Record<string, unknown>; safe?: true };
+    expected: { calls: number; method?: string; path?: string; query?: string; error?: ExpectedError };
   }
 
   const cases = vectors<{ cases: TransportCase[] }>('transport.json').cases.filter((c) => 'call' in c);
   for (const c of cases.filter(runsHere)) {
     it(c.name, async () => {
-      const sent: { method: string; path: string }[] = [];
+      running('transport.json', c.expected, ['calls', 'method', 'path', 'query', 'error']);
+      const sent: { method: string; path: string; query: string }[] = [];
       const nuntly = new Nuntly({
         apiKey: 'test_key',
         baseUrl: 'https://api.test.com',
         retry: 'none',
         fetch: (async (input: Request, init?: RequestInit) => {
-          sent.push({ method: init?.method ?? input.method, path: new URL(input.url).pathname });
+          const url = new URL(input.url);
+          sent.push({ method: init?.method ?? input.method, path: url.pathname, query: url.search.slice(1) });
           return Response.json({ data: {} });
         }) as typeof fetch,
       });
-      const call = callOperation(c.call.safe ? safe(nuntly) : nuntly, c.call.operation, c.call.args);
+      const args = c.call.query ? [...c.call.args, c.call.query] : c.call.args;
+      const call = callOperation(c.call.safe ? safe(nuntly) : nuntly, c.call.operation, args);
       let error: unknown;
       if (c.call.safe) {
         // Safe mode never rejects: an awaited rejection fails the case.
@@ -404,7 +514,9 @@ describe('conformance: transport.json path ids', () => {
       }
 
       expect(sent).toHaveLength(c.expected.calls);
-      if (c.expected.path) expect(sent[0]).toEqual({ method: c.expected.method!, path: c.expected.path });
+      if (c.expected.method) expect(sent[0]?.method).toBe(c.expected.method);
+      if (c.expected.path) expect(sent[0]?.path).toBe(c.expected.path);
+      if (c.expected.query !== undefined) expect(sent[0]?.query).toBe(c.expected.query);
       if (c.expected.error) expectError(error, c.expected.error);
       else expect(error).toBeUndefined();
     });
@@ -420,6 +532,8 @@ describe('conformance: forward-compat.json', () => {
 
   for (const c of vectors<{ cases: ForwardCompatCase[] }>('forward-compat.json').cases.filter(runsHere)) {
     it(c.name, async () => {
+      // `known` needs no branch: a TS response enum is the wire string, known or not.
+      running('forward-compat.json', c.expected, ['field', 'value', 'known']);
       const nuntly = new Nuntly({
         apiKey: 'test_key',
         baseUrl: 'https://api.test.com',
@@ -429,8 +543,17 @@ describe('conformance: forward-compat.json', () => {
 
       const result = (await callOperation(nuntly, c.call.operation, c.call.args)) as Record<string, unknown>;
 
-      // A TS response enum is the wire string, known or not.
       expect(result[c.expected.field]).toBe(c.expected.value);
     });
   }
+});
+
+// Last: every vector file ran every case this runtime keeps (requirements.json is the monorepo's capability list).
+describe('conformance: every case ran', () => {
+  it('runs each case of each vector file once', () => {
+    const files = readdirSync(conformanceDir()).filter((f) => f.endsWith('.json') && f !== 'requirements.json');
+    const kept = files.map((file) => [file, vectors<{ cases: Case[] }>(file).cases.filter(runsHere).length]);
+    // A file with no case for this runtime ran zero cases; a label that names no file still shows up.
+    expect(Object.fromEntries([...files.map((file) => [file, 0]), ...ran])).toEqual(Object.fromEntries(kept));
+  });
 });

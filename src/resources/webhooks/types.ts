@@ -3,8 +3,9 @@ import type { EventType, WebhookEventType } from '../shared/types.js';
 /**
  * @example
  *     await nuntly.webhooks.create({
+ *       name: 'Production webhook',
  *       endpointUrl: 'https://example.com/webhooks',
- *       events: ['email.delivered', 'email.bounced'],
+ *       events: ['email.sent'],
  *     });
  */
 export interface CreateWebhookRequest {
@@ -44,6 +45,13 @@ export interface DeleteWebhookResponse {
   id: string;
 }
 
+/**
+ * @example
+ *     await nuntly.webhooks.update('wh_01ka8k8s80gvx9604cn9am5st4', {
+ *       name: 'Production webhook',
+ *       events: ['email.sent'],
+ *     });
+ */
 export interface UpdateWebhookRequest {
   /** The name of the webhook */
   name?: string;

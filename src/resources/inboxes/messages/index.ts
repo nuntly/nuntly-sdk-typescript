@@ -23,6 +23,7 @@ export class InboxesMessages extends Resource {
         pathParams: { inboxId },
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }

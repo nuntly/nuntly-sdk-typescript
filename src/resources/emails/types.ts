@@ -26,9 +26,12 @@ export type CreateBulkEmails = Array<CreateBulkEmail>;
 /**
  * @example
  *     await nuntly.emails.send({
- *       from: 'hello@nuntly.com',
- *       to: 'user@example.com',
- *       subject: 'Welcome to Nuntly',
+ *       from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+ *       to: 'brian67@gmail.com',
+ *       subject: 'Verify your email address',
+ *       text: 'Thank you for signing up! Please verify your email address.',
+ *       html: '<h1>Welcome 🎉</h1><p>Thank you for signing up! Please verify your email address.</p>',
+ *       tags: [{ name: 'category', value: 'transactional' }],
  *     });
  */
 export interface CreateEmailRequest {
@@ -189,7 +192,7 @@ export interface EmailResponse {
   /** The status of the email. */
   status: EmailStatus | (string & {});
   /** May provide more informations about the status */
-  statusReason?: Record<string, Record<string, unknown>>;
+  statusReason?: Record<string, unknown>;
   /** The subject of the e-mail */
   subject: string;
   /** The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address */

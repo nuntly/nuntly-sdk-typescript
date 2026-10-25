@@ -1,8 +1,10 @@
 /**
  * @example
- *     await nuntly.inboxes.messages.send({
- *       to: 'user@example.com',
- *       subject: 'Welcome to Nuntly',
+ *     await nuntly.inboxes.messages.send('ibx_01kabn43yqyxn2bx4ve84mczd3', {
+ *       to: ['brian67@gmail.com'],
+ *       subject: 'Verify your email address',
+ *       text: 'Thank you for signing up! Please verify your email address.',
+ *       html: '<h1>Welcome</h1><p>Thank you for signing up! Please verify your email address.</p>',
  *     });
  */
 export interface SendMessageRequest {

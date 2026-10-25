@@ -1,5 +1,5 @@
 {
-  "description": "Retry decisions. Each case runs one request against the scripted responses in order: {status, headers?, body?, abortAfter?}, {network: true}, {timeout: true} (the SDK timeout) or {callerTimeout: true} (the signal of the caller times out). client and request options default to the SDK defaults; delaysMs bounds each wait in order; error.kind names the error type (see README.md).",
+  "description": "Retry decisions. Each case runs one request against the scripted responses in order: {status, headers?, body?, abortAfter?}, {network: true}, {timeout: true} (the SDK timeout) or {callerTimeout: true} (the signal of the caller times out). request.idempotencyKey is an Idempotency-Key header the caller sets; request.idempotent marks an operation the API deduplicates by that key, as the SDK methods for it do. client and request options default to the SDK defaults; delaysMs bounds each wait in order; error.kind names the error type (see README.md). expected.hookSequence is the order of the hook calls: onRequest before every attempt, onRetry before each retry, onResponse once on the final response (none when the last attempt got no response), then onSuccess on a 2xx or onError; a hook that throws ends it.",
   "cases": [
     {
       "name": "GET 408 is retried",
@@ -25,7 +25,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -52,7 +59,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -79,7 +93,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -106,7 +127,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -133,7 +161,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -160,7 +195,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -182,7 +224,12 @@
         "error": {
           "kind": "bad_request",
           "status": 400
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -204,7 +251,12 @@
         "error": {
           "kind": "authentication",
           "status": 401
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -226,7 +278,12 @@
         "error": {
           "kind": "permission_denied",
           "status": 403
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -248,7 +305,12 @@
         "error": {
           "kind": "not_found",
           "status": 404
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -270,7 +332,12 @@
         "error": {
           "kind": "conflict",
           "status": 409
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -292,7 +359,12 @@
         "error": {
           "kind": "unprocessable_entity",
           "status": 422
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -314,7 +386,12 @@
         "error": {
           "kind": "internal_server",
           "status": 501
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -352,7 +429,16 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -394,7 +480,18 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -417,7 +514,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -444,7 +546,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -471,7 +580,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -496,7 +612,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -520,7 +641,11 @@
         "calls": 1,
         "error": {
           "kind": "connection"
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onError"
+        ]
       }
     },
     {
@@ -544,7 +669,11 @@
         "calls": 1,
         "error": {
           "kind": "timeout"
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onError"
+        ]
       }
     },
     {
@@ -574,11 +703,18 @@
         ],
         "result": {
           "status": 201
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
-      "name": "keyed POST 503 is retried with the same key",
+      "name": "keyed idempotent POST 503 is retried with the same key",
       "request": {
         "method": "POST",
         "path": "/emails",
@@ -588,7 +724,8 @@
           "subject": "Hi",
           "text": "Hi"
         },
-        "idempotencyKey": "conformance-key-0001"
+        "idempotencyKey": "conformance-key-0001",
+        "idempotent": true
       },
       "responses": [
         {
@@ -609,7 +746,112 @@
         "sameIdempotencyKey": true,
         "result": {
           "status": 202
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
+      }
+    },
+    {
+      "name": "a caller key on a POST the API does not deduplicate does not make a 503 retried",
+      "request": {
+        "method": "POST",
+        "path": "/domains",
+        "body": {
+          "name": "example.com"
+        },
+        "idempotencyKey": "conformance-key-0002"
+      },
+      "responses": [
+        {
+          "status": 503
+        },
+        {
+          "status": 201
         }
+      ],
+      "expected": {
+        "calls": 1,
+        "error": {
+          "kind": "internal_server",
+          "status": 503
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
+      }
+    },
+    {
+      "name": "a caller key on a POST the API does not deduplicate does not make a network error retried",
+      "request": {
+        "method": "POST",
+        "path": "/domains",
+        "body": {
+          "name": "example.com"
+        },
+        "idempotencyKey": "conformance-key-0002"
+      },
+      "responses": [
+        {
+          "network": true
+        },
+        {
+          "status": 201
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "error": {
+          "kind": "connection"
+        },
+        "hookSequence": [
+          "onRequest",
+          "onError"
+        ]
+      }
+    },
+    {
+      "name": "a caller key on a POST the API does not deduplicate still lets a 429 be retried",
+      "request": {
+        "method": "POST",
+        "path": "/domains",
+        "body": {
+          "name": "example.com"
+        },
+        "idempotencyKey": "conformance-key-0002"
+      },
+      "responses": [
+        {
+          "status": 429
+        },
+        {
+          "status": 201
+        }
+      ],
+      "expected": {
+        "calls": 2,
+        "delaysMs": [
+          [
+            375,
+            500
+          ]
+        ],
+        "result": {
+          "status": 201
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -639,7 +881,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -669,7 +918,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -699,7 +955,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -713,7 +976,8 @@
           "subject": "Hi",
           "text": "Hi"
         },
-        "idempotencyKey": "conformance-key-0001"
+        "idempotencyKey": "conformance-key-0001",
+        "idempotent": true
       },
       "responses": [
         {
@@ -745,7 +1009,14 @@
         "sameIdempotencyKey": true,
         "result": {
           "status": 202
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -775,7 +1046,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -799,7 +1077,12 @@
         "calls": 1,
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -824,7 +1107,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -854,7 +1142,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -884,7 +1179,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -914,7 +1216,14 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -941,7 +1250,12 @@
           "kind": "rate_limit",
           "status": 429,
           "retryAfterMs": 61000
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -967,7 +1281,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -994,7 +1313,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -1031,7 +1355,13 @@
         ],
         "error": {
           "kind": "connection"
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onError"
+        ]
       }
     },
     {
@@ -1068,7 +1398,16 @@
         ],
         "result": {
           "status": 200
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     },
     {
@@ -1094,7 +1433,12 @@
         "error": {
           "kind": "conflict",
           "status": 409
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -1123,7 +1467,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -1149,7 +1498,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -1169,7 +1523,10 @@
         "hookCalls": 1,
         "error": {
           "kind": "hook"
-        }
+        },
+        "hookSequence": [
+          "onRequest"
+        ]
       }
     },
     {
@@ -1188,7 +1545,11 @@
         "calls": 1,
         "error": {
           "kind": "hook"
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse"
+        ]
       }
     },
     {
@@ -1217,7 +1578,12 @@
         "error": {
           "kind": "internal_server",
           "status": 503
-        }
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
       }
     },
     {
@@ -1243,7 +1609,142 @@
         "retries": 0,
         "error": {
           "kind": "connection"
+        },
+        "hookSequence": [
+          "onRequest",
+          "onError"
+        ]
+      }
+    },
+    {
+      "name": "x-should-retry is read in any letter case: True retries",
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "status": 400,
+          "headers": {
+            "x-should-retry": "True"
+          }
+        },
+        {
+          "status": 200
         }
+      ],
+      "expected": {
+        "calls": 2,
+        "delaysMs": [
+          [
+            375,
+            500
+          ]
+        ],
+        "result": {
+          "status": 200
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
+      }
+    },
+    {
+      "name": "x-should-retry is read in any letter case: FALSE stops a retryable status",
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "status": 503,
+          "headers": {
+            "x-should-retry": "FALSE"
+          }
+        },
+        {
+          "status": 200
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "error": {
+          "kind": "internal_server",
+          "status": 503
+        },
+        "hookSequence": [
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
+      }
+    },
+    {
+      "name": "hooks run in order across retries that end in an error response",
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "status": 503
+        },
+        {
+          "network": true
+        },
+        {
+          "status": 503
+        }
+      ],
+      "expected": {
+        "calls": 3,
+        "retries": 2,
+        "error": {
+          "kind": "internal_server",
+          "status": 503
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onError"
+        ]
+      }
+    },
+    {
+      "name": "hooks run in order across a retry that ends in success",
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "status": 429
+        },
+        {
+          "status": 200
+        }
+      ],
+      "expected": {
+        "calls": 2,
+        "retries": 1,
+        "result": {
+          "status": 200
+        },
+        "hookSequence": [
+          "onRequest",
+          "onRetry",
+          "onRequest",
+          "onResponse",
+          "onSuccess"
+        ]
       }
     }
   ]

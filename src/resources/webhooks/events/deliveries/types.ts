@@ -5,5 +5,5 @@ export interface WebhookEventDeliveriesResponseItem {
   deliveredAt: string;
   code: string;
   status: 'pending' | 'success' | 'failed' | (string & {});
-  response: Record<string, Record<string, unknown>>;
+  response: Record<string, unknown>;
 }

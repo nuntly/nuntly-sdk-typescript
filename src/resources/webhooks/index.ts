@@ -80,7 +80,7 @@ export class Webhooks extends Resource {
   ): PagePromise<CursorPage<WebhooksResponseItem>, WebhooksResponseItem> {
     return this._http.list<WebhooksResponseItem>({
       path: '/webhooks',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

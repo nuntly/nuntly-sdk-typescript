@@ -36,7 +36,7 @@ export class Organizations extends Resource {
   ): PagePromise<CursorPage<OrganizationsResponseItem>, OrganizationsResponseItem> {
     return this._http.list<OrganizationsResponseItem>({
       path: '/organizations',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

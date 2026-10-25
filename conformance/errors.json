@@ -1,5 +1,5 @@
 {
-  "description": "Error mapping. Each case runs one GET with retries disabled against one response; body is JSON, rawBody is sent as is. expected lists the accessors every runtime exposes (see README.md); an absent details or requestId means none.",
+  "description": "Error mapping. Each case runs one GET with retries disabled against one response; body is JSON, rawBody is sent as is. expected lists the accessors every runtime exposes (see README.md); an absent details or requestId means none. A 2xx case expects the SDK error for a body that is not the JSON object every operation reads. messageIncludes is text the error message contains.",
   "cases": [
     {
       "name": "400 invalid idempotency key",
@@ -298,6 +298,45 @@
         "status": 503,
         "code": "unknown",
         "title": "Request failed"
+      }
+    },
+    {
+      "name": "2xx with an empty body where JSON is expected",
+      "response": {
+        "status": 200,
+        "rawBody": ""
+      },
+      "expected": {
+        "kind": "sdk",
+        "messageIncludes": "the request may have been applied"
+      }
+    },
+    {
+      "name": "2xx with an HTML body where JSON is expected",
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/html"
+        },
+        "rawBody": "<html><body>Sign in to the network</body></html>"
+      },
+      "expected": {
+        "kind": "sdk",
+        "messageIncludes": "the request may have been applied"
+      }
+    },
+    {
+      "name": "2xx with a JSON body that is not an object",
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "rawBody": "\"ok\""
+      },
+      "expected": {
+        "kind": "sdk",
+        "messageIncludes": "the request may have been applied"
       }
     }
   ]

@@ -64,7 +64,7 @@ export class ApiKeys extends Resource {
   ): PagePromise<CursorPage<ApiKeysResponseItem>, ApiKeysResponseItem> {
     return this._http.list<ApiKeysResponseItem>({
       path: '/api-keys',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

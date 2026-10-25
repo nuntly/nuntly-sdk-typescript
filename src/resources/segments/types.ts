@@ -1,7 +1,7 @@
 /**
  * @example
  *     await nuntly.segments.create({
- *       name: 'example.com',
+ *       name: 'vip customers',
  *     });
  */
 export interface CreateSegmentRequest {
@@ -34,8 +34,8 @@ export interface SegmentsResponseItem {
 
 /**
  * @example
- *     await nuntly.segments.update({
- *       name: 'example.com',
+ *     await nuntly.segments.update('seg_01kabn43yqyxn2bx4ve84mczd3', {
+ *       name: 'vip customers',
  *     });
  */
 export interface UpdateSegmentRequest {

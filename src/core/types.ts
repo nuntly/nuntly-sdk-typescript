@@ -15,6 +15,7 @@ export interface RequestContext {
   path: string;
   /** Full URL: baseUrl + path + querystring. */
   url: string;
+  /** The request headers, with `authorization` set to `Bearer [redacted]`. */
   headers: Record<string, string>;
   body?: unknown;
 }
@@ -34,7 +35,7 @@ export interface ErrorContext {
   /** On a call refused before sending, `path` is the path template and `headers` is empty. */
   request: RequestContext;
   response?: Response;
-  /** A plain `NuntlyError` when the SDK refuses the call before sending it (an empty, `.` or `..` path id, or an invalid timeout). */
+  /** A plain `NuntlyError` when a 2xx body is not the JSON object expected, or when the SDK refuses the call before sending it (an empty, `.` or `..` path id, an empty list or a null element in a query param, or an invalid timeout). */
   error: APIError | APIConnectionError | NuntlyError;
 }
 
@@ -66,8 +67,8 @@ export interface Hooks {
   /** After each 2xx response, with the parsed payload. */
   onSuccess?: (ctx: SuccessContext) => void | Promise<void>;
   /**
-   * On 4xx/5xx (`APIError`), network/timeout (`APIConnectionError`) or a call refused before sending
-   * (`NuntlyError`). An error it throws is logged and does not replace the call's error.
+   * On 4xx/5xx (`APIError`), network/timeout (`APIConnectionError`), a 2xx body that is not the JSON
+   * object expected, or a call refused before sending (`NuntlyError`). An error it throws is logged and does not replace the call's error.
    */
   onError?: (ctx: ErrorContext) => void | Promise<void>;
   /** Before each retry attempt. */

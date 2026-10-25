@@ -23,7 +23,7 @@ export class ThreadsMessages extends Resource {
     return this._http.list<ThreadMessagesResponseItem>({
       path: '/threads/{threadId}/messages',
       pathParams: { threadId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

@@ -26,7 +26,7 @@ export interface ContactsResponseItem {
 /**
  * @example
  *     await nuntly.contacts.create({
- *       email: 'email_value',
+ *       email: 'jane@example.com',
  *     });
  */
 export interface CreateContactRequest {
@@ -36,8 +36,14 @@ export interface CreateContactRequest {
   properties?: Record<string, string | number | null>;
 }
 
+/**
+ * @example
+ *     await nuntly.contacts.update('ct_01kabn43yqyxn2bx4ve84mczd3', {
+ *       properties: { plan: 'pro' },
+ *     });
+ */
 export interface UpdateContactRequest {
-  /** The address cannot be changed. */
+  /** The contact's current address, in any letter case. The address cannot be changed: a different address is refused with the error code contact_email_immutable. */
   email?: string;
   /** Contact properties keyed by name, matched exactly. A null value removes the property. */
   properties?: Record<string, string | number | null>;

@@ -23,7 +23,7 @@ export class TopicsMemberships extends Resource {
     return this._http.list<TopicMembershipsResponseItem>({
       path: '/topics/{topicId}/memberships',
       pathParams: { topicId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

@@ -2,9 +2,10 @@ import type { VariableDeclaration } from '../../shared/types.js';
 
 /**
  * @example
- *     await nuntly.templates.versions.create({
- *       subject: 'Welcome to Nuntly',
- *       html: '<h1>Welcome!</h1>',
+ *     await nuntly.templates.versions.create('tpl_01kabn43yqyxn2bx4ve84mczd3', {
+ *       subject: 'Verify your email address',
+ *       html: '<h1>Welcome</h1><p>Thank you for signing up! Please verify your email address.</p>',
+ *       text: 'Thank you for signing up! Please verify your email address.',
  *     });
  */
 export interface CreateTemplateVersionRequest {

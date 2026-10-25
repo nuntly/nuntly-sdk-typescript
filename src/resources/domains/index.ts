@@ -63,7 +63,7 @@ export class Domains extends Resource {
   ): PagePromise<CursorPage<DomainsResponseItem>, DomainsResponseItem> {
     return this._http.list<DomainsResponseItem>({
       path: '/domains',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

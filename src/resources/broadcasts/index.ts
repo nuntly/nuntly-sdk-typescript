@@ -46,6 +46,7 @@ export class Broadcasts extends Resource {
         path: '/broadcasts',
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }
@@ -82,7 +83,7 @@ export class Broadcasts extends Resource {
   ): PagePromise<CursorPage<BroadcastsResponseItem>, BroadcastsResponseItem> {
     return this._http.list<BroadcastsResponseItem>({
       path: '/broadcasts',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }
@@ -125,6 +126,7 @@ export class Broadcasts extends Resource {
         pathParams: { broadcastId },
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }

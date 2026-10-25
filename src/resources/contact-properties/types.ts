@@ -34,7 +34,7 @@ export interface ContactPropertyResponse {
 /**
  * @example
  *     await nuntly.contactProperties.create({
- *       name: 'example.com',
+ *       name: 'plan',
  *       type: 'string',
  *     });
  */
@@ -49,6 +49,12 @@ export interface CreateContactPropertyRequest {
   defaultValue?: string | number | null;
 }
 
+/**
+ * @example
+ *     await nuntly.contactProperties.update('ctpd_01kabn43yqyxn2bx4ve84mczd3', {
+ *       description: 'The plan the customer is on.',
+ *     });
+ */
 export interface UpdateContactPropertyRequest {
   /** An optional description of the property. */
   description?: string | null;

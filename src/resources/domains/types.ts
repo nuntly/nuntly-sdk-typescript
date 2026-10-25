@@ -92,6 +92,13 @@ export interface DomainsResponseItem {
   region: 'eu-west-1';
 }
 
+/**
+ * @example
+ *     await nuntly.domains.update('dns_01kabn43yqyxn2bx4ve84mczd3', {
+ *       openTracking: true,
+ *       clickTracking: true,
+ *     });
+ */
 export interface UpdateDomainRequest {
   /** Emit an event for each recipient opens an email their email client */
   openTracking?: boolean;

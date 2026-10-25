@@ -36,7 +36,7 @@ export class WebhooksEvents extends Resource {
   ): PagePromise<CursorPage<WebhookEventsResponseItem>, WebhookEventsResponseItem> {
     return this._http.list<WebhookEventsResponseItem>({
       path: '/webhooks/events',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }
@@ -56,6 +56,7 @@ export class WebhooksEvents extends Resource {
         path: '/webhooks/{id}/events/{eventId}/replay',
         pathParams: { id, eventId },
         options,
+        voidResponse: true,
       })
       .map(() => undefined);
   }

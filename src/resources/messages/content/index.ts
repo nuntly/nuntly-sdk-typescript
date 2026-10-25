@@ -20,7 +20,7 @@ export class MessagesContent extends Resource {
       .get<{ data: MessageContent }>({
         path: '/messages/{messageId}/content',
         pathParams: { messageId },
-        query: query as unknown as Record<string, unknown>,
+        query,
         options,
       })
       .map((r) => r.data);

@@ -110,7 +110,7 @@ Creates an API key with full access or send-only access, optionally limited to c
 | ----- | ---- | ----------- |
 | `name?` | `string` | The name of the api key |
 | `status?` | `'enabled' | 'disabled' | 'revoked'` | The status for the api key |
-| `permission` | `'fullAccess' | 'sendingAccess'` | The permission type for the api key |
+| `permission?` | `'fullAccess' | 'sendingAccess'` | The permission type for the api key |
 | `domainIds?` | `Array<string>` | The domain ids to restrict the api key to (only for sendingAccess) |
 
 **CreateApiKeyResponse**
@@ -231,7 +231,7 @@ Create a broadcast for your contacts.
 | `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
 | `statusAt` | `string` | Date at which the broadcast reached its current state. |
-| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more information about the status. |
+| `statusReason?` | `Record<string, unknown>` | May provide more information about the status. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 | `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
@@ -273,7 +273,7 @@ List the organization broadcasts.
 | `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
 | `statusAt` | `string` | Date at which the broadcast reached its current state. |
-| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more information about the status. |
+| `statusReason?` | `Record<string, unknown>` | May provide more information about the status. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 | `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
@@ -301,7 +301,7 @@ Retrieve a broadcast and its status.
 | `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
 | `statusAt` | `string` | Date at which the broadcast reached its current state. |
-| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more information about the status. |
+| `statusReason?` | `Record<string, unknown>` | May provide more information about the status. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 | `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
@@ -559,7 +559,7 @@ Update a contact's properties.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `email?` | `string` | The address cannot be changed. |
+| `email?` | `string` | The contact's current address, in any letter case. The address cannot be changed: a different address is refused with the error code contact_email_immutable. |
 | `properties?` | `Record<string, string | number | null>` | Contact properties keyed by name, matched exactly. A null value removes the property. |
 
 **IdResponse**
@@ -829,7 +829,7 @@ Returns a single email by id with its delivery status, status reason, recipients
 | `cc?` | `Array<string> | string` | The carbon copy recipient(s) of the email |
 | `bcc?` | `Array<string> | string` | The blind carbon copy recipient(s) of the email |
 | `status` | `EmailStatus` | The status of the email. |
-| `statusReason?` | `Record<string, Record<string, unknown>>` | May provide more informations about the status |
+| `statusReason?` | `Record<string, unknown>` | May provide more informations about the status |
 | `subject` | `string` | The subject of the e-mail |
 | `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `headers?` | `Record<string, string>` | The headers to add to the email |
@@ -1186,7 +1186,7 @@ Replies from the inbox that holds the message, in the same thread. Set replyAll 
 | ----- | ---- | ----------- |
 | `text?` | `string` | The plain text body. |
 | `html?` | `string` | The HTML body. |
-| `replyAll` | `boolean` | Whether to reply to all recipients. |
+| `replyAll?` | `boolean` | Whether to reply to all recipients. |
 
 **SendMessageResponse**
 
@@ -2071,7 +2071,7 @@ Lists the webhook events of the last 48 hours across all your endpoints, with th
 | `orgId` | `string` | The id of the organization |
 | `event` | `EventType` | An event |
 | `successfulAt?` | `string` | The timestamp when the event was successfully delivered to the endpoint |
-| `data` | `Record<string, Record<string, unknown>>` |  |
+| `data` | `Record<string, unknown>` |  |
 | `status` | `'success' | 'pending' | 'failed'` | Status of the webhook delivery attempt |
 
 ### `webhooks.events.replay(id: string, eventId: string, options?: RequestOptions)`
