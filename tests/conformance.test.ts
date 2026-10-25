@@ -354,12 +354,18 @@ describe('conformance: pagination.json', () => {
     request: { path: string; query: Record<string, string> };
     action: 'nextPage' | 'iterate';
     responses: ScriptedResponse[];
-    expected: { calls: number; ids?: string[]; queries?: Record<string, string>[]; error?: ExpectedError };
+    expected: {
+      calls: number;
+      ids?: string[];
+      queries?: Record<string, string>[];
+      nextCursor?: string | null;
+      error?: ExpectedError;
+    };
   }
 
   for (const c of vectors<{ cases: PaginationCase[] }>('pagination.json').cases.filter(runsHere)) {
     it(c.name, async () => {
-      running('pagination.json', c.expected, ['calls', 'ids', 'queries', 'error']);
+      running('pagination.json', c.expected, ['calls', 'ids', 'queries', 'nextCursor', 'error']);
       const queries: Record<string, string>[] = [];
       const client = new NuntlyClient({
         apiKey: 'test_key',
@@ -370,9 +376,11 @@ describe('conformance: pagination.json', () => {
       const list = () => client.list<{ id: string }>({ path: c.request.path, query: c.request.query });
 
       const ids: string[] = [];
+      let firstPage: { nextCursor: string | null } | undefined;
       const error = await (async () => {
         if (c.action === 'nextPage') {
-          await (await list()).nextPage();
+          firstPage = await list();
+          await firstPage.nextPage();
           return;
         }
         for await (const item of list()) ids.push(item.id);
@@ -384,6 +392,7 @@ describe('conformance: pagination.json', () => {
       expect(queries).toHaveLength(c.expected.calls);
       if (c.expected.queries) expect(queries).toEqual(c.expected.queries);
       if (c.expected.ids) expect(ids).toEqual(c.expected.ids);
+      if ('nextCursor' in c.expected) expect(firstPage?.nextCursor).toBe(c.expected.nextCursor);
       if (c.expected.error) expectError(error, c.expected.error);
       else expect(error).toBeUndefined();
     });
@@ -544,6 +553,32 @@ describe('conformance: forward-compat.json', () => {
       const result = (await callOperation(nuntly, c.call.operation, c.call.args)) as Record<string, unknown>;
 
       expect(result[c.expected.field]).toBe(c.expected.value);
+    });
+  }
+});
+
+describe('conformance: serialization.json', () => {
+  interface SerializationCase extends Case {
+    call: { operation: string; args: string[] };
+    response: { body: unknown };
+    expected: { path: string[]; number: number; integer: boolean };
+  }
+
+  for (const c of vectors<{ cases: SerializationCase[] }>('serialization.json').cases.filter(runsHere)) {
+    it(c.name, async () => {
+      running('serialization.json', c.expected, ['path', 'number', 'integer']);
+      const nuntly = new Nuntly({
+        apiKey: 'test_key',
+        baseUrl: 'https://api.test.com',
+        retry: 'none',
+        fetch: (async () => Response.json(c.response.body)) as typeof fetch,
+      });
+
+      const result = await callOperation(nuntly, c.call.operation, c.call.args);
+      const value = c.expected.path.reduce<unknown>((target, key) => (target as Record<string, unknown>)[key], result);
+
+      expect(value).toBe(c.expected.number);
+      expect(Number.isInteger(value)).toBe(c.expected.integer);
     });
   }
 });

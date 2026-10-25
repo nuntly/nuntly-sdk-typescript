@@ -57,14 +57,14 @@ Retrieves the key-value memory and summary saved for an AI agent, at organizatio
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `id` | `string | null` | The agent memory record id. |
-| `createdAt` | `string | null` | Date at which the object was created (ISO 8601 format) |
-| `updatedAt` | `string | null` | Date at which the object was updated (ISO 8601 format) |
+| `id` | `string \| null` | The agent memory record id. |
+| `createdAt` | `string \| null` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string \| null` | Date at which the object was updated (ISO 8601 format) |
 | `agentId` | `string` | The agent identifier. |
-| `inboxId` | `string | null` | The inbox id. |
-| `threadId` | `string | null` | The thread id. |
-| `memory` | `Record<string, string | number | boolean | null | Array<string | number | boolean | null>>` | The agent memory data. |
-| `summary` | `string | null` | The conversation summary. |
+| `inboxId` | `string \| null` | The inbox id. |
+| `threadId` | `string \| null` | The thread id. |
+| `memory` | `Record<string, string \| number \| boolean \| null \| Array<string \| number \| boolean \| null>>` | The agent memory data. |
+| `summary` | `string \| null` | The conversation summary. |
 
 ### `agents.memory.upsert(agentId: string, body: AgentMemoryRequest, options?: RequestOptions)`
 
@@ -79,21 +79,21 @@ Saves the key-value memory and optional summary of an AI agent, at organization 
 | ----- | ---- | ----------- |
 | `inboxId?` | `string` | The id of an inbox in your organization. Scopes memory to that inbox. |
 | `threadId?` | `string` | The id of a thread in your organization. Scopes memory to that thread. |
-| `memory` | `Record<string, string | number | boolean | null | Array<string | number | boolean | null>>` | The agent memory key-value data. |
-| `summary?` | `string | null` | A human-readable conversation summary. |
+| `memory` | `Record<string, string \| number \| boolean \| null \| Array<string \| number \| boolean \| null>>` | The agent memory key-value data. |
+| `summary?` | `string \| null` | A human-readable conversation summary. |
 
 **AgentMemory**
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `id` | `string | null` | The agent memory record id. |
-| `createdAt` | `string | null` | Date at which the object was created (ISO 8601 format) |
-| `updatedAt` | `string | null` | Date at which the object was updated (ISO 8601 format) |
+| `id` | `string \| null` | The agent memory record id. |
+| `createdAt` | `string \| null` | Date at which the object was created (ISO 8601 format) |
+| `updatedAt` | `string \| null` | Date at which the object was updated (ISO 8601 format) |
 | `agentId` | `string` | The agent identifier. |
-| `inboxId` | `string | null` | The inbox id. |
-| `threadId` | `string | null` | The thread id. |
-| `memory` | `Record<string, string | number | boolean | null | Array<string | number | boolean | null>>` | The agent memory data. |
-| `summary` | `string | null` | The conversation summary. |
+| `inboxId` | `string \| null` | The inbox id. |
+| `threadId` | `string \| null` | The thread id. |
+| `memory` | `Record<string, string \| number \| boolean \| null \| Array<string \| number \| boolean \| null>>` | The agent memory data. |
+| `summary` | `string \| null` | The conversation summary. |
 
 ## apiKeys
 
@@ -109,8 +109,8 @@ Creates an API key with full access or send-only access, optionally limited to c
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `name?` | `string` | The name of the api key |
-| `status?` | `'enabled' | 'disabled' | 'revoked'` | The status for the api key |
-| `permission?` | `'fullAccess' | 'sendingAccess'` | The permission type for the api key |
+| `status?` | `'enabled' \| 'disabled' \| 'revoked'` | The status for the api key |
+| `permission?` | `'fullAccess' \| 'sendingAccess'` | The permission type for the api key |
 | `domainIds?` | `Array<string>` | The domain ids to restrict the api key to (only for sendingAccess) |
 
 **CreateApiKeyResponse**
@@ -121,7 +121,7 @@ Creates an API key with full access or send-only access, optionally limited to c
 | `name?` | `string` | The name of the api key |
 | `apiKey` | `string` | The content of the api key |
 | `shortToken` | `string` | The last 6 characters of the api key token |
-| `status` | `'enabled' | 'disabled' | 'revoked'` | The status for the api key |
+| `status` | `'enabled' \| 'disabled' \| 'revoked'` | The status for the api key |
 
 ### `apiKeys.delete(id: string, options?: RequestOptions)`
 
@@ -151,7 +151,7 @@ Lists the API keys of your organization, newest first, with cursor pagination. E
 | `id` | `string` | The id of the api key |
 | `name?` | `string` | The name of the api key |
 | `shortToken` | `string` | The last 6 characters of the api key token |
-| `status` | `'enabled' | 'disabled' | 'revoked'` | The status for the api key |
+| `status` | `'enabled' \| 'disabled' \| 'revoked'` | The status for the api key |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
 ### `apiKeys.retrieve(id: string, options?: RequestOptions)`
@@ -168,7 +168,7 @@ Retrieves an API key by id with its name, status, creation date, and a short tok
 | `id` | `string` | The id of the api key |
 | `name?` | `string` | The name of the api key |
 | `shortToken` | `string` | The last 6 characters of the api key token |
-| `status` | `'enabled' | 'disabled' | 'revoked'` | The status for the api key |
+| `status` | `'enabled' \| 'disabled' \| 'revoked'` | The status for the api key |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
 ### `apiKeys.update(id: string, body: UpdateApiKeyRequest, options?: RequestOptions)`
@@ -183,8 +183,8 @@ Updates the name of an API key, enables or disables it, or changes its access le
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `name?` | `string` | The name of the api key |
-| `status?` | `'enabled' | 'disabled'` |  |
-| `permission?` | `'fullAccess' | 'sendingAccess'` | The permission type for the api key |
+| `status?` | `'enabled' \| 'disabled'` |  |
+| `permission?` | `'fullAccess' \| 'sendingAccess'` | The permission type for the api key |
 | `domainIds?` | `Array<string>` | The domain ids to restrict the api key to (only for sendingAccess) |
 
 **UpdateApiKeyResponse**
@@ -195,7 +195,7 @@ Updates the name of an API key, enables or disables it, or changes its access le
 
 ## broadcasts
 
-### `broadcasts.create(body: CreateBroadcastRequest, options?: RequestOptions)`
+### `broadcasts.create(body: CreateBroadcastRequest, options?: IdempotentRequestOptions)`
 
 Create a broadcast for your contacts.
 
@@ -210,10 +210,10 @@ Create a broadcast for your contacts.
 | `from` | `string` | The sender address, on a verified domain. |
 | `name?` | `string` | An internal label, shown only to your team. |
 | `subject?` | `string` | The subject. Defaults to the template version’s subject. |
-| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `replyTo?` | `Array<string> \| string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `topicId?` | `string` | The topic to send to. |
 | `segmentId?` | `string` | The segment to send to. |
-| `variables?` | `Record<string, string | number | boolean>` | Variable values keyed by declared name. |
+| `variables?` | `Record<string, string \| number \| boolean>` | Variable values keyed by declared name. |
 
 **BroadcastResponse**
 
@@ -228,13 +228,13 @@ Create a broadcast for your contacts.
 | `segmentId?` | `string` | The segment this broadcast targets. |
 | `from` | `string` |  |
 | `subject?` | `string` | The subject, falling back to the template version’s subject. |
-| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `replyTo?` | `Array<string> \| string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
 | `statusAt` | `string` | Date at which the broadcast reached its current state. |
 | `statusReason?` | `Record<string, unknown>` | May provide more information about the status. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
+| `variables?` | `Record<string, string \| number \| boolean>` | The stored variable values. |
 
 ### `broadcasts.delete(broadcastId: string, options?: RequestOptions)`
 
@@ -270,13 +270,13 @@ List the organization broadcasts.
 | `segmentId?` | `string` | The segment this broadcast targets. |
 | `from` | `string` |  |
 | `subject?` | `string` | The subject, falling back to the template version’s subject. |
-| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `replyTo?` | `Array<string> \| string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
 | `statusAt` | `string` | Date at which the broadcast reached its current state. |
 | `statusReason?` | `Record<string, unknown>` | May provide more information about the status. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
+| `variables?` | `Record<string, string \| number \| boolean>` | The stored variable values. |
 
 ### `broadcasts.retrieve(broadcastId: string, options?: RequestOptions)`
 
@@ -298,15 +298,15 @@ Retrieve a broadcast and its status.
 | `segmentId?` | `string` | The segment this broadcast targets. |
 | `from` | `string` |  |
 | `subject?` | `string` | The subject, falling back to the template version’s subject. |
-| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `replyTo?` | `Array<string> \| string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `status` | `BroadcastStatus` | The lifecycle state of the broadcast. |
 | `statusAt` | `string` | Date at which the broadcast reached its current state. |
 | `statusReason?` | `Record<string, unknown>` | May provide more information about the status. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `variables?` | `Record<string, string | number | boolean>` | The stored variable values. |
+| `variables?` | `Record<string, string \| number \| boolean>` | The stored variable values. |
 
-### `broadcasts.send(broadcastId: string, body: SendBroadcastRequest, options?: RequestOptions)`
+### `broadcasts.send(broadcastId: string, body?: SendBroadcastRequest, options?: IdempotentRequestOptions)`
 
 Send a broadcast now or schedule it.
 
@@ -337,14 +337,14 @@ Edit a draft or scheduled broadcast.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `templateId?` | `string | null` | Set to null to detach the template. |
+| `templateId?` | `string \| null` | Set to null to detach the template. |
 | `from?` | `string` | The sender address, on a verified domain. |
-| `name?` | `string | null` | Set to null to remove the name. |
-| `subject?` | `string | null` | Set to null to fall back to the template version’s subject. |
-| `replyTo?` | `Array<string> | string | null` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
-| `topicId?` | `string | null` | Set to null to remove the topic. |
-| `segmentId?` | `string | null` | Set to null to remove the segment. |
-| `variables?` | `Record<string, string | number | boolean>` | Replaces the stored values. Send {} to clear them. |
+| `name?` | `string \| null` | Set to null to remove the name. |
+| `subject?` | `string \| null` | Set to null to fall back to the template version’s subject. |
+| `replyTo?` | `Array<string> \| string \| null` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `topicId?` | `string \| null` | Set to null to remove the topic. |
+| `segmentId?` | `string \| null` | Set to null to remove the segment. |
+| `variables?` | `Record<string, string \| number \| boolean>` | Replaces the stored values. Send {} to clear them. |
 | `status?` | `BroadcastStatus` | Only draft is accepted. |
 
 **IdResponse**
@@ -368,7 +368,7 @@ List the recipients of a broadcast.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the recipient record. |
-| `contactId` | `string | null` | The source contact, absent once deleted. |
+| `contactId` | `string \| null` | The source contact, absent once deleted. |
 | `email` | `string` | The recipient address, kept until your retention window ends. |
 | `outcome` | `EmailStatus` | The current status of the recipient’s email. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -387,9 +387,9 @@ Create a contact property.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
-| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
-| `description?` | `string | null` | An optional description of the property. |
-| `defaultValue?` | `string | number | null` | Applied to new contacts that omit this property. |
+| `type` | `'string' \| 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string \| null` | An optional description of the property. |
+| `defaultValue?` | `string \| number \| null` | Applied to new contacts that omit this property. |
 
 **ContactPropertyResponse**
 
@@ -397,9 +397,9 @@ Create a contact property.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the contact property. |
 | `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
-| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
-| `description?` | `string | null` | An optional description of the property. |
-| `defaultValue?` | `string | number` |  |
+| `type` | `'string' \| 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string \| null` | An optional description of the property. |
+| `defaultValue?` | `string \| number` |  |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -430,9 +430,9 @@ List the organization contact properties.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the contact property. |
 | `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
-| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
-| `description?` | `string | null` | An optional description of the property. |
-| `defaultValue?` | `string | number` |  |
+| `type` | `'string' \| 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string \| null` | An optional description of the property. |
+| `defaultValue?` | `string \| number` |  |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -449,9 +449,9 @@ Retrieve one contact property.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the contact property. |
 | `name` | `string` | A name for the property, used as its key in a contact's properties. Stored trimmed, with the letter case it was typed with. |
-| `type` | `'string' | 'number'` | The declared type of the property. Immutable after creation. |
-| `description?` | `string | null` | An optional description of the property. |
-| `defaultValue?` | `string | number` |  |
+| `type` | `'string' \| 'number'` | The declared type of the property. Immutable after creation. |
+| `description?` | `string \| null` | An optional description of the property. |
+| `defaultValue?` | `string \| number` |  |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -466,8 +466,8 @@ Update a contact property.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description?` | `string | null` | An optional description of the property. |
-| `defaultValue?` | `string | number | null` |  |
+| `description?` | `string \| null` | An optional description of the property. |
+| `defaultValue?` | `string \| number \| null` |  |
 
 **IdResponse**
 
@@ -489,7 +489,7 @@ Create a contact.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `email` | `string` | The contact email address. Stored lowercased and trimmed. |
-| `properties?` | `Record<string, string | number | null>` | Contact properties keyed by name. A null value means not supplied. |
+| `properties?` | `Record<string, string \| number \| null>` | Contact properties keyed by name. A null value means not supplied. |
 
 **ContactResponse**
 
@@ -499,7 +499,7 @@ Create a contact.
 | `email` | `string` | The contact email address. Stored lowercased and trimmed. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `properties?` | `Record<string, string | number | null>` | The contact's properties, keyed by property name. |
+| `properties?` | `Record<string, string \| number \| null>` | The contact's properties, keyed by property name. |
 
 ### `contacts.delete(contactId: string, options?: RequestOptions)`
 
@@ -546,7 +546,7 @@ Retrieve one contact.
 | `email` | `string` | The contact email address. Stored lowercased and trimmed. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `properties?` | `Record<string, string | number | null>` | The contact's properties, keyed by property name. |
+| `properties?` | `Record<string, string \| number \| null>` | The contact's properties, keyed by property name. |
 
 ### `contacts.update(contactId: string, body: UpdateContactRequest, options?: RequestOptions)`
 
@@ -560,7 +560,7 @@ Update a contact's properties.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `email?` | `string` | The contact's current address, in any letter case. The address cannot be changed: a different address is refused with the error code contact_email_immutable. |
-| `properties?` | `Record<string, string | number | null>` | Contact properties keyed by name, matched exactly. A null value removes the property. |
+| `properties?` | `Record<string, string \| number \| null>` | Contact properties keyed by name, matched exactly. A null value removes the property. |
 
 **IdResponse**
 
@@ -591,6 +591,13 @@ List a contact's segments.
 
 - **HTTP**: `GET /contacts/{contactId}/segments`
 - **Returns**: `ContactSegmentsResponse`
+
+**ContactSegmentsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `segmentId` | `string` | The id of the segment. |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
 ### `contacts.segments.remove(contactId: string, segmentId: string, options?: RequestOptions)`
 
@@ -630,6 +637,14 @@ List a contact's subscription state per topic.
 - **HTTP**: `GET /contacts/{contactId}/topics`
 - **Returns**: `ContactTopicMembershipsResponse`
 
+**ContactTopicMembershipsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `topicId` | `string` | The id of the topic. |
+| `state` | `'subscribed' \| 'unsubscribed'` | The subscribe/unsubscribe state. |
+| `source` | `'explicit' \| 'default' \| 'platform_opt_out'` | How this state was derived: an explicit membership record, the organization default (subscribed, when no record exists), or a platform-wide opt-out, which overrides every other source. |
+
 ### `contacts.topics.update(contactId: string, topicId: string, body: SetContactTopicMembershipRequest, options?: RequestOptions)`
 
 Subscribe or unsubscribe a contact from a topic.
@@ -641,7 +656,7 @@ Subscribe or unsubscribe a contact from a topic.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `state` | `'subscribed' | 'unsubscribed'` | The subscribe/unsubscribe state. |
+| `state` | `'subscribed' \| 'unsubscribed'` | The subscribe/unsubscribe state. |
 
 **SetContactTopicMembershipResponse**
 
@@ -649,7 +664,7 @@ Subscribe or unsubscribe a contact from a topic.
 | ----- | ---- | ----------- |
 | `contactId` | `string` | The id of the contact. |
 | `topicId` | `string` | The id of the topic. |
-| `state` | `'subscribed' | 'unsubscribed'` | The subscribe/unsubscribe state. |
+| `state` | `'subscribed' \| 'unsubscribed'` | The subscribe/unsubscribe state. |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
 ## domains
@@ -687,7 +702,7 @@ Adds a domain for sending, receiving, or both, and returns the DNS records to pu
 | `receivingStatusAt` | `string` | The date of the latest receiving status change |
 | `openTracking` | `boolean` | Emit an event for each recipient opens an email their email client |
 | `clickTracking` | `boolean` | Emit an event for each time the recipient clicks a link in the email |
-| `records` | `Array<{ name: string; fullname: string; recordType: 'TXT' | 'MX' | 'CNAME'; ttl: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; selector?: string; priority?: string; value: string; status: DomainStatus; statusAt: string }>` | The DNS records for your domain. |
+| `records` | `Array<{ name: string; fullname: string; recordType: 'TXT' \| 'MX' \| 'CNAME'; ttl: string; group: 'DKIM' \| 'SPF' \| 'MX' \| 'DMARC' \| 'MX_RECEIVING'; selector?: string; priority?: string; value: string; status: DomainStatus; statusAt: string }>` | The DNS records for your domain. |
 
 ### `domains.delete(id: string, options?: RequestOptions)`
 
@@ -747,7 +762,7 @@ Retrieves a domain with its capabilities, tracking settings, statuses, and the D
 | `receivingStatusAt` | `string` | The date of the latest receiving status change |
 | `openTracking` | `boolean` | Emit an event for each recipient opens an email their email client |
 | `clickTracking` | `boolean` | Emit an event for each time the recipient clicks a link in the email |
-| `records` | `Array<{ name: string; fullname: string; recordType: 'TXT' | 'MX' | 'CNAME'; ttl: string; group: 'DKIM' | 'SPF' | 'MX' | 'DMARC' | 'MX_RECEIVING'; selector?: string; priority?: string; value: string; status: DomainStatus; statusAt: string }>` | The DNS records for your domain. |
+| `records` | `Array<{ name: string; fullname: string; recordType: 'TXT' \| 'MX' \| 'CNAME'; ttl: string; group: 'DKIM' \| 'SPF' \| 'MX' \| 'DMARC' \| 'MX_RECEIVING'; selector?: string; priority?: string; value: string; status: DomainStatus; statusAt: string }>` | The DNS records for your domain. |
 
 ### `domains.update(id: string, body: UpdateDomainRequest, options?: RequestOptions)`
 
@@ -803,7 +818,7 @@ Lists your emails newest first with cursor pagination, up to 30 per page. Each i
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the email |
 | `from` | `string` | The e-mail address of the sender |
-| `to` | `Array<string> | string` | The primary recipient(s) of the email |
+| `to` | `Array<string> \| string` | The primary recipient(s) of the email |
 | `subject` | `string` | The subject of the e-mail |
 | `status` | `EmailStatus` | The status of the email. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -825,21 +840,21 @@ Returns a single email by id with its delivery status, status reason, recipients
 | `messageId?` | `string` | The id from email provider |
 | `bulkId?` | `string` | The bulk id |
 | `from` | `string` | The e-mail address of the sender |
-| `to` | `Array<string> | string` | The primary recipient(s) of the email |
-| `cc?` | `Array<string> | string` | The carbon copy recipient(s) of the email |
-| `bcc?` | `Array<string> | string` | The blind carbon copy recipient(s) of the email |
+| `to` | `Array<string> \| string` | The primary recipient(s) of the email |
+| `cc?` | `Array<string> \| string` | The carbon copy recipient(s) of the email |
+| `bcc?` | `Array<string> \| string` | The blind carbon copy recipient(s) of the email |
 | `status` | `EmailStatus` | The status of the email. |
 | `statusReason?` | `Record<string, unknown>` | May provide more informations about the status |
 | `subject` | `string` | The subject of the e-mail |
-| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `replyTo?` | `Array<string> \| string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `headers?` | `Record<string, string>` | The headers to add to the email |
 | `tags?` | `Array<Tag>` | The tags to add to the email |
 | `attachments?` | `Array<{ filename?: string; contentType?: string; size?: number }>` | The attachements |
-| `variables?` | `Record<string, string | number | boolean | null>` | The variables for the template |
+| `variables?` | `Record<string, string \| number \| boolean \| null>` | The variables for the template |
 | `scheduledAt?` | `string` | The date at which the email is scheduled to be sent |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
-### `emails.send(body: CreateEmailRequest, options?: RequestOptions)`
+### `emails.send(body: CreateEmailRequest, options?: IdempotentRequestOptions)`
 
 Send transactional emails through Nuntly platform. It supports HTML and plain-text emails, attachments, labels, custom headers and scheduling.
 
@@ -851,17 +866,17 @@ Send transactional emails through Nuntly platform. It supports HTML and plain-te
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `from` | `string` | The e-mail address of the sender |
-| `to` | `Array<string> | string` | The primary recipient(s) of the email |
-| `cc?` | `Array<string> | string` | The carbon copy recipient(s) of the email |
-| `bcc?` | `Array<string> | string` | The blind carbon copy recipient(s) of the email |
-| `replyTo?` | `Array<string> | string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
+| `to` | `Array<string> \| string` | The primary recipient(s) of the email |
+| `cc?` | `Array<string> \| string` | The carbon copy recipient(s) of the email |
+| `bcc?` | `Array<string> \| string` | The blind carbon copy recipient(s) of the email |
+| `replyTo?` | `Array<string> \| string` | The email address where replies should be sent. If a recipient replies, the response will go to this address instead of the sender's email address |
 | `subject` | `string` | The subject of the e-mail |
 | `text?` | `string` | The plaintext version of the email |
 | `html?` | `string` | The HTML version of the email |
 | `headers?` | `Record<string, string>` | The headers to add to the email |
 | `tags?` | `Array<Tag>` | The tags to add to the email |
 | `attachments?` | `Array<Attachment>` | The attachements to add to the email |
-| `variables?` | `Record<string, string | number | boolean | null>` | The variables for the template |
+| `variables?` | `Record<string, string \| number \| boolean \| null>` | The variables for the template |
 | `scheduledAt?` | `string` | The date at which the email is scheduled to be sent |
 
 **CreateEmailResponse**
@@ -887,7 +902,7 @@ Returns the emails created by a bulk request, with the id and current status of 
 | `id` | `string` |  |
 | `emails` | `Array<{ id: string; status: EmailStatus; detail?: string }>` |  |
 
-### `emails.bulk.send(body: CreateBulkEmailsRequest, options?: RequestOptions)`
+### `emails.bulk.send(body: CreateBulkEmailsRequest, options?: IdempotentRequestOptions)`
 
 Queues 1 to 20 emails in one request with optional shared fallback values, and returns a bulk id plus the id and status of each email. No scheduling.
 
@@ -921,12 +936,12 @@ Returns download links, valid for 2 minutes, for the HTML, plain-text and raw MI
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `html` | `EmailContentItem | null` | HTML content, or `null` if unavailable. |
-| `text` | `EmailContentItem | null` | Plain text content, or `null` if unavailable. |
-| `mime` | `EmailContentItem | null` | Raw MIME (.eml) content, or `null` if unavailable. |
-| `subjectTemplate` | `EmailContentItem | null` | Subject template content, or `null` if unavailable. Returned for failed emails only. |
-| `htmlTemplate` | `EmailContentItem | null` | HTML template content, or `null` if unavailable. Returned for failed emails only. |
-| `textTemplate` | `EmailContentItem | null` | Text template content, or `null` if unavailable. Returned for failed emails only. |
+| `html` | `EmailContentItem \| null` | HTML content, or `null` if unavailable. |
+| `text` | `EmailContentItem \| null` | Plain text content, or `null` if unavailable. |
+| `mime` | `EmailContentItem \| null` | Raw MIME (.eml) content, or `null` if unavailable. |
+| `subjectTemplate` | `EmailContentItem \| null` | Subject template content, or `null` if unavailable. Returned for failed emails only. |
+| `htmlTemplate` | `EmailContentItem \| null` | HTML template content, or `null` if unavailable. Returned for failed emails only. |
+| `textTemplate` | `EmailContentItem \| null` | Text template content, or `null` if unavailable. Returned for failed emails only. |
 
 ## emails.events
 
@@ -936,6 +951,18 @@ Returns the full event history of an email, newest first, such as queued, sent, 
 
 - **HTTP**: `GET /emails/{id}/events`
 - **Returns**: `EmailEventsResponse`
+
+**EmailEventsResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` |  |
+| `orgId` | `string` | The id of the organization |
+| `emailId` | `string` | The id of the email |
+| `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
+| `occurredAt?` | `string` | The date at which the event occurred |
+| `eventType` | `EventType` | An event |
+| `payload` | `Record<string, unknown>` |  |
 
 ## emails.stats
 
@@ -956,7 +983,7 @@ Returns daily email counts for the last 30 days and today, per status and engage
 
 ## inboxes
 
-### `inboxes.create(body: CreateInboxRequest, options?: RequestOptions)`
+### `inboxes.create(body: CreateInboxRequest, options?: IdempotentRequestOptions)`
 
 Creates an inbox address on a verified domain with receiving active, or on your provided domain if none is given. Can assign a namespace and agent id.
 
@@ -983,10 +1010,10 @@ Creates an inbox address on a verified domain with receiving active, or on your 
 | `domainId` | `string` | The id of the domain. |
 | `domainName` | `string` | The domain name. |
 | `address` | `string` | The local-part of the email address. |
-| `name` | `string | null` | The display name of the inbox. |
-| `namespaceId` | `string | null` | The id of the namespace. |
-| `namespaceName` | `string | null` | The display name of the namespace. |
-| `agentId` | `string | null` | The AI agent identifier. |
+| `name` | `string \| null` | The display name of the inbox. |
+| `namespaceId` | `string \| null` | The id of the namespace. |
+| `namespaceName` | `string \| null` | The display name of the namespace. |
+| `agentId` | `string \| null` | The AI agent identifier. |
 
 ### `inboxes.delete(inboxId: string, options?: RequestOptions)`
 
@@ -1019,10 +1046,10 @@ Lists the active inboxes of your organization, newest first, with cursor paginat
 | `domainId` | `string` | The id of the domain. |
 | `domainName` | `string` | The domain name. |
 | `address` | `string` | The local-part of the email address. |
-| `name` | `string | null` | The display name of the inbox. |
-| `namespaceId` | `string | null` | The id of the namespace. |
-| `namespaceName` | `string | null` | The display name of the namespace. |
-| `agentId` | `string | null` | The AI agent identifier. |
+| `name` | `string \| null` | The display name of the inbox. |
+| `namespaceId` | `string \| null` | The id of the namespace. |
+| `namespaceName` | `string \| null` | The display name of the namespace. |
+| `agentId` | `string \| null` | The AI agent identifier. |
 
 ### `inboxes.retrieve(inboxId: string, options?: RequestOptions)`
 
@@ -1041,10 +1068,10 @@ Retrieves an inbox by id, including its address, domain, display name, namespace
 | `domainId` | `string` | The id of the domain. |
 | `domainName` | `string` | The domain name. |
 | `address` | `string` | The local-part of the email address. |
-| `name` | `string | null` | The display name of the inbox. |
-| `namespaceId` | `string | null` | The id of the namespace. |
-| `namespaceName` | `string | null` | The display name of the namespace. |
-| `agentId` | `string | null` | The AI agent identifier. |
+| `name` | `string \| null` | The display name of the inbox. |
+| `namespaceId` | `string \| null` | The id of the namespace. |
+| `namespaceName` | `string \| null` | The display name of the namespace. |
+| `agentId` | `string \| null` | The AI agent identifier. |
 
 ### `inboxes.update(inboxId: string, body: UpdateInboxRequest, options?: RequestOptions)`
 
@@ -1057,7 +1084,7 @@ Updates the display name of an inbox, used as the sender name on messages it sen
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `name?` | `string | null` | The display name of the inbox. |
+| `name?` | `string \| null` | The display name of the inbox. |
 
 **IdResponse**
 
@@ -1067,7 +1094,7 @@ Updates the display name of an inbox, used as the sender name on messages it sen
 
 ## inboxes.messages
 
-### `inboxes.messages.send(inboxId: string, body: SendMessageRequest, options?: RequestOptions)`
+### `inboxes.messages.send(inboxId: string, body: SendMessageRequest, options?: IdempotentRequestOptions)`
 
 Sends a new email from an inbox to one or more recipients. The message is queued for delivery and the response returns its id, thread id, and Message-ID.
 
@@ -1111,18 +1138,18 @@ Lists the threads in an inbox, most recently active first, with cursor paginatio
 | `id` | `string` | The id of the thread |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `domainId` | `string | null` | The id of the domain. |
+| `domainId` | `string \| null` | The id of the domain. |
 | `domainName` | `string` | The domain name. |
 | `inboxId` | `string` | The id of the inbox. |
 | `subject` | `string` | The original subject line. |
 | `lastMessageAt` | `string` | The timestamp of the most recent message. |
 | `messageCount` | `number` | The number of messages in the thread. |
 | `labels` | `Array<string>` | Aggregated labels from all messages in the thread. |
-| `agentId` | `string | null` | The AI agent identifier. |
+| `agentId` | `string \| null` | The AI agent identifier. |
 
 ## messages
 
-### `messages.forward(messageId: string, body: ForwardMessageRequest, options?: RequestOptions)`
+### `messages.forward(messageId: string, body: ForwardMessageRequest, options?: IdempotentRequestOptions)`
 
 Sends a message with a Fwd: subject from the inbox of the original message to one or more new recipients, in a new thread, with an optional text note.
 
@@ -1159,21 +1186,21 @@ Lists messages newest first, with cursor pagination and optional filters by doma
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the message |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
-| `inboxId` | `string | null` | The id of the inbox, or null if routed to the default catch-all. |
+| `inboxId` | `string \| null` | The id of the inbox, or null if routed to the default catch-all. |
 | `threadId` | `string` | The id of the thread. |
 | `messageId` | `string` | The email Message-ID header. |
 | `from` | `string` | The sender address (RFC 5322 format, e.g. "Jane Doe <jane@example.com>" or "jane@example.com"). |
 | `to` | `Array<string>` | The recipient addresses. |
-| `cc` | `Array<string> | null` | The CC addresses. |
-| `bcc` | `Array<string> | null` | The BCC addresses. |
-| `replyTo` | `Array<string> | null` | The Reply-To addresses. |
+| `cc` | `Array<string> \| null` | The CC addresses. |
+| `bcc` | `Array<string> \| null` | The BCC addresses. |
+| `replyTo` | `Array<string> \| null` | The Reply-To addresses. |
 | `subject` | `string` | The message subject. |
 | `receivedAt` | `string` | The original date of the message. |
-| `status` | `'received' | 'sent' | 'discarded' | 'failed'` | The status of the message |
+| `status` | `'received' \| 'sent' \| 'discarded' \| 'failed'` | The status of the message |
 | `labels` | `Array<string>` | The message labels. |
 | `attachmentCount` | `number` | The number of attachments. |
 
-### `messages.reply(messageId: string, body: ReplyMessageRequest, options?: RequestOptions)`
+### `messages.reply(messageId: string, body: ReplyMessageRequest, options?: IdempotentRequestOptions)`
 
 Replies from the inbox that holds the message, in the same thread. Set replyAll to true to also copy the other recipients. The send is queued.
 
@@ -1210,20 +1237,20 @@ Retrieves a received or sent message by id, including its sender, recipients, su
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the message |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
-| `inboxId` | `string | null` | The id of the inbox, or null if routed to the default catch-all. |
+| `inboxId` | `string \| null` | The id of the inbox, or null if routed to the default catch-all. |
 | `threadId` | `string` | The id of the thread. |
 | `messageId` | `string` | The email Message-ID header. |
 | `from` | `string` | The sender address (RFC 5322 format, e.g. "Jane Doe <jane@example.com>" or "jane@example.com"). |
 | `to` | `Array<string>` | The recipient addresses. |
-| `cc` | `Array<string> | null` | The CC addresses. |
-| `bcc` | `Array<string> | null` | The BCC addresses. |
-| `replyTo` | `Array<string> | null` | The Reply-To addresses. |
+| `cc` | `Array<string> \| null` | The CC addresses. |
+| `bcc` | `Array<string> \| null` | The BCC addresses. |
+| `replyTo` | `Array<string> \| null` | The Reply-To addresses. |
 | `subject` | `string` | The message subject. |
 | `receivedAt` | `string` | The original date of the message. |
-| `status` | `'received' | 'sent' | 'discarded' | 'failed'` | The status of the message |
+| `status` | `'received' \| 'sent' \| 'discarded' \| 'failed'` | The status of the message |
 | `labels` | `Array<string>` | The message labels. |
 | `attachmentCount` | `number` | The number of attachments. |
-| `headers` | `Record<string, string> | null` | The raw email headers. |
+| `headers` | `Record<string, string> \| null` | The raw email headers. |
 
 ### `messages.update(messageId: string, body: UpdateMessageRequest, options?: RequestOptions)`
 
@@ -1254,6 +1281,18 @@ Lists the attachments of a message with their filename, content type, size, disp
 - **HTTP**: `GET /messages/{messageId}/attachments`
 - **Returns**: `AttachmentsResponse`
 
+**AttachmentResponse**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` | The id of the attachment |
+| `filename` | `string \| null` | The original filename. |
+| `contentType` | `string` | The MIME content type. |
+| `size` | `number` | The size in bytes. |
+| `contentDisposition` | `string \| null` | The content disposition (inline or attachment). |
+| `contentId` | `string \| null` | The CID for inline images. |
+| `downloadUrl?` | `string` | Presigned download URL (included when retrieving a single attachment). |
+
 ### `messages.attachments.retrieve(messageId: string, attachmentId: string, options?: RequestOptions)`
 
 Retrieves the metadata of an attachment and a temporary download URL that expires after 15 minutes. Use it to fetch the attachment file itself.
@@ -1266,11 +1305,11 @@ Retrieves the metadata of an attachment and a temporary download URL that expire
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the attachment |
-| `filename` | `string | null` | The original filename. |
+| `filename` | `string \| null` | The original filename. |
 | `contentType` | `string` | The MIME content type. |
 | `size` | `number` | The size in bytes. |
-| `contentDisposition` | `string | null` | The content disposition (inline or attachment). |
-| `contentId` | `string | null` | The CID for inline images. |
+| `contentDisposition` | `string \| null` | The content disposition (inline or attachment). |
+| `contentId` | `string \| null` | The CID for inline images. |
 | `downloadUrl?` | `string` | Presigned download URL (included when retrieving a single attachment). |
 
 ## messages.content
@@ -1286,9 +1325,9 @@ Returns temporary download URLs, valid for 2 minutes, for the HTML, plain-text o
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `text` | `MessageContentItem | null` | Plain text content, or `null` if not requested or unavailable. |
-| `html` | `MessageContentItem | null` | HTML content, or `null` if not requested or unavailable. |
-| `mime` | `MessageContentItem | null` | Raw MIME (.eml) content, or `null` if not requested or unavailable. Returned for received messages only. |
+| `text` | `MessageContentItem \| null` | Plain text content, or `null` if not requested or unavailable. |
+| `html` | `MessageContentItem \| null` | HTML content, or `null` if not requested or unavailable. |
+| `mime` | `MessageContentItem \| null` | Raw MIME (.eml) content, or `null` if not requested or unavailable. Returned for received messages only. |
 
 ## namespaces
 
@@ -1314,7 +1353,7 @@ Creates a namespace to group inboxes, with a display name and an optional extern
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
 | `name` | `string` | The display name of the namespace. |
-| `externalId` | `string | null` | The external identifier for the namespace. |
+| `externalId` | `string \| null` | The external identifier for the namespace. |
 
 ### `namespaces.delete(namespaceId: string, options?: RequestOptions)`
 
@@ -1345,7 +1384,7 @@ Lists the namespaces of your organization, newest first, with cursor pagination.
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
 | `name` | `string` | The display name of the namespace. |
-| `externalId` | `string | null` | The external identifier for the namespace. |
+| `externalId` | `string \| null` | The external identifier for the namespace. |
 
 ### `namespaces.retrieve(namespaceId: string, options?: RequestOptions)`
 
@@ -1362,7 +1401,7 @@ Retrieves a namespace by id with its name, its optional external id, and inbox c
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
 | `name` | `string` | The display name of the namespace. |
-| `externalId` | `string | null` | The external identifier for the namespace. |
+| `externalId` | `string \| null` | The external identifier for the namespace. |
 | `inboxCount` | `number` | The total number of inboxes in this namespace. |
 | `activeInboxCount` | `number` | The number of active inboxes in this namespace. |
 
@@ -1378,7 +1417,7 @@ Updates the display name or external id of a namespace. Set the external id to n
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `name?` | `string` | The display name of the namespace. |
-| `externalId?` | `string | null` | An optional external identifier for the namespace. |
+| `externalId?` | `string \| null` | An optional external identifier for the namespace. |
 
 **IdResponse**
 
@@ -1406,10 +1445,10 @@ Lists the active inboxes assigned to a namespace, newest first, with cursor pagi
 | `domainId` | `string` | The id of the domain. |
 | `domainName` | `string` | The domain name. |
 | `address` | `string` | The local-part of the email address. |
-| `name` | `string | null` | The display name of the inbox. |
-| `namespaceId` | `string | null` | The id of the namespace. |
-| `namespaceName` | `string | null` | The display name of the namespace. |
-| `agentId` | `string | null` | The AI agent identifier. |
+| `name` | `string \| null` | The display name of the inbox. |
+| `namespaceId` | `string \| null` | The id of the namespace. |
+| `namespaceName` | `string \| null` | The display name of the namespace. |
+| `agentId` | `string \| null` | The AI agent identifier. |
 
 ## organizations
 
@@ -1427,7 +1466,7 @@ Lists the organization that the API key belongs to, with its id, name, and statu
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the organization |
 | `name` | `string` | The name of the organization |
-| `status` | `'enabled' | 'disabled'` | The status of the organization |
+| `status` | `'enabled' \| 'disabled'` | The status of the organization |
 
 ### `organizations.retrieve(id: string, options?: RequestOptions)`
 
@@ -1442,7 +1481,7 @@ Retrieves the organization that the API key belongs to by id, returning its name
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the organization |
 | `name` | `string` | The name of the organization |
-| `status` | `'enabled' | 'disabled'` | The status of the organization |
+| `status` | `'enabled' \| 'disabled'` | The status of the organization |
 
 ## organizations.usage
 
@@ -1457,7 +1496,7 @@ Returns the daily and monthly email usage of the organization, with each limit, 
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `email` | `{ daily: { used: number; limit: number | null; breakdown: { transactional: { sent: number; received: number }; broadcast: { sent: number } }; resetsAt: string }; monthly: { used: number; limit: number | null; breakdown: { transactional: { sent: number; received: number }; broadcast: { sent: number } }; resetsAt: string | null } }` |  |
+| `email` | `{ daily: { used: number; limit: number \| null; breakdown: { transactional: { sent: number; received: number }; broadcast: { sent: number } }; resetsAt: string }; monthly: { used: number; limit: number \| null; breakdown: { transactional: { sent: number; received: number }; broadcast: { sent: number } }; resetsAt: string \| null } }` |  |
 
 ## segments
 
@@ -1586,7 +1625,7 @@ Create a template.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the template. |
 | `name` | `string` | A name for the template, shown only to your team. |
-| `status` | `'draft' | 'published'` | The lifecycle state of the template. |
+| `status` | `'draft' \| 'published'` | The lifecycle state of the template. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -1617,7 +1656,7 @@ List the organization templates.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the template. |
 | `name` | `string` | A name for the template, shown only to your team. |
-| `status` | `'draft' | 'published'` | The lifecycle state of the template. |
+| `status` | `'draft' \| 'published'` | The lifecycle state of the template. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -1634,7 +1673,7 @@ Retrieve one template.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the template. |
 | `name` | `string` | A name for the template, shown only to your team. |
-| `status` | `'draft' | 'published'` | The lifecycle state of the template. |
+| `status` | `'draft' \| 'published'` | The lifecycle state of the template. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -1681,7 +1720,7 @@ Create a draft version of a template.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the content version. |
 | `templateId` | `string` | The id of the template. |
-| `status` | `'draft' | 'active'` | The lifecycle state of the content version. |
+| `status` | `'draft' \| 'active'` | The lifecycle state of the content version. |
 | `subject` | `string` |  |
 | `publishedAt?` | `string` | Date at which this version was published. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -1702,7 +1741,7 @@ List the versions of a template.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the content version. |
 | `templateId` | `string` | The id of the template. |
-| `status` | `'draft' | 'active'` | The lifecycle state of the content version. |
+| `status` | `'draft' \| 'active'` | The lifecycle state of the content version. |
 | `subject` | `string` |  |
 | `publishedAt?` | `string` | Date at which this version was published. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -1736,7 +1775,7 @@ Retrieve one content version.
 | ----- | ---- | ----------- |
 | `id` | `string` | The id of the content version. |
 | `templateId` | `string` | The id of the template. |
-| `status` | `'draft' | 'active'` | The lifecycle state of the content version. |
+| `status` | `'draft' \| 'active'` | The lifecycle state of the content version. |
 | `subject` | `string` |  |
 | `publishedAt?` | `string` | Date at which this version was published. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -1756,8 +1795,8 @@ Get download links for a version's HTML and text.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `html` | `{ status: 'available'; downloadUrl: string; expiresAt: string } | { status: 'absent' } | { status: 'unavailable' }` |  |
-| `text` | `{ status: 'available'; downloadUrl: string; expiresAt: string } | { status: 'absent' } | { status: 'unavailable' }` |  |
+| `html` | `{ status: 'available'; downloadUrl: string; expiresAt: string } \| { status: 'absent' } \| { status: 'unavailable' }` |  |
+| `text` | `{ status: 'available'; downloadUrl: string; expiresAt: string } \| { status: 'absent' } \| { status: 'unavailable' }` |  |
 
 ## threads
 
@@ -1775,14 +1814,14 @@ Retrieves a thread with its subject, message count, last activity and labels fro
 | `id` | `string` | The id of the thread |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt?` | `string` | Date at which the object was updated (ISO 8601 format) |
-| `domainId` | `string | null` | The id of the domain. |
+| `domainId` | `string \| null` | The id of the domain. |
 | `domainName` | `string` | The domain name. |
 | `inboxId` | `string` | The id of the inbox. |
 | `subject` | `string` | The original subject line. |
 | `lastMessageAt` | `string` | The timestamp of the most recent message. |
 | `messageCount` | `number` | The number of messages in the thread. |
 | `labels` | `Array<string>` | Aggregated labels from all messages in the thread. |
-| `agentId` | `string | null` | The AI agent identifier. |
+| `agentId` | `string \| null` | The AI agent identifier. |
 
 ### `threads.update(threadId: string, body: UpdateThreadRequest, options?: RequestOptions)`
 
@@ -1797,7 +1836,7 @@ Adds or removes labels on every message in a thread, or sets its agent. Label op
 | ----- | ---- | ----------- |
 | `addLabels?` | `Array<string>` | Labels to add to all messages in the thread. |
 | `removeLabels?` | `Array<string>` | Labels to remove from all messages in the thread. |
-| `agentId?` | `string | null` | The AI agent identifier. |
+| `agentId?` | `string \| null` | The AI agent identifier. |
 
 **IdResponse**
 
@@ -1825,12 +1864,12 @@ Lists the messages in a thread in chronological order, oldest first, with cursor
 | `messageId` | `string` | The email Message-ID header. |
 | `from` | `string` | The sender address (RFC 5322 format, e.g. "Jane Doe <jane@example.com>" or "jane@example.com"). |
 | `to` | `Array<string>` | The recipient addresses. |
-| `cc` | `Array<string> | null` | The CC addresses. |
-| `bcc` | `Array<string> | null` | The BCC addresses. |
-| `replyTo` | `Array<string> | null` | The Reply-To addresses. |
+| `cc` | `Array<string> \| null` | The CC addresses. |
+| `bcc` | `Array<string> \| null` | The BCC addresses. |
+| `replyTo` | `Array<string> \| null` | The Reply-To addresses. |
 | `subject` | `string` | The message subject. |
 | `receivedAt` | `string` | The original date of the message. |
-| `status` | `'received' | 'sent' | 'discarded' | 'failed'` | The status of the message |
+| `status` | `'received' \| 'sent' \| 'discarded' \| 'failed'` | The status of the message |
 | `labels` | `Array<string>` | The message labels. |
 | `attachmentCount` | `number` | The number of attachments. |
 
@@ -1938,7 +1977,7 @@ List a topic's explicit membership records only. A contact without one is subscr
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `contactId` | `string` | The id of the contact. |
-| `state` | `'subscribed' | 'unsubscribed'` | The subscribe/unsubscribe state. |
+| `state` | `'subscribed' \| 'unsubscribed'` | The subscribe/unsubscribe state. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 | `updatedAt` | `string` | Date at which the object was updated (ISO 8601 format) |
 
@@ -1957,7 +1996,7 @@ Registers an HTTPS endpoint to receive the event types you subscribe to. The res
 | ----- | ---- | ----------- |
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
-| `status?` | `'enabled' | 'disabled'` | The status of the webhook. |
+| `status?` | `'enabled' \| 'disabled'` | The status of the webhook. |
 | `events` | `Array<WebhookEventType>` | The event types to subscribe to |
 
 **CreateWebhookResponse**
@@ -1967,9 +2006,9 @@ Registers an HTTPS endpoint to receive the event types you subscribe to. The res
 | `id` | `string` | The id of the webhook |
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
-| `status` | `'enabled' | 'disabled' | 'revoked'` | The status of the webhook. |
-| `disabledReason` | `'manual' | 'auto_consecutive_failures' | null` | The reason the webhook was disabled, or `null` if it is not disabled. |
-| `disabledAt` | `string | null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
+| `status` | `'enabled' \| 'disabled' \| 'revoked'` | The status of the webhook. |
+| `disabledReason` | `'manual' \| 'auto_consecutive_failures' \| null` | The reason the webhook was disabled, or `null` if it is not disabled. |
+| `disabledAt` | `string \| null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
 | `events` | `Array<EventType>` | The event types to subscribe to |
 | `signingSecret` | `string` | The signing secret of the webhook. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
@@ -2002,9 +2041,9 @@ Lists the webhook endpoints of your organization, newest first, with cursor pagi
 | `id` | `string` | The id of the webhook |
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
-| `status` | `'enabled' | 'disabled' | 'revoked'` | The status of the webhook. |
-| `disabledReason` | `'manual' | 'auto_consecutive_failures' | null` | The reason the webhook was disabled, or `null` if it is not disabled. |
-| `disabledAt` | `string | null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
+| `status` | `'enabled' \| 'disabled' \| 'revoked'` | The status of the webhook. |
+| `disabledReason` | `'manual' \| 'auto_consecutive_failures' \| null` | The reason the webhook was disabled, or `null` if it is not disabled. |
+| `disabledAt` | `string \| null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
 | `events` | `Array<EventType>` | The event types to subscribe to |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
@@ -2023,9 +2062,9 @@ Retrieves a webhook endpoint with its URL, subscribed event types, status, and t
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl` | `string` | The endpoint URL of the webhook |
 | `events` | `Array<EventType>` | The event types to subscribe to |
-| `status` | `'enabled' | 'disabled' | 'revoked'` | The status of the webhook. |
-| `disabledReason` | `'manual' | 'auto_consecutive_failures' | null` | The reason the webhook was disabled, or `null` if it is not disabled. |
-| `disabledAt` | `string | null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
+| `status` | `'enabled' \| 'disabled' \| 'revoked'` | The status of the webhook. |
+| `disabledReason` | `'manual' \| 'auto_consecutive_failures' \| null` | The reason the webhook was disabled, or `null` if it is not disabled. |
+| `disabledAt` | `string \| null` | The timestamp when the webhook was disabled, or `null` if it is not disabled. |
 | `createdAt` | `string` | Date at which the object was created (ISO 8601 format) |
 
 ### `webhooks.update(id: string, body: UpdateWebhookRequest, options?: RequestOptions)`
@@ -2042,7 +2081,7 @@ Updates the name, URL, event types, or status of a webhook, or rotates its signi
 | `name?` | `string` | The name of the webhook |
 | `endpointUrl?` | `string` | The endpoint URL of the webhook |
 | `events?` | `Array<WebhookEventType>` | The event types to subscribe to |
-| `status?` | `'enabled' | 'disabled'` | The status of the webhook. |
+| `status?` | `'enabled' \| 'disabled'` | The status of the webhook. |
 | `rotateSecret?` | `boolean` | If true, a new signing secret will be generated |
 
 **UpdateWebhookResponse**
@@ -2072,7 +2111,7 @@ Lists the webhook events of the last 48 hours across all your endpoints, with th
 | `event` | `EventType` | An event |
 | `successfulAt?` | `string` | The timestamp when the event was successfully delivered to the endpoint |
 | `data` | `Record<string, unknown>` |  |
-| `status` | `'success' | 'pending' | 'failed'` | Status of the webhook delivery attempt |
+| `status` | `'success' \| 'pending' \| 'failed'` | Status of the webhook delivery attempt |
 
 ### `webhooks.events.replay(id: string, eventId: string, options?: RequestOptions)`
 
@@ -2089,3 +2128,13 @@ Lists the delivery attempts of a webhook event to an endpoint, with the status, 
 
 - **HTTP**: `GET /webhooks/{id}/events/{eventId}/deliveries`
 - **Returns**: `WebhookEventDeliveriesResponse`
+
+**WebhookEventDeliveriesResponseItem**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `id` | `string` |  |
+| `deliveredAt` | `string` |  |
+| `code` | `string` |  |
+| `status` | `'pending' \| 'success' \| 'failed'` |  |
+| `response` | `Record<string, unknown>` |  |

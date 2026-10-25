@@ -12,6 +12,7 @@ The official TypeScript SDK for [Nuntly](https://nuntly.com), the developer-firs
 - [Installation](#installation)
 - [Requirements](#requirements)
 - [Quick start](#quick-start)
+- [Broadcast quick start](#broadcast-quick-start)
 - [Configuration](#configuration)
 - [Pagination](#pagination)
 - [Error handling](#error-handling)
@@ -63,6 +64,47 @@ const email = await nuntly.emails.send({
 
 console.log(email.id); // em_01ka8k8s80gvx9604cn9am5st4
 ```
+
+Sending needs a verified domain: the `from` address must be on a domain you added to Nuntly and verified (see [sending domains](https://nuntly.com/docs/guides/sending-domains)). Until then, a send fails with the `domain_not_verified` error code, or `domain_not_found` for a domain you never added.
+
+## Broadcast quick start
+
+A broadcast sends one template to the contacts of a segment. This script creates a contact in a segment, publishes a template version, then schedules a broadcast:
+
+```typescript
+import { Nuntly } from '@nuntly/sdk';
+
+const nuntly = new Nuntly({ apiKey: process.env.NUNTLY_API_KEY });
+
+// A contact in a segment
+const contact = await nuntly.contacts.create({ email: 'jane@yourcustomer.com' });
+const segment = await nuntly.segments.create({ name: 'Early adopters' });
+await nuntly.contacts.segments.add(contact.id, segment.id);
+
+// A template with one published version
+const template = await nuntly.templates.create({ name: 'Monthly product update' });
+const version = await nuntly.templates.versions.create(template.id, {
+  subject: 'What shipped in {{month}}',
+  html: '<p>Here is what shipped in {{month}}.</p><p><a href="{{system.unsubscribeUrl}}">Unsubscribe</a></p>',
+  variables: [{ name: 'month', type: 'string' }],
+});
+await nuntly.templates.versions.publish(template.id, version.id);
+
+// A broadcast to the segment, scheduled in one hour
+const broadcast = await nuntly.broadcasts.create({
+  from: 'Your Company <updates@yourcompany.com>',
+  templateId: template.id,
+  segmentId: segment.id,
+  variables: { month: 'October' },
+});
+const { status } = await nuntly.broadcasts.send(broadcast.id, {
+  scheduledAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+});
+
+console.log(status); // 'scheduled'
+```
+
+Leave out `scheduledAt` to send the broadcast right away. A version whose HTML has no `{{system.unsubscribeUrl}}` link cannot be published. The broadcast `from` address needs a verified domain too, or `broadcasts.create` fails with `broadcast_no_eligible_domain`. See the [broadcast guides](https://nuntly.com/docs/guides/broadcast-overview) for segments, topics and unsubscribes.
 
 ## Configuration
 
