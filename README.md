@@ -78,7 +78,7 @@ const nuntly = new Nuntly({
 |--------|------|---------|-------------|
 | `apiKey` | `string` | `NUNTLY_API_KEY` env var | Your Nuntly API key |
 | `baseUrl` | `string` | `https://api.nuntly.com` | API base URL |
-| `timeout` | `number` | `60000` | Request timeout in milliseconds |
+| `timeout` | `number` | `60000` | Timeout of each attempt in milliseconds. `0`, `Infinity` or a value above `2147483647` sets none; a negative or NaN value throws |
 | `maxRetries` | `number` | `2` | Number of retry attempts on failure |
 | `retry` | `RetryStrategy` | `'backoff'` | Retry strategy: `'backoff'`, `'none'`, or custom backoff config |
 | `debug` | `boolean` | `false` | Log HTTP requests and responses |
@@ -200,7 +200,7 @@ if (error) {
 }
 ```
 
-`error` is an `APIError` for an error response, an `APIConnectionError` when no response arrived, or a plain `NuntlyError` when the SDK refuses the call before sending it (an empty, `.` or `..` id). To use this shape for some calls only, see [safe mode for one call](https://nuntly.com/docs/api-reference/typescript-sdk#safe-mode-for-one-call).
+`error` is an `APIError` for an error response, an `APIConnectionError` when no response arrived, or a plain `NuntlyError` when the SDK refuses the call before sending it (an empty, `.` or `..` id, an invalid `timeout`) or when something else, such as one of your hooks, throws a value that is not an SDK error: its `cause` is that value. To use this shape for some calls only, see [safe mode for one call](https://nuntly.com/docs/api-reference/typescript-sdk#safe-mode-for-one-call).
 
 ## Lifecycle hooks
 
@@ -266,7 +266,7 @@ whose endpoint deduplicates by key accept `idempotencyKey` (their options type i
 you pass none and reuse it across that call's retries. Pass your own value to
 deduplicate across processes.
 
-The default request timeout is 60 seconds. Override it for every request in the client options, or per request as above:
+The timeout applies to each attempt, not to the whole call: with the default 2 retries, a call can take about three times the timeout plus the waits between attempts. The default is 60 seconds, and `0` turns it off. Override it for every request in the client options, or per request as above:
 
 ```typescript
 const nuntly = new Nuntly({
@@ -275,7 +275,7 @@ const nuntly = new Nuntly({
 });
 ```
 
-A request that exceeds its timeout aborts with an `APIConnectionTimeoutError`.
+An attempt that exceeds its timeout aborts. The call rejects with an `APIConnectionTimeoutError` when no retry is left. A failure while reading the response body, such as a timeout or a connection reset mid-body, is not retried. To bound the whole call, pass `signal: AbortSignal.timeout(ms)` in the per-request options.
 
 ## More
 

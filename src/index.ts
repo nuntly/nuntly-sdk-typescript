@@ -76,7 +76,7 @@ export class Nuntly {
   }
 }
 
-export function createSafeNuntly(options: ClientOptions) {
+export function createSafeNuntly(options: ClientOptions = {}) {
   return safe(new Nuntly(options));
 }
 

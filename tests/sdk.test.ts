@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'bun:test';
 import { getEventListeners } from 'node:events';
-import type { CreateDomainRequest, CreateEmailRequest, ReplyMessageRequest } from '../src/index';
+import { type AddressInfo, createServer, type Server } from 'node:net';
+import { rejectWithCallError } from '../src/core/client';
+import type { CreateDomainRequest, CreateEmailRequest, ErrorContext, ReplyMessageRequest } from '../src/index';
 import {
   APIConnectionError,
   APIConnectionTimeoutError,
@@ -11,6 +13,7 @@ import {
   InternalServerError,
   NotFoundError,
   Nuntly,
+  NuntlyError,
   RateLimitError,
   verifyWebhook,
   WebhookVerificationError,
@@ -103,6 +106,23 @@ describe('Idempotency-Key on broadcast sends', () => {
       { idempotencyKey: 'campaign-2026-11' },
     );
     expect(captured!.headers.get('idempotency-key')).toBe('campaign-2026-11');
+  });
+});
+
+describe('Idempotency-Key from a caller header', () => {
+  it('sends only the caller key when its header is in another case', async () => {
+    let captured: Headers | undefined;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      fetch: ((_input: Request, init?: RequestInit) => {
+        captured = new Headers(init?.headers);
+        return Promise.resolve(jsonResponse({ data: { id: 'em_1', status: 'queued' } }, 202));
+      }) as typeof fetch,
+    });
+
+    await nuntly.emails.send(emailPayload, { headers: { 'idempotency-key': 'caller-key' } });
+    expect(captured?.get('idempotency-key')).toBe('caller-key');
   });
 });
 
@@ -313,6 +333,59 @@ describe('Safe mode', () => {
   });
 });
 
+describe('Safe mode with a failing hook', () => {
+  const hookClient = (thrown: unknown, safeMode: boolean) => {
+    const options = {
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      fetch: mockFetch(() => jsonResponse({ data: { id: 'em_1' } })) as typeof fetch,
+      hooks: {
+        onRequest: () => {
+          throw thrown;
+        },
+      },
+    };
+    return safeMode ? createSafeNuntly(options) : new Nuntly(options);
+  };
+
+  it('wraps a plain Error thrown by a hook in a NuntlyError whose cause is that Error', async () => {
+    const thrown = new Error('quota exceeded');
+    const result = await (hookClient(thrown, true) as ReturnType<typeof createSafeNuntly>).emails.retrieve('em_1');
+    expect(result.data).toBeNull();
+    expect(result.error).toBeInstanceOf(NuntlyError);
+    expect((result.error as NuntlyError).message).toBe('quota exceeded');
+    expect((result.error as NuntlyError).cause).toBe(thrown);
+  });
+
+  it('wraps any other thrown value with String(value) as the message', async () => {
+    for (const thrown of ['quota exceeded', 42]) {
+      const result = await (hookClient(thrown, true) as ReturnType<typeof createSafeNuntly>).emails.retrieve('em_1');
+      expect((result.error as NuntlyError).message).toBe(String(thrown));
+      expect((result.error as NuntlyError).cause).toBe(thrown);
+    }
+  });
+
+  it('wraps a value whose String() throws, such as a null-prototype object', async () => {
+    const thrown = Object.create(null);
+    const result = await (hookClient(thrown, true) as ReturnType<typeof createSafeNuntly>).emails.retrieve('em_1');
+    expect(result.data).toBeNull();
+    expect(result.error).toBeInstanceOf(NuntlyError);
+    expect((result.error as NuntlyError).cause).toBe(thrown);
+  });
+
+  it('passes a NuntlyError subclass thrown by a hook unchanged', async () => {
+    const thrown = new APIConnectionError('proxy refused');
+    const result = await (hookClient(thrown, true) as ReturnType<typeof createSafeNuntly>).emails.retrieve('em_1');
+    expect(result.error).toBe(thrown);
+  });
+
+  it('forwards the hook value unchanged outside safe mode', async () => {
+    const thrown = { reason: 'quota' };
+    const error = await (hookClient(thrown, false) as Nuntly).emails.retrieve('em_1').catch((e: unknown) => e);
+    expect(error).toBe(thrown);
+  });
+});
+
 describe('Pagination', () => {
   it('list returns CursorPage with data and nextCursor', async () => {
     const nuntly = createClient(() =>
@@ -431,6 +504,22 @@ describe('Auth and headers', () => {
       }) as typeof fetch;
 
       await new Nuntly().emails.retrieve('em_1');
+      expect(captured!.headers.get('authorization')).toBe('Bearer env_key');
+    });
+
+    it('createSafeNuntly() reads the API key from NUNTLY_API_KEY', async () => {
+      process.env.NUNTLY_API_KEY = 'env_key';
+      process.env.NUNTLY_BASE_URL = 'https://api.test.com';
+      let captured: Request | null = null;
+      globalThis.fetch = mockFetch((req) => {
+        captured = req;
+        return jsonResponse({ data: { id: 'em_1' } });
+      }) as typeof fetch;
+
+      // The tests are not type-checked: a parameter with a default does not count in length.
+      expect(createSafeNuntly.length).toBe(0);
+      const { data } = await createSafeNuntly().emails.retrieve('em_1');
+      expect(data?.id).toBe('em_1');
       expect(captured!.headers.get('authorization')).toBe('Bearer env_key');
     });
 
@@ -722,6 +811,73 @@ describe('Default timeout and retries', () => {
     }
   });
 
+  for (const timeout of [0, Number.POSITIVE_INFINITY]) {
+    it(`attaches no timeout when timeout is ${timeout}`, async () => {
+      const fetch = delayedFetch(30, () => jsonResponse({ data: { id: 'em_1' } }));
+      const nuntly = new Nuntly({ apiKey: 'test_key', baseUrl: 'https://api.test.com', timeout, retry: 'none', fetch });
+
+      expect((await nuntly.emails.retrieve('em_1')).id).toBe('em_1');
+      expect((await nuntly.withOptions({ timeout: 25 }).emails.retrieve('em_1', { timeout })).id).toBe('em_1');
+    });
+  }
+
+  for (const timeout of [-1, Number.NaN, Number.NEGATIVE_INFINITY]) {
+    it(`refuses a timeout of ${timeout}`, async () => {
+      let calls = 0;
+      const fetch = (() => {
+        calls++;
+        return Promise.resolve(jsonResponse({ data: { id: 'em_1' } }));
+      }) as typeof globalThis.fetch;
+      expect(() => new Nuntly({ apiKey: 'test_key', timeout, fetch })).toThrow(NuntlyError);
+
+      const nuntly = new Nuntly({ apiKey: 'test_key', baseUrl: 'https://api.test.com', fetch });
+      await expect(nuntly.emails.retrieve('em_1', { timeout })).rejects.toThrow(NuntlyError);
+      expect(calls).toBe(0);
+    });
+  }
+
+  it('treats a timeout above 2147483647 as no timeout, like Infinity', async () => {
+    const timeoutOf = AbortSignal.timeout;
+    let timers = 0;
+    AbortSignal.timeout = (ms: number) => {
+      timers++;
+      return timeoutOf.call(AbortSignal, ms);
+    };
+    try {
+      const fetch = delayedFetch(30, () => jsonResponse({ data: { id: 'em_1' } }));
+      const nuntly = new Nuntly({
+        apiKey: 'test_key',
+        baseUrl: 'https://api.test.com',
+        timeout: 2 ** 31,
+        retry: 'none',
+        fetch,
+      });
+      expect((await nuntly.emails.retrieve('em_1')).id).toBe('em_1');
+      expect((await nuntly.emails.retrieve('em_1', { timeout: 1e12 })).id).toBe('em_1');
+      expect(timers).toBe(0);
+    } finally {
+      AbortSignal.timeout = timeoutOf;
+    }
+  });
+
+  it('rounds a fractional timeout up to whole milliseconds and accepts the largest one', async () => {
+    const timeoutOf = AbortSignal.timeout;
+    const received: number[] = [];
+    AbortSignal.timeout = (ms: number) => {
+      received.push(ms);
+      return timeoutOf.call(AbortSignal, Math.ceil(ms));
+    };
+    try {
+      const fetch = delayedFetch(1, () => jsonResponse({ data: { id: 'em_1' } }));
+      const nuntly = new Nuntly({ apiKey: 'test_key', baseUrl: 'https://api.test.com', retry: 'none', fetch });
+      await nuntly.emails.retrieve('em_1', { timeout: 300.00000000000006 });
+      await nuntly.emails.retrieve('em_1', { timeout: 2 ** 31 - 1 });
+      expect(received).toEqual([301, 2 ** 31 - 1]);
+    } finally {
+      AbortSignal.timeout = timeoutOf;
+    }
+  });
+
   it('retries send() at the client-configured maxRetries', async () => {
     let attempt = 0;
     const nuntly = new Nuntly({
@@ -892,6 +1048,179 @@ describe('Hooks', () => {
     expect(capturedStatus).toBe(200);
   });
 
+  it('resolves the call when onResponse reads the body', async () => {
+    let hookBody: unknown;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      fetch: mockFetch(() => jsonResponse({ data: { id: 'em_1' } })) as typeof fetch,
+      hooks: {
+        onResponse: async (ctx) => {
+          hookBody = await ctx.response.json();
+        },
+      },
+    });
+
+    const { data, response } = await nuntly.emails.retrieve('em_1').withResponse();
+    expect(data.id).toBe('em_1');
+    expect(hookBody).toEqual({ data: { id: 'em_1' } });
+    expect(await response.json()).toEqual({ data: { id: 'em_1' } });
+  });
+
+  describe('response cloning', () => {
+    const clone = Response.prototype.clone;
+    let clones = 0;
+    afterEach(() => {
+      Response.prototype.clone = clone;
+    });
+    function countClones() {
+      clones = 0;
+      Response.prototype.clone = function (this: Response) {
+        clones++;
+        return clone.call(this);
+      };
+    }
+
+    it('clones no response when no second reader needs the body', async () => {
+      const nuntly = createClient(() => jsonResponse({ data: { id: 'em_1' } }));
+      countClones();
+
+      expect((await nuntly.emails.retrieve('em_1')).id).toBe('em_1');
+      expect((await nuntly.emails.list({ limit: 1 })).data).toBeDefined();
+      expect(clones).toBe(0);
+    });
+
+    it('clones a response once for withResponse()', async () => {
+      const nuntly = createClient(() => jsonResponse({ data: { id: 'em_1' } }));
+      countClones();
+
+      const { response } = await nuntly.emails.retrieve('em_1').withResponse();
+      expect(await response.json()).toEqual({ data: { id: 'em_1' } });
+      expect(clones).toBe(1);
+    });
+
+    it('still gives a readable response to a late asResponse()', async () => {
+      const nuntly = createClient(() => jsonResponse({ message: 'missing' }, 404));
+      countClones();
+
+      const call = nuntly.emails.retrieve('em_1');
+      await expect(call).rejects.toThrow(NotFoundError);
+      const response = await call.asResponse();
+      expect(response.status).toBe(404);
+      expect(await response.json()).toEqual({ message: 'missing' });
+      expect(clones).toBe(0);
+    });
+  });
+
+  it('rejects a late asResponse() with the error of a body read that failed', async () => {
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      retry: 'none',
+      fetch: (() => {
+        const body = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('{"data":'));
+            controller.error(new TypeError('terminated'));
+          },
+        });
+        return Promise.resolve(new Response(body, { status: 200 }));
+      }) as typeof fetch,
+    });
+
+    const call = nuntly.emails.retrieve('em_1');
+    const error = await call.catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(APIConnectionError);
+    await expect(call.asResponse()).rejects.toBe(error);
+    await expect(call.withResponse()).rejects.toBe(error);
+  });
+
+  it('drops the encoding and length headers from a copy built from the decoded body', async () => {
+    const nuntly = createClient(() =>
+      jsonResponse({ data: { id: 'em_1' } }, 200, {
+        'content-encoding': 'gzip',
+        'content-length': '999',
+        'x-request-id': 'req_1',
+      }),
+    );
+
+    const call = nuntly.emails.retrieve('em_1');
+    await call;
+    const response = await call.asResponse();
+    expect(response.headers.get('content-encoding')).toBeNull();
+    expect(response.headers.get('content-length')).toBeNull();
+    expect(response.headers.get('x-request-id')).toBe('req_1');
+    expect(await response.json()).toEqual({ data: { id: 'em_1' } });
+  });
+
+  describe('rejectWithCallError', () => {
+    it('rejects with the call error when the call fails', async () => {
+      const callError = new APIConnectionError('reset');
+      const reason = await new Promise((reject) =>
+        rejectWithCallError(Promise.reject(callError), new Error('read'), reject),
+      );
+      expect(reason).toBe(callError);
+    });
+
+    it('still rejects, with the read error, when the call succeeds', async () => {
+      const readError = new Error('read');
+      const reason = await new Promise((reject) => rejectWithCallError(Promise.resolve({}), readError, reject));
+      expect(reason).toBe(readError);
+    });
+  });
+
+  it('gives an API error a raw response whose body is readable', async () => {
+    const nuntly = createClient(() => jsonResponse({ error: { code: 'not_found', title: 'Not found' } }, 404));
+
+    const error = await nuntly.emails.retrieve('em_1').catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(NotFoundError);
+    expect(await (error as NotFoundError).rawResponse?.json()).toEqual({
+      error: { code: 'not_found', title: 'Not found' },
+    });
+  });
+
+  it('gives onSuccess a response whose body is readable', async () => {
+    let hookBody: unknown;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      fetch: mockFetch(() => jsonResponse({ data: { id: 'em_1' } })) as typeof fetch,
+      hooks: {
+        onSuccess: async (ctx) => {
+          hookBody = await ctx.response.json();
+        },
+      },
+    });
+
+    expect((await nuntly.emails.retrieve('em_1')).id).toBe('em_1');
+    expect(hookBody).toEqual({ data: { id: 'em_1' } });
+  });
+
+  describe('a response requested after the headers, before the call settles', () => {
+    for (const hook of ['onResponse', 'onSuccess'] as const) {
+      it(`is readable when requested from ${hook}`, async () => {
+        let pending: Promise<Response> | undefined;
+        let call: ReturnType<Nuntly['emails']['retrieve']> | undefined;
+        const nuntly = new Nuntly({
+          apiKey: 'test_key',
+          baseUrl: 'https://api.test.com',
+          fetch: mockFetch(() => jsonResponse({ data: { id: 'em_1' } })) as typeof fetch,
+          hooks: {
+            [hook]: () => {
+              pending = call?.asResponse();
+            },
+          },
+        });
+
+        call = nuntly.emails.retrieve('em_1');
+        expect((await call).id).toBe('em_1');
+        const response = await pending;
+        expect(response?.status).toBe(200);
+        expect(await response?.json()).toEqual({ data: { id: 'em_1' } });
+      });
+    }
+  });
+
   it('onResponse also fires on 4xx (alongside onError)', async () => {
     let responseFired = false;
     let errorFired = false;
@@ -978,6 +1307,67 @@ describe('Hooks', () => {
     expect(capturedCtx.error).toBeInstanceOf(NotFoundError);
     expect(capturedCtx.response).toBeInstanceOf(Response);
     expect((capturedCtx.error as NotFoundError).status).toBe(404);
+  });
+
+  it('rejects with the original error when onError throws', async () => {
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      retry: 'none',
+      fetch: mockFetch(() =>
+        jsonResponse({ error: { status: 404, code: 'not_found', title: 'Not found' } }, 404),
+      ) as typeof fetch,
+      hooks: {
+        onError: () => {
+          throw new Error('telemetry down');
+        },
+      },
+    });
+
+    await expect(nuntly.emails.retrieve('em_1')).rejects.toThrow(NotFoundError);
+  });
+
+  it('passes onError the same connection error the caller gets', async () => {
+    let hookError: unknown;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      retry: 'none',
+      fetch: (() => Promise.reject(new TypeError('fetch failed'))) as typeof fetch,
+      hooks: {
+        onError: (ctx) => {
+          hookError = ctx.error;
+        },
+      },
+    });
+
+    const error = await nuntly.emails.retrieve('em_1').catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(APIConnectionError);
+    expect(hookError).toBe(error);
+  });
+
+  it('calls onError when the path cannot be resolved', async () => {
+    let captured: ErrorContext | undefined;
+    let calls = 0;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      fetch: (() => {
+        calls++;
+        return Promise.resolve(jsonResponse({ data: {} }));
+      }) as typeof fetch,
+      hooks: {
+        onError: (ctx) => {
+          captured = ctx;
+        },
+      },
+    });
+
+    const error = await nuntly.emails.retrieve('..').catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(NuntlyError);
+    expect(captured?.error).toBe(error as NuntlyError);
+    expect(captured?.request).toMatchObject({ method: 'GET', path: '/emails/{id}' });
+    expect(calls).toBe(0);
   });
 
   it('onRetry receives a RetryContext with attempt number', async () => {
@@ -1133,6 +1523,10 @@ describe('Non-JSON error bodies', () => {
 });
 
 describe('Retry policy', () => {
+  const servers: Server[] = [];
+  afterEach(() => {
+    for (const server of servers.splice(0)) server.close();
+  });
   const fastRetry = {
     strategy: 'backoff' as const,
     backoff: { initialInterval: 1, maxInterval: 1, exponent: 1 },
@@ -1166,6 +1560,22 @@ describe('Retry policy', () => {
 
     await expect(nuntly.domains.create(domainPayload)).rejects.toThrow(InternalServerError);
     expect(calls).toHaveLength(1);
+  });
+
+  it('does not retry a PATCH without Idempotency-Key on 503', async () => {
+    const { nuntly, calls } = countingClient(() => jsonResponse({ message: 'unavailable' }, 503));
+
+    await expect(nuntly.domains.update('dom_1', { openTracking: true })).rejects.toThrow(InternalServerError);
+    expect(calls).toHaveLength(1);
+  });
+
+  it('retries a PATCH with an Idempotency-Key on 503', async () => {
+    const { nuntly, calls } = countingClient((_req, attempt) =>
+      attempt === 1 ? jsonResponse({ message: 'unavailable' }, 503) : jsonResponse({ data: { id: 'dom_1' } }),
+    );
+
+    await nuntly.domains.update('dom_1', { openTracking: true }, { headers: { 'Idempotency-Key': 'key_1' } });
+    expect(calls).toHaveLength(2);
   });
 
   // Like the real fetch, rejects with the signal's reason (a TimeoutError on timeout).
@@ -1263,6 +1673,189 @@ describe('Retry policy', () => {
     expect(calls).toBe(2);
   });
 
+  // As Bun 1.4.4 rejects them: a closed port, an unresolvable host, a reset connection.
+  const bunError = (code: string, message: string) => Object.assign(new TypeError(message), { code });
+  for (const error of [
+    bunError('ECONNREFUSED', 'ECONNREFUSED: Unable to connect. Is the computer able to access the url?'),
+    bunError('ENOTFOUND', 'getaddrinfo ENOTFOUND nonexistent.invalid'),
+    bunError(
+      'ECONNRESET',
+      'ECONNRESET: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()',
+    ),
+    new TypeError('Failed to fetch'),
+  ]) {
+    it(`retries a network TypeError: ${error.message}`, async () => {
+      let calls = 0;
+      const nuntly = new Nuntly({
+        apiKey: 'test_key',
+        baseUrl: 'https://api.test.com',
+        retry: fastRetry,
+        fetch: (() => {
+          calls++;
+          return calls === 1 ? Promise.reject(error) : Promise.resolve(jsonResponse({ data: { id: 'em_1' } }));
+        }) as typeof fetch,
+      });
+
+      await nuntly.emails.retrieve('em_1');
+      expect(calls).toBe(2);
+    });
+  }
+
+  for (const error of [
+    Object.assign(new TypeError('fetch() URL is invalid'), { code: 'ERR_INVALID_URL' }),
+    new TypeError("Cannot read properties of undefined (reading 'headers')"),
+  ]) {
+    it(`does not retry a TypeError that is not a network failure: ${error.message}`, async () => {
+      let calls = 0;
+      const nuntly = new Nuntly({
+        apiKey: 'test_key',
+        baseUrl: 'https://api.test.com',
+        retry: fastRetry,
+        fetch: (() => {
+          calls++;
+          return Promise.reject(error);
+        }) as typeof fetch,
+      });
+
+      await expect(nuntly.emails.retrieve('em_1')).rejects.toThrow(APIConnectionError);
+      expect(calls).toBe(1);
+    });
+  }
+
+  for (const [name, listen] of [
+    ['a closed port', async () => 1],
+    [
+      'a reset connection',
+      async () => {
+        const server = createServer((socket) => socket.resetAndDestroy());
+        await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+        servers.push(server);
+        return (server.address() as AddressInfo).port;
+      },
+    ],
+  ] as const) {
+    it(`retries the runtime's own network error on ${name}`, async () => {
+      const port = await listen();
+      let calls = 0;
+      const nuntly = new Nuntly({
+        apiKey: 'test_key',
+        baseUrl: `http://127.0.0.1:${port}`,
+        maxRetries: 1,
+        retry: fastRetry,
+        fetch: ((input: Request, init?: RequestInit) => {
+          calls++;
+          return globalThis.fetch(input, init);
+        }) as typeof fetch,
+      });
+
+      await expect(nuntly.emails.retrieve('em_1')).rejects.toThrow(APIConnectionError);
+      expect(calls).toBe(2);
+    });
+  }
+
+  it('does not retry a failure while reading the response body', async () => {
+    let calls = 0;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      retry: fastRetry,
+      fetch: (() => {
+        calls++;
+        const body = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('{"data":'));
+            controller.error(new TypeError('terminated'));
+          },
+        });
+        return Promise.resolve(new Response(body, { status: 200 }));
+      }) as typeof fetch,
+    });
+
+    await expect(nuntly.emails.retrieve('em_1')).rejects.toThrow(APIConnectionError);
+    expect(calls).toBe(1);
+  });
+
+  it('exposes no earlier response when the last attempt throws', async () => {
+    const seen: number[] = [];
+    const retryResponses: (Response | undefined)[] = [];
+    let calls = 0;
+    const nuntly = new Nuntly({
+      apiKey: 'test_key',
+      baseUrl: 'https://api.test.com',
+      maxRetries: 2,
+      retry: fastRetry,
+      fetch: (() => {
+        calls++;
+        return calls === 1
+          ? Promise.resolve(jsonResponse({ message: 'unavailable' }, 503))
+          : Promise.reject(new TypeError('fetch failed'));
+      }) as typeof fetch,
+      hooks: {
+        onResponse: (ctx) => {
+          seen.push(ctx.response.status);
+        },
+        onRetry: (ctx) => {
+          retryResponses.push(ctx.response);
+        },
+      },
+    });
+
+    const call = nuntly.emails.retrieve('em_1');
+    const error = await call.catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(APIConnectionError);
+    await expect(call.asResponse()).rejects.toBe(error);
+    expect(calls).toBe(3);
+    expect(seen).toEqual([]);
+    expect(retryResponses[0]?.status).toBe(503);
+    expect(retryResponses[1]).toBeUndefined();
+  });
+
+  describe('a retry that never starts exposes no response', () => {
+    function retryingClient(hooks: { onRetry?: () => void } = {}) {
+      const seen: number[] = [];
+      const nuntly = new Nuntly({
+        apiKey: 'test_key',
+        baseUrl: 'https://api.test.com',
+        retry: fastRetry,
+        fetch: mockFetch(() => jsonResponse({ message: 'unavailable' }, 503, { 'retry-after': '0.2' })) as typeof fetch,
+        hooks: {
+          ...hooks,
+          onResponse: (ctx) => {
+            seen.push(ctx.response.status);
+          },
+        },
+      });
+      return { nuntly, seen };
+    }
+
+    it('when onRetry throws', async () => {
+      const failure = new Error('retry hook down');
+      const { nuntly, seen } = retryingClient({
+        onRetry: () => {
+          throw failure;
+        },
+      });
+
+      const call = nuntly.emails.retrieve('em_1');
+      await expect(call).rejects.toBe(failure);
+      await expect(call.asResponse()).rejects.toBe(failure);
+      expect(seen).toEqual([]);
+    });
+
+    it('when the caller aborts during the retry delay', async () => {
+      const { nuntly, seen } = retryingClient();
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(), 20);
+
+      const call = nuntly.emails.retrieve('em_1', { signal: controller.signal });
+      const error = await call.catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(APIConnectionError);
+      expect(error).not.toBeInstanceOf(APIConnectionTimeoutError);
+      await expect(call.asResponse()).rejects.toBe(error);
+      expect(seen).toEqual([]);
+    });
+  });
+
   it('does not retry when the caller aborts', async () => {
     let calls = 0;
     const slow = delayedFetch(200, () => jsonResponse({ data: {} }));
@@ -1278,7 +1871,9 @@ describe('Retry policy', () => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), 10);
 
-    await expect(nuntly.emails.retrieve('em_1', { signal: controller.signal })).rejects.toThrow();
+    const error = await nuntly.emails.retrieve('em_1', { signal: controller.signal }).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(APIConnectionError);
+    expect(error).not.toBeInstanceOf(APIConnectionTimeoutError);
     expect(calls).toBe(1);
   });
 });
