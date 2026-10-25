@@ -8,7 +8,7 @@ import type {
   RequestOptions,
 } from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import { generateIdempotencyKey } from '../../lib/idempotency.js';
+import { withIdempotencyKey } from '../../lib/idempotency.js';
 import type {
   CreateInboxRequest,
   IdResponse,
@@ -43,13 +43,11 @@ export class Inboxes extends Resource {
    * @returns APIPromise<InboxResponse>
    */
   create(body: CreateInboxRequest, options?: IdempotentRequestOptions): APIPromise<InboxResponse> {
-    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
-    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http
       .post<{ data: InboxResponse }>({
         path: '/inboxes',
         body,
-        options,
+        options: withIdempotencyKey(options),
       })
       .map((r) => r.data);
   }

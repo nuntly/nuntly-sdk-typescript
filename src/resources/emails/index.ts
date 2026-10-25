@@ -8,7 +8,7 @@ import type {
   RequestOptions,
 } from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import { generateIdempotencyKey } from '../../lib/idempotency.js';
+import { withIdempotencyKey } from '../../lib/idempotency.js';
 import type {
   CreateEmailRequest,
   CreateEmailResponse,
@@ -103,13 +103,11 @@ export class Emails extends Resource {
    * @returns APIPromise<CreateEmailResponse>
    */
   send(body: CreateEmailRequest, options?: IdempotentRequestOptions): APIPromise<CreateEmailResponse> {
-    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
-    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http
       .post<{ data: CreateEmailResponse }>({
         path: '/emails',
         body,
-        options,
+        options: withIdempotencyKey(options),
       })
       .map((r) => r.data);
   }

@@ -8,7 +8,7 @@ import type {
   RequestOptions,
 } from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import { generateIdempotencyKey } from '../../lib/idempotency.js';
+import { withIdempotencyKey } from '../../lib/idempotency.js';
 import type {
   ForwardMessageRequest,
   IdResponse,
@@ -50,14 +50,12 @@ export class Messages extends Resource {
     body: ForwardMessageRequest,
     options?: IdempotentRequestOptions,
   ): APIPromise<SendMessageResponse> {
-    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
-    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http
       .post<{ data: SendMessageResponse }>({
         path: '/messages/{messageId}/forward',
         pathParams: { messageId },
         body,
-        options,
+        options: withIdempotencyKey(options),
       })
       .map((r) => r.data);
   }
@@ -95,14 +93,12 @@ export class Messages extends Resource {
     body: ReplyMessageRequest,
     options?: IdempotentRequestOptions,
   ): APIPromise<SendMessageResponse> {
-    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
-    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http
       .post<{ data: SendMessageResponse }>({
         path: '/messages/{messageId}/reply',
         pathParams: { messageId },
         body,
-        options,
+        options: withIdempotencyKey(options),
       })
       .map((r) => r.data);
   }

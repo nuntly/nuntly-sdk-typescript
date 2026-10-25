@@ -8,7 +8,7 @@ import type {
   RequestOptions,
 } from '../../core/index.js';
 import { Resource } from '../../core/index.js';
-import { generateIdempotencyKey } from '../../lib/idempotency.js';
+import { withIdempotencyKey } from '../../lib/idempotency.js';
 import type {
   BroadcastResponse,
   BroadcastsResponseItem,
@@ -41,13 +41,11 @@ export class Broadcasts extends Resource {
    * @returns APIPromise<BroadcastResponse>
    */
   create(body: CreateBroadcastRequest, options?: IdempotentRequestOptions): APIPromise<BroadcastResponse> {
-    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
-    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http
       .post<{ data: BroadcastResponse }>({
         path: '/broadcasts',
         body,
-        options,
+        options: withIdempotencyKey(options),
       })
       .map((r) => r.data);
   }
@@ -121,14 +119,12 @@ export class Broadcasts extends Resource {
     body?: SendBroadcastRequest,
     options?: IdempotentRequestOptions,
   ): APIPromise<SendBroadcastResponse> {
-    const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
-    options = { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
     return this._http
       .post<{ data: SendBroadcastResponse }>({
         path: '/broadcasts/{broadcastId}/send',
         pathParams: { broadcastId },
         body,
-        options,
+        options: withIdempotencyKey(options),
       })
       .map((r) => r.data);
   }

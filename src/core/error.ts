@@ -1,8 +1,18 @@
 import { parseRetryAfter } from './retry-after.js';
 
+// A message for any thrown value: String() itself throws on a null-prototype object or a throwing toString.
+export function describeThrown(value: unknown): string {
+  if (value instanceof Error) return value.message;
+  try {
+    return String(value);
+  } catch {
+    return 'Non-error value thrown';
+  }
+}
+
 export class NuntlyError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
     this.name = 'NuntlyError';
   }
 }

@@ -1,3 +1,13 @@
+import type { IdempotentRequestOptions } from '../core/types.js';
+
+// The caller's key, or a new one reused across this call's retries; an explicit header, in any case, still wins.
+export function withIdempotencyKey(options?: IdempotentRequestOptions): IdempotentRequestOptions {
+  const callerHeader = Object.keys(options?.headers ?? {}).some((name) => name.toLowerCase() === 'idempotency-key');
+  if (callerHeader) return { ...options };
+  const idempotencyKey = options?.idempotencyKey ?? generateIdempotencyKey();
+  return { ...options, headers: { 'Idempotency-Key': idempotencyKey, ...options?.headers } };
+}
+
 // UUID v4 for the Idempotency-Key header. Tries crypto.randomUUID, falls
 // back to crypto.getRandomValues (works on browser HTTP, where randomUUID
 // throws because it requires a secure context), then Math.random as last

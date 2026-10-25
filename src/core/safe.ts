@@ -1,7 +1,7 @@
-import type { APIConnectionError, APIError, NuntlyError } from './error.js';
+import { type APIConnectionError, type APIError, describeThrown, NuntlyError } from './error.js';
 
-// A plain `NuntlyError` is a call refused before sending (an empty, `.` or `..` path id).
-// An error thrown by your own hook is passed through as is.
+// A plain `NuntlyError` is a call refused before sending (an empty, `.` or `..` path id, an invalid
+// timeout), or any other thrown value, such as one from your own hook, kept as its `cause`.
 export type SafeResult<T> =
   | { data: T; error: null }
   | { data: null; error: APIError | APIConnectionError | NuntlyError };
@@ -14,6 +14,12 @@ type Safeify<T> = {
       : T[K];
 };
 
+// Keeps the declared error type: an SDK error passes as is, any other value is wrapped.
+function toSafeError(error: unknown): NuntlyError {
+  if (error instanceof NuntlyError) return error;
+  return new NuntlyError(describeThrown(error), { cause: error });
+}
+
 function wrapSafe<T extends object>(obj: T): Safeify<T> {
   return new Proxy(obj, {
     get(target, prop, receiver) {
@@ -25,7 +31,7 @@ function wrapSafe<T extends object>(obj: T): Safeify<T> {
           if (result instanceof Promise) {
             return result.then(
               (data: unknown) => ({ data, error: null }),
-              (error: unknown) => ({ data: null, error }),
+              (error: unknown) => ({ data: null, error: toSafeError(error) }),
             );
           }
           return result;

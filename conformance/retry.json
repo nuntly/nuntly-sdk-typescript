@@ -971,6 +971,33 @@
       }
     },
     {
+      "name": "Retry-After above the cap wins over x-should-retry true",
+      "request": {
+        "method": "GET",
+        "path": "/emails/em_1"
+      },
+      "responses": [
+        {
+          "status": 503,
+          "headers": {
+            "x-should-retry": "true",
+            "retry-after": "61"
+          }
+        },
+        {
+          "status": 200
+        }
+      ],
+      "expected": {
+        "calls": 1,
+        "delaysMs": [],
+        "error": {
+          "kind": "internal_server",
+          "status": 503
+        }
+      }
+    },
+    {
       "name": "an attempt that throws is judged on its error, not an earlier response",
       "request": {
         "method": "POST",

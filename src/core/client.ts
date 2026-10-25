@@ -1,6 +1,6 @@
 import { up } from 'up-fetch';
 import { APIPromise, PagePromise } from './api-promise.js';
-import { APIConnectionError, APIConnectionTimeoutError, APIError, NuntlyError } from './error.js';
+import { APIConnectionError, APIConnectionTimeoutError, APIError, describeThrown, NuntlyError } from './error.js';
 import { CursorPage } from './pagination.js';
 import { parseRetryAfter } from './retry-after.js';
 import type {
@@ -8,6 +8,7 @@ import type {
   ClientOptions,
   CursorPageParams,
   CursorPageResponse,
+  ErrorContext,
   Hooks,
   HttpMethod,
   Logger,
@@ -22,9 +23,11 @@ const DEFAULT_TIMEOUT = 60_000;
 const DEFAULT_MAX_RETRIES = 2;
 // 409 is a deterministic business conflict: a retry only adds latency.
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504]);
+const IDEMPOTENT_METHODS = new Set(['GET', 'PUT', 'DELETE']);
 const DEFAULT_BACKOFF: Required<BackoffStrategy> = { initialInterval: 500, maxInterval: 8000, exponent: 2 };
 // A longer Retry-After is not waited on: the caller gets that response's error at once.
 const MAX_RETRY_AFTER_MS = 60_000;
+const MAX_TIMEOUT = 2 ** 31 - 1;
 
 declare const Deno: unknown;
 declare const Bun: unknown;
@@ -63,6 +66,28 @@ async function runHook(call: () => void | Promise<void> | undefined): Promise<vo
   }
 }
 
+// fetch rejects a network failure with a TypeError; these messages and errno codes tell it from a bug.
+const NETWORK_ERROR_MESSAGES = new Set([
+  'fetch failed', // Node.js
+  'Failed to fetch', // Chromium
+  'NetworkError when attempting to fetch resource.', // Firefox
+  'Load failed', // Safari
+  'The Internet connection appears to be offline.', // Safari
+  'Network request failed', // React Native
+  'Network connection lost.', // Cloudflare Workers
+]);
+
+function isNetworkError(error: unknown): boolean {
+  if (!(error instanceof TypeError)) return false;
+  // Bun 1.4 sets an errno code (ECONNREFUSED, ENOTFOUND, ECONNRESET); Deno prefixes its message.
+  const code = (error as { code?: unknown }).code;
+  return (
+    NETWORK_ERROR_MESSAGES.has(error.message) ||
+    (typeof code === 'string' && /^E[A-Z]+$/.test(code)) ||
+    error.message.startsWith('error sending request')
+  );
+}
+
 function shouldRetry(
   request: Request,
   response: Response | undefined,
@@ -71,14 +96,14 @@ function shouldRetry(
 ): boolean {
   // A caller abort, including the caller's own AbortSignal.timeout, is never retried.
   if (callerSignal?.aborted || error instanceof HookError) return false;
-  // A POST without Idempotency-Key may already have been applied: only a 429 is safe to replay.
-  const replaySafe = request.method !== 'POST' || request.headers.has('idempotency-key');
+  // A POST or PATCH without Idempotency-Key may already have been applied: only a 429 is safe to replay.
+  const replaySafe = IDEMPOTENT_METHODS.has(request.method) || request.headers.has('idempotency-key');
   // up-fetch keeps the previous attempt's response when an attempt throws: judge the error alone.
   if (error !== undefined) {
-    // A timeout or a network failure (ECONNRESET, DNS), which fetch rejects with a TypeError.
-    return replaySafe && ((error as Error | null)?.name === 'TimeoutError' || error instanceof TypeError);
+    return replaySafe && ((error as Error | null)?.name === 'TimeoutError' || isNetworkError(error));
   }
   if (!response || response.ok) return false;
+  // The cap holds even against x-should-retry: true.
   if ((parseRetryAfter(response.headers.get('retry-after')) ?? 0) > MAX_RETRY_AFTER_MS) return false;
   // A server may force or suppress a retry via x-should-retry; obey it before the status rules.
   const header = response.headers.get('x-should-retry');
@@ -124,9 +149,13 @@ function buildRetryConfig(retry: RetryStrategy | undefined, maxRetries: number) 
   };
 }
 
-function normalizeError(error: unknown): APIError | APIConnectionError {
+function normalizeError(error: unknown, callerSignal?: AbortSignal): APIError | APIConnectionError {
   if (error instanceof APIError) return error;
   if (error instanceof APIConnectionError) return error;
+  // The caller's own AbortSignal.timeout stays a timeout; any other caller abort is not one.
+  if (callerSignal?.aborted && (callerSignal.reason as Error | undefined)?.name !== 'TimeoutError') {
+    return new APIConnectionError('Request aborted', error instanceof Error ? error : undefined);
+  }
   if (error instanceof DOMException && error.name === 'AbortError') {
     return new APIConnectionTimeoutError(error);
   }
@@ -140,6 +169,32 @@ function normalizeError(error: unknown): APIError | APIConnectionError {
     error instanceof Error ? error.message : 'Request failed',
     error instanceof Error ? error : undefined,
   );
+}
+
+// A JSON body, or the raw text when it is not JSON (a proxy's HTML error page).
+function parseText(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+// A readable copy of a response whose body the SDK already read. The text is decoded, so the
+// original encoding and byte length no longer describe it.
+function replayResponse(response: Response, text: string): Response {
+  const { status, statusText } = response;
+  const headers = new Headers(response.headers);
+  headers.delete('content-encoding');
+  headers.delete('content-length');
+  const copy = new Response(text === '' ? null : text, { status, statusText, headers });
+  Object.defineProperty(copy, 'url', { value: response.url });
+  return copy;
+}
+
+// Settles in every case: with the call's own error when it fails, else with `error`.
+export function rejectWithCallError(call: Promise<unknown>, error: unknown, reject: (reason: unknown) => void): void {
+  call.then(() => reject(error), reject);
 }
 
 function headersToRecord(h: Headers): Record<string, string> {
@@ -158,6 +213,15 @@ function serializeParams(params: Record<string, unknown>): string {
     for (const item of Array.isArray(value) ? value : [value]) search.append(key, String(item));
   }
   return search.toString();
+}
+
+// 0, Infinity or more than a timer can wait (2^31 - 1 ms, past which it fires at once) turns the
+// timeout off; a negative or NaN value is a bug, not a request for none.
+function checkTimeout(timeout: number): number {
+  if (timeout === 0) return timeout;
+  if (timeout > MAX_TIMEOUT) return Number.POSITIVE_INFINITY;
+  if (Number.isFinite(timeout) && timeout > 0) return Math.ceil(timeout);
+  throw new NuntlyError(`timeout must be 0, Infinity or a positive number of milliseconds, not ${timeout}.`);
 }
 
 function resolvePath(template: string, pathParams?: Record<string, unknown>): string {
@@ -202,6 +266,7 @@ export class NuntlyClient {
   private readonly log: Logger;
   private readonly hooks: Hooks;
   private readonly http: ReturnType<typeof up>;
+  private readonly retryConfig: ReturnType<typeof buildRetryConfig>;
 
   constructor(options: ClientOptions) {
     const apiKey = options.apiKey ?? (typeof process !== 'undefined' ? process.env?.['NUNTLY_API_KEY'] : undefined);
@@ -213,16 +278,19 @@ export class NuntlyClient {
     this.apiKey = apiKey;
     const envBaseUrl = typeof process !== 'undefined' ? process.env?.['NUNTLY_BASE_URL'] : undefined;
     this.baseUrl = (options.baseUrl ?? envBaseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, '');
-    this.timeout = options.timeout ?? DEFAULT_TIMEOUT;
+    this.timeout = checkTimeout(options.timeout ?? DEFAULT_TIMEOUT);
     this.maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
     this.retryEnabled = options.retry !== 'none';
     this.log = options.logger ?? (options.debug ? console : NOOP_LOGGER);
     this.hooks = options.hooks ?? {};
+    this.retryConfig = buildRetryConfig(options.retry, this.maxRetries);
 
     const fetchFn = (options.fetch ?? globalThis.fetch) as typeof fetch;
     // The timeout bounds each attempt's fetch, not the wait before a retry: up-fetch would
     // abort a Retry-After wait with its own per-attempt timeout signal.
     const timedFetch = ((input: Request, init: RequestInit & { attemptTimeout: number }) => {
+      // 0 or Infinity means no timeout, as in 1.x; AbortSignal.timeout(Infinity) throws.
+      if (init.attemptTimeout === 0 || init.attemptTimeout === Number.POSITIVE_INFINITY) return fetchFn(input, init);
       const timeout = AbortSignal.timeout(init.attemptTimeout);
       return fetchFn(input, { ...init, signal: init.signal ? anySignal(init.signal, timeout) : timeout });
     }) as typeof fetch;
@@ -248,20 +316,29 @@ export class NuntlyClient {
       baseUrl: this.baseUrl,
       headers,
       serializeParams,
-      retry: buildRetryConfig(options.retry, this.maxRetries),
-      parseRejected: async (response: Response) => {
-        // Read once: a failed json() consumes the stream and a text() fallback would throw.
-        const text = await response.text();
-        let body: unknown = text;
-        try {
-          body = JSON.parse(text);
-        } catch {}
-        return APIError.from(response.status, body, response.headers, response);
-      },
+      retry: this.retryConfig,
     }));
   }
 
+  // A failing onError hook must not replace the error the caller gets.
+  private async reportError(ctx: ErrorContext): Promise<void> {
+    try {
+      await this.hooks.onError?.(ctx);
+    } catch (hookError) {
+      this.log.error(`!! onError hook failed: ${describeThrown(hookError)}`);
+    }
+  }
+
   private request<T>(args: InternalRequestArgs): APIPromise<T> {
+    const { data, response, onResponseRequested } = this.send<T>(args);
+    return APIPromise.fromPromises(data, response, onResponseRequested);
+  }
+
+  private send<T>(args: InternalRequestArgs): {
+    data: Promise<T>;
+    response: Promise<Response>;
+    onResponseRequested: () => void;
+  } {
     let resolveResponse!: (response: Response) => void;
     let rejectResponse!: (reason: unknown) => void;
     const responsePromise = new Promise<Response>((res, rej) => {
@@ -270,14 +347,54 @@ export class NuntlyClient {
     });
 
     let resolvedPath: string;
+    let attemptTimeout: number;
     try {
+      attemptTimeout = checkTimeout(args.options?.timeout ?? this.timeout);
       resolvedPath = resolvePath(args.path, args.pathParams);
     } catch (error) {
-      const rejected = Promise.reject(error);
-      return APIPromise.fromPromises(rejected, rejected);
+      const refused = error as NuntlyError;
+      const request: RequestContext = {
+        method: args.method,
+        path: args.path,
+        url: `${this.baseUrl}${args.path}`,
+        headers: {},
+        body: args.body,
+      };
+      const rejected = (async (): Promise<never> => {
+        this.log.error(`!! ${args.method} ${args.path} refused: ${refused.message}`);
+        await this.reportError({ request, error: refused });
+        throw refused;
+      })();
+      return { data: rejected, response: rejected, onResponseRequested: () => {} };
     }
     let reqCtx: RequestContext | undefined;
-    let capturedResponse: Response | undefined;
+    let reportedError: APIError | APIConnectionError | undefined;
+    // up-fetch keeps the previous attempt's response when an attempt throws: track the last attempt's own.
+    let attemptResponse: Response | undefined;
+    // The SDK reads the final response's body once, as text. A reader before that gets a clone,
+    // a reader after it a copy built from that text, so no response is cloned for nothing.
+    let responseRequested = false;
+    let finalResponse: Response | undefined;
+    let bodyText: Promise<string> | undefined;
+    const readText = (response: Response) => {
+      bodyText = response.text();
+      return bodyText;
+    };
+    // Rejects when the SDK's own body read failed (a timeout or a reset mid-body).
+    const readableResponse = async (response: Response): Promise<Response> => {
+      if (!bodyText) return response.clone();
+      return replayResponse(response, await bodyText);
+    };
+    const onResponseRequested = () => {
+      if (responseRequested) return;
+      responseRequested = true;
+      // After a failed body read, the caller gets the error the call rejects with.
+      if (finalResponse) {
+        readableResponse(finalResponse).then(resolveResponse, (error) =>
+          rejectWithCallError(dataPromise, error, rejectResponse),
+        );
+      }
+    };
 
     const opts: Record<string, unknown> = {
       method: args.method,
@@ -297,34 +414,50 @@ export class NuntlyClient {
         const ctx = reqCtx;
         await runHook(() => this.hooks.onRequest?.(ctx));
       },
-      onResponse: async (response: Response | undefined) => {
-        // up-fetch invokes onResponse even when the request failed before a
-        // response arrived (timeout, abort, connection error). Bail out so the
-        // real error surfaces through onError instead of a TypeError here.
+      onResponse: async () => {
+        // No response when the last attempt failed (timeout, abort, connection error):
+        // the error surfaces through onError.
+        const response = attemptResponse;
         if (!response) return;
-        capturedResponse = response;
+        finalResponse = response;
+        if (responseRequested) resolveResponse(response.clone());
         const requestId = response.headers.get('x-request-id') ?? '';
         this.log.info(`<- ${response.status} ${args.method} ${resolvedPath}${requestId ? ` [${requestId}]` : ''}`);
         if (reqCtx) {
           const request = reqCtx;
-          await runHook(() => this.hooks.onResponse?.({ request, response }));
+          const hook = this.hooks.onResponse;
+          if (hook) {
+            // The hook may read the body, which the SDK still has to parse.
+            const copy = response.clone();
+            await runHook(() => hook({ request, response: copy }));
+          }
         }
-        // The caller gets its own copy: the SDK reads the original body to build the data or the error.
-        resolveResponse(response.clone());
+      },
+      parseResponse: async (response: Response) => {
+        const text = await readText(response);
+        return text ? parseText(text) : null;
+      },
+      parseRejected: async (response: Response) => {
+        const text = await readText(response);
+        // The error keeps a readable copy: the SDK just consumed the original body.
+        return APIError.from(response.status, parseText(text), response.headers, replayResponse(response, text));
       },
       onSuccess: async (data: unknown) => {
-        if (reqCtx && capturedResponse) {
-          const ctx = { request: reqCtx, response: capturedResponse, data };
-          await runHook(() => this.hooks.onSuccess?.(ctx));
+        const hook = this.hooks.onSuccess;
+        if (reqCtx && finalResponse && hook) {
+          const ctx = { request: reqCtx, response: await readableResponse(finalResponse), data };
+          await runHook(() => hook(ctx));
         }
       },
       onError: async (error: unknown) => {
         if (error instanceof HookError) return;
-        const normalized = normalizeError(error);
+        const normalized = normalizeError(error, args.options?.signal);
+        reportedError = normalized;
         this.log.error(`!! ${args.method} ${resolvedPath} failed: ${normalized.message}`);
-        if (reqCtx) {
-          const ctx = { request: reqCtx, response: capturedResponse, error: normalized };
-          await runHook(() => this.hooks.onError?.(ctx));
+        if (reqCtx && this.hooks.onError) {
+          // After a failed body read the hook still gets the status and headers.
+          const response = finalResponse && (await readableResponse(finalResponse).catch(() => finalResponse));
+          await this.reportError({ request: reqCtx, response, error: normalized });
         }
       },
       onRetry: async (ctx: { attempt: number; response: Response | undefined; error: unknown; request: Request }) => {
@@ -333,36 +466,43 @@ export class NuntlyClient {
         const retryCtx = {
           request: reqCtx,
           attempt: ctx.attempt,
-          response: ctx.response,
-          error: ctx.error !== undefined ? normalizeError(ctx.error) : undefined,
+          response: ctx.error === undefined ? ctx.response : undefined,
+          error: ctx.error !== undefined ? normalizeError(ctx.error, args.options?.signal) : undefined,
         };
         await runHook(() => this.hooks.onRetry?.(retryCtx));
       },
     };
 
-    opts.attemptTimeout = args.options?.timeout ?? this.timeout;
+    opts.attemptTimeout = attemptTimeout;
 
     // Always set `when`: without it up-fetch retries every non-2xx with no delay.
     opts.retry = {
       ...(args.options?.maxRetries !== undefined ? { attempts: args.options.maxRetries } : {}),
-      when: ({ request, response, error }: { request: Request; response: Response | undefined; error: unknown }) =>
-        this.retryEnabled && shouldRetry(request, response, error, args.options?.signal),
+      when: ({ request, response, error }: { request: Request; response: Response | undefined; error: unknown }) => {
+        attemptResponse = error === undefined ? response : undefined;
+        return this.retryEnabled && shouldRetry(request, response, error, args.options?.signal);
+      },
+      // Called only once a retry is scheduled: from then on this attempt's response is not the final one,
+      // even if onRetry throws or the caller aborts before the next attempt.
+      delay: (ctx: { response: Response | undefined; error: unknown; attempt: number }) => {
+        attemptResponse = undefined;
+        return this.retryConfig.delay?.(ctx) ?? 0;
+      },
     };
 
     const dataPromise = (async (): Promise<T> => {
       try {
         return (await this.http(resolvedPath as unknown as Request, opts as never)) as T;
       } catch (error) {
-        const failure = error instanceof HookError ? error.hookError : error;
-        // Surface the failure on `responsePromise` so consumers of
-        // `.asResponse()` observe it instead of hanging when no response
-        // was ever received.
-        rejectResponse(failure);
-        throw error instanceof HookError ? failure : normalizeError(error);
+        const failure =
+          error instanceof HookError ? error.hookError : (reportedError ?? normalizeError(error, args.options?.signal));
+        // Without a response, `.asResponse()` gets the call's own error instead of hanging.
+        if (!finalResponse) rejectResponse(failure);
+        throw failure;
       }
     })();
 
-    return APIPromise.fromPromises(dataPromise, responsePromise);
+    return { data: dataPromise, response: responsePromise, onResponseRequested };
   }
 
   get<T>(args: {
@@ -412,13 +552,13 @@ export class NuntlyClient {
     options?: RequestOptions;
   }): PagePromise<CursorPage<T>, T> {
     const params: CursorPageParams = (args.query as CursorPageParams) ?? {};
-    const firstResponse = this.get<CursorPageResponse<T>>(args);
+    const first = this.send<CursorPageResponse<T>>({ method: 'GET', ...args });
     const pagePromise = (async () => {
-      const response = await firstResponse;
+      const response = await first.data;
       return new CursorPage<T>(response, params, (nextParams) =>
         this.get<CursorPageResponse<T>>({ ...args, query: nextParams as Record<string, unknown> }),
       );
     })();
-    return PagePromise.fromPagePromises<CursorPage<T>, T>(pagePromise, firstResponse.asResponse());
+    return PagePromise.fromPagePromises<CursorPage<T>, T>(pagePromise, first.response, first.onResponseRequested);
   }
 }
