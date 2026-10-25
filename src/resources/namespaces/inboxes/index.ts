@@ -23,7 +23,7 @@ export class NamespacesInboxes extends Resource {
     return this._http.list<InboxesResponseItem>({
       path: '/namespaces/{namespaceId}/inboxes',
       pathParams: { namespaceId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

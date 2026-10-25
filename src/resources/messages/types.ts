@@ -2,8 +2,9 @@ import type { InboundEventData } from '../shared/types.js';
 
 /**
  * @example
- *     await nuntly.messages.forward({
- *       to: 'user@example.com',
+ *     await nuntly.messages.forward('imsg_01kabn43yqyxn2bx4ve84mczd3', {
+ *       to: ['brian67@gmail.com'],
+ *       text: 'Thank you for signing up! Please verify your email address.',
  *     });
  */
 export interface ForwardMessageRequest {
@@ -140,8 +141,9 @@ export interface MessagesResponseItem {
 
 /**
  * @example
- *     await nuntly.messages.reply({
- *       replyAll: false,
+ *     await nuntly.messages.reply('imsg_01kabn43yqyxn2bx4ve84mczd3', {
+ *       text: 'Thank you for signing up! Please verify your email address.',
+ *       html: '<h1>Welcome</h1><p>Thank you for signing up! Please verify your email address.</p>',
  *     });
  */
 export interface ReplyMessageRequest {
@@ -150,9 +152,15 @@ export interface ReplyMessageRequest {
   /** The HTML body. */
   html?: string;
   /** Whether to reply to all recipients. */
-  replyAll: boolean;
+  replyAll?: boolean;
 }
 
+/**
+ * @example
+ *     await nuntly.messages.update('imsg_01kabn43yqyxn2bx4ve84mczd3', {
+ *       addLabels: ['urgent'],
+ *     });
+ */
 export interface UpdateMessageRequest {
   /** Labels to add to the message. */
   addLabels?: Array<string>;

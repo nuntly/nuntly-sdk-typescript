@@ -28,6 +28,12 @@ export interface ThreadResponse {
   agentId: string | null;
 }
 
+/**
+ * @example
+ *     await nuntly.threads.update('thr_01kabn43yqyxn2bx4ve84mczd3', {
+ *       addLabels: ['urgent'],
+ *     });
+ */
 export interface UpdateThreadRequest {
   /** Labels to add to all messages in the thread. */
   addLabels?: Array<string>;

@@ -71,7 +71,7 @@ export class Emails extends Resource {
   ): PagePromise<CursorPage<EmailsResponseItem>, EmailsResponseItem> {
     return this._http.list<EmailsResponseItem>({
       path: '/emails',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }
@@ -108,6 +108,7 @@ export class Emails extends Resource {
         path: '/emails',
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }

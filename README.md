@@ -175,7 +175,7 @@ switch (event.type) {
 
 `event` is a `WebhookEvent`, one of the event types a webhook delivers. Keep a `default` branch: a webhook only receives the types it subscribes to, so a type added in a later release reaches your handler only once you subscribe to it.
 
-The function throws `WebhookVerificationError` on invalid signatures or expired timestamps (default: 5 minutes).
+The function throws `WebhookVerificationError` on invalid signatures, timestamps outside the tolerance (default: 5 minutes), or a payload that is not a JSON object.
 
 ## Safe mode (error as value)
 
@@ -200,7 +200,7 @@ if (error) {
 }
 ```
 
-`error` is an `APIError` for an error response, an `APIConnectionError` when no response arrived, or a plain `NuntlyError` when the SDK refuses the call before sending it (an empty, `.` or `..` id, an invalid `timeout`) or when something else, such as one of your hooks, throws a value that is not an SDK error: its `cause` is that value. To use this shape for some calls only, see [safe mode for one call](https://nuntly.com/docs/api-reference/typescript-sdk#safe-mode-for-one-call).
+`error` is an `APIError` for an error response, an `APIConnectionError` when no response arrived, or a plain `NuntlyError` when a 2xx body is not the JSON object the SDK expects, when the SDK refuses the call before sending it (an empty, `.` or `..` id, an empty list or a `null` element in a query param, an invalid `timeout`) or when something else, such as one of your hooks, throws a value that is not an SDK error: its `cause` is that value. To use this shape for some calls only, see [safe mode for one call](https://nuntly.com/docs/api-reference/typescript-sdk#safe-mode-for-one-call).
 
 ## Lifecycle hooks
 

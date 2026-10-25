@@ -25,7 +25,7 @@ export interface BroadcastResponse {
   /** Date at which the broadcast reached its current state. */
   statusAt: string;
   /** May provide more information about the status. */
-  statusReason?: Record<string, Record<string, unknown>>;
+  statusReason?: Record<string, unknown>;
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
   /** Date at which the object was updated (ISO 8601 format) */
@@ -60,7 +60,7 @@ export interface BroadcastsResponseItem {
   /** Date at which the broadcast reached its current state. */
   statusAt: string;
   /** May provide more information about the status. */
-  statusReason?: Record<string, Record<string, unknown>>;
+  statusReason?: Record<string, unknown>;
   /** Date at which the object was created (ISO 8601 format) */
   createdAt: string;
   /** Date at which the object was updated (ISO 8601 format) */
@@ -72,7 +72,8 @@ export interface BroadcastsResponseItem {
 /**
  * @example
  *     await nuntly.broadcasts.create({
- *       from: 'hello@nuntly.com',
+ *       from: 'Tomlinson AI <ray@info.tomlinson.ai>',
+ *       name: 'October newsletter',
  *     });
  */
 export interface CreateBroadcastRequest {
@@ -94,6 +95,12 @@ export interface CreateBroadcastRequest {
   variables?: Record<string, string | number | boolean>;
 }
 
+/**
+ * @example
+ *     await nuntly.broadcasts.send('bc_01kabn43yqyxn2bx4ve84mczd3', {
+ *       scheduledAt: '2026-03-30T09:00:00.000Z',
+ *     });
+ */
 export interface SendBroadcastRequest {
   /** When to send. Omit to send immediately. */
   scheduledAt?: string;
@@ -106,6 +113,12 @@ export interface SendBroadcastResponse {
   status: BroadcastStatus | (string & {});
 }
 
+/**
+ * @example
+ *     await nuntly.broadcasts.update('bc_01kabn43yqyxn2bx4ve84mczd3', {
+ *       name: 'October newsletter',
+ *     });
+ */
 export interface UpdateBroadcastRequest {
   /** Set to null to detach the template. */
   templateId?: string | null;

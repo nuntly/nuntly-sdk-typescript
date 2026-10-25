@@ -4,7 +4,7 @@ export type ContactTopicMembershipsResponse = Array<ContactTopicMembershipsRespo
 
 /**
  * @example
- *     await nuntly.contacts.topics.update({
+ *     await nuntly.contacts.topics.update('ct_01kabn43yqyxn2bx4ve84mczd3', 'tpc_01kabn43yqyxn2bx4ve84mczd3', {
  *       state: 'subscribed',
  *     });
  */

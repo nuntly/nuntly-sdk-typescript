@@ -68,7 +68,7 @@ export class TemplatesVersions extends Resource {
     return this._http.list<TemplateVersionsResponseItem>({
       path: '/templates/{templateId}/versions',
       pathParams: { templateId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

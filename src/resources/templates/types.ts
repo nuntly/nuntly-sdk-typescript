@@ -1,7 +1,7 @@
 /**
  * @example
  *     await nuntly.templates.create({
- *       name: 'example.com',
+ *       name: 'Welcome email',
  *     });
  */
 export interface CreateTemplateRequest {
@@ -36,6 +36,12 @@ export interface TemplatesResponseItem {
   updatedAt: string;
 }
 
+/**
+ * @example
+ *     await nuntly.templates.update('tpl_01kabn43yqyxn2bx4ve84mczd3', {
+ *       name: 'Welcome email',
+ *     });
+ */
 export interface UpdateTemplateRequest {
   /** A name for the template, shown only to your team. */
   name?: string;

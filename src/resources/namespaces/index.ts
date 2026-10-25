@@ -80,7 +80,7 @@ export class Namespaces extends Resource {
   ): PagePromise<CursorPage<NamespacesResponseItem>, NamespacesResponseItem> {
     return this._http.list<NamespacesResponseItem>({
       path: '/namespaces',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

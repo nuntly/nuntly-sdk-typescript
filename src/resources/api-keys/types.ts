@@ -28,7 +28,7 @@ export interface ApiKeysResponseItem {
 /**
  * @example
  *     await nuntly.apiKeys.create({
- *       permission: 'fullAccess',
+ *       name: 'Production',
  *     });
  */
 export interface CreateApiKeyRequest {
@@ -37,7 +37,7 @@ export interface CreateApiKeyRequest {
   /** The status for the api key */
   status?: 'enabled' | 'disabled' | 'revoked';
   /** The permission type for the api key */
-  permission: 'fullAccess' | 'sendingAccess';
+  permission?: 'fullAccess' | 'sendingAccess';
   /** The domain ids to restrict the api key to (only for sendingAccess) */
   domainIds?: Array<string>;
 }
@@ -60,6 +60,12 @@ export interface DeleteApiKeyResponse {
   id: string;
 }
 
+/**
+ * @example
+ *     await nuntly.apiKeys.update('apk_01ka8k8s80gvx9604cn9am5st4', {
+ *       name: 'Production',
+ *     });
+ */
 export interface UpdateApiKeyRequest {
   /** The name of the api key */
   name?: string;

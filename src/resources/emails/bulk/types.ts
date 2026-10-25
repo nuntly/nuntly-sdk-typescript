@@ -36,6 +36,12 @@ export interface CreateBulkEmail {
   variables?: Record<string, string | number | boolean | null>;
 }
 
+/**
+ * @example
+ *     await nuntly.emails.bulk.send({
+ *       emails: [{ from: 'Tomlinson AI <ray@info.tomlinson.ai>', to: 'brian67@gmail.com', subject: 'Verify your email address', text: 'Thank you for signing up! Please verify your email address.' }],
+ *     });
+ */
 export interface CreateBulkEmailsRequest {
   /** Used as a fallback field email value if no value is present in emails. */
   fallback?: CreateBulkFallback;

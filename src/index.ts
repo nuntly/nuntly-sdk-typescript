@@ -1,5 +1,5 @@
 import type { ClientOptions, SafeResult } from './core/index.js';
-import { NuntlyClient, safe } from './core/index.js';
+import { NuntlyClient, NuntlyError, safe } from './core/index.js';
 import { Agents } from './resources/agents/index.js';
 import { ApiKeys } from './resources/api-keys/index.js';
 import { Broadcasts } from './resources/broadcasts/index.js';
@@ -17,9 +17,12 @@ import { Threads } from './resources/threads/index.js';
 import { Topics } from './resources/topics/index.js';
 import { Webhooks } from './resources/webhooks/index.js';
 
+// Outside the instance: the options hold the API key, which no string form of the client shows. Keyed by the
+// inner client, which a Proxy around the Nuntly instance still reads through.
+const clientOptions = new WeakMap<NuntlyClient, ClientOptions>();
+
 export class Nuntly {
   private readonly client: NuntlyClient;
-  private readonly options: ClientOptions;
 
   readonly agents: Agents;
   readonly apiKeys: ApiKeys;
@@ -39,8 +42,8 @@ export class Nuntly {
   readonly webhooks: Webhooks;
 
   constructor(options: ClientOptions = {}) {
-    this.options = options;
     this.client = new NuntlyClient(options);
+    clientOptions.set(this.client, options);
     this.agents = new Agents(this.client);
     this.apiKeys = new ApiKeys(this.client);
     this.broadcasts = new Broadcasts(this.client);
@@ -68,10 +71,12 @@ export class Nuntly {
    * await tenantClient.emails.send({ ... });
    */
   withOptions(partial: Partial<ClientOptions>): Nuntly {
+    const options = clientOptions.get(this.client);
+    if (!options) throw new NuntlyError('withOptions must be called on a client built by new Nuntly().');
     return new Nuntly({
-      ...this.options,
+      ...options,
       ...partial,
-      defaultHeaders: { ...this.options.defaultHeaders, ...partial.defaultHeaders },
+      defaultHeaders: { ...options.defaultHeaders, ...partial.defaultHeaders },
     });
   }
 }

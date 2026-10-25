@@ -62,7 +62,7 @@ export class ContactProperties extends Resource {
   ): PagePromise<CursorPage<ContactPropertiesResponseItem>, ContactPropertiesResponseItem> {
     return this._http.list<ContactPropertiesResponseItem>({
       path: '/contact-properties',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

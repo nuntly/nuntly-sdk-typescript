@@ -78,7 +78,7 @@ export class Segments extends Resource {
   ): PagePromise<CursorPage<SegmentsResponseItem>, SegmentsResponseItem> {
     return this._http.list<SegmentsResponseItem>({
       path: '/segments',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

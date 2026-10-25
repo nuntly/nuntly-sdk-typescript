@@ -27,7 +27,7 @@ const SECRET_PREFIX = /^whsec_/;
  * The signing secret may be passed with or without the `whsec_` prefix.
  *
  * @throws {WebhookVerificationError} if the signature is missing, malformed,
- *   too old (older than `tolerance`), or does not match.
+ *   outside `tolerance`, or does not match, or if the payload is not a JSON object.
  */
 export async function verifyWebhook(
   payload: string | Uint8Array,
@@ -87,7 +87,21 @@ export async function verifyWebhook(
     throw new WebhookVerificationError('Webhook signature verification failed');
   }
 
-  return JSON.parse(payloadStr) as WebhookEvent;
+  return parseEvent(payloadStr);
+}
+
+// A correctly signed payload that is not a JSON object is no event: a verification error, not a SyntaxError.
+function parseEvent(payload: string): WebhookEvent {
+  let event: unknown;
+  try {
+    event = JSON.parse(payload);
+  } catch {
+    throw new WebhookVerificationError('Invalid webhook payload');
+  }
+  if (typeof event !== 'object' || event === null || Array.isArray(event)) {
+    throw new WebhookVerificationError('Invalid webhook payload');
+  }
+  return event as WebhookEvent;
 }
 
 function bytesToHex(bytes: Uint8Array): string {

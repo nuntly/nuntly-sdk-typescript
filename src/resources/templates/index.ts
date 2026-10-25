@@ -78,7 +78,7 @@ export class Templates extends Resource {
   ): PagePromise<CursorPage<TemplatesResponseItem>, TemplatesResponseItem> {
     return this._http.list<TemplatesResponseItem>({
       path: '/templates',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

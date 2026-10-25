@@ -23,7 +23,7 @@ export class InboxesThreads extends Resource {
     return this._http.list<ThreadsResponseItem>({
       path: '/inboxes/{inboxId}/threads',
       pathParams: { inboxId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

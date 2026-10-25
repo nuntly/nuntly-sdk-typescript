@@ -1,7 +1,7 @@
 /**
  * @example
  *     await nuntly.inboxes.create({
- *       address: 'address_value',
+ *       address: 'support',
  *     });
  */
 export interface CreateInboxRequest {
@@ -49,6 +49,12 @@ export interface InboxesQuery {
   namespaceId?: string;
 }
 
+/**
+ * @example
+ *     await nuntly.inboxes.update('ibx_01kabn43yqyxn2bx4ve84mczd3', {
+ *       name: 'Support team',
+ *     });
+ */
 export interface UpdateInboxRequest {
   /** The display name of the inbox. */
   name?: string | null;

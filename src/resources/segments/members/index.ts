@@ -23,7 +23,7 @@ export class SegmentsMembers extends Resource {
     return this._http.list<SegmentMembersResponseItem>({
       path: '/segments/{segmentId}/members',
       pathParams: { segmentId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

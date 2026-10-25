@@ -92,12 +92,14 @@ function shouldRetry(
   request: Request,
   response: Response | undefined,
   error: unknown,
+  idempotent: boolean,
   callerSignal?: AbortSignal,
 ): boolean {
   // A caller abort, including the caller's own AbortSignal.timeout, is never retried.
   if (callerSignal?.aborted || error instanceof HookError) return false;
-  // A POST or PATCH without Idempotency-Key may already have been applied: only a 429 is safe to replay.
-  const replaySafe = IDEMPOTENT_METHODS.has(request.method) || request.headers.has('idempotency-key');
+  // A POST or PATCH may already have been applied: only a 429 is safe to replay, unless the
+  // operation is one the API deduplicates by Idempotency-Key and the request carries a key.
+  const replaySafe = IDEMPOTENT_METHODS.has(request.method) || (idempotent && request.headers.has('idempotency-key'));
   // up-fetch keeps the previous attempt's response when an attempt throws: judge the error alone.
   if (error !== undefined) {
     return replaySafe && ((error as Error | null)?.name === 'TimeoutError' || isNetworkError(error));
@@ -105,8 +107,8 @@ function shouldRetry(
   if (!response || response.ok) return false;
   // The cap holds even against x-should-retry: true.
   if ((parseRetryAfter(response.headers.get('retry-after')) ?? 0) > MAX_RETRY_AFTER_MS) return false;
-  // A server may force or suppress a retry via x-should-retry; obey it before the status rules.
-  const header = response.headers.get('x-should-retry');
+  // A server may force or suppress a retry via x-should-retry, in any letter case; obey it before the status rules.
+  const header = response.headers.get('x-should-retry')?.toLowerCase();
   if (header === 'true') return true;
   if (header === 'false') return false;
   return replaySafe ? RETRYABLE_STATUS_CODES.has(response.status) : response.status === 429;
@@ -180,6 +182,24 @@ function parseText(text: string): unknown {
   }
 }
 
+// Every 2xx of the API carries a JSON object; anything else is no answer the caller can use. A 2xx means the
+// API may have applied the request, so the error says so before the caller retries it.
+function parseSuccess(status: number, text: string): unknown {
+  const fail = (what: string) =>
+    new NuntlyError(`The API answered ${status} with ${what}: the request may have been applied.`);
+  if (text === '') throw fail('an empty body where JSON was expected');
+  let body: unknown;
+  try {
+    body = JSON.parse(text);
+  } catch {
+    throw fail('a body that is not JSON');
+  }
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    throw fail('a JSON body that is not an object');
+  }
+  return body;
+}
+
 // A readable copy of a response whose body the SDK already read. The text is decoded, so the
 // original encoding and byte length no longer describe it.
 function replayResponse(response: Response, text: string): Response {
@@ -197,10 +217,13 @@ export function rejectWithCallError(call: Promise<unknown>, error: unknown, reje
   call.then(() => reject(error), reject);
 }
 
+const REDACTED_AUTHORIZATION = 'Bearer [redacted]';
+
+// Hooks see every header but the API key.
 function headersToRecord(h: Headers): Record<string, string> {
   const out: Record<string, string> = {};
   h.forEach((v, k) => {
-    out[k] = v;
+    out[k] = k === 'authorization' ? REDACTED_AUTHORIZATION : v;
   });
   return out;
 }
@@ -213,6 +236,19 @@ function serializeParams(params: Record<string, unknown>): string {
     for (const item of Array.isArray(value) ? value : [value]) search.append(key, String(item));
   }
   return search.toString();
+}
+
+// An empty list sends no key, which the API reads as its default; a null element would go out as "null".
+function checkQuery(query?: object): void {
+  for (const [key, value] of Object.entries(query ?? {})) {
+    if (!Array.isArray(value)) continue;
+    if (value.length === 0) {
+      throw new NuntlyError(`Query param '${key}' must not be empty: leave it out to get the default.`);
+    }
+    if (value.some((item) => item === null || item === undefined)) {
+      throw new NuntlyError(`Query param '${key}' must not contain null.`);
+    }
+  }
 }
 
 // 0, Infinity or more than a timer can wait (2^31 - 1 ms, past which it fires at once) turns the
@@ -253,13 +289,19 @@ interface InternalRequestArgs {
   path: string;
   pathParams?: Record<string, unknown>;
   body?: unknown;
-  query?: Record<string, unknown>;
+  query?: object;
   options?: RequestOptions;
+  /**
+   * The API deduplicates this operation by `Idempotency-Key`, so a keyed request is replayed on a
+   * 408, a 5xx, a timeout or a network error. Set it on no other operation: a replay could apply it twice.
+   */
+  idempotent?: boolean;
+  /** The operation returns nothing, so its 2xx body is not read as JSON. */
+  voidResponse?: boolean;
 }
 
 export class NuntlyClient {
   private readonly baseUrl: string;
-  private readonly apiKey: string;
   private readonly timeout: number;
   private readonly maxRetries: number;
   private readonly retryEnabled: boolean;
@@ -275,9 +317,8 @@ export class NuntlyClient {
         'API key is required. Pass it via `new Nuntly({ apiKey })` or set the NUNTLY_API_KEY environment variable.',
       );
     }
-    this.apiKey = apiKey;
     const envBaseUrl = typeof process !== 'undefined' ? process.env?.['NUNTLY_BASE_URL'] : undefined;
-    this.baseUrl = (options.baseUrl ?? envBaseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, '');
+    this.baseUrl = (options.baseUrl ?? envBaseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, '');
     this.timeout = checkTimeout(options.timeout ?? DEFAULT_TIMEOUT);
     this.maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
     this.retryEnabled = options.retry !== 'none';
@@ -300,7 +341,8 @@ export class NuntlyClient {
       // (set below) always override them. Per-request `RequestOptions.headers`
       // is applied later by up-fetch and wins over everything here.
       ...options.defaultHeaders,
-      Authorization: `Bearer ${this.apiKey}`,
+      // The key lives only in this closure: no field, string form or hook argument carries it.
+      Authorization: `Bearer ${apiKey}`,
     };
     if (!isBrowserLike()) {
       // Browsers ignore User-Agent assignment and emit a console warning,
@@ -351,6 +393,7 @@ export class NuntlyClient {
     try {
       attemptTimeout = checkTimeout(args.options?.timeout ?? this.timeout);
       resolvedPath = resolvePath(args.path, args.pathParams);
+      checkQuery(args.query);
     } catch (error) {
       const refused = error as NuntlyError;
       const request: RequestContext = {
@@ -368,7 +411,7 @@ export class NuntlyClient {
       return { data: rejected, response: rejected, onResponseRequested: () => {} };
     }
     let reqCtx: RequestContext | undefined;
-    let reportedError: APIError | APIConnectionError | undefined;
+    let reportedError: NuntlyError | undefined;
     // up-fetch keeps the previous attempt's response when an attempt throws: track the last attempt's own.
     let attemptResponse: Response | undefined;
     // The SDK reads the final response's body once, as text. A reader before that gets a clone,
@@ -435,7 +478,7 @@ export class NuntlyClient {
       },
       parseResponse: async (response: Response) => {
         const text = await readText(response);
-        return text ? parseText(text) : null;
+        return args.voidResponse ? null : parseSuccess(response.status, text);
       },
       parseRejected: async (response: Response) => {
         const text = await readText(response);
@@ -451,7 +494,8 @@ export class NuntlyClient {
       },
       onError: async (error: unknown) => {
         if (error instanceof HookError) return;
-        const normalized = normalizeError(error, args.options?.signal);
+        // A NuntlyError of its own, such as a 2xx body that is not JSON, reaches the caller as is.
+        const normalized = error instanceof NuntlyError ? error : normalizeError(error, args.options?.signal);
         reportedError = normalized;
         this.log.error(`!! ${args.method} ${resolvedPath} failed: ${normalized.message}`);
         if (reqCtx && this.hooks.onError) {
@@ -480,7 +524,9 @@ export class NuntlyClient {
       ...(args.options?.maxRetries !== undefined ? { attempts: args.options.maxRetries } : {}),
       when: ({ request, response, error }: { request: Request; response: Response | undefined; error: unknown }) => {
         attemptResponse = error === undefined ? response : undefined;
-        return this.retryEnabled && shouldRetry(request, response, error, args.options?.signal);
+        return (
+          this.retryEnabled && shouldRetry(request, response, error, args.idempotent === true, args.options?.signal)
+        );
       },
       // Called only once a retry is scheduled: from then on this attempt's response is not the final one,
       // even if onRetry throws or the caller aborts before the next attempt.
@@ -508,7 +554,7 @@ export class NuntlyClient {
   get<T>(args: {
     path: string;
     pathParams?: Record<string, unknown>;
-    query?: Record<string, unknown>;
+    query?: object;
     options?: RequestOptions;
   }): APIPromise<T> {
     return this.request<T>({ method: 'GET', ...args });
@@ -519,6 +565,8 @@ export class NuntlyClient {
     pathParams?: Record<string, unknown>;
     body?: unknown;
     options?: RequestOptions;
+    idempotent?: boolean;
+    voidResponse?: boolean;
   }): APIPromise<T> {
     return this.request<T>({ method: 'POST', ...args });
   }
@@ -528,6 +576,7 @@ export class NuntlyClient {
     pathParams?: Record<string, unknown>;
     body?: unknown;
     options?: RequestOptions;
+    voidResponse?: boolean;
   }): APIPromise<T> {
     return this.request<T>({ method: 'PUT', ...args });
   }
@@ -537,18 +586,24 @@ export class NuntlyClient {
     pathParams?: Record<string, unknown>;
     body?: unknown;
     options?: RequestOptions;
+    voidResponse?: boolean;
   }): APIPromise<T> {
     return this.request<T>({ method: 'PATCH', ...args });
   }
 
-  delete<T>(args: { path: string; pathParams?: Record<string, unknown>; options?: RequestOptions }): APIPromise<T> {
+  delete<T>(args: {
+    path: string;
+    pathParams?: Record<string, unknown>;
+    options?: RequestOptions;
+    voidResponse?: boolean;
+  }): APIPromise<T> {
     return this.request<T>({ method: 'DELETE', ...args });
   }
 
   list<T>(args: {
     path: string;
     pathParams?: Record<string, unknown>;
-    query?: Record<string, unknown>;
+    query?: object;
     options?: RequestOptions;
   }): PagePromise<CursorPage<T>, T> {
     const params: CursorPageParams = (args.query as CursorPageParams) ?? {};
@@ -556,7 +611,7 @@ export class NuntlyClient {
     const pagePromise = (async () => {
       const response = await first.data;
       return new CursorPage<T>(response, params, (nextParams) =>
-        this.get<CursorPageResponse<T>>({ ...args, query: nextParams as Record<string, unknown> }),
+        this.get<CursorPageResponse<T>>({ ...args, query: nextParams }),
       );
     })();
     return PagePromise.fromPagePromises<CursorPage<T>, T>(pagePromise, first.response, first.onResponseRequested);

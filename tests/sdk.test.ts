@@ -1460,6 +1460,25 @@ describe('defaultHeaders and withOptions', () => {
     expect(capturedKey).toBe('Bearer root_key');
   });
 
+  // A reactive store or a test double wraps the client in a Proxy, so withOptions runs with the proxy as `this`.
+  it('withOptions keeps the original options when called through a Proxy', async () => {
+    const captured: Headers[] = [];
+    const root = new Nuntly({
+      apiKey: 'root_key',
+      baseUrl: 'https://api.test.com',
+      defaultHeaders: { 'X-Service': 'billing' },
+      fetch: mockFetch((req) => {
+        captured.push(req.headers);
+        return jsonResponse({ data: { id: 'em_1' } });
+      }) as typeof fetch,
+    });
+
+    await new Proxy(root, {}).withOptions({ timeout: 5000 }).emails.retrieve('em_1');
+
+    expect(captured[0]!.get('authorization')).toBe('Bearer root_key');
+    expect(captured[0]!.get('x-service')).toBe('billing');
+  });
+
   it('withOptions deep-merges defaultHeaders', async () => {
     let captured: Headers | null = null;
     const fetchImpl = mockFetch((req) => {
@@ -1569,13 +1588,22 @@ describe('Retry policy', () => {
     expect(calls).toHaveLength(1);
   });
 
-  it('retries a PATCH with an Idempotency-Key on 503', async () => {
-    const { nuntly, calls } = countingClient((_req, attempt) =>
-      attempt === 1 ? jsonResponse({ message: 'unavailable' }, 503) : jsonResponse({ data: { id: 'dom_1' } }),
-    );
+  it('does not retry a PATCH with a caller Idempotency-Key on 503', async () => {
+    const { nuntly, calls } = countingClient(() => jsonResponse({ message: 'unavailable' }, 503));
 
-    await nuntly.domains.update('dom_1', { openTracking: true }, { headers: { 'Idempotency-Key': 'key_1' } });
-    expect(calls).toHaveLength(2);
+    await expect(
+      nuntly.domains.update('dom_1', { openTracking: true }, { headers: { 'Idempotency-Key': 'key_1' } }),
+    ).rejects.toThrow(InternalServerError);
+    expect(calls).toHaveLength(1);
+  });
+
+  it('does not retry domains.create with a caller Idempotency-Key on 503', async () => {
+    const { nuntly, calls } = countingClient(() => jsonResponse({ message: 'unavailable' }, 503));
+
+    await expect(nuntly.domains.create(domainPayload, { headers: { 'Idempotency-Key': 'key_1' } })).rejects.toThrow(
+      InternalServerError,
+    );
+    expect(calls).toHaveLength(1);
   });
 
   // Like the real fetch, rejects with the signal's reason (a TimeoutError on timeout).

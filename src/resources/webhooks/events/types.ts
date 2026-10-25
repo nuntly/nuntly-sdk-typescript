@@ -12,7 +12,7 @@ export interface WebhookEventsResponseItem {
   event: EventType | (string & {});
   /** The timestamp when the event was successfully delivered to the endpoint */
   successfulAt?: string;
-  data: Record<string, Record<string, unknown>>;
+  data: Record<string, unknown>;
   /** Status of the webhook delivery attempt */
   status: 'success' | 'pending' | 'failed' | (string & {});
 }

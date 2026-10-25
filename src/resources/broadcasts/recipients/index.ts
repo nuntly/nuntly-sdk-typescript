@@ -23,7 +23,7 @@ export class BroadcastsRecipients extends Resource {
     return this._http.list<BroadcastRecipientsResponseItem>({
       path: '/broadcasts/{broadcastId}/recipients',
       pathParams: { broadcastId },
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

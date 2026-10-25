@@ -48,6 +48,7 @@ export class Inboxes extends Resource {
         path: '/inboxes',
         body,
         options: withIdempotencyKey(options),
+        idempotent: true,
       })
       .map((r) => r.data);
   }
@@ -84,7 +85,7 @@ export class Inboxes extends Resource {
   ): PagePromise<CursorPage<InboxesResponseItem>, InboxesResponseItem> {
     return this._http.list<InboxesResponseItem>({
       path: '/inboxes',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

@@ -81,7 +81,7 @@ export class Contacts extends Resource {
   ): PagePromise<CursorPage<ContactsResponseItem>, ContactsResponseItem> {
     return this._http.list<ContactsResponseItem>({
       path: '/contacts',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

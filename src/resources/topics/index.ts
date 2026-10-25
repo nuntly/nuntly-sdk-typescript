@@ -78,7 +78,7 @@ export class Topics extends Resource {
   ): PagePromise<CursorPage<TopicsResponseItem>, TopicsResponseItem> {
     return this._http.list<TopicsResponseItem>({
       path: '/topics',
-      query: query as unknown as Record<string, unknown>,
+      query,
       options,
     });
   }

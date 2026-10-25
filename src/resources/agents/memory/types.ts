@@ -24,6 +24,12 @@ export interface AgentMemoryQuery {
   threadId?: string;
 }
 
+/**
+ * @example
+ *     await nuntly.agents.memory.upsert('aB3dE7fG', {
+ *       memory: { lastTopic: 'billing', openTickets: 2 },
+ *     });
+ */
 export interface AgentMemoryRequest {
   /** The id of an inbox in your organization. Scopes memory to that inbox. */
   inboxId?: string;

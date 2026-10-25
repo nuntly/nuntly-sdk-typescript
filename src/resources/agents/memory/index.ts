@@ -20,7 +20,7 @@ export class AgentsMemory extends Resource {
       .get<{ data: AgentMemory }>({
         path: '/agents/{agentId}/memory',
         pathParams: { agentId },
-        query: query as unknown as Record<string, unknown>,
+        query,
         options,
       })
       .map((r) => r.data);

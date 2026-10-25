@@ -29,7 +29,7 @@ export class Threads extends Resource {
       .get<{ data: ThreadResponse }>({
         path: '/threads/{threadId}',
         pathParams: { threadId },
-        query: query as unknown as Record<string, unknown>,
+        query,
         options,
       })
       .map((r) => r.data);

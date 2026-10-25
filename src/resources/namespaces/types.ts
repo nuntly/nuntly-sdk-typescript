@@ -1,7 +1,7 @@
 /**
  * @example
  *     await nuntly.namespaces.create({
- *       name: 'example.com',
+ *       name: 'Customer support',
  *     });
  */
 export interface CreateNamespaceRequest {
@@ -62,6 +62,12 @@ export interface NamespacesResponseItem {
   externalId: string | null;
 }
 
+/**
+ * @example
+ *     await nuntly.namespaces.update('ns_01kabn43yqyxn2bx4ve84mczd3', {
+ *       name: 'Customer support',
+ *     });
+ */
 export interface UpdateNamespaceRequest {
   /** The display name of the namespace. */
   name?: string;
