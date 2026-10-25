@@ -18,13 +18,14 @@ export class CursorPage<T> implements AsyncIterable<T> {
     fetchPage: (params: CursorPageParams) => Promise<CursorPageResponse<T>>,
   ) {
     this.data = response.data;
-    this.nextCursor = response.nextCursor;
+    // The API leaves nextCursor out on the last page; a blank cursor names no page either, as in Java.
+    this.nextCursor = response.nextCursor?.trim() ? response.nextCursor : null;
     this.params = params;
     this.fetchPage = fetchPage;
   }
 
   hasNextPage(): boolean {
-    return this.nextCursor !== null && this.nextCursor !== undefined;
+    return this.nextCursor !== null;
   }
 
   /**

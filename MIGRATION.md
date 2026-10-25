@@ -81,11 +81,11 @@ await nuntly.threads.retrieve(threadId, { markRead: shouldMarkRead ? 'true' : 'f
 
 These changes apply to the TypeScript SDK and to the CLI and the MCP server, which use it.
 
-- A 409 is retried only when the API sends `x-should-retry: true`, as on `idempotency_key_in_progress` during a keyed send. A Nuntly conflict such as `contact_already_exists` does not resolve on its own, so a retry only delayed the error.
+- A 409 is retried only when the API sends `x-should-retry: true`, as on `idempotency_key_in_progress` during a keyed send. Any other Nuntly conflict does not resolve on its own, so a retry only delayed the error.
 - A 5xx means a 500, a 502, a 503 or a 504; any other 5xx is not retried. The first retry waits 375 to 500 ms.
 - A `Retry-After` above 60 s is no longer waited on: the error for that response is thrown at once, with `RateLimitError.retryAfter` set on a 429.
-- A `POST` or a `PATCH` is retried on a 408, a 5xx, a timeout or a network error only when the API deduplicates it by `Idempotency-Key`, so a retry cannot apply it twice: `emails.send`, `emails.bulk.send`, `messages.reply`, `messages.forward`, `inboxes.messages.send`, `inboxes.create`, `broadcasts.create` and `broadcasts.send`, which send your key or generate one. An `Idempotency-Key` header you add to another method does not make it retried on those failures. A 429 is still retried on every `POST` and `PATCH`.
-- `RequestOptions` no longer has `idempotencyKey`, which every method except those eight ignored. Those eight take `IdempotentRequestOptions`, which adds it, so passing a key to any other method is now a type error instead of a key that is never sent.
+- A `POST` or a `PATCH` is retried on a 408, a 5xx, a timeout or a network error only when the API deduplicates it by `Idempotency-Key`, so a retry cannot apply it twice. Among the 1.x methods, those are `emails.send`, `emails.bulk.send`, `messages.reply`, `messages.forward`, `inboxes.messages.send` and `inboxes.create`, which send your key or generate one. An `Idempotency-Key` header you add to another method does not make it retried on those failures. A 429 is still retried on every `POST` and `PATCH`.
+- `RequestOptions` no longer has `idempotencyKey`, which every 1.x method except `emails.send`, `emails.bulk.send`, `messages.reply`, `messages.forward` and `inboxes.messages.send` ignored. The methods that send a key take `IdempotentRequestOptions`, which adds it, so passing a key to any other method is now a type error instead of a key that is never sent.
 - A network error (connection reset, DNS failure) is now retried under the same rules. A failure while reading the response body is not retried. A request you abort through `signal`, including with `AbortSignal.timeout(...)`, and an error thrown by a hook are never retried.
 - An error thrown by an `onError` hook is logged and no longer replaces the error of the call. `onError` is also called, with a plain `NuntlyError`, when the SDK refuses a call before sending it.
 - In safe mode (`createSafeNuntly`, `safe()`), a thrown value that is not an SDK error, such as one from your own hook, is returned as a plain `NuntlyError` with the value's message (or `String(value)`) and the value as `cause`, so `error` keeps its declared type. It used to be returned as is. Without safe mode, the call still rejects with the value the hook threw.
@@ -128,7 +128,7 @@ switch (event.type) {
 
 ### 7. Response enums accept values added later
 
-A string enum in a response type, such as `BroadcastResponse.status` or `WebhookResponse.events`, is typed `BroadcastStatus | (string & {})`: the known values still autocomplete, and a value the API adds after this release type-checks instead of contradicting the declared type. Request types keep the closed set, so `webhooks.create({ ..., events: ['email.typo'] })` is still a type error. The named enum types (`BroadcastStatus`, `EventType`, ...) still list only the known values.
+A string enum in a response type, such as `EmailResponse.status` or `WebhookResponse.events`, is typed `EmailStatus | (string & {})`: the known values still autocomplete, and a value the API adds after this release type-checks instead of contradicting the declared type. Request types keep the closed set, so `webhooks.create({ ..., events: ['email.typo'] })` is still a type error. The named enum types (`EmailStatus`, `EventType`, ...) still list only the known values.
 
 The webhook payloads that `verifyWebhook` returns follow the same rule: `BounceDetail.bounceType` and `bounceSubType`, `ComplaintDetail.complaintFeedbackType`, `ClickDetail.isBotEvent` and `OpenDetail.isBotEvent`, `DeliveryDelayDetail.delayType` and `MessageRejectedEventData.reason` accept a value added later. The event `type` keeps the literal of its event, so `switch (event.type)` still narrows the event.
 
@@ -136,11 +136,11 @@ An exhaustive `switch` that ends on `const _: never = status` no longer compiles
 
 ```ts
 // before: compiled, and a status added later fell through unhandled
-const status: BroadcastStatus = broadcast.status;
+const status: EmailStatus = email.status;
 
 // after
-switch (broadcast.status) {
-  case 'sent':
+switch (email.status) {
+  case 'delivered':
     break;
   default:
     // a status this SDK version does not know yet
@@ -154,7 +154,7 @@ Every OpenAPI `operationId` is now the name its SDK method implies: `nuntly.emai
 - `emails.bulk.list(bulkId)` reads one bulk request, not a page, so it is now `emails.bulk.retrieve(bulkId)`.
 - `webhooks.events.deliveries(id, eventId)` is now the sub-resource method `webhooks.events.deliveries.list(id, eventId)`, so its `operationId` keeps the 1.x name `list-webhook-event-deliveries`.
 
-The MCP tool names are the same ids: the [MCP migration guide](https://github.com/nuntly/nuntly-mcp/blob/main/MIGRATION.md#tool-names-follow-the-sdk-names) maps every renamed one. The contact property operations, new in 2.0.0, take the OpenAPI path parameter `contactPropertyId` instead of `propertyDefinitionId`, and the topic memberships item type `TopicMembershipExceptionsResponseItem` is now `TopicMembershipsResponseItem`.
+The MCP tool names are the same ids: the [MCP migration guide](https://github.com/nuntly/nuntly-mcp/blob/main/MIGRATION.md#tool-names-follow-the-sdk-names) maps every renamed one.
 
 Update a client generated from the Nuntly OpenAPI document, whose method names come from the `operationId`. The API reference pages moved with their names; the old URLs redirect.
 
@@ -171,11 +171,12 @@ Update a client generated from the Nuntly OpenAPI document, whose method names c
 - `verifyWebhook` throws `WebhookVerificationError` (`Invalid webhook payload`) when a correctly signed payload is not a JSON object, as Java does. Since 1.x it threw the raw `SyntaxError` of `JSON.parse`, or returned a JSON string, number or array as the event.
 - A list query param that is empty or holds `null`, such as `messages.content.retrieve(messageId, { format: [] })`, throws `NuntlyError` before any request is sent, as in Java. It used to send no `format`, so the API returned its default, or the string `null`, which the API rejects.
 - The client drops every trailing `/` from `baseUrl`. Since 1.x it dropped only one, so `https://api.nuntly.com//` sent every request to `//path`.
+- A page's `nextCursor` is `null` on the last page, as its type says, in the SDK and in the CLI and the MCP server, which use it. Since 1.x it was `undefined` when the API left the field out, so a loop on `while (cursor !== null)` fetched the first page again forever. An empty `nextCursor` also reads as `null`, as in Java.
 - Iterating a page (`for await`, `pages()`) throws `NuntlyError` when the API returns a cursor already requested in that iteration, before fetching it again, and `nextPage()` throws it when the next cursor is the cursor the page was requested with. Since 1.x such a response made the loop fetch the same pages forever.
 - No string form of the client shows the API key, and hooks read `Authorization: Bearer [redacted]` in `ctx.headers`. Since 1.x `console.log(nuntly)`, `util.inspect` and `JSON.stringify` of the client printed the key, and every hook received it.
 - `verifyWebhook` accepts every signature of the header during a signing secret rotation. Since 1.x it kept only the first one, so the header `t=<ts>,v0=<sigNew>,<sigOld>` failed verification with the previous secret until the rotation ended.
 - `.asResponse()` on a failed request returns the error response with its body unread, and the typed error it carries no longer goes unhandled. Since 1.x a 404 left an unhandled `NotFoundError` that exited a Node process, and the body of the returned response was already consumed. Awaiting the promise or `.withResponse()` still throws the typed error.
-- A path id equal to `''`, `.` or `..` throws `NuntlyError` before any request is sent, in the SDK and in the CLI and the MCP server, which use it. Since 1.x the URL parser resolved it into another route: `contacts.segments.remove('..', segmentId)` sent `DELETE /segments/{segmentId}` and deleted the segment, and `emails.retrieve('')` listed emails. In safe mode the call resolves to `{ data: null, error }` with that `NuntlyError`, and `SafeResult` now declares it next to `APIError` and `APIConnectionError`.
+- A path id equal to `''`, `.` or `..` throws `NuntlyError` before any request is sent, in the SDK and in the CLI and the MCP server, which use it. Since 1.x the URL parser resolved it into another route: `emails.retrieve('')` listed emails. In safe mode the call resolves to `{ data: null, error }` with that `NuntlyError`, and `SafeResult` now declares it next to `APIError` and `APIConnectionError`.
 
 ## `v0.x` → `v1.0.0`
 

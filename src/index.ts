@@ -126,8 +126,8 @@ export {
 export type { VerifyWebhookOptions } from './lib/webhook.js';
 export { verifyWebhook, WebhookVerificationError } from './lib/webhook.js';
 // Per-event types (EmailBouncedEvent, MessageReceivedEvent, ...) and the
-// `Event` and `WebhookEvent` unions flow through the resources barrel - no
-// explicit re-export here, otherwise the named exports would shadow the
-// canonical generated shapes with stale hand-written ones.
+// `WebhookEvent` union flow through the resources barrel - no explicit
+// re-export here, otherwise the named exports would shadow the canonical
+// generated shapes with stale hand-written ones.
 export * from './resources/types.js';
 export default Nuntly;
